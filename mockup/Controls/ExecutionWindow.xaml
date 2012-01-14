@@ -1,0 +1,35 @@
+﻿<Window x:Class="Org.OpenEngSB.DotNet.Lib.MockupMonitor.Controls.ExecutionWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:me="clr-namespace:Org.OpenEngSB.DotNet.Lib.MockupMonitor.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Title="Return from ">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Background="Gray" FontWeight="Bold" FontSize="16" VerticalAlignment="Stretch" VerticalContentAlignment="Bottom">
+            Parameter:
+        </Label>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Margin="5" Padding="5" Name="cmdExec" Click="cmdExec_Click">Execute</Button>
+            <Button Margin="5" Name="cmdRet" Padding="5" Click="cmdRet_Click" Visibility="Collapsed">Return</Button>
+        </StackPanel>
+        <StackPanel Name="spParams" Grid.Row="1" Orientation="Vertical" Background="LightGray" />
+        <TextBlock Grid.Row="2" Background="Gray" FontWeight="Bold" FontSize="16">Returns:</TextBlock>
+        <!--<me:ObjectTreeView Grid.Row="3" x:Name="tvReturnValue">
+            <me:ObjectTreeView.ItemTemplate>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </me:ObjectTreeView.ItemTemplate>
+        </me:ObjectTreeView>-->
+        <TextBox Grid.Row="3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Name="txtRetValue" />
+    </Grid>
+</Window>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+  <parent>
+    <artifactId>Root</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>Interface</artifactId>
+  <packaging>library</packaging>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Interface</name>
+  <build>
+    <sourceDirectory>./</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.npanday.plugins</groupId>
+        <artifactId>maven-compile-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <frameworkVersion>4.0</frameworkVersion>
+          <includeSources>
+            <includeSource>IDomainFactory.cs</includeSource>
+            <includeSource>MessageMethodInvocation.cs</includeSource>
+            <includeSource>MethodInvocation.cs</includeSource>
+            <includeSource>Properties\AssemblyInfo.cs</includeSource>
+          </includeSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

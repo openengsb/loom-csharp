@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation</RootNamespace>
+    <AssemblyName>Implementation</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Apache.NMS">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_1-SNAPSHOT\Apache.NMS.dll</HintPath>
+    </Reference>
+    <Reference Include="Apache.NMS.ActiveMQ">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="fastJSON">
+      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_1-SNAPSHOT\fastJSON.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-5.0_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
+    <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
+    <Compile Include="DomainFactoryProvider.cs" />
+    <Compile Include="Common\IStoppable.cs" />
+    <Compile Include="Communication\IIncomingPort.cs" />
+    <Compile Include="Communication\IMarshaller.cs" />
+    <Compile Include="Communication\IOutgoingPort.cs" />
+    <Compile Include="Communication\IPort.cs" />
+    <Compile Include="Communication\Jms\Destination.cs" />
+    <Compile Include="Communication\Jms\JmsIncomingPort.cs" />
+    <Compile Include="Communication\Jms\JmsOutgoingPort.cs" />
+    <Compile Include="Communication\Jms\JMSPort.cs" />
+    <Compile Include="Communication\Json\JsonMarshaller.cs" />
+    <Compile Include="Common\LocalType.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Authentification.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\BinaryData.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\ConnectorDescription.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\ConnectorId.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Data.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\DomainProxy.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\DomainReverseProxy.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Message.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MessageResult.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\RemoteMethodCall.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodCallRequest.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodResult.cs" />
+    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodResultMessage.cs" />
+    <Compile Include="Common\RemoteType.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\AuthenticationInfo.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDescription.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorId.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\Data.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\DomainProxy.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\DomainReverseProxy.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OpenEngSB3_0_0\RealDomainFactory.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\Message.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageResult.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\RemoteMethodCall.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Interface\Interface.csproj">
+      <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
+      <Name>Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
