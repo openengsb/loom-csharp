@@ -19,6 +19,7 @@
     <module>bridge</module>
     <!--<module>mockup</module>-->
     <module>docs</module>
+    <module>assembly</module>
   </modules>
 
   <dependencyManagement>
