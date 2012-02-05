@@ -19,11 +19,11 @@
     </license>
   </licenses>
   <version>1.0.0-SNAPSHOT</version>
- <dependencies>
+  <dependencies>
     <dependency>
       <groupId>at.ac.tuwien.ifs.cdl.domain</groupId>
       <artifactId>at.ac.tuwien.ifs.cdl.domain.signal</artifactId>
-	  <version>0.3.0-SNAPSHOT</version>
+      <version>0.3.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>	
@@ -61,11 +61,11 @@
 	    <configuration>
 		  <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
 		  <wsdl_location>${basedir}\target\at.ac.tuwien.ifs.cdl.domain.signal-0.3.0-SNAPSHOT-SignalDomain.wsdl</wsdl_location>
-		</configuration>		
+        </configuration>		
         <executions>
           <execution>
             <phase>compile</phase>
-			  <goals> 
+              <goals> 
                 <goal>run</goal>
               </goals>
           </execution>

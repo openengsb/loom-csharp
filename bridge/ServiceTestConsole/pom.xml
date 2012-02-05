@@ -52,7 +52,7 @@
       <version>0.0.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\.netbridge2\loom-csharp-visualstudio\bridge\src\lib\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</systemPath>
+      <systemPath>${basedir}\..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</systemPath>
     </dependency>
     <dependency>
       <groupId>SignalDomainEventsInterfaces</groupId>
@@ -60,7 +60,7 @@
       <version>0.0.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\.netbridge2\loom-csharp-visualstudio\bridge\src\lib\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</systemPath>
+      <systemPath>${basedir}\..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

@@ -19,11 +19,11 @@
     </license>
   </licenses>
   <version>1.0.0-SNAPSHOT</version>
- <dependencies>
+  <dependencies>
     <dependency>
       <groupId>at.ac.tuwien.ifs.cdl.domain</groupId>
       <artifactId>at.ac.tuwien.ifs.cdl.domain.signal</artifactId>
-	  <version>0.3.0-SNAPSHOT</version>
+      <version>0.3.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>	
@@ -65,7 +65,7 @@
         <executions>
           <execution>
             <phase>compile</phase>
-			  <goals> 
+              <goals> 
                 <goal>run</goal>
               </goals>
           </execution>
