@@ -5,7 +5,7 @@
     <artifactId>openengsb-root</artifactId>
     <version>28</version>
   </parent>
-  <name>Signaldomain.wsdl to SignalDomainInterface.dll</name>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: SignalDomain</name>
   <description>Compile SignalDomain wsdl to dll</description>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>SignalDomainDll</artifactId>
