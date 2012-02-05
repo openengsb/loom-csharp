@@ -33,21 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Apache.NMS">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_1-SNAPSHOT\Apache.NMS.dll</HintPath>
-    </Reference>
-    <Reference Include="Apache.NMS.ActiveMQ">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
-    </Reference>
-    <Reference Include="fastJSON">
-      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_1-SNAPSHOT\fastJSON.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-5.0_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <Reference Include="Apache.NMS, Version=1.5.0.2194, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL" />
+    <Reference Include="Apache.NMS.ActiveMQ, Version=1.5.2.2508, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL" />
+    <Reference Include="fastJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -105,13 +94,13 @@
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Interface\Interface.csproj">
       <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -40,7 +40,7 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost:6549";
             string domainName = "signal";
 
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(new Uri("http://localhost:8090"));
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
   
             ISignalDomainSoapBinding localDomain = new SignalConnector();
 

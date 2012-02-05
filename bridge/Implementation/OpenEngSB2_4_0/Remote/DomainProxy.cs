@@ -88,7 +88,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.
             IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
             portOut.Send(methodCallMsg);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
-            string methodReturnMsg = portIn.Receive();
+            string methodReturnMsg = portIn.Receive();            
             MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
             return ToMessage(methodReturn.message.result, callMessage);
         }
@@ -111,7 +111,8 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.
             switch (methodReturn.type)
             {
                 case MethodResult.ReturnType.Exception:
-                    returnMessage = new ReturnMessage((Exception)methodReturn.arg, callMessage);
+                    returnMessage = new ReturnMessage(new Exception(methodReturn.arg + "\n" + methodReturn.ToString()), callMessage);
+                   // returnMessage = new ReturnMessage((Exception)methodReturn.arg, callMessage);
                     break;
                 case MethodResult.ReturnType.Void:
                 case MethodResult.ReturnType.Object:
@@ -218,7 +219,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.
             {
                 LocalType type = new LocalType(arg.GetType());
                 realClassImplementation.Add(getPackageName(type.RemoteTypeFullName));
-                classes.Add(getPackageName(type.RemoteTypeFullName) + ".event." + firstLetterToUpper(type.RemoteTypeFullName));
+                classes.Add(getPackageName(type.RemoteTypeFullName) + "." + firstLetterToUpper(type.RemoteTypeFullName));
             }
 
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, realClassImplementation);

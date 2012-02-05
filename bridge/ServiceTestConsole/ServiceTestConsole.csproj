@@ -38,11 +38,13 @@
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="SignalDomainEventsInterfaces">
-      <HintPath>.references\org.openengsb.wrapped.csharp\SignalDomainEventsInterfaces-0.0.0\SignalDomainEventsInterfaces.dll</HintPath>
+    <Reference Include="SignalDomainEventsInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="SignalDomainInterfaces">
-      <HintPath>.references\org.openengsb.wrapped.csharp\SignalDomainInterfaces-0.0.0\SignalDomainInterfaces.dll</HintPath>
+    <Reference Include="SignalDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -58,8 +58,8 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.J
         /// </summary>
         public new void Close()
         {
-            base.Close();
             _producer.Close();
+            base.Close();           
         }
         #endregion
     }
