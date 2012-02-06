@@ -9,8 +9,8 @@
   <artifactId>GenerateDLL</artifactId>
   <packaging>pom</packaging>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL</name>
-  <modules>   
+  <modules>
     <module>SignalDomain</module>
-	<module>SignalDomainEvents</module>
+    <module>SignalDomainEvents</module>
   </modules>
 </project>

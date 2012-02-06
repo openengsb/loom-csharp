@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-  <id>all_dlls</id> 
+  <id>all_dlls</id>
   <formats>
-    <format>zip</format>    
+    <format>zip</format>
   </formats>
   <fileSets>
     <fileSet>
