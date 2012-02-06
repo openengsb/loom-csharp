@@ -49,7 +49,7 @@
     <dependency>
       <groupId>SignalDomainInterfaces</groupId>
       <artifactId>SignalDomainInterfaces</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
       <systemPath>${basedir}\..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</systemPath>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>SignalDomainEventsInterfaces</groupId>
       <artifactId>SignalDomainEventsInterfaces</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
       <systemPath>${basedir}\..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</systemPath>
