@@ -116,7 +116,7 @@ public class WsdlToDll extends AbstractMojo {
 					// Because the wsdl.exe can not be executed in a
 					// outputDirectory, the file has to be moved to the
 					// corresponding folder
-					if (last.contains("'")) {
+					if (last.contains("'") && last.contains(".cs")) {
 						String filepath = last.split("'")[1];
 						File file = new File(filepath);
 						boolean moved = file.renameTo(new File(outputDirectory,
@@ -131,7 +131,7 @@ public class WsdlToDll extends AbstractMojo {
 					}
 					if (child.waitFor() != 0)
 						throw new MojoExecutionException(error);
-					System.out.println(input);
+					getLog().info(input);
 					return true;
 				} catch (IOException e) {
 					throw new MojoExecutionException("unable to execute "
@@ -152,9 +152,14 @@ public class WsdlToDll extends AbstractMojo {
 
 		if (!outputDirectory.exists())
 			outputDirectory.mkdirs();
-		System.out.println("wsdllocation: " + wsdl_location);
-		String wsdlparameter = "/serverInterface " + "\"" + wsdl_location
-				+ "\"";
+		getLog().info("wsdllocation: " + wsdl_location);
+		String namespace = "defaultnamespace" + (int) (Math.random() * 100);
+		if (wsdl_location.contains("-") && wsdl_location.contains("."))
+			namespace = wsdl_location.substring(
+					wsdl_location.lastIndexOf('-') + 1,
+					wsdl_location.lastIndexOf('.'));
+		String wsdlparameter = "/serverInterface /n:" + namespace + " \""
+				+ wsdl_location + "\"";
 		if (!npanday_setting.exists())
 			throw new MojoExecutionException(
 					"npdanay-setting.xml could not be found: "

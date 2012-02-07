@@ -37,7 +37,7 @@
   <packaging>pom</packaging>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL</name>
   <modules>
-    <module>SignalDomain</module>
-    <module>SignalDomainEvents</module>
+    <module>Domain</module>
+    <module>DomainEvents</module>
   </modules>
 </project>

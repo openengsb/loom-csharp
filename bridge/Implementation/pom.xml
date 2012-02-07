@@ -13,13 +13,17 @@
   ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
-  -->
+-->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
   <parent>
     <artifactId>Root</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>Implementation</artifactId>
+  <packaging>library</packaging>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Implementation</name>
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -32,10 +36,6 @@
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>Implementation</artifactId>
-  <packaging>library</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Implementation</name>
   <build>
     <sourceDirectory>./</sourceDirectory>
     <plugins>
@@ -109,7 +109,7 @@
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_2</version>
+      <version>1.5.0_1-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>

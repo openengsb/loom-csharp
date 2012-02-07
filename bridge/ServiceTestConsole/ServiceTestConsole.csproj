@@ -35,14 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExampleDomainEventsInterfaces">
+      <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ExampleDomainInterfaces">
+      <HintPath>..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalDomainEventsInterfaces">
-      <HintPath>..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalDomainInterfaces">
-      <HintPath>..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

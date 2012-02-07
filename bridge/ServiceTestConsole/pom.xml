@@ -13,13 +13,17 @@
   ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
-  -->
+-->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
   <parent>
     <artifactId>Root</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>ServiceTestConsole</artifactId>
+  <packaging>exe</packaging>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ServiceTestConsole</name>
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -32,10 +36,6 @@
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>ServiceTestConsole</artifactId>
-  <packaging>exe</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ServiceTestConsole</name>
   <build>
     <sourceDirectory>./</sourceDirectory>
     <plugins>
@@ -74,20 +74,20 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>SignalDomainInterfaces</groupId>
-      <artifactId>SignalDomainInterfaces</artifactId>
+      <groupId>ExampleDomainInterfaces</groupId>
+      <artifactId>ExampleDomainInterfaces</artifactId>
       <version>1.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</systemPath>
+      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</systemPath>
     </dependency>
     <dependency>
-      <groupId>SignalDomainEventsInterfaces</groupId>
-      <artifactId>SignalDomainEventsInterfaces</artifactId>
+      <groupId>ExampleDomainEventsInterfaces</groupId>
+      <artifactId>ExampleDomainEventsInterfaces</artifactId>
       <version>1.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</systemPath>
+      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

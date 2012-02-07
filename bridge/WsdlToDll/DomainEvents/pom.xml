@@ -20,10 +20,10 @@
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: SignalDomainEvents</name>
-  <description>Compile SignalDomainEvents wsdl to dll</description>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: ExampleDomainEvents</name>
+  <description>Compile ExampleDomainEvents wsdl to dll</description>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>SignalDomainEventsDll</artifactId>
+  <artifactId>TestDomainEventsDll</artifactId>
   <packaging>pom</packaging>
   <licenses>
     <license>
@@ -40,9 +40,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <dependencies>
     <dependency>
-      <groupId>at.ac.tuwien.ifs.cdl.domain</groupId>
-      <artifactId>at.ac.tuwien.ifs.cdl.domain.signal</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <groupId>org.openengsb.domain</groupId>
+      <artifactId>org.openengsb.domain.example</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
@@ -61,9 +61,9 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>at.ac.tuwien.ifs.cdl.domain</groupId>
-                  <artifactId>at.ac.tuwien.ifs.cdl.domain.signal</artifactId>
-                  <classifier>SignalDomainEvents</classifier>
+                  <groupId>org.openengsb.domain</groupId>
+                  <artifactId>org.openengsb.domain.example</artifactId>
+                  <classifier>ExampleDomainEvents</classifier>
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
@@ -79,7 +79,7 @@
         <version>1.3-SNAPSHOT</version>
         <configuration>
           <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
-          <wsdl_location>${basedir}\target\at.ac.tuwien.ifs.cdl.domain.signal-0.3.0-SNAPSHOT-SignalDomainEvents.wsdl</wsdl_location>
+          <wsdl_location>${basedir}\target\org.openengsb.domain.example-3.0.0-SNAPSHOT-ExampleDomainEvents.wsdl</wsdl_location>
         </configuration>
         <executions>
           <execution>
