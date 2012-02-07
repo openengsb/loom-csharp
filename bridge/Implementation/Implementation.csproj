@@ -1,4 +1,4 @@
-﻿﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -33,10 +33,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Apache.NMS, Version=1.5.0.2194, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL" />
-    <Reference Include="Apache.NMS.ActiveMQ, Version=1.5.2.2508, Culture=neutral, PublicKeyToken=82756feee3957618, processorArchitecture=MSIL" />
-    <Reference Include="fastJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="Apache.NMS">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_1-SNAPSHOT\Apache.NMS.dll</HintPath>
+    </Reference>
+    <Reference Include="Apache.NMS.ActiveMQ">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="fastJSON">
+      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_1-SNAPSHOT\fastJSON.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-5.0_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />

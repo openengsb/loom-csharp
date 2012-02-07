@@ -2,21 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6E73B7BD-2C7A-40CB-94FE-747D7ABDFBF9}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{5CCD2925-BB25-496E-824F-3894A4FBF968}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.ServiceTestConsole</RootNamespace>
-    <AssemblyName>ServiceTestConsole</AssemblyName>
+    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.Interface</RootNamespace>
+    <AssemblyName>Interface</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,9 +22,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -35,19 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalDomainEventsInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
@@ -58,19 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SignalConnector.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="IDomainFactory.cs" />
+    <Compile Include="MessageMethodInvocation.cs" />
+    <Compile Include="MethodInvocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Implementation\Implementation.csproj">
-      <Project>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</Project>
-      <Name>Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Interface\Interface.csproj">
-      <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
-      <Name>Interface</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
