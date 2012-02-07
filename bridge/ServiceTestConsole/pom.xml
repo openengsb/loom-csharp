@@ -42,25 +42,21 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>SignalDomainEventsInterfaces</artifactId>
+      <version>0.0.0</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>SignalDomainInterfaces</artifactId>
+      <version>0.0.0</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_1-SNAPSHOT</version>
       <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>SignalDomainInterfaces</groupId>
-      <artifactId>SignalDomainInterfaces</artifactId>
-      <version>1.0.0</version>
-      <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\SignalDomain\target\SignalDomainInterfaces.dll</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>SignalDomainEventsInterfaces</groupId>
-      <artifactId>SignalDomainEventsInterfaces</artifactId>
-      <version>1.0.0</version>
-      <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\SignalDomainEvents\target\SignalDomainEventsInterfaces.dll</systemPath>
     </dependency>
   </dependencies>
 </project>
