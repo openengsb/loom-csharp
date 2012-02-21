@@ -35,12 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomainEventsInterfaces">
-      <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ExampleDomainInterfaces">
-      <HintPath>..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
     </Reference>
@@ -54,6 +48,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TestDomainEventsInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\DomainEvents\target\TestDomainEventsInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TestDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\Domain\target\TestDomainInterfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SignalConnector.cs" />

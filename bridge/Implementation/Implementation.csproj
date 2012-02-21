@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
+    <Compile Include="HelpMethods.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
     <Compile Include="Common\IStoppable.cs" />

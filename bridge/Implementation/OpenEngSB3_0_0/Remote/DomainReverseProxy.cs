@@ -269,6 +269,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.
                 if (textMsg == null)
                     continue;
                 SecureMethodCallRequest methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(SecureMethodCallRequest)) as SecureMethodCallRequest;
+                if (methodCallRequest.message.methodCall.args == null) methodCallRequest.message.methodCall.args = new List<Object>();
 
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 

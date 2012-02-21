@@ -29,6 +29,7 @@ using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Jms;
 using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication;
 using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Json;
 using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation;
 namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
@@ -100,7 +101,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             SecureMethodCallRequest methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
+            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));            
             portOut.Send(methodCallMsg);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
             string methodReturnMsg = portIn.Receive();
@@ -137,77 +138,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.
             return returnMessage;
         }
 
-        /// <summary>
-        /// Takes a Namespace as input, reverse the elements and returns the package structure from java
-        /// </summary>
-        /// <param name="url">Namespace URL</param>
-        /// <returns>Java Package structure</returns>
-        private String reverseURL(String url)
-        {           
-            String tmp=url.Replace("http://","");
-            tmp=tmp.Replace("/","");
-            String[] elements = tmp.Split('.');
-            int i;
-            String result="";
-            for (i = elements.Length-1; i >= 0; i--)
-            {
-                if (i != 0) result += elements[i] + ".";
-                else result += elements[i];                
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Search in the interface for the Namespace (equal to the package structure in java)
-        /// </summary>
-        /// <param name="fieldname">Method name or Parameter name</param>
-        /// <returns>Packagename</returns>
-        private String getPackageName(String fieldname)
-        {
-            Type type = typeof(T);
-            MethodInfo method = type.GetMethod(fieldname);
-            //Tests if it is a Method or a type
-            if (method != null)
-            {
-                SoapDocumentMethodAttribute soapAttribute;
-                foreach (Attribute attribute in method.GetCustomAttributes(false))
-                {
-                    if (attribute is SoapDocumentMethodAttribute)
-                    {
-                        soapAttribute = attribute as SoapDocumentMethodAttribute;
-                        return reverseURL(soapAttribute.RequestNamespace);
-                    }
-                }
-            }
-            else
-            {
-                Assembly ass = typeof(T).Assembly;
-                type = ass.GetType(fieldname);
-                foreach (Attribute attribute in Attribute.GetCustomAttributes(type))
-                {
-                    if (attribute is XmlTypeAttribute)
-                    {
-                        XmlTypeAttribute xmltype = attribute as XmlTypeAttribute;
-                        return reverseURL(xmltype.Namespace);
-                    }
-                }
-            }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
-        }
-        /// <summary>
-        /// Makes the first character to a upper character
-        /// </summary>
-        /// <param name="element">Element to edit</param>
-        /// <returns>String with the first character upper</returns>
-        private String firstLetterToUpper(String element)
-        {
-            if (element.Length <= 1) return element.ToUpper();
-            String first = element.Substring(0, 1);
-            first = first.ToUpper();
-            String tmp = element.Substring(1);
-            return first + tmp;
-        }
-
+       
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.
         /// </summary>
@@ -221,19 +152,15 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.
             Dictionary<string, string> metaData = new Dictionary<string, string>();
             //The structure is always domain.DOMAINTYPE.events
             metaData.Add("serviceId", "domain." + domainType + ".events");
-
             // Arbitrary string, maybe not necessary
             metaData.Add("contextId", "foo");
-
             List<string> classes = new List<string>();
-
-
             foreach (object arg in msg.Args)
             {
+                String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
-                classes.Add(getPackageName(type.RemoteTypeFullName) + "." + firstLetterToUpper(type.RemoteTypeFullName));
+                classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp+".","")));
             }
-
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes,null);
             String classname = "org.openengsb.connector.usernamepassword.Password";
             Data data = Data.CreateInstance("password");

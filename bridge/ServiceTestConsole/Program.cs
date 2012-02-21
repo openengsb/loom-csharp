@@ -24,8 +24,8 @@ using System.IO;
 using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation;
 using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface;
 using Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole;
-using ExampleDomain;
-using ExampleDomainEvents;
+using TestDomain;
+using TestDomainEvents;
 
 namespace ServiceTestConsole
 {
@@ -40,21 +40,21 @@ namespace ServiceTestConsole
             log4net.Config.BasicConfigurator.Configure();
 
             string destination = "tcp://localhost:6549";
-            string domainName = "signal";
+            string domainName = "test";
 
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
   
-            IExampleDomainSoapBinding localDomain = new ExampleDomainConnector();
+            ITestDomainSoap11Binding localDomain = new TestDomainConnector();
 
             //Register the connecter on the osenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            IExampleDomainEventsSoapBinding remotedomain = factory.getEventhandler<IExampleDomainEventsSoapBinding>(destination);
-
-            ExampleDomainEvents.logEvent log = new ExampleDomainEvents.logEvent();
-            log.name="Hallo World";
-            log.name = "Test";
-            remotedomain.raiseEvent4(log);            
+            ITestDomainEventsSoap11Binding remotedomain = factory.getEventhandler<ITestDomainEventsSoap11Binding>(destination);
+            TestStartEvent tstart = new TestStartEvent();
+            tstart.name = "Test";
+            tstart.processId = 0;
+            tstart.testId = "1";            
+            remotedomain.raiseTestStartEvent(tstart);
             Console.ReadKey();
             factory.UnregisterDomainService(localDomain);            
         }

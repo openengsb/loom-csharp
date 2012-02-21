@@ -5,15 +5,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:ns="http://docbook.org/ns/docbook">
-  <title>Configuration</title>
+  <title>How to install the .netbridge</title>
   <para>Dieses Kapitel erklärt die installation.</para>
-  <section>
-    <title>TBW</title>
-    <para>TBW</para>
-  </section>
-  <section>
-    <title>TBW</title>
-    <para>TBW</para>
-  </section>
+  <section><title>User installation</title>If you are downloading the binary files, you just have to
+    include all the dll's from the downloaded file</section>
+  <section><title>Developer installation</title>To install the .netbridge, you have to download the
+    source code and using maven to build the project. This will creates the dlls Interface and
+    Implementation , which can be inclueded to every project.</section>
+  <section>The netbridge has some dependencies, which are generated as well and included in the zip
+    file in the folder assembly/target.</section>
+  <section>If you use npanday in your project, instede of adding the file from the .netbridge zip
+    (assembly/target), you can add the dependencies over  maven dependencies</section>
 </chapter>
 

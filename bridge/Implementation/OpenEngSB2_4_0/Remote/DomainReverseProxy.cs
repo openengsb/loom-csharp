@@ -10,7 +10,7 @@
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.f
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
@@ -259,7 +259,7 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.
                     continue;
                 
                 MethodCallRequest methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallRequest)) as MethodCallRequest;
-
+                if (methodCallRequest.message.methodCall.args==null) methodCallRequest.message.methodCall.args=new List<Object>();
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.message.answer)

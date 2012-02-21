@@ -20,16 +20,16 @@ using System.Linq;
 using System.Web.Services;
 using System.Text;
 using log4net;
-using ExampleDomain;
+using TestDomain;
 namespace Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole
 {
 
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : IExampleDomainSoapBinding
+    class TestDomainConnector : ITestDomainSoap11Binding
     {
-        private ILog _logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
+        private ILog logger = LogManager.GetLogger(typeof(TestDomainConnector));
 
         /// <summary>
         /// Part of the registration process
@@ -37,45 +37,20 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole
         /// <param name="element">Message from the server</param>
         public void setDomainId(String element)
         {
-            _logger.Info("setDomainId:" + element);
+            logger.Info("setDomainId:" + element);
         }
-
         public void setConnectorId(String element)
         {
-            _logger.Info("setConnectorId:" + element);
+            logger.Info("setConnectorId:" + element);
         }
-        public string doSomething(string arg0)
+        public string runTests()
         {
-            _logger.Info("Result doSomething: " + arg0);
-            return "received";
+            logger.Info("run test simulation");
+            return "done";
         }
-
-        public string doSomething1(exampleEnum arg0, bool arg0Specified)
+        public void runTestsProcessId(long args0, bool args0Specified)
         {
-            _logger.Info("Result doSomething1: " + arg0+" "+arg0Specified);
-            return "received";
-        }
-
-        public object doSomething2(object arg0)
-        {
-            _logger.Info("Result doSomething2: " + arg0);
-            return null;
-        }
-
-        public string doSomethingWithLogEvent(logEvent arg0)
-        {
-            _logger.Info("Result doSomething: " + arg0);
-            return "received";
-        }
-
-        public void getAliveState(out aliveState @return, out bool returnSpecified)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getInstanceId()
-        {
-            throw new NotImplementedException();
+            logger.Info("run test "+args0+ " "+args0Specified);            
         }
     }
 }
