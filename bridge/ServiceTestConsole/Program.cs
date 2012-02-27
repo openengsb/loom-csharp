@@ -21,13 +21,12 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface;
-using Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole;
+using Bridge.Implementation;
+using Bridge.Interface;
 using TestDomain;
 using TestDomainEvents;
 
-namespace ServiceTestConsole
+namespace Bridge.ServiceTestConsole
 {
     class Program
     {

@@ -1,34 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0"
-         xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd   http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd   http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema-instance.xsd"
-         xml:id="install.configuration" xmlns="http://docbook.org/ns/docbook"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         xmlns:ns="http://docbook.org/ns/docbook">
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
   <title>How to use</title>
-  <para>This section explains how to use the .netbridge.</para>
+  <para>This section explains, how to use the .netbridge.</para>
   <section>
-    <title>Introducation</title> This section explains how to use the .netbridge. All the domains
-    and connectors in OpenEngSB are written in java. So if you want to use a onther language like
-    for example C# to communicate with the domain, you have to translate all the commands from java
-    to C# and back. If you had to do that for every connector, it would be a lot of work and it
-    would be difficult to handel changes on versions. For this problem, the .netbridge has been
-    created. It registers a connector and profites the functions, to invoke methods in the
-      domain.<title>Domaindescription</title>To communicate with a domain, it is required to get the
-    interfacedesciptions. These have the nameconvention: [DomainName]Domain and
-    [DomainName]DomainEvents. When building the domain, these information are encoded in a wsdl. In
-    other words, after building there are two wsdl, which descripes how to communicate with this
-    domain. These informations have to be translated to dll and included into c#. There are two ways
-    to do this, which are explaned in the following paragraphs</section>
-  <section><title>Wsdl to dll (With the maven plugin)</title>To have an easy and fast way, to build
-    the dll from a wsdl, a maven plugin has been introduced. The name of the plugin is ADSDD and has
-    the followinf structure: 
-    <section>
-      <title>Functional Interface</title>
-      <para>The following listing presents the Java Domain Interface. This interface also contains information 
-        about events raised by this domain.</para>
-      <xi:include href="docbook/use/TestDomain.xml"/>
-    </section>
+    <title>Introducation</title>
+    <para> This section explains how to use the .netbridge. All the domains and connectors in
+      OpenEngSB are written in java. So if you want to use a onther language like for example C# to
+      communicate with the domain, you have to translate all the commands from java to C# and back.
+      If you had to do that for every connector, it would be a lot of work and it would be difficult
+      to handel changes on versions. For this problem, the .netbridge has been created. It registers
+      a connector and profites the functions, to invoke methods in the domain.</para>
+    <para>In the Section 2.2, the domain description will be explained, which the .Net bridge need
+      as dll. How to create the dll is explaned in Section 2.3 or Section 2.4. In the last Section,
+      a example of the .Net Bridge is shown.</para>
+  </section>
+  <section>
+    <title>Domain description</title>
+    <para> To communicate with a domain, it is required to get the interfacedesciptions. These have
+      the nameconvention: "DomainName"Domain and "DomainName"DomainEvents. When building the domain,
+      these information are encoded in a WSDL. In other words, after building there are two WSDL's,
+      which descripes how to communicate with this domain. These informations have to be translated
+      to dll and included into C#. There are two ways to do this, which are explaned in the
+      following paragraphs </para>
+  </section>
+
+  <section>
+    <title>Wsdl to dll (With the maven plugin)</title>
+    <para><emphasis role="bold">To use this plugin, NPanday is regired.</emphasis></para>
+    <para> To have an easy and fast way, to build the dll from a wsdl, a maven plugin has been
+      introduced. The plugin has the following structur:</para>
+    <para><code> TO INCLUDE</code> . </para>
+    <para>After maven install, the corresponding dll is in the target folder.</para>
+  </section>
+  <section>
+    <title>Wsdl to dll (Without the plugin)</title>
+    <para>If you do not want to install NPanday, you can generate the dll manually. First you need
+      the location of the WSDL from the corresponding domain. Then you can use the following command
+      in the "Visual studio command Prompt" </para>
+    <para><code>wsdl /serverInterface namespace_name wsdl_location </code>. </para>
+    <para>After this step, a <emphasis role="italic">cs</emphasis> file has been created. This
+        <emphasis role="italic">cs</emphasis> file has to bee compiled to a dll. This can be done by
+      executing the following command in the "Visual studio command Prompt"</para>
+    <para><code>csc.exe /target:library  cs_file_path</code></para>
+    <para>Finnally, the dll has been created.</para>
+    <para><emphasis role="bold">Note:</emphasis> If you do not have the "Visual studio command
+      Prompt" then you can browse with the Windows Command prompt (cmd) to the wsdl.exe/csc.exe
+      location and execute it like meanched before. These filese can also be downloaded from the
+      web.</para>
+  </section>
+  <section>
+    <title>Example of the netbridge, with the OpenEngSB Test-domain</title>
+    <para> The following example shows the usage of the .Net bridge</para>
   </section>
 </chapter>

@@ -8,7 +8,7 @@
     <ProjectGuid>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation</RootNamespace>
+    <RootNamespace>Implementation</RootNamespace>
     <AssemblyName>Implementation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -104,6 +104,7 @@
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs" />
+    <Compile Include="RegistrationFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

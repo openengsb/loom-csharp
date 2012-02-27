@@ -21,27 +21,17 @@ using System.Web.Services;
 using System.Text;
 using log4net;
 using TestDomain;
-namespace Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole
+using Bridge.Implementation;
+namespace Bridge.ServiceTestConsole
 {
-
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class TestDomainConnector : ITestDomainSoap11Binding
+    class TestDomainConnector : RegistrationFunctions,ITestDomainSoap11Binding
     {
-        private ILog logger = LogManager.GetLogger(typeof(TestDomainConnector));
-
-        /// <summary>
-        /// Part of the registration process
-        /// </summary>
-        /// <param name="element">Message from the server</param>
-        public void setDomainId(String element)
+        private static ILog logger = LogManager.GetLogger(typeof(TestDomainConnector));
+        public TestDomainConnector():base(logger)
         {
-            logger.Info("setDomainId:" + element);
-        }
-        public void setConnectorId(String element)
-        {
-            logger.Info("setConnectorId:" + element);
         }
         public string runTests()
         {

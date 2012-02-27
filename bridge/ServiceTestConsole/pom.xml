@@ -31,7 +31,7 @@
         <configuration>
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
-            <includeSource>SignalConnector.cs</includeSource>
+            <includeSource>TestDomainConnector.cs</includeSource>
             <includeSource>Program.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
           </includeSources>
@@ -41,18 +41,6 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Implementation</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Interface</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>library</type>
-    </dependency>
-    <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_1-SNAPSHOT</version>
@@ -61,18 +49,30 @@
     <dependency>
       <groupId>TestDomainInterfaces</groupId>
       <artifactId>TestDomainInterfaces</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\Domain\target\TestDomainInterfaces.dll</systemPath>
+      <systemPath>${basedir}\..\WsdlToDll\Domain\target\TestDomainInterfaces.dll</systemPath>
     </dependency>
     <dependency>
       <groupId>TestDomainEventsInterfaces</groupId>
       <artifactId>TestDomainEventsInterfaces</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\Projekts\netbrige-common\loom-csharp-common\bridge\WsdlToDll\DomainEvents\target\TestDomainEventsInterfaces.dll</systemPath>
+      <systemPath>${basedir}\..\WsdlToDll\DomainEvents\target\TestDomainEventsInterfaces.dll</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>Implementation</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>Interface</artifactId>
+      <version>1.0.0.0</version>
+      <type>dotnet-library</type>
     </dependency>
   </dependencies>
 </project>

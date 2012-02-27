@@ -21,7 +21,7 @@
   </formats>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/target</directory>
+      <directory>${basedir}/target/dlls</directory>
       <includes>
         <include>*.dll</include>
       </includes>

@@ -21,12 +21,12 @@ using System.Text;
 using System.Threading;
 using System.Reflection;
 using System.IO;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Jms;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Json;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Common;
+using Bridge.Implementation.Communication.Jms;
+using Bridge.Implementation.Communication;
+using Bridge.Implementation.Communication.Json;
+using Bridge.Implementation.Common;
 
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.Remote
+namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the

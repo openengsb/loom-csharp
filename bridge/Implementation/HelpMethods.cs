@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
 
-namespace Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation
+namespace Bridge.Implementation
 {
     public class HelpMethods
     {

@@ -24,13 +24,13 @@ using System.Web.Services.Protocols;
 using System.Reflection;
 using System.IO;
 using System.Xml.Serialization;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Jms;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Json;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation;
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.Remote
+using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Bridge.Implementation.Communication.Jms;
+using Bridge.Implementation.Communication;
+using Bridge.Implementation.Communication.Json;
+using Bridge.Implementation.Common;
+using Bridge.Implementation;
+namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
