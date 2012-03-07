@@ -11,8 +11,9 @@
       to handel changes on versions. For this problem, the .netbridge has been created. It registers
       a connector and profites the functions, to invoke methods in the domain.</para>
     <para>In the Section 2.2, the domain description will be explained, which the .Net bridge need
-      as dll. How to create the dll is explaned in Section 2.3 or Section 2.4. In the last Section,
-      a example of the .Net Bridge is shown.</para>
+      as dll. How to create the dll is explaned in Section 2.3 or Section 2.4 and in the Section 2.5
+      it is explaned, how to invoke a method. In the last Section, a example of the .Net Bridge is
+      shown.</para>
   </section>
   <section>
     <title>Domain description</title>
@@ -26,10 +27,20 @@
 
   <section>
     <title>Wsdl to dll (With the maven plugin)</title>
-    <para><emphasis role="bold">To use this plugin, NPanday is regired.</emphasis></para>
+    <para><emphasis role="bold"><emphasis role="italic">To use this plugin, NPanday is
+          regired!</emphasis></emphasis></para>
     <para> To have an easy and fast way, to build the dll from a wsdl, a maven plugin has been
       introduced. The plugin has the following structur:</para>
-    <para><code> TO INCLUDE</code> . </para>
+    <para><code><![CDATA[
+      <plugin>
+        <groupId>org.openengsb.plugin</groupId>
+        <artifactId>generate-cs-dll</artifactId>
+        <version>VersionNumber</version>
+        <configuration>
+          <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
+          <wsdl_location>Location to the WSDL FILE</wsdl_location>
+        </configuration>
+      </plugin>]]></code></para>
     <para>After maven install, the corresponding dll is in the target folder.</para>
   </section>
   <section>
@@ -49,7 +60,37 @@
       web.</para>
   </section>
   <section>
+    <title>Register a connector and invoke methods</title>
+    <para>There are two ways, to get a instance of the factory, which is used to get the
+      eventhandler. The first way, the OpenEngSB version is indicted. This call would looke like
+      this:</para>
+    <para><code>DomainFactoryProvider.GetDomainFactoryInstance("3.0.0")</code></para>
+    <para>The other way, is by indicating the URL, whcih returns the version number. This could look
+      like this:</para>
+    <para><code>DomainFactoryProvider.GetDomainFactoryInstance("http://localhost:6549");</code></para>
+    <para>In the next step, the methods for the answer from the Domain has to be specified. The
+      methods, which can be invoked by the domain are defined in the "DomainName"Domain and have to
+      be implementend in a class (inherite from the corresponding dll). Furthermore, the specified
+      class has to inherite the partial class <emphasis role="italic"
+        >RegistrationFunctions</emphasis>. This partial class contains the function for the
+      registration calls from the domain. These methods can be overriden, if desired.  With the
+      following call, the bridge will be registrating the bridge as connector:</para>
+    <para><code>factory.RegisterDomainService(destination, localDomain, domainName);</code></para>
+    <para>Last but not least, the a proxy can be created, to invoke methods on the domain. This is
+      done by invoking the following method:</para>
+    <para><code>factory.getEventhandler&lt;"DomainName"DomainEvents>(destination);</code></para>
+    <para>Now it is possible, to invoke methods on the domain. For example:</para>
+    <para><code>remotedomain.raiseTestStartEvent(TestStartEvent);</code></para>
+  </section>
+  <section>
     <title>Example of the netbridge, with the OpenEngSB Test-domain</title>
-    <para> The following example shows the usage of the .Net bridge</para>
+    <para> The library <emphasis role="italic">ServiceTestConsole</emphasis> in the .Net Bridge
+      contains the example, to connect with the Test-domain. This exanple has the following
+      stucture</para>
+    <para><inlinemediaobject>
+        <imageobject>
+          <imagedata fileref="graphics/Example1.png"/>
+        </imageobject>
+      </inlinemediaobject></para>
   </section>
 </chapter>

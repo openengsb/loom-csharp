@@ -6,16 +6,15 @@
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:ns="http://docbook.org/ns/docbook">
   <title>How to install the .netbridge</title>
-  <para>Dieses Kapitel erklärt die installation.</para>
   <section>
-    <title>User installation</title>
+    <title>Binary installation</title>
     <para>
       If you are downloading the binary files, you just have to
       include all the dll's from the downloaded file
     </para>
   </section>
   <section>
-    <title>Developer installation</title>
+    <title>Source installation</title>
     <para> To install the .netbridge, you have to download the source code and using maven to build
       the project. This will creates the all the dlls , which can be inclueded to every
       project.</para>

@@ -38,7 +38,7 @@ namespace Bridge.ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
 
-            string destination = "tcp://localhost:6549";
+            string destination = "tcp://localhost.:6549";
             string domainName = "test";
 
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
