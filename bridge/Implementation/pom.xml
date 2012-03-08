@@ -74,6 +74,7 @@
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs</includeSource>
+            <includeSource>RegistrationFunctions.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>

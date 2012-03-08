@@ -16,13 +16,13 @@
  ***/
 using System;
 using System.Collections.Generic;
-
 using System.Runtime.Remoting.Messaging;
 using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Bridge.Implementation.Communication.Jms;
 using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
+using System.Runtime.Remoting.Proxies;
 namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
