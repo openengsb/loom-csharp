@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xmlns="http://docbook.org/ns/docbook">
+<chapter version="5.0" xml:id="use.configuration" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook">
   <title>How to use</title>
   <para>This section explains, how to use the .netbridge.</para>
   <section>
@@ -10,12 +10,12 @@
       If you had to do that for every connector, it would be a lot of work and it would be difficult
       to handel changes on versions. For this problem, the .netbridge has been created. It registers
       a connector and profites the functions, to invoke methods in the domain.</para>
-    <para>In the Section 2.2, the domain description will be explained, which the .Net bridge need
-      as dll. How to create the dll is explaned in Section 2.3 or Section 2.4 and in the Section 2.5
-      it is explaned, how to invoke a method. In the last Section, a example of the .Net Bridge is
-      shown.</para>
+    <para>In the <xref xlink:href="#Domaindecription"/>, the domain description will be
+      explained, which the .Net bridge need as dll. How to create the dll is explaned in <xref xlink:href="#WSDLTODLLPLUGIN"/>
+      or <xref xlink:href="#WSDLTODLLNoPLUGIN"/> and in the <xref xlink:href="#Example"/> it is explaned, how to invoke a method. In the last
+      Section, a example of the .Net Bridge is shown.</para>
   </section>
-  <section>
+  <section xml:id="Domaindecription">
     <title>Domain description</title>
     <para> To communicate with a domain, it is required to get the interfacedesciptions. These have
       the nameconvention: "DomainName"Domain and "DomainName"DomainEvents. When building the domain,
@@ -25,25 +25,24 @@
       following paragraphs </para>
   </section>
 
-  <section>
+  <section xml:id="WSDLTODLLPLUGIN">
     <title>Wsdl to dll (With the maven plugin)</title>
     <para><emphasis role="bold"><emphasis role="italic">To use this plugin, NPanday is
           regired!</emphasis></emphasis></para>
     <para> To have an easy and fast way, to build the dll from a wsdl, a maven plugin has been
       introduced. The plugin has the following structur:</para>
-    <para><code><![CDATA[
-      <plugin>
-        <groupId>org.openengsb.plugin</groupId>
-        <artifactId>generate-cs-dll</artifactId>
-        <version>VersionNumber</version>
-        <configuration>
-          <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
-          <wsdl_location>Location to the WSDL FILE</wsdl_location>
-        </configuration>
-      </plugin>]]></code></para>
+    <para><programlisting>&lt;plugin>
+  &lt;groupId>org.openengsb.plugin&lt;/groupId>
+  &lt;artifactId>generate-cs-dll&lt;/artifactId>
+  &lt;version>VersionNumber&lt;/version>
+  &lt;configuration>
+    &lt;npanday_setting>${user.home}\.m2\npanday-settings.xml&lt;/npanday_setting>
+    &lt;wsdl_location>Location to the WSDL FILE&lt;/wsdl_location>
+  &lt;/configuration>
+&lt;/plugin></programlisting></para>
     <para>After maven install, the corresponding dll is in the target folder.</para>
   </section>
-  <section>
+  <section xml:id="WSDLTODLLNoPLUGIN">
     <title>Wsdl to dll (Without the plugin)</title>
     <para>If you do not want to install NPanday, you can generate the dll manually. First you need
       the location of the WSDL from the corresponding domain. Then you can use the following command
@@ -59,7 +58,7 @@
       location and execute it like meanched before. These filese can also be downloaded from the
       web.</para>
   </section>
-  <section>
+  <section xml:id="Connector">
     <title>Register a connector and invoke methods</title>
     <para>There are two ways, to get a instance of the factory, which is used to get the
       eventhandler. The first way, the OpenEngSB version is indicted. This call would looke like
@@ -82,7 +81,7 @@
     <para>Now it is possible, to invoke methods on the domain. For example:</para>
     <para><code>remotedomain.raiseTestStartEvent(TestStartEvent);</code></para>
   </section>
-  <section>
+  <section xml:id="Example">
     <title>Example of the netbridge, with the OpenEngSB Test-domain</title>
     <para> The library <emphasis role="italic">ServiceTestConsole</emphasis> in the .Net Bridge
       contains the example, to connect with the Test-domain. This exanple has the following

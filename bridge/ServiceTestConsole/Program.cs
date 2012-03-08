@@ -42,13 +42,11 @@ namespace Bridge.ServiceTestConsole
             string domainName = "test";
 
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
-  
             ITestDomainSoap11Binding localDomain = new TestDomainConnector();
-
             //Register the connecter on the osenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            ITestDomainEventsSoap11Binding remotedomain = factory.getEventhandler<ITestDomainEventsSoap11Binding>(destination);
+            ITestDomainEventsSoap11Binding remotedomain = factory.getEventhandler<ITestDomainEventsSoap11Binding>(destination);           
             TestStartEvent tstart = new TestStartEvent();
             tstart.name = "Test";
             tstart.processId = 0;

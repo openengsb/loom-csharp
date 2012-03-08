@@ -44,4 +44,8 @@
     <title>How to use the .netbridge</title>
     <xi:include href="docbook/use/configuration.xml"/>
   </part>
+  <part xml:id="developer.manual">
+    <title>Developer manual</title>
+    <xi:include href="docbook/developer/configuration.xml"/>
+  </part>
 </book>

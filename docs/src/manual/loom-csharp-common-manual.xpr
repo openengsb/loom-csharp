@@ -5,6 +5,7 @@
         <options/>
     </meta>
     <projectTree name="loom-csharp-common-manual.xpr">
+        <folder path="docbook/developer/"/>
         <folder path="docbook/install/"/>
         <file name="loom-csharp-common-manual.xml"/>
     </projectTree>

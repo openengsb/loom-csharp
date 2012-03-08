@@ -16,20 +16,13 @@
  ***/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Remoting.Proxies;
+
 using System.Runtime.Remoting.Messaging;
-using System.Web.Services.Protocols;
-using System.Reflection;
-using System.IO;
-using System.Xml.Serialization;
 using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Bridge.Implementation.Communication.Jms;
 using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
-using Bridge.Implementation;
 namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>

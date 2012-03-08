@@ -8,10 +8,8 @@
   <title>How to install the .netbridge</title>
   <section>
     <title>Binary installation</title>
-    <para>
-      If you are downloading the binary files, you just have to
-      include all the dll's from the downloaded file
-    </para>
+    <para> If you are downloading the binary files, you just have to include all the dll's from the
+      downloaded file.</para>
   </section>
   <section>
     <title>Source installation</title>
