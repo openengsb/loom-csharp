@@ -1,0 +1,17 @@
+<plugin>
+  <groupId>org.openengsb.plugin</groupId>
+  <artifactId>generate-cs-dll</artifactId>
+  <version>1.3</version>
+  <configuration>
+    <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
+    <wsdl_location>${basedir}\target\DOMAINNAME.wsdl</wsdl_location>
+  </configuration>
+  <executions>
+    <execution>
+    <phase>compile</phase>
+      <goals>
+        <goal>run</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
