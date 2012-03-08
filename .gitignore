@@ -101,6 +101,10 @@ pconf.pyc
 #pax-provision
 #================
 *runner
+#================
+#Npanday references
+#================
+.references
 
 #================
 #wicket generated files

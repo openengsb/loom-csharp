@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using Apache.NMS;
 
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Communication.Jms
+namespace Bridge.Implementation.Communication.Jms
 {
     /// <summary>
     /// Abstract class to connect to a destination

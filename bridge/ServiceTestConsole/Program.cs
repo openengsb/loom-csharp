@@ -21,11 +21,12 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface;
-using Org.OpenEngSB.Loom.Csharp.Common.ServiceTestConsole;
+using Bridge.Implementation;
+using Bridge.Interface;
+using TestDomain;
+using TestDomainEvents;
 
-namespace ServiceTestConsole
+namespace Bridge.ServiceTestConsole
 {
     class Program
     {
@@ -37,23 +38,20 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
 
-            string destination = "tcp://localhost:6549";
-            string domainName = "signal";
+            string destination = "tcp://localhost.:6549";
+            string domainName = "test";
 
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(new Uri("http://localhost:8090"));
-  
-            ISignalDomainSoapBinding localDomain = new SignalConnector();
-
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
+            ITestDomainSoap11Binding localDomain = new TestDomainConnector();
             //Register the connecter on the osenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            ISignalDomainEventsSoapBinding remotedomain = factory.getEventhandler<ISignalDomainEventsSoapBinding>(destination);
-            updateMeEvent events=new updateMeEvent();
-            events.name = "updateMe";
-            events.lastKnownVersion = "1321503714918";
-            events.query="cpuNumber:1";
-            events.origin = factory.getDomainTypServiceId();
-            remotedomain.raiseUpdateMeEvent(events);
+            ITestDomainEventsSoap11Binding remotedomain = factory.getEventhandler<ITestDomainEventsSoap11Binding>(destination);           
+            TestStartEvent tstart = new TestStartEvent();
+            tstart.name = "Test";
+            tstart.processId = 0;
+            tstart.testId = "1";            
+            remotedomain.raiseTestStartEvent(tstart);
             Console.ReadKey();
             factory.UnregisterDomainService(localDomain);            
         }

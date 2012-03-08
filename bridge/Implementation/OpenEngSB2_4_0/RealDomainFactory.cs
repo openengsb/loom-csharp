@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.Common;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface;
-using Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0.Remote;
+using Bridge.Implementation.Common;
+using Bridge.Interface;
+using Bridge.Implementation.OpenEngSB2_4_0.Remote;
 
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB2_4_0
+namespace Bridge.Implementation.OpenEngSB2_4_0
 {
     /// <summary>
     /// This class produces and manages proxies.

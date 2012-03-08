@@ -8,7 +8,7 @@
     <ProjectGuid>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.Implementation</RootNamespace>
+    <RootNamespace>Implementation</RootNamespace>
     <AssemblyName>Implementation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
+    <Compile Include="HelpMethods.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
     <Compile Include="Common\IStoppable.cs" />
@@ -103,15 +104,16 @@
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs" />
+    <Compile Include="RegistrationFunctions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interface\Interface.csproj">
       <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

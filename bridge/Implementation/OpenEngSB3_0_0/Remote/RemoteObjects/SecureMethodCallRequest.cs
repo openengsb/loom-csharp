@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for a Secured Method Call
