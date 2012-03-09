@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface
+namespace Bridge.Interface
 {
     public interface IDomainFactory
     {
@@ -28,7 +28,6 @@ namespace Org.OpenEngSB.Loom.Csharp.Common.Bridge.Interface
 
         void RegisterDomainService<T>(string destination, T service, string domainType);
         void UnregisterDomainService(object service);
-        String getDomainTypServiceId();
-        
+        String getDomainTypServiceId();        
     }
 }

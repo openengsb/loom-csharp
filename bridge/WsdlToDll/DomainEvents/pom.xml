@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2010 OpenEngSB Division, Vienna University of Technology
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+  <parent>
+    <artifactId>Root</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomainEvents</name>
+  <description>Compile TestDomainEvents wsdl to dll</description>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>TestDomainEventsDll</artifactId>
+  <packaging>pom</packaging>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
+    <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
+    <url>https://github.com/openengsb/loom-csharp-common</url>
+  </scm>
+  <version>1.0.0-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.openengsb.domain</groupId>
+      <artifactId>org.openengsb.domain.test</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.openengsb.domain</groupId>
+                  <artifactId>org.openengsb.domain.test</artifactId>
+                  <classifier>TestDomainEvents</classifier>
+                  <type>wsdl</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.openengsb.plugin</groupId>
+        <artifactId>generate-cs-dll</artifactId>
+        <version>1.3-SNAPSHOT</version>
+        <configuration>
+          <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
+          <wsdl_location>${basedir}\target\org.openengsb.domain.test-3.0.0-SNAPSHOT-TestDomainEvents.wsdl</wsdl_location>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

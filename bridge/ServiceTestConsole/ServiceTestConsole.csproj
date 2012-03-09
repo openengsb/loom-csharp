@@ -8,7 +8,7 @@
     <ProjectGuid>{6E73B7BD-2C7A-40CB-94FE-747D7ABDFBF9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.ServiceTestConsole</RootNamespace>
+    <RootNamespace>ServiceTestConsole</RootNamespace>
     <AssemblyName>ServiceTestConsole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -38,12 +38,6 @@
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="SignalDomainEventsInterfaces">
-      <HintPath>.references\org.openengsb.wrapped.csharp\SignalDomainEventsInterfaces-0.0.0\SignalDomainEventsInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalDomainInterfaces">
-      <HintPath>.references\org.openengsb.wrapped.csharp\SignalDomainInterfaces-0.0.0\SignalDomainInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -54,11 +48,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TestDomainEventsInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\DomainEvents\target\TestDomainEventsInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TestDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\Domain\target\TestDomainInterfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SignalConnector.cs" />
+    <Compile Include="TestDomainConnector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Implementation\Implementation.csproj">
@@ -69,9 +74,6 @@
       <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
