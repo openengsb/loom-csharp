@@ -28,7 +28,7 @@ namespace Bridge.Implementation.Communication.Jms
     public class JmsIncomingPort : JmsPort, IIncomingPort
     {
         #region variables
-        IMessageConsumer _consumer;
+        IMessageConsumer consumer;
         #endregion
         #region Constructor
         /// <summary>
@@ -37,7 +37,7 @@ namespace Bridge.Implementation.Communication.Jms
         /// <param name="destination">URL to OpenEngSB</param>
         public JmsIncomingPort(string destination) : base(destination)
         {
-            _consumer = _session.CreateConsumer(_destination);
+            consumer = session.CreateConsumer(this.destination);
         }
         #endregion
         #region Public Methods
@@ -48,7 +48,7 @@ namespace Bridge.Implementation.Communication.Jms
         /// <returns>Read message. Null if the connection is closed.</returns>
         public string Receive()
         {
-            ITextMessage message = _consumer.Receive() as ITextMessage;
+            ITextMessage message = consumer.Receive() as ITextMessage;
 
             if (message == null)
                 return null;
@@ -60,7 +60,7 @@ namespace Bridge.Implementation.Communication.Jms
         public new void Close()
         {
             base.Close();
-            _consumer.Close();
+            consumer.Close();
         }
         #endregion
     }
