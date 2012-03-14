@@ -23,7 +23,7 @@ using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
 using System.Runtime.Remoting.Proxies;
-using Implementation.Communication.Jms;
+
 namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
