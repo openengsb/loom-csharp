@@ -247,11 +247,11 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(callRequest);
-            portOut.Send(request);
-
+            portOut.Send(request,id.ToString());
+            
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId));
             string reply = portIn.Receive();
-
+            
             MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
             if (result.message.result.type == MethodResult.ReturnType.Exception)
                 throw new ApplicationException("Remote Exception while deleting service proxy");            
