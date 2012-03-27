@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Jms\ReplyTo.cs" />
     <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />

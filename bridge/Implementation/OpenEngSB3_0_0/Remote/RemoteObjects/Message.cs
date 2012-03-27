@@ -31,7 +31,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
         public RemoteMethodCall methodCall { get; set; }
         public string callId { get; set; }
         public bool answer { get; set; }
-        public string destination { get; set; }
+        public string destination { get; set; }        
         #endregion
         #region Public Static Methods
         /// <summary>
@@ -48,7 +48,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
             instance.methodCall = methodCall;
             instance.callId = callId;
             instance.answer = answer;
-            instance.destination = destination;
+            instance.destination = destination;            
             return instance;
         }
         #endregion

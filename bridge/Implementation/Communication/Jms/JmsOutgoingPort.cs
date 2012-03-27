@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Apache.NMS;
-
 namespace Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -28,7 +27,7 @@ namespace Bridge.Implementation.Communication.Jms
     public class JmsOutgoingPort : JmsPort, IOutgoingPort
     {
         #region Variables
-        IMessageProducer _producer;
+        IMessageProducer producer;
         #endregion
         #region Constructor
         /// <summary>
@@ -37,20 +36,31 @@ namespace Bridge.Implementation.Communication.Jms
         /// <param name="destination">URL to OpenEngSB</param>
         public JmsOutgoingPort(string destination): base(destination)
         {
-            _producer = _session.CreateProducer(_destination);
-            _producer.DeliveryMode = MsgDeliveryMode.Persistent;
+            producer = session.CreateProducer(this.destination);
+            producer.DeliveryMode = MsgDeliveryMode.Persistent;
         }
         #endregion
         #region Public Methods
         /// <summary>
-        /// Send an string over NMS.
+        /// Send a string over NMS.
         /// </summary>
         /// <param name="text">Text to send</param>
         /// <param name="receiver">Queue name on server side</param>
         public void Send(string text)
         {
-            ITextMessage message = _session.CreateTextMessage(text);
-            _producer.Send(message);
+            ITextMessage message = session.CreateTextMessage(text);            
+            producer.Send(message);
+        }
+        /// <summary>
+        /// Send a string over NMS and defines the replyTo field
+        /// </summary>
+        /// <param name="text">Text to send</param>
+        /// <param name="replyTo">Reply destination</param>
+        public void Send(string text,String queueName)
+        {
+            ITextMessage message = session.CreateTextMessage(text);            
+            message.NMSReplyTo = session.GetQueue(queueName);
+            producer.Send(message);
         }
 
         /// <summary>
@@ -59,7 +69,7 @@ namespace Bridge.Implementation.Communication.Jms
         public new void Close()
         {
             base.Close();
-            _producer.Close();
+            producer.Close();
         }
         #endregion
     }

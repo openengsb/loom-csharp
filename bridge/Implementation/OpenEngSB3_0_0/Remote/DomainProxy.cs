@@ -23,6 +23,7 @@ using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
 using System.Runtime.Remoting.Proxies;
+
 namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
@@ -67,7 +68,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             this.serviceId = serviceId;
             this.domainType = domainType;
-            this.host = host; ;
+            this.host = host;
             this.marshaller = new JsonMarshaller();
             this.username = "admin";
             this.password = "password";
@@ -94,8 +95,9 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             SecureMethodCallRequest methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));            
-            portOut.Send(methodCallMsg);
+            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
+
+            portOut.Send(methodCallMsg, methodCallRequest.message.callId);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
@@ -153,7 +155,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
                 String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
                 classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp+".","")));
-            }
+            }            
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes,null);
             String classname = "org.openengsb.connector.usernamepassword.Password";
             Data data = Data.CreateInstance("password");

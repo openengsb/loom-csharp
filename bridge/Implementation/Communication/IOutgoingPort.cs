@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Apache.NMS;
 
 namespace Bridge.Implementation.Communication
 {
@@ -32,5 +33,11 @@ namespace Bridge.Implementation.Communication
         /// </summary>
         /// <param name="Text">message to send</param>
         void Send(string Text);
+        /// <summary>
+        /// Definition to send a message and define ReplyTo
+        /// </summary>
+        /// <param name="Text">message to send</param>
+        /// <param name="ReplyTo">ReplyTo parameter</param>
+        void Send(string Text, String ReplyTo);
     }
 }

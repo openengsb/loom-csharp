@@ -32,10 +32,10 @@ namespace Bridge.Implementation.Communication.Jms
         /// <summary>
         /// ActiveMQ NMS
         /// </summary>
-        protected IConnection _connection;
-        protected IConnectionFactory _factory;
-        protected ISession _session;
-        protected IDestination _destination;
+        protected IConnection connection;
+        protected IConnectionFactory factory;
+        protected ISession session;
+        protected IDestination destination;
         #endregion
         #region Constructor 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
         protected JmsPort(string destination)
         {
-            _connection = null;
-            _factory = null;
-            _session = null;
-            _destination = null;
+            connection = null;
+            factory = null;
+            session = null;
+            this.destination = null;
             Configure(destination);
         }
         #endregion
@@ -61,11 +61,11 @@ namespace Bridge.Implementation.Communication.Jms
             Destination dest = new Destination(destination);
 
             Uri connectionUri = new Uri(dest.Host);
-            _factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
-            _connection = _factory.CreateConnection();
-            _session = _connection.CreateSession();
-            _connection.Start();
-            _destination = _session.GetDestination(dest.Queue);
+            factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
+            connection = factory.CreateConnection();
+            session = connection.CreateSession();
+            connection.Start();
+            this.destination = session.GetDestination(dest.Queue);
         }
         #endregion
         #region Protected Methods
@@ -74,7 +74,7 @@ namespace Bridge.Implementation.Communication.Jms
         /// </summary>
         protected void Close()
         {
-            _connection.Close();
+            connection.Close();
         }
         #endregion
     }
