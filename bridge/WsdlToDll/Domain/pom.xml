@@ -16,9 +16,10 @@
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
   <parent>
-    <artifactId>Root</artifactId>
+    <artifactId>GenerateDLL</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomain</name>
   <description>Compile TestDomain wsdl to dll</description>
