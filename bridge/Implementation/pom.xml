@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_1-SNAPSHOT</version>
+      <version>1.5.0_3-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
