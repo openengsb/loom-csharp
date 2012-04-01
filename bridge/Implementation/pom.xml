@@ -34,7 +34,7 @@
             <includeSource>Exceptions\ConnectOpenEngSBException.cs</includeSource>
             <includeSource>OpenEngSB2_4_0\RealDomainFactory.cs</includeSource>
             <includeSource>DomainFactoryProvider.cs</includeSource>
-			<includeSource>HelpMethods.cs</includeSource>
+            <includeSource>HelpMethods.cs</includeSource>
             <includeSource>Common\IStoppable.cs</includeSource>
             <includeSource>Common\LocalType.cs</includeSource>
             <includeSource>Common\RemoteType.cs</includeSource>
@@ -82,39 +82,39 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Apache.NMS</artifactId>
-      <version>1.5.0_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>fastJSON</artifactId>
-      <version>1.9.6_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>log4net</artifactId>
-      <version>1.2.11_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Newtonsoft.Json</artifactId>
-      <version>5.0_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Interface</artifactId>
       <version>1.0.0.0</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>wrapped.csharp</groupId>
+      <artifactId>Apache.NMS</artifactId>
+      <version>1.5.0_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>wrapped.csharp</groupId>
+      <artifactId>Apache.NMS.ActiveMQ</artifactId>
+      <version>1.5.0_3</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>wrapped.csharp</groupId>
+      <artifactId>Newtonsoft.Json</artifactId>
+      <version>5.0_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>wrapped.csharp</groupId>
+      <artifactId>fastJSON</artifactId>
+      <version>1.9.6_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>wrapped.csharp</groupId>
+      <artifactId>log4net</artifactId>
+      <version>1.2.11_2</version>
       <type>dotnet-library</type>
     </dependency>
   </dependencies>
