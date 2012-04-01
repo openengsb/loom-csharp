@@ -39,6 +39,7 @@
   <packaging>pom</packaging>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Root</name>
   <modules>
+    <module>wsdltodll</module>
     <module>bridge</module>
     <!--<module>mockup</module>-->
     <module>docs</module>

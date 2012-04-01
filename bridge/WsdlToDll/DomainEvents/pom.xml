@@ -91,10 +91,9 @@
       </plugin>
       <plugin>
         <groupId>org.openengsb.plugin</groupId>
-        <artifactId>generate-cs-dll</artifactId>
+        <artifactId>wsdl-to-dll</artifactId>
         <version>1.3-SNAPSHOT</version>
-        <configuration>
-          <npanday_setting>${user.home}\.m2\npanday-settings.xml</npanday_setting>
+        <configuration>          
           <wsdl_location>${basedir}\target\org.openengsb.domain.test-3.0.0-20120330.060717-1-TestDomainEvents.wsdl</wsdl_location>
         </configuration>
         <executions>

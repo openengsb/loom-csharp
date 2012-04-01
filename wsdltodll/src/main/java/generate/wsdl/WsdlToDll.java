@@ -52,7 +52,6 @@ public class WsdlToDll extends AbstractMojo {
      * Location of the npanday-setting.xml.
      * 
      * @parameter expression="$M2_REPO\npanday-setting.xml"
-     * 
      */
     private File npanday_setting;
 
@@ -64,10 +63,11 @@ public class WsdlToDll extends AbstractMojo {
      */
     private String wsdl_location;
 
-    // Save the location of the cs file
+    // Save the location of the cs file, which has been generate from wsdl.exe
     private String cspath;
 
     /**
+     * Executes a command
      * 
      * @param exec List of paths, where the corresponding command could be
      * @param command Command to execute
@@ -113,6 +113,14 @@ public class WsdlToDll extends AbstractMojo {
 
     }
 
+    /**
+     * Search for the wsdl command and execute it when it is found
+     * 
+     * @param possiblepathes List of possiblepathes
+     * @param parameter parameters for wsdl
+     * @return returns true when the execution was successful returns false when wsdl.exe couldn't be found
+     * @throws MojoExecutionException
+     */
     private boolean wsdlCommand(List<String> possiblepathes, String parameter) throws MojoExecutionException {
         for (String path : possiblepathes) {
             String cmd = path;
@@ -136,6 +144,14 @@ public class WsdlToDll extends AbstractMojo {
         return false;
     }
 
+    /**
+     * Search for the csc command and execute it when it is found
+     * 
+     * @param possiblepathes List of possiblepathes
+     * @param parameter parameters for csc
+     * @return returns true when the execution was successful returns false when csc.exe couldn't be found
+     * @throws MojoExecutionException
+     */
     private boolean cscCommand(List<String> possiblepathes, String parameter) throws MojoExecutionException {
         for (String path : possiblepathes) {
             String cmd = path;
@@ -159,25 +175,52 @@ public class WsdlToDll extends AbstractMojo {
         return false;
     }
 
+    /**
+     * Linux mode for maven execution
+     * 
+     * @throws MojoExecutionException
+     */
     private void LinuxMode() throws MojoExecutionException {
         throw new MojoExecutionException("This plugin can't be used under Linux");
     }
 
+    /**
+     * Search in the default folder location of SDK and the .net Framework for the newest version. If the folder exist,
+     * add it to the list
+     * 
+     * @param exec Contains the list of default folder locations
+     */
     private void AdddefaultSDKPath(List<String> exec) {
         String defaultpathes[] =
-            new String[]{ "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\",
-                "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\",
-                "C:\\Windows\\Microsoft.NET\\Framework64\\v2.0.50727\\",
-                "C:\\Windows\\Microsoft.NET\\Framework64\\v3.0\\",
-                "C:\\Windows\\Microsoft.NET\\Framework64\\v3.5\\",
-                "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\",
+            new String[]{ "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\",
+                "C:\\Program Files\\Microsoft SDKs\\Windows\\",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\",
+                "C:\\Windows\\Microsoft.NET\\Framework\\"
             };
-        for (String string : defaultpathes) {
-            if (new File(string).exists() && !exec.contains(string))                
-                exec.add(string);
+        File dir;
+        String fullpath;
+        String[] children;
+        for (String path : defaultpathes) {
+            dir = new File(path);
+            if (new File(path).exists()) {
+                children = dir.list();
+                for (String folder : children) {
+                    fullpath = path + folder;
+                    if (new File(fullpath).isDirectory()) {
+                        if (new File(fullpath + "\\Bin\\").exists())
+                            fullpath = fullpath + "\\Bin\\";
+                        exec.add(fullpath);
+                    }
+                }
+            }
         }
     }
 
+    /**
+     * Windows mode for maven execution
+     * 
+     * @throws MojoExecutionException
+     */
     private void WindowsMode() throws MojoExecutionException {
         List<String> sdkandFrameworkPathes = new LinkedList<String>();
         if (npanday_setting == null || !npanday_setting.exists()) {
@@ -211,12 +254,13 @@ public class WsdlToDll extends AbstractMojo {
         if (!wsdlCommand(sdkandFrameworkPathes, wsdlparameter))
             throw new MojoExecutionException(
                 "wsdl.exe could not be found. Add "
-                        + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> to the NPanday file");
+                        + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> to the NPanday file and configurate the plugin");
 
         String cslocation = "/target:library \"" + cspath + "\"";
         if (!cscCommand(sdkandFrameworkPathes, cslocation))
-            throw new MojoExecutionException("csc.exe could not be found Add "
-                    + "<executablePath>.NetFrameworkPath</executablePath> to the NPanday file");
+            throw new MojoExecutionException(
+                "csc.exe could not be found Add "
+                        + "<executablePath>.NetFrameworkPath</executablePath> to the NPanday file and configurate the plugin");
     }
 
     /**
