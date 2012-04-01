@@ -39,156 +39,209 @@ import java.util.List;
  * @phase process-sources
  */
 public class WsdlToDll extends AbstractMojo {
-	/**
-	 * Location of the file.
-	 * 
-	 * @parameter expression="${project.build.directory}"
-	 * @required
-	 */
-	private File outputDirectory;
-	/**
-	 * Location of the npanday-setting.xml.
-	 * 
-	 * @parameter expression="$M2_REPO\npanday-setting.xml"
-	 * @required
-	 */
-	private File npanday_setting;
 
-	/**
-	 * Location of the wsdl fuke
-	 * 
-	 * @parameter expression="${base.dir}/target"
-	 * @required
-	 */
-	private String wsdl_location;
+    private String wsdlparameter;
+    /**
+     * Location of the file.
+     * 
+     * @parameter expression="${project.build.directory}"
+     * @required
+     */
+    private File outputDirectory;
+    /**
+     * Location of the npanday-setting.xml.
+     * 
+     * @parameter expression="$M2_REPO\npanday-setting.xml"
+     * 
+     */
+    private File npanday_setting;
 
-	// Save the location of the cs file
-	private String cspath;
+    /**
+     * Location of the wsdl fuke
+     * 
+     * @parameter expression="${base.dir}/target"
+     * @required
+     */
+    private String wsdl_location;
 
-	/**
-	 * 
-	 * @param exec
-	 *            List of paths, where the corresponding command could be
-	 * @param command
-	 *            Command to execute
-	 * @param parameter
-	 *            Parameters for the command
-	 * @return true if a command has been executed correctly, false if not
-	 * @throws MojoExecutionException
-	 */
-	private boolean executeCommand(List<String> exec, String command,
-			String parameter) throws MojoExecutionException {
+    // Save the location of the cs file
+    private String cspath;
 
-		for (int i = 0; i < exec.size(); i++) {
-			String cmd = exec.get(i);
-			cmd += "\\" + command;
-			cmd = cmd.replace("\\\\", "\\");
-			File commandlocation = new File(cmd);
-			if (commandlocation.exists()) {
-				try {
+    /**
+     * 
+     * @param exec List of paths, where the corresponding command could be
+     * @param command Command to execute
+     * @param parameter Parameters for the command
+     * @return true if a command has been executed correctly, false if not
+     * @throws IOException
+     * @throws MojoExecutionException
+     * @throws InterruptedException
+     */
+    private void exCommand(Process child) throws IOException, MojoExecutionException, InterruptedException {
+        BufferedReader brout = new BufferedReader(
+            new InputStreamReader(child.getInputStream()));
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(child.getErrorStream()));
 
-					String execute = "\"" + cmd + "\"" + " " + parameter;
-					Runtime tr = Runtime.getRuntime();
-					Process child = null;
-					if (command.contains("wsdl"))
-						// When the outputDirectory is indicated, then
-						// /serviceInterface is transformed to
-						// /serviceinterface,
-						// which leads to an error
-						child = tr.exec(execute);
-					else
-						child = tr.exec(execute, null, outputDirectory);
+        String error = "", tmp, input = "", last = "";
+        while ((tmp = br.readLine()) != null)
+            error += tmp;
+        while ((tmp = brout.readLine()) != null) {
+            input += tmp + "\n";
+            last = tmp;
+        }
 
-					// Print the result/error from the execution
-					BufferedReader brout = new BufferedReader(
-							new InputStreamReader(child.getInputStream()));
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader(child.getErrorStream()));
+        // Because the wsdl.exe can not be executed in a
+        // outputDirectory, the file has to be moved to the
+        // corresponding folder
+        if (last.contains("'") && last.contains(".cs")) {
+            String filepath = last.split("'")[1];
+            File file = new File(filepath);
+            boolean moved = file.renameTo(new File(outputDirectory,
+                file.getName()));
+            if (!moved)
+                throw new MojoExecutionException(
+                    "Unable to move file: "
+                            + file.getAbsolutePath());
+            cspath = outputDirectory + "\\" + file.getName();
+            input += "Moving file " + file.getName() + " to "
+                    + cspath + "\n";
+            getLog().info(input);
+        }
+        if (child.waitFor() != 0)
+            throw new MojoExecutionException(error);
 
-					String error = "", tmp, input = "", last = "";
-					while ((tmp = br.readLine()) != null)
-						error += tmp;
-					while ((tmp = brout.readLine()) != null) {
-						input += tmp + "\n";
-						last = tmp;
-					}
-					;
-					// Because the wsdl.exe can not be executed in a
-					// outputDirectory, the file has to be moved to the
-					// corresponding folder
-					if (last.contains("'") && last.contains(".cs")) {
-						String filepath = last.split("'")[1];
-						File file = new File(filepath);
-						boolean moved = file.renameTo(new File(outputDirectory,
-								file.getName()));
-						if (!moved)
-							throw new MojoExecutionException(
-									"Unable to move file: "
-											+ file.getAbsolutePath());
-						cspath = outputDirectory + "\\" + file.getName();
-						input += "Moving file " + file.getName() + " to "
-								+ cspath + "\n";
-					}
-					if (child.waitFor() != 0)
-						throw new MojoExecutionException(error);
-					getLog().info(input);
-					return true;
-				} catch (IOException e) {
-					throw new MojoExecutionException("unable to execute "
-							+ command + " " + e);
-				} catch (InterruptedException e) {
-					throw new MojoExecutionException("unable to execute "
-							+ command + " " + e);
-				}
-			}
-		}
-		return false;
-	}
+    }
 
-	/**
-	 * Find and executes the commands wsdl.exe and csc.exe
-	 */
-	public void execute() throws MojoExecutionException {
+    private boolean wsdlCommand(List<String> possiblepathes, String parameter) throws MojoExecutionException {
+        for (String path : possiblepathes) {
+            String cmd = path;
+            if (cmd.lastIndexOf("\\") < path.length() - 1)
+                cmd += "\\";
+            cmd += "wsdl.exe";
+            if (new File(cmd).exists()) {
+                String execute = "\"" + cmd + "\" " + parameter;
+                getLog().info("trying " + cmd);
+                Runtime tr = Runtime.getRuntime();
+                try {
+                    exCommand(tr.exec(execute));
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Error, while executing command: " + execute + "\n", e);
+                } catch (InterruptedException e) {
+                    throw new MojoExecutionException("Error, while executing command: " + execute + "\n", e);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
-		if (!outputDirectory.exists())
-			outputDirectory.mkdirs();
-		getLog().info("wsdllocation: " + wsdl_location);
-		String namespace = "defaultnamespace" + (int) (Math.random() * 100);
-		if (wsdl_location.contains("-") && wsdl_location.contains("."))
-			namespace = wsdl_location.substring(
-					wsdl_location.lastIndexOf('-') + 1,
-					wsdl_location.lastIndexOf('.'));
-		String wsdlparameter = "/serverInterface /n:" + namespace + " \""
-				+ wsdl_location + "\"";
-		if (!npanday_setting.exists())
-			throw new MojoExecutionException(
-					"npdanay-setting.xml could not be found: "
-							+ npanday_setting);
-		DOMParser parser = new DOMParser();
-		try {
-			parser.parse(npanday_setting.getAbsolutePath());
-		} catch (SAXException e1) {
-			throw new MojoExecutionException(
-					"Error while parsing the npanday_setting.xml \n" + e1);
-		} catch (IOException e1) {
-			throw new MojoExecutionException(
-					"Error while parsing the npanday_setting.xml \n" + e1);
-		}
-		Document document = parser.getDocument();
-		NodeList nodes = document.getElementsByTagName("sdkInstallRoot");
-		List<String> exec = new LinkedList<String>();
-		List<String> sdk = new LinkedList<String>();
-		for (int i = 0; i < nodes.getLength(); i++)
-			sdk.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
-		nodes = document.getElementsByTagName("executablePath");
-		for (int i = 0; i < nodes.getLength(); i++)
-			exec.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
+    private boolean cscCommand(List<String> possiblepathes, String parameter) throws MojoExecutionException {
+        for (String path : possiblepathes) {
+            String cmd = path;
+            if (cmd.lastIndexOf("\\") < path.length() - 1)
+                cmd += "\\";
+            cmd += "csc.exe";
+            if (new File(cmd).exists()) {
+                String execute = "\"" + cmd + "\"" + " " + parameter;
+                getLog().info("trying " + cmd);
+                Runtime tr = Runtime.getRuntime();
+                try {
+                    exCommand(tr.exec(execute, null, outputDirectory));
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Error, while executing command: " + execute + "\n", e);
+                } catch (InterruptedException e) {
+                    throw new MojoExecutionException("Error, while executing command: " + execute + "\n", e);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
-		if (!executeCommand(sdk, "wsdl.exe", wsdlparameter))
-			throw new MojoExecutionException("wsdl.exe could not be found");
-		String cslocation = "/target:library \"" + cspath + "\"";
-		if (!executeCommand(exec, "csc.exe", cslocation))
-			throw new MojoExecutionException("csc.exe could not be found");
+    private void LinuxMode() throws MojoExecutionException {
+        throw new MojoExecutionException("This plugin can't be used under Linux");
+    }
 
-	}
+    private void AdddefaultSDKPath(List<String> exec) {
+        String defaultpathes[] =
+            new String[]{ "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\",
+                "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v2.0.50727\\",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v3.0\\",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v3.5\\",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\",
+            };
+        for (String string : defaultpathes) {
+            if (new File(string).exists() && !exec.contains(string))                
+                exec.add(string);
+        }
+    }
+
+    private void WindowsMode() throws MojoExecutionException {
+        List<String> sdkandFrameworkPathes = new LinkedList<String>();
+        if (npanday_setting == null || !npanday_setting.exists()) {
+            getLog().info("npdanay-setting.xml could not be found. Trying default pathes");
+        }
+        else {
+            getLog().info("Searching in the npanday file, for wsdl.exe and csc.exe");
+            DOMParser parser = new DOMParser();
+            try {
+                parser.parse(npanday_setting.getAbsolutePath());
+            } catch (SAXException e1) {
+                throw new MojoExecutionException(
+                    "Error while parsing the npanday_setting.xml \n" + e1);
+            } catch (IOException e1) {
+                throw new MojoExecutionException(
+                    "Error while parsing the npanday_setting.xml \n" + e1);
+            }
+            Document document = parser.getDocument();
+            NodeList nodes = document.getElementsByTagName("sdkInstallRoot");
+
+            for (int i = 0; i < nodes.getLength(); i++)
+                sdkandFrameworkPathes.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
+            nodes = document.getElementsByTagName("executablePath");
+            for (int i = 0; i < nodes.getLength(); i++)
+                sdkandFrameworkPathes.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
+            nodes = document.getElementsByTagName("installRoot");
+            for (int i = 0; i < nodes.getLength(); i++)
+                sdkandFrameworkPathes.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
+        }
+        AdddefaultSDKPath(sdkandFrameworkPathes);
+        if (!wsdlCommand(sdkandFrameworkPathes, wsdlparameter))
+            throw new MojoExecutionException(
+                "wsdl.exe could not be found. Add "
+                        + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> to the NPanday file");
+
+        String cslocation = "/target:library \"" + cspath + "\"";
+        if (!cscCommand(sdkandFrameworkPathes, cslocation))
+            throw new MojoExecutionException("csc.exe could not be found Add "
+                    + "<executablePath>.NetFrameworkPath</executablePath> to the NPanday file");
+    }
+
+    /**
+     * Find and executes the commands wsdl.exe and csc.exe
+     */
+    public void execute() throws MojoExecutionException {
+        String os = System.getProperty("os.name");
+        if (!outputDirectory.exists())
+            outputDirectory.mkdirs();
+        getLog().info("Operation system:" + os);
+        String namespace = "defaultnamespace" + (int) (Math.random() * 100);
+        if (wsdl_location.contains("-") && wsdl_location.contains("."))
+            namespace = wsdl_location.substring(
+                wsdl_location.lastIndexOf('-') + 1,
+                wsdl_location.lastIndexOf('.'));
+
+        if (os.toUpperCase().contains("WINDOWS")) {
+            wsdlparameter = "/serverInterface /n:" + namespace + " \""
+                    + wsdl_location + "\"";
+            WindowsMode();
+        }
+        else {
+            wsdlparameter = "-server -n:" + namespace + " \""
+                    + wsdl_location + "\"";
+            LinuxMode();
+        }
+    }
 }

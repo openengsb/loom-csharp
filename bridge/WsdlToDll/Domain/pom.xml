@@ -16,7 +16,7 @@
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
   <parent>
-    <artifactId>GenerateDLL</artifactId>
+    <artifactId>parent</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
@@ -41,7 +41,6 @@
   <version>1.0.0-SNAPSHOT</version>
   <repositories>
     <repository>
-      <!-- OEB snapshots are deployed here -->
       <id>sonatype-snapshots</id>
       <name>Sonaype Snapsht Repository</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
