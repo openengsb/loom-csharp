@@ -32,15 +32,16 @@ namespace Bridge.ServiceTestConsole
         private static ILog logger = LogManager.GetLogger(typeof(TestDomainConnector));
         public TestDomainConnector():base(logger)
         {
-        }
-        public string runTests()
+        }        
+        public string runTests(OpenEngSBFileModel args0)
         {
             logger.Info("run test simulation");
             return "done";
         }
-        public void runTestsProcessId(long args0, bool args0Specified)
+
+        public void runTestsProcessId(OpenEngSBFileModel args0, long args1, bool args1Specified)
         {
-            logger.Info("run test "+args0+ " "+args0Specified);            
+            logger.Info("run test " + args1 + " " + args1Specified);            
         }
     }
 }

@@ -34,19 +34,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apache.NMS">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_1-SNAPSHOT\Apache.NMS.dll</HintPath>
+      <HintPath>.references\wrapped.csharp\Apache.NMS-1.5.0_2\Apache.NMS.dll</HintPath>
     </Reference>
     <Reference Include="Apache.NMS.ActiveMQ">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
+      <HintPath>.references\wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_3\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
     <Reference Include="fastJSON">
-      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_1-SNAPSHOT\fastJSON.dll</HintPath>
+      <HintPath>.references\wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_1-SNAPSHOT\log4net.dll</HintPath>
+      <HintPath>.references\wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-5.0_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>.references\wrapped.csharp\Newtonsoft.Json-5.0_2\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
