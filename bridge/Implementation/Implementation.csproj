@@ -93,7 +93,7 @@
     <Compile Include="Common\RemoteType.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\AuthenticationInfo.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDescription.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorId.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDefinition.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\Data.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\DomainProxy.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\DomainReverseProxy.cs" />
