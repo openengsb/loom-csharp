@@ -62,7 +62,7 @@
             <includeSource>OpenEngSB2_4_0\Remote\RemoteObjects\MethodResultMessage.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\AuthenticationInfo.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDescription.cs</includeSource>
-            <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorId.cs</includeSource>
+            <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDefinition.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\RemoteObjects\Data.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\DomainProxy.cs</includeSource>
             <includeSource>OpenEngSB3_0_0\Remote\DomainReverseProxy.cs</includeSource>

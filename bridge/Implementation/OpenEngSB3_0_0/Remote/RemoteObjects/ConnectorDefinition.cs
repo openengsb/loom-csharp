@@ -25,11 +25,11 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// <summary>
     /// This class  indentifies an Connector instance on the bus.
     /// </summary>
-    public class ConnectorId
+    public class ConnectorDefinition
     {
         #region Variables
-        public String domainType { get; set; }
-        public String connectorType { get; set; }
+        public String domainId { get; set; }
+        public String connectorId { get; set; }
         public String instanceId { get; set; }
         #endregion
     }

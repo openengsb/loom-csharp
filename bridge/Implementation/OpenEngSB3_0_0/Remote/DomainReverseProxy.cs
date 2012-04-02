@@ -87,7 +87,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <summary>
         /// Identifies the service-instance.
         /// </summary>
-        private ConnectorId connectorId;
+        private ConnectorDefinition connectorDefinition;
         #endregion
         #region Propreties
         public T DomainService
@@ -114,7 +114,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.portIn = new JmsIncomingPort(destination);
-            this.connectorId = null;
+            this.connectorDefinition = null;
             this.username = "admin";
             this.password = "password";
         }
@@ -137,7 +137,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.portIn = new JmsIncomingPort(destination);
-            this.connectorId = null;
+            this.connectorDefinition = null;
             this.username = username;
             this.password = password;
         }
@@ -187,7 +187,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             String classname = "org.openengsb.connector.usernamepassword.Password";
 
             IList<string> classes = new List<string>();
-            classes.Add("org.openengsb.core.api.model.ConnectorId");
+            classes.Add("org.openengsb.core.api.model.ConnectorDefinition");
             classes.Add("org.openengsb.core.api.model.ConnectorDescription");
 
             IList<object> args = new List<object>();
@@ -196,12 +196,12 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             connectorDescription.attributes.Add("portId", _CREATION_PORT);
             connectorDescription.attributes.Add("destination", destination);
 
-            connectorId = new ConnectorId();
-            connectorId.connectorType = _CREATION_CONNECTOR_TYPE;
-            connectorId.instanceId = serviceId;
-            connectorId.domainType = domainType;
+            connectorDefinition = new ConnectorDefinition();
+            connectorDefinition.connectorId = _CREATION_CONNECTOR_TYPE;
+            connectorDefinition.instanceId = serviceId;
+            connectorDefinition.domainId = domainType;
 
-            args.Add(connectorId);
+            args.Add(connectorDefinition);
             args.Add(connectorDescription);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes,null);
@@ -227,10 +227,10 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             metaData.Add("serviceId", CREATION_SERVICE_ID);
 
             IList<string> classes = new List<string>();
-            classes.Add("org.openengsb.core.api.model.ConnectorId");
+            classes.Add("org.openengsb.core.api.model.ConnectorDefinition");
 
             IList<object> args = new List<object>();
-            args.Add(connectorId);
+            args.Add(connectorDefinition);
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes,null);
 
