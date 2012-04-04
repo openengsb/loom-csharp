@@ -20,7 +20,7 @@
 
   <parent>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-	<artifactId>Root</artifactId>
+	<artifactId>loom-csharp-common-bridge-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
