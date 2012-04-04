@@ -15,11 +15,26 @@
   ~    limitations under the License.
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>Root</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <artifactId>Root</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+  <artifactId>Interface</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>library</packaging>
+
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Interface</name>
+  <description>
+    Container for the interfaces required for the communication between the OpenEngSB and the
+    Bridge. Those are all the interfaces which should be required to a client.
+  </description>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -27,16 +42,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>Interface</artifactId>
-  <version>1.0.0.0</version>
-  <packaging>library</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Interface</name>
+
   <build>
     <sourceDirectory>./</sourceDirectory>
     <plugins>
@@ -56,4 +68,6 @@
       </plugin>
     </plugins>
   </build>
+
 </project>
+

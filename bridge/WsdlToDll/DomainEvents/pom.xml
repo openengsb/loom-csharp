@@ -15,17 +15,24 @@
   ~    limitations under the License.
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>parent</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
+
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+  <artifactId>TestDomainEventsInterfaces</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomainEvents</name>
   <description>Compile TestDomainEvents wsdl to dll</description>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>TestDomainEventsDll</artifactId>
-  <packaging>pom</packaging>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -33,40 +40,18 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <version>1.0.0-SNAPSHOT</version>
-  <repositories>
-    <repository>
-      <id>sonatype-snapshots</id>
-      <name>Sonaype Snapsht Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <dependencies>
-    <dependency>
-      <groupId>org.openengsb.domain</groupId>
-      <artifactId>org.openengsb.domain.test</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
-      <classifier>TestDomain</classifier>
-      <type>wsdl</type>
-    </dependency>
-  </dependencies>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.4</version>
         <executions>
           <execution>
             <id>copy</id>
@@ -83,6 +68,7 @@
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
+				  <destFileName>TestDomainEvents.wsdl</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -90,11 +76,11 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.openengsb.plugin</groupId>
-        <artifactId>wsdl-to-dll</artifactId>
-        <version>1.3-SNAPSHOT</version>
-        <configuration>          
-          <wsdl_location>${basedir}\target\org.openengsb.domain.test-3.0.0-20120330.060717-1-TestDomainEvents.wsdl</wsdl_location>
+        <groupId>org.openengsb.loom.csharp.common</groupId>
+        <artifactId>wsdltodll-maven-plugin</artifactId>
+        <configuration>
+          <wsdl_location>${project.build.directory}\TestDomainEvents.wsdl</wsdl_location>
+		  <namespace>TestDomainEvents</namespace>
         </configuration>
         <executions>
           <execution>
@@ -105,6 +91,39 @@
           </execution>
         </executions>
       </plugin>
+	  <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/TestDomainEventsInterfaces.dll</file>
+                  <type>dll</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.openengsb.domain</groupId>
+      <artifactId>org.openengsb.domain.test</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <classifier>TestDomainEvents</classifier>
+      <type>wsdl</type>
+    </dependency>
+  </dependencies>
+
 </project>
+

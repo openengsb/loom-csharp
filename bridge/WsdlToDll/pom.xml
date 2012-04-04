@@ -15,12 +15,28 @@
   ~    limitations under the License.
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
+    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <artifactId>Root</artifactId>
-    <groupId>org.openengsb.loom.csharp.common</groupId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
   </parent>
+
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+  <artifactId>parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL</name>
+  <description>Parent Pom of the wrapped OpenEngSB interface libraries</description>
+
+  <modules>
+    <module>Domain</module>
+    <module>DomainEvents</module>
+  </modules>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -28,19 +44,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>parent</artifactId>
-  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL</name>
-  <modules>
-    <module>Domain</module>
-    <module>DomainEvents</module>
-  </modules>
+
 </project>
+

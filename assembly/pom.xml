@@ -15,12 +15,25 @@
   ~    limitations under the License.
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.openengsb.loom.csharp.common</groupId>
     <artifactId>Root</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+
+  <groupId>org.openengsb.loom.csharp.common</groupId>
+  <artifactId>loom-csharp-common</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Assembly</name>
+  <description>
+    Pom to assembly together a source and binary distribution of the .net bridge.
+  </description>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -28,16 +41,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
-  <groupId>org.openengsb.loom.csharp.common</groupId>
-  <artifactId>loom-csharp-common</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Assembly</name>
+
   <build>
     <plugins>
       <plugin>
@@ -45,23 +55,23 @@
         <version>2.5</version>
         <executions>
           <execution>
-            <id>copy-resources</id>           
+            <id>copy-resources</id>
             <phase>validate</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
             <configuration>
               <outputDirectory>${basedir}/target/dlls</outputDirectory>
-              <resources>          
+              <resources>
                 <resource>
-                  <directory>${basedir}/../target/</directory>  				 
+                  <directory>${basedir}/../target/</directory>
                 </resource>
-              </resources>              
-            </configuration>            
+              </resources>
+            </configuration>
           </execution>
-        </executions>		
+        </executions>
       </plugin>
-	  <plugin>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <appendAssemblyId>false</appendAssemblyId>
@@ -79,6 +89,8 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>   
+    </plugins>
   </build>
+
 </project>
+

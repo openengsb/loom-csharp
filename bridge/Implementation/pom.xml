@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>Root</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
   <artifactId>Implementation</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>library</packaging>
+
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Implementation</name>
+  <description>
+    Implementation of the Communication bridge between the OpenEngSB an a local
+    csharp or dotnet application.
+  </description>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -16,11 +27,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
+
   <build>
     <sourceDirectory>./</sourceDirectory>
     <plugins>
@@ -29,7 +42,7 @@
         <artifactId>maven-compile-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <frameworkVersion>4.0</frameworkVersion>
+          <frameworkVersion>${dotnet.framework.version}</frameworkVersion>
           <includeSources>
             <includeSource>Exceptions\ConnectOpenEngSBException.cs</includeSource>
             <includeSource>OpenEngSB2_4_0\RealDomainFactory.cs</includeSource>
@@ -80,42 +93,45 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Interface</artifactId>
-      <version>1.0.0.0</version>
       <type>dotnet-library</type>
+	  <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS</artifactId>
-      <version>1.5.0_2</version>
+	  <version>1.5.0_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_3</version>
+	  <version>1.5.0_3</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Newtonsoft.Json</artifactId>
-      <version>5.0_2</version>
+	  <version>5.0_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>fastJSON</artifactId>
-      <version>1.9.6_2</version>
+	  <version>1.9.6_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
-      <version>1.2.11_2</version>
       <type>dotnet-library</type>
+	  <version>1.2.11_2</version>
     </dependency>
   </dependencies>
+
 </project>
+

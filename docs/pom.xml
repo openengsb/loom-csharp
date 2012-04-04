@@ -16,6 +16,11 @@
   <packaging>pom</packaging>
 
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Manual</name>
+  <description>
+    The manual describing the usage of the common .net integration components. This manual
+    describes in detail the layout and configuration of the bridge and other components from
+    this framework.
+  </description>
 
   <build>
     <plugins>
@@ -70,7 +75,7 @@
             </execution>
           </executions>
         </plugin>
-<plugin>
+        <plugin>
           <groupId>com.agilejava.docbkx</groupId>
           <artifactId>docbkx-maven-plugin</artifactId>
           <executions>

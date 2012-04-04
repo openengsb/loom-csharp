@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>Root</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <artifactId>Root</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
   <artifactId>ServiceTestConsole</artifactId>
-  <packaging>exe</packaging>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>dotnet-executable</packaging>
+
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ServiceTestConsole</name>
+  <description>
+    Exe bundle to be started and executed seperately to test the OpenEngSB.
+  </description>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -16,11 +26,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
     <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
+
   <build>
     <sourceDirectory>./</sourceDirectory>
     <plugins>
@@ -29,7 +41,7 @@
         <artifactId>maven-compile-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <frameworkVersion>4.0</frameworkVersion>
+          <frameworkVersion>${dotnet.framework.version}</frameworkVersion>
           <includeSources>
             <includeSource>TestDomainConnector.cs</includeSource>
             <includeSource>Program.cs</includeSource>
@@ -39,40 +51,38 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Implementation</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
+	  <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Interface</artifactId>
-      <version>1.0.0.0</version>
       <type>dotnet-library</type>
+	  <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>TestDomainInterfaces</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>TestDomainInterfaces</artifactId>
-      <version>1.0.0.0</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\Domain\target\TestDomainInterfaces.dll</systemPath>
+	  <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>TestDomainEventsInterfaces</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>TestDomainEventsInterfaces</artifactId>
-      <version>1.0.0.0</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\DomainEvents\target\TestDomainEventsInterfaces.dll</systemPath>
+	  <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>wrapped.csharp</groupId>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
-      <version>1.2.11_2</version>
+	  <version>1.2.11_2</version>
       <type>dotnet-library</type>
     </dependency>
   </dependencies>
+
 </project>
