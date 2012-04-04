@@ -19,10 +19,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>parent</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+	<artifactId>Root</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>..</relativePath>
+    <relativePath>../..</relativePath>
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
