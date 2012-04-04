@@ -5,7 +5,7 @@
 
   <parent>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-	<artifactId>loom-csharp-common-bridge-parent</artifactId>
+    <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
@@ -99,37 +99,37 @@
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Interface</artifactId>
       <type>dotnet-library</type>
-	  <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS</artifactId>
-	  <version>1.5.0_2</version>
+      <version>1.5.0_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS.ActiveMQ</artifactId>
-	  <version>1.5.0_3</version>
+      <version>1.5.0_3</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Newtonsoft.Json</artifactId>
-	  <version>5.0_2</version>
+      <version>5.0_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>fastJSON</artifactId>
-	  <version>1.9.6_2</version>
+      <version>1.9.6_2</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <type>dotnet-library</type>
-	  <version>1.2.11_2</version>
+      <version>1.2.11_2</version>
     </dependency>
   </dependencies>
 

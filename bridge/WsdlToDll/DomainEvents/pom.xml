@@ -20,7 +20,7 @@
 
   <parent>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-	<artifactId>loom-csharp-common-bridge-parent</artifactId>
+    <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
@@ -68,7 +68,7 @@
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-				  <destFileName>TestDomainEvents.wsdl</destFileName>
+                  <destFileName>TestDomainEvents.wsdl</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -80,7 +80,7 @@
         <artifactId>wsdltodll-maven-plugin</artifactId>
         <configuration>
           <wsdl_location>${project.build.directory}\TestDomainEvents.wsdl</wsdl_location>
-		  <namespace>TestDomainEvents</namespace>
+          <namespace>TestDomainEvents</namespace>
         </configuration>
         <executions>
           <execution>
@@ -91,7 +91,7 @@
           </execution>
         </executions>
       </plugin>
-	  <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>

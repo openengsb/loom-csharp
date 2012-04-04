@@ -20,7 +20,7 @@
 
   <parent>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-	<artifactId>loom-csharp-common-bridge-parent</artifactId>
+    <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
@@ -29,7 +29,7 @@
   <artifactId>TestDomainInterfaces</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
-  
+
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomain</name>
   <description>Compile TestDomain wsdl to dll</description>
 
@@ -68,7 +68,7 @@
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-				  <destFileName>TestDomain.wsdl</destFileName>
+                  <destFileName>TestDomain.wsdl</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -80,7 +80,7 @@
         <artifactId>wsdltodll-maven-plugin</artifactId>
         <configuration>
           <wsdl_location>${project.build.directory}/TestDomain.wsdl</wsdl_location>
-		  <namespace>TestDomain</namespace>
+          <namespace>TestDomain</namespace>
         </configuration>
         <executions>
           <execution>
@@ -91,7 +91,7 @@
           </execution>
         </executions>
       </plugin>
-	  <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
@@ -120,7 +120,7 @@
       <groupId>org.openengsb.domain</groupId>
       <artifactId>org.openengsb.domain.test</artifactId>
       <version>3.0.0-SNAPSHOT</version>
-	  <classifier>TestDomain</classifier>
+      <classifier>TestDomain</classifier>
       <type>wsdl</type>
     </dependency>
   </dependencies>
