@@ -26,12 +26,12 @@
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>TestDomainEventsInterfaces</artifactId>
+  <artifactId>ExampleDomainEventsInterfaces</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomainEvents</name>
-  <description>Compile TestDomainEvents wsdl to dll</description>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: ExampleDomainEvents</name>
+  <description>Compile ExampleDomainEvents wsdl to dll</description>
 
   <licenses>
     <license>
@@ -104,7 +104,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/TestDomainEventsInterfaces.dll</file>
+                  <file>target/ExampleDomainEventsInterfaces.dll</file>
                   <type>dll</type>
                 </artifact>
               </artifacts>

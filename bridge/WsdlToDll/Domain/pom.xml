@@ -26,12 +26,12 @@
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>TestDomainInterfaces</artifactId>
+  <artifactId>ExampleDomainInterfaces</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
 
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: TestDomain</name>
-  <description>Compile TestDomain wsdl to dll</description>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: ExampleDomain</name>
+  <description>Compile ExampleDomain wsdl to dll</description>
 
   <licenses>
     <license>

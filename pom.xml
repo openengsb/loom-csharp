@@ -4,10 +4,6 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <properties>
-    <dotnet.framework.version>4.0</dotnet.framework.version>
-  </properties>
-
   <parent>
     <groupId>org.openengsb</groupId>
     <artifactId>openengsb-root</artifactId>

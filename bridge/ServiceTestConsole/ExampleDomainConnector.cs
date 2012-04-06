@@ -20,28 +20,43 @@ using System.Linq;
 using System.Web.Services;
 using System.Text;
 using log4net;
-using TestDomain;
+using ExampleDomain;
 using Bridge.Implementation;
 namespace Bridge.ServiceTestConsole
 {
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class TestDomainConnector : RegistrationFunctions,ITestDomainSoap11Binding
+    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoap11Binding
     {
-        private static ILog logger = LogManager.GetLogger(typeof(TestDomainConnector));
-        public TestDomainConnector():base(logger)
+        private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
+        
+        public ExampleDomainConnector() : base(logger)
         {
         }        
-        public string runTests(OpenEngSBFileModel args0)
+
+        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
         {
-            logger.Info("run test simulation");
+            logger.Info("run doSomethingWithEnum with " + args0);
             return "done";
         }
 
-        public void runTestsProcessId(OpenEngSBFileModel args0, long args1, bool args1Specified)
+        public string doSomethingWithLogEvent(LogEvent args0)
         {
-            logger.Info("run test " + args1 + " " + args1Specified);            
+            logger.Info("run doSomethingWithLogEvent with " + args0);
+            return "done";
+        }
+
+        public string doSomethingWithMessage(string args0)
+        {
+            logger.Info("run doSomethingWithMessage with " + args0);
+            return "done";
+        }
+
+        public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
+        {
+            logger.Info("run doSomethingWithModel with " + args0);
+            return new ExampleResponseModel();
         }
     }
 }

@@ -23,8 +23,8 @@ using System.Reflection;
 using System.IO;
 using Bridge.Implementation;
 using Bridge.Interface;
-using TestDomain;
-using TestDomainEvents;
+using ExampleDomain;
+using ExampleDomainEvents;
 
 namespace Bridge.ServiceTestConsole
 {
@@ -42,16 +42,17 @@ namespace Bridge.ServiceTestConsole
             string domainName = "test";
 
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
-            ITestDomainSoap11Binding localDomain = new TestDomainConnector();
+            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the osenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            ITestDomainEventsSoap11Binding remotedomain = factory.getEventhandler<ITestDomainEventsSoap11Binding>(destination);           
-            TestStartEvent tstart = new TestStartEvent();
-            tstart.name = "Test";
-            tstart.processId = 0;
-            tstart.testId = "1";            
-            remotedomain.raiseTestStartEvent(tstart);
+            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
+            ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
+            logEvent.name = "Example";
+            logEvent.processId = 0;
+            logEvent.level = new ExampleDomainEvents.LogEvent_LogLevel();
+            logEvent.message = "remoteTestEventLog";
+            remotedomain.raiseEvent(logEvent);
             Console.ReadKey();
             factory.UnregisterDomainService(localDomain);            
         }

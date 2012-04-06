@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
-
+  
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <artifactId>loom-csharp-common-bridge-parent</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
@@ -41,9 +41,9 @@
         <artifactId>maven-compile-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <frameworkVersion>${dotnet.framework.version}</frameworkVersion>
+          <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
-            <includeSource>TestDomainConnector.cs</includeSource>
+            <includeSource>ExampleDomainConnector.cs</includeSource>
             <includeSource>Program.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
           </includeSources>
@@ -56,26 +56,26 @@
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Implementation</artifactId>
-      <type>dotnet-library</type>
       <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Interface</artifactId>
-      <type>dotnet-library</type>
       <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>TestDomainInterfaces</artifactId>
-      <type>dotnet-library</type>
+      <artifactId>ExampleDomainEventsInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>TestDomainEventsInterfaces</artifactId>
-      <type>dotnet-library</type>
+      <artifactId>ExampleDomainInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
@@ -86,4 +86,3 @@
   </dependencies>
 
 </project>
-
