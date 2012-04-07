@@ -117,7 +117,7 @@
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>fastJSON</artifactId>
       <version>1.9.6_2</version>
-	  <type>dotnet-library</type>
+      <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
@@ -134,3 +134,4 @@
   </dependencies>
 
 </project>
+
