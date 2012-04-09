@@ -66,7 +66,7 @@
     <para><code>DomainFactoryProvider.GetDomainFactoryInstance("3.0.0")</code></para>
     <para>The other way, is by indicating the URL, whcih returns the version number. This could look
       like this:</para>
-    <para><code>DomainFactoryProvider.GetDomainFactoryInstance("http://localhost:6549");</code></para>
+    <para><code>DomainFactoryProvider.GetDomainFactoryInstance(new Uri("http://localhost:8090"));</code></para>
     <para>In the next step, the methods for the answer from the Domain has to be specified. The
       methods, which can be invoked by the domain are defined in the "DomainName"Domain and have to
       be implementend in a class (inherite from the corresponding dll). Furthermore, the specified
