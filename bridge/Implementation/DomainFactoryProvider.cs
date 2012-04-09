@@ -24,6 +24,7 @@ using System.IO;
 using Bridge.Interface;
 using Bridge.Implementation.Exceptions;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Bridge.Implementation
 {
@@ -42,7 +43,8 @@ namespace Bridge.Implementation
             try
             {
                 String versionnbr = stringVersion.Replace(".", "");
-                versionnbr = versionnbr.Replace("-SNAPSHOT", "");
+                Regex rgx = new Regex("-.*");
+                versionnbr = rgx.Replace(versionnbr, "");
                 int version = int.Parse(versionnbr);
                 if (version >= 300) return new Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory();
                 if (version >= 240) return new Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory();
