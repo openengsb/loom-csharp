@@ -36,18 +36,6 @@ namespace Bridge.Implementation.Common
         public string LocalTypeFullName { get; set; }
         #endregion
         #region Constructor
-       /* /// <summary>
-        /// Default constructor
-        /// </summary>
-        /// <param name="typeString">Type in a String format</param>
-        public RemoteType(string typeString)
-        {
-            FullName = typeString;
-            if (FullName.Contains("$")) Name = FullName.Split('$').Last().Trim();
-            else Name = FullName.Split('.').Last().Trim();
-            
-            SetLocalTypeFullName();
-        }*/
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
             FullName = typeString;
@@ -57,19 +45,19 @@ namespace Bridge.Implementation.Common
                 LocalTypeFullName = FullName;
                 foreach (ParameterInfo par in parameterInfos)
                 {
-
                     if (par.ParameterType.FullName.Contains(Name))
                     {
                         String tmp = par.ParameterType.FullName;
-                        int start=0;
-                        for (int i=tmp.IndexOf(Name)-2;i>=0;i--){
+                        int start = 0;
+                        for (int i = tmp.IndexOf(Name) - 2; i >= 0; i--)
+                        {
                             Char ts = tmp[i];
                             if (!Char.IsLetter(tmp[i])) { start = i + 1; break; }
                         }
                         int xy = tmp.IndexOf(Name) - start + Name.Length;
                         tmp = tmp.Substring(start, xy);
-                        
-                        LocalTypeFullName = tmp;                        
+
+                        LocalTypeFullName = tmp;
                     }
                 }
             }
@@ -83,7 +71,7 @@ namespace Bridge.Implementation.Common
                         LocalTypeFullName = par.ParameterType.FullName;
                         break;
                     }
-                }                
+                }
             }
         }
         #endregion

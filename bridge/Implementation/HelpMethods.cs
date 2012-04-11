@@ -22,6 +22,7 @@ using System.Text;
 using System.Reflection;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
+using Bridge.Implementation.Common;
 
 namespace Bridge.Implementation
 {
@@ -119,7 +120,7 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="args">List of parameters for a methodcall</param>
         /// <param name="m">Methodinfo</param>
-        public static int addTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        public static int AddTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;
@@ -136,5 +137,46 @@ namespace Bridge.Implementation
             }
             return parameterLength;
         }
+        /// <summary>
+        /// Tests if the list of type names are equal to the types of the method parameter.
+        /// </summary>
+        /// <param name="typeStrings"></param>
+        /// <param name="parameterInfos"></param>
+        /// <returns></returns>
+        public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
+        {
+            if (typeStrings.Count != parameterInfos.Length)
+                throw new ApplicationException("length of type-string-arrays are not equal");
+
+            for (int i = 0; i < parameterInfos.Length; ++i)
+            {
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Test if two types are equal
+        /// TODO remove "null" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
+        /// </summary>
+        /// <param name="remoteType">Remote Type</param>
+        /// <param name="localType">Local Type</param>
+        /// <returns>If to types are equal</returns>
+        private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
+        {
+            if (remoteType.Equals("null")) return true;
+            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
+
+            if (localType.Name.ToLower().Contains("nullable"))
+            {
+                return (localType.FullName.Contains(remote_typ.Name));
+            }
+            return (remote_typ.Name.Equals(localType.Name));
+        }
+
     }
 }

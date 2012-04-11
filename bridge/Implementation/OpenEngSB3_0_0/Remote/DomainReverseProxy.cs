@@ -34,7 +34,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// client side for the bus.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DomainReverseProxy<T>: IStoppable
+    public class DomainReverseProxy<T> : IStoppable
     {
         #region Const.
         private const string _CREATION_QUEUE = "receive";
@@ -107,7 +107,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
         {
             this.marshaller = new JsonMarshaller();
-            this.isEnabled = true;            
+            this.isEnabled = true;
             this.domainService = localDomainService;
             this.destination = Destination.CreateDestinationString(host, serviceId);
             this.queueThread = null;
@@ -127,7 +127,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType,String username,String password)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
         {
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
@@ -204,18 +204,18 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             args.Add(connectorDefinition);
             args.Add(connectorDescription);
 
-            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes,null);
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes, null);
             Message message = Message.createInstance(creationCall, id.ToString(), true, "");
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = _CREATION_QUEUE;
-            
-            Data data=Data.CreateInstance(password);
-            AuthenticationInfo autinfo=AuthenticationInfo.createInstance(classname,data);
+
+            Data data = Data.CreateInstance(password);
+            AuthenticationInfo autinfo = AuthenticationInfo.createInstance(classname, data);
             SecureMethodCallRequest secureRequest = SecureMethodCallRequest.createInstance(username, autinfo, message);
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request);         
+            portOut.Send(request);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             IList<object> args = new List<object>();
             args.Add(connectorDefinition);
 
-            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes,null);
+            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
             Guid id = Guid.NewGuid();
             String classname = "org.openengsb.connector.usernamepassword.Password";
@@ -240,21 +240,21 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             AuthenticationInfo authentification = AuthenticationInfo.createInstance(classname, data);
 
             Message message = Message.createInstance(deletionCall, id.ToString(), true, "");
-            SecureMethodCallRequest callRequest = SecureMethodCallRequest.createInstance(username,authentification,message);
+            SecureMethodCallRequest callRequest = SecureMethodCallRequest.createInstance(username, authentification, message);
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = _CREATION_QUEUE;
 
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(callRequest);
-            portOut.Send(request,id.ToString());
-            
+            portOut.Send(request, id.ToString());
+
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId));
             string reply = portIn.Receive();
-            
+
             MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
             if (result.message.result.type == MethodResult.ReturnType.Exception)
-                throw new ApplicationException("Remote Exception while deleting service proxy");            
+                throw new ApplicationException("Remote Exception while deleting service proxy");
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             if (methInfo == null)
                 throw new ApplicationException("No corresponding method found");
 
-            object[] arguments = CreateMethodArguments(request.message.methodCall,methInfo);
+            object[] arguments = CreateMethodArguments(request.message.methodCall, methInfo);
 
             object returnValue = null;
             try
@@ -329,7 +329,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             methodResult.type = type;
             methodResult.arg = returnValue;
             MethodResultMessage methodResultMessage = new MethodResultMessage();
-            methodResultMessage.message=new MessageResult();
+            methodResultMessage.message = new MessageResult();
             methodResultMessage.message.callId = correlationId;
 
             if (returnValue == null)
@@ -393,77 +393,27 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             if (methodCallWrapper.args.Count > methodCallWrapper.classes.Count)
             {
-                int tmp=methodCallWrapper.args.Count - methodCallWrapper.classes.Count;
+                int tmp = methodCallWrapper.args.Count - methodCallWrapper.classes.Count;
                 int i;
                 Object[] nullObject = new object[1];
                 String nullObjectString = nullObject.GetType().ToString();
-                for (i = 0;i<tmp; i++)
-                {
+                for (i = 0; i < tmp; i++)
                     methodCallWrapper.classes.Add(nullObject.GetType().ToString());
-                }
             }
 
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
-                if (methodCallWrapper.methodName.ToLower() != methodInfo.Name.ToLower())
-                {
-                    continue;
-                }
+                if (methodCallWrapper.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
                 List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
                 if (parameterResult.Count != methodCallWrapper.args.Count)
                 {
-                    if (HelpMethods.addTrueForSpecified(parameterResult, methodInfo)!= methodCallWrapper.args.Count) continue;                   
+                    if (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCallWrapper.args.Count) continue;
                 }
-                if (!TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>()))
-                {
-                    continue;
-                }
-
+                if (!HelpMethods.TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>())) continue;
                 return methodInfo;
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Tests if the list of type names are equal to the types of the method parameter.
-        /// </summary>
-        /// <param name="typeStrings"></param>
-        /// <param name="parameterInfos"></param>
-        /// <returns></returns>
-        private bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
-        {
-            if (typeStrings.Count != parameterInfos.Length)
-                throw new ApplicationException("length of type-string-arrays are not equal");
-
-            for (int i = 0; i < parameterInfos.Length; ++i)
-            {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Test if two types are equal
-        /// TODO remove "null" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
-        /// </summary>
-        /// <param name="remoteType">Remote Type</param>
-        /// <param name="localType">Local Type</param>
-        /// <returns>If to types are equal</returns>
-        private bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
-        {
-            if (remoteType.Equals("null")) return true;
-            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
-            // leading underscore fix
-            if (localType.Name.ToLower().Contains("nullable"))
-            {
-                return (localType.FullName.Contains(remote_typ.Name));
-            }
-            return (remote_typ.Name.Equals(localType.Name));
         }
         #endregion
     }
