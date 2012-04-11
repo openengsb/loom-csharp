@@ -97,5 +97,44 @@ namespace Bridge.Implementation
             String tmp = element.Substring(1);
             return first + tmp;
         }
+        /// <summary>
+        /// Add true objects for the Specified fields
+        /// </summary>
+        /// <param name="args">List of parameters for a methodcall</param>
+        /// <param name="m">Methodinfo</param>
+        public static void addTrueForSpecified(IList<object> args, MethodInfo m)
+        {
+            ParameterInfo[] paraminfo = m.GetParameters();
+            if (paraminfo.Length <= args.Count) return;
+            int i = 0;
+            while (i + 1 < paraminfo.Length)
+            {
+                String paramName = paraminfo[i].Name + "Specified";
+                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
+                i = i + 2;
+            }
+        }
+        /// <summary>
+        /// Add true objects for the Specified fields
+        /// </summary>
+        /// <param name="args">List of parameters for a methodcall</param>
+        /// <param name="m">Methodinfo</param>
+        public static int addTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        {
+            ParameterInfo[] parameters = m.GetParameters();
+            int i = 0;
+            int parameterLength = 0;
+            while (i + 1 < parameters.Length)
+            {
+                String paramName = parameters[i].Name + "Specified";
+                if ((parameters[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(parameters[i + 1].Name))
+                {
+                    parameterResult.Remove(parameters[i + 1]);
+                    parameterLength++;
+                }
+                i = i + 2;
+            }
+            return parameterLength;
+        }
     }
 }

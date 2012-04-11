@@ -294,7 +294,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             if (methInfo == null)
                 throw new ApplicationException("No corresponding method found");
 
-            object[] arguments = CreateMethodArguments(request.message.methodCall);
+            object[] arguments = CreateMethodArguments(request.message.methodCall,methInfo);
 
             object returnValue = null;
             try
@@ -348,17 +348,16 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         /// <param name="methodCall">MethodCall</param>
         /// <returns>Arguments</returns>
-        private object[] CreateMethodArguments(RemoteMethodCall methodCall)
+        private object[] CreateMethodArguments(RemoteMethodCall methodCall, MethodInfo methodInfo)
         {
             IList<object> args = new List<object>();
 
-            Assembly asm = typeof(T).GetType().Assembly;
-            for (int i = 0; i < methodCall.args.Count; ++i)
+            Assembly asm = typeof(T).Assembly;
+            for (int i = 0; i < methodCall.args.Count; i++)
             {
                 object arg = methodCall.args[i];
-                RemoteType remoteType = new RemoteType(methodCall.classes[i]);
+                RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
-                
                 if (type == null)
                     type = Type.GetType(remoteType.LocalTypeFullName);
 
@@ -372,7 +371,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
                 }
                 else if (type.IsEnum)
                 {
-                    obj = Enum.Parse(type,(string) arg);
+                    obj = Enum.Parse(type, (string)arg);
                 }
                 else
                 {
@@ -380,7 +379,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
                 }
                 args.Add(obj);
             }
-
+            HelpMethods.addTrueForSpecified(args, methodInfo);
             return args.ToArray();
         }
 
@@ -410,12 +409,12 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
                 {
                     continue;
                 }
-
-                if (methodInfo.GetParameters().Length != methodCallWrapper.args.Count)
+                List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
+                if (parameterResult.Count != methodCallWrapper.args.Count)
                 {
-                    continue;
+                    if (HelpMethods.addTrueForSpecified(parameterResult, methodInfo)!= methodCallWrapper.args.Count) continue;                   
                 }
-                if (!TypesAreEqual(methodCallWrapper.classes, methodInfo.GetParameters()))
+                if (!TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>()))
                 {
                     continue;
                 }
@@ -439,7 +438,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             for (int i = 0; i < parameterInfos.Length; ++i)
             {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType))
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
                 {
                     return false;
                 }
@@ -455,12 +454,16 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="remoteType">Remote Type</param>
         /// <param name="localType">Local Type</param>
         /// <returns>If to types are equal</returns>
-        private bool TypeIsEqual(string remoteType, Type localType)
+        private bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
             if (remoteType.Equals("null")) return true;
-            RemoteType remote_typ = new RemoteType(remoteType);
+            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
             // leading underscore fix
-            return (remote_typ.LocalTypeFullName == localType.FullName);
+            if (localType.Name.ToLower().Contains("nullable"))
+            {
+                return (localType.FullName.Contains(remote_typ.Name));
+            }
+            return (remote_typ.Name.Equals(localType.Name));
         }
         #endregion
     }

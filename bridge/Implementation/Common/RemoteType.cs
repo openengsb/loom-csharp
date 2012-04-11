@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace Bridge.Implementation.Common
 {
@@ -35,46 +36,55 @@ namespace Bridge.Implementation.Common
         public string LocalTypeFullName { get; set; }
         #endregion
         #region Constructor
-        /// <summary>
+       /* /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="typeString">Type in a String format</param>
         public RemoteType(string typeString)
         {
             FullName = typeString;
-            Name = FullName.Split('.').Last().Trim();
+            if (FullName.Contains("$")) Name = FullName.Split('$').Last().Trim();
+            else Name = FullName.Split('.').Last().Trim();
+            
             SetLocalTypeFullName();
-        }
-        #endregion
-        #region Public Methods
-        /// <summary>
-        /// Find the name of the local Type
-        /// </summary>
-        public void SetLocalTypeFullName()
+        }*/
+        public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
-            // Workaround: built-in types.
-            if (Name == "String")
+            FullName = typeString;
+            if (FullName.Contains("$"))
             {
-                LocalTypeFullName = "System.String";
-                return;
-            }
+                Name = FullName.Split('$').Last().Trim();
+                LocalTypeFullName = FullName;
+                foreach (ParameterInfo par in parameterInfos)
+                {
 
-            StringBuilder builder = new StringBuilder();
-            int counter = 1;
-            for (int i = 0; i < FullName.Length; ++i)
+                    if (par.ParameterType.FullName.Contains(Name))
+                    {
+                        String tmp = par.ParameterType.FullName;
+                        int start=0;
+                        for (int i=tmp.IndexOf(Name)-2;i>=0;i--){
+                            Char ts = tmp[i];
+                            if (!Char.IsLetter(tmp[i])) { start = i + 1; break; }
+                        }
+                        int xy = tmp.IndexOf(Name) - start + Name.Length;
+                        tmp = tmp.Substring(start, xy);
+                        
+                        LocalTypeFullName = tmp;                        
+                    }
+                }
+            }
+            else
             {
-                if (FullName[i] == '$')
+                Name = FullName.Split('.').Last().Trim();
+                foreach (ParameterInfo par in parameterInfos)
                 {
-                    builder.Append(counter.ToString());
-                }
-                else
-                {
-                    builder.Append(FullName[i]);
-                }
+                    if (par.ParameterType.FullName.Contains(Name))
+                    {
+                        LocalTypeFullName = par.ParameterType.FullName;
+                        break;
+                    }
+                }                
             }
-
-            // Workaround: event-keyword
-            LocalTypeFullName = builder.ToString().Replace(".event","._event");
         }
         #endregion
     }

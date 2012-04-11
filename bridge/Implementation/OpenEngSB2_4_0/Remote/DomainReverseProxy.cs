@@ -345,7 +345,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             for (int i = 0; i < methodCall.args.Count; ++i)
             {
                 object arg = methodCall.args[i];
-                RemoteType remoteType = new RemoteType(methodCall.classes[i]);
+                RemoteType remoteType = new RemoteType(methodCall.classes[i],null);
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
                 
                 if (type == null)
@@ -395,21 +395,10 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
-                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower())
-                {
-                    continue;
-                }
-
-                if (methodInfo.GetParameters().Length != methodCall.args.Count)
-                {
-                    continue;
-                }
-                if (!TypesAreEqual(methodCall.classes, methodInfo.GetParameters()))
-                {
-                    continue;
-                }
-
-                return methodInfo;
+                if (!(methodCall.methodName.ToLower() != methodInfo.Name.ToLower() ||
+                    (methodInfo.GetParameters().Length != methodCall.args.Count) ||
+                    (!TypesAreEqual(methodCall.classes, methodInfo.GetParameters()))))
+                    return methodInfo;
             }
 
             return null;
@@ -447,7 +436,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
         private bool TypeIsEqual(string remoteType, Type localType)
         {
             if (remoteType.Equals("null")) return true;
-            RemoteType remote_typ = new RemoteType(remoteType);
+            RemoteType remote_typ = new RemoteType(remoteType,null);
             // leading underscore fix
             return (remote_typ.LocalTypeFullName == localType.FullName);
         }
