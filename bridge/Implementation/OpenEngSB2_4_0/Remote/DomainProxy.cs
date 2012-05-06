@@ -29,6 +29,7 @@ using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
 using Bridge.Implementation;
+using Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
     /// <summary>
@@ -125,8 +126,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             return returnMessage;
         }
         /// <summary>
-        /// Builds an MethodCall using IMethodCallMessage.
-        /// In the of the OpenEngSB version 3.0.0  classes.Add(getPackageName(type.RemoteTypeFullName) + ".event." + firstLetterToUpper(type.RemoteTypeFullName)); with classes.Add(getPackageName(type.RemoteTypeFullName) + "." + firstLetterToUpper(type.RemoteTypeFullName)) is removed;
+        /// Builds an MethodCall using IMethodCallMessage.       
         /// </summary>
         /// <param name="msg">Information, to create a MethodCallRequest</param>
         /// <returns>A new instance of methodCallrequest</returns>

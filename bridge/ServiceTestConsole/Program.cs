@@ -40,9 +40,11 @@ namespace Bridge.ServiceTestConsole
 
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
-
+            Type tessss = typeof(ExampleDomain.ExampleEnum);
+            String test = typeof(ExampleDomain.ExampleEnum).ToString();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
+
             //Register the connecter on the osenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
@@ -50,7 +52,7 @@ namespace Bridge.ServiceTestConsole
             ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
             logEvent.name = "Example";
             logEvent.processId = 0;
-            logEvent.level = new ExampleDomainEvents.LogEvent_LogLevel();
+            logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
             logEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(logEvent);
             Console.ReadKey();

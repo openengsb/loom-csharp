@@ -25,6 +25,7 @@ using Bridge.Implementation.Communication.Jms;
 using Bridge.Implementation.Communication;
 using Bridge.Implementation.Communication.Json;
 using Bridge.Implementation.Common;
+using Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 
 namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
@@ -85,7 +86,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// <summary>
         /// Identifies the service-instance.
         /// </summary>
-        private ConnectorId connectorId;        
+        private ConnectorId connectorId;
         #endregion
         #region Propreties
         public T DomainService
@@ -192,7 +193,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             args.Add(connectorId);
             args.Add(connectorDescription);
 
-            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes,null);
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes, null);
 
 
             Message message = Message.createInstance(creationCall, id.ToString(), true, "");
@@ -204,7 +205,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(callRequest);
-            portOut.Send(request);            
+            portOut.Send(request);
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             IList<object> args = new List<object>();
             args.Add(connectorId);
 
-            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes,null);
+            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
             Guid id = Guid.NewGuid();
             String classname = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
@@ -229,7 +230,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             Authentification authentification = Authentification.createInstance(classname, data, BinaryData.CreateInstance());
 
             Message message = Message.createInstance(deletionCall, id.ToString(), true, "");
-            MethodCallRequest callRequest = MethodCallRequest.CreateInstance(authentification,message);
+            MethodCallRequest callRequest = MethodCallRequest.CreateInstance(authentification, message);
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = _CREATION_QUEUE;
@@ -257,9 +258,9 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 
                 if (textMsg == null)
                     continue;
-                
+
                 MethodCallRequest methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallRequest)) as MethodCallRequest;
-                if (methodCallRequest.message.methodCall.args==null) methodCallRequest.message.methodCall.args=new List<Object>();
+                if (methodCallRequest.message.methodCall.args == null) methodCallRequest.message.methodCall.args = new List<Object>();
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.message.answer)
@@ -283,7 +284,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             if (methInfo == null)
                 throw new ApplicationException("No corresponding method found");
 
-            object[] arguments = CreateMethodArguments(request.message.methodCall);
+            object[] arguments = CreateMethodArguments(request.message.methodCall, methInfo);
 
             object returnValue = null;
             try
@@ -318,7 +319,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             methodResult.type = type;
             methodResult.arg = returnValue;
             MethodResultMessage methodResultMessage = new MethodResultMessage();
-            methodResultMessage.message=new MessageResult();
+            methodResultMessage.message = new MessageResult();
             methodResultMessage.message.callId = correlationId;
 
             if (returnValue == null)
@@ -337,7 +338,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// </summary>
         /// <param name="methodCall">MethodCall</param>
         /// <returns>Arguments</returns>
-        private object[] CreateMethodArguments(RemoteMethodCall methodCall)
+        private object[] CreateMethodArguments(RemoteMethodCall methodCall, MethodInfo methodInfo)
         {
             IList<object> args = new List<object>();
 
@@ -345,9 +346,9 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             for (int i = 0; i < methodCall.args.Count; ++i)
             {
                 object arg = methodCall.args[i];
-                RemoteType remoteType = new RemoteType(methodCall.classes[i]);
+                RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
-                
+
                 if (type == null)
                     type = Type.GetType(remoteType.LocalTypeFullName);
 
@@ -361,12 +362,13 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
                 }
                 else if (type.IsEnum)
                 {
-                    obj = Enum.Parse(type,(string) arg);
+                    obj = Enum.Parse(type, (string)arg);
                 }
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
                 }
+                HelpMethods.addTrueForSpecified(args, methodInfo);
                 args.Add(obj);
             }
 
@@ -392,65 +394,21 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
                     methodCall.classes.Add(nullObject.GetType().ToString());
                 }
             }
-
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
-                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower())
+                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
+                List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
+                if (parameterResult.Count != methodCall.args.Count)
                 {
-                    continue;
+                    if (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count) continue;
                 }
-
-                if (methodInfo.GetParameters().Length != methodCall.args.Count)
-                {
-                    continue;
-                }
-                if (!TypesAreEqual(methodCall.classes, methodInfo.GetParameters()))
-                {
-                    continue;
-                }
-
+                if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>())) continue;
                 return methodInfo;
             }
 
             return null;
         }
 
-        /// <summary>
-        /// Tests if the list of type names are equal to the types of the method parameter.
-        /// </summary>
-        /// <param name="typeStrings">TypeSting</param>
-        /// <param name="parameterInfos">Parameter Infos</param>
-        /// <returns>If types are equal</returns>
-        private bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
-        {
-            if (typeStrings.Count != parameterInfos.Length)
-                throw new ApplicationException("length of type-string-arrays are not equal");
-
-            for (int i = 0; i < parameterInfos.Length; ++i)
-            {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Test if two types are equal
-        /// TODO remove "null" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
-        /// </summary>
-        /// <param name="remoteType">Remote Type</param>
-        /// <param name="localType">Local Type</param>
-        /// <returns>If to types are equal</returns>
-        private bool TypeIsEqual(string remoteType, Type localType)
-        {
-            if (remoteType.Equals("null")) return true;
-            RemoteType remote_typ = new RemoteType(remoteType);
-            // leading underscore fix
-            return (remote_typ.LocalTypeFullName == localType.FullName);
-        }
 
         /// <summary>
         /// Stops the queue listening for messages and deletes the proxy on the bus.

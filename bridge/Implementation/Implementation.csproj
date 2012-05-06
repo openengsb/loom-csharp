@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Communication\Jms\ReplyTo.cs" />
     <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
     <Compile Include="HelpMethods.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\SecureMethodCallRequest.cs" />
-    <Compile Include="RegistrationFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

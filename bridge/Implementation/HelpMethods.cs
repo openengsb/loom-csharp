@@ -22,6 +22,7 @@ using System.Text;
 using System.Reflection;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
+using Bridge.Implementation.Common;
 
 namespace Bridge.Implementation
 {
@@ -97,5 +98,85 @@ namespace Bridge.Implementation
             String tmp = element.Substring(1);
             return first + tmp;
         }
+        /// <summary>
+        /// Add true objects for the Specified fields
+        /// </summary>
+        /// <param name="args">List of parameters for a methodcall</param>
+        /// <param name="m">Methodinfo</param>
+        public static void addTrueForSpecified(IList<object> args, MethodInfo m)
+        {
+            ParameterInfo[] paraminfo = m.GetParameters();
+            if (paraminfo.Length <= args.Count) return;
+            int i = 0;
+            while (i + 1 < paraminfo.Length)
+            {
+                String paramName = paraminfo[i].Name + "Specified";
+                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
+                i = i + 2;
+            }
+        }
+        /// <summary>
+        /// Add true objects for the Specified fields
+        /// </summary>
+        /// <param name="args">List of parameters for a methodcall</param>
+        /// <param name="m">Methodinfo</param>
+        public static int AddTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        {
+            ParameterInfo[] parameters = m.GetParameters();
+            int i = 0;
+            int parameterLength = 0;
+            while (i + 1 < parameters.Length)
+            {
+                String paramName = parameters[i].Name + "Specified";
+                if ((parameters[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(parameters[i + 1].Name))
+                {
+                    parameterResult.Remove(parameters[i + 1]);
+                    parameterLength++;
+                }
+                i = i + 2;
+            }
+            return parameterLength;
+        }
+        /// <summary>
+        /// Tests if the list of type names are equal to the types of the method parameter.
+        /// </summary>
+        /// <param name="typeStrings"></param>
+        /// <param name="parameterInfos"></param>
+        /// <returns></returns>
+        public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
+        {
+            if (typeStrings.Count != parameterInfos.Length)
+                throw new ApplicationException("length of type-string-arrays are not equal");
+
+            for (int i = 0; i < parameterInfos.Length; ++i)
+            {
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Test if two types are equal
+        /// TODO remove "null" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
+        /// </summary>
+        /// <param name="remoteType">Remote Type</param>
+        /// <param name="localType">Local Type</param>
+        /// <returns>If to types are equal</returns>
+        private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
+        {
+            if (remoteType.Equals("null")) return true;
+            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
+
+            if (localType.Name.ToLower().Contains("nullable"))
+            {
+                return (localType.FullName.Contains(remote_typ.Name));
+            }
+            return (remote_typ.Name.Equals(localType.Name));
+        }
+
     }
 }

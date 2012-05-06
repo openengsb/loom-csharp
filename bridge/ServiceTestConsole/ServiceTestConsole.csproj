@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExampleDomainEventsInterfaces">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomainEventsInterfaces-1.0.0-SNAPSHOT\ExampleDomainEventsInterfaces.dll</HintPath>
+      <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="ExampleDomainInterfaces">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomainInterfaces-1.0.0-SNAPSHOT\ExampleDomainInterfaces.dll</HintPath>
+      <HintPath>..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
