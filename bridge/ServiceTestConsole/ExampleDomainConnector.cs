@@ -35,12 +35,6 @@ namespace Bridge.ServiceTestConsole
         {
         }        
 
-        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
-        {
-            logger.Info("run doSomethingWithEnum with " + args0);
-            return "done";
-        }
-
         public string doSomethingWithLogEvent(LogEvent args0)
         {
             logger.Info("run doSomethingWithLogEvent with " + args0);
@@ -56,7 +50,13 @@ namespace Bridge.ServiceTestConsole
         public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
         {
             logger.Info("run doSomethingWithModel with " + args0);
-            return new ExampleResponseModel();
+            return null;
+        }
+
+        public string doSomethingWithEnum(ExampleEnum? args0, bool args0Specified)
+        {
+            logger.Info("run doSomethingWithEnum with " + args0);
+            return "done";
         }
     }
 }
