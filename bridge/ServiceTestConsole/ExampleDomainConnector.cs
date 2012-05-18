@@ -53,7 +53,7 @@ namespace Bridge.ServiceTestConsole
             return null;
         }
 
-        public string doSomethingWithEnum(ExampleEnum? args0, bool args0Specified)
+        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
         {
             logger.Info("run doSomethingWithEnum with " + args0);
             return "done";

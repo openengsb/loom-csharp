@@ -39,9 +39,7 @@ namespace Bridge.ServiceTestConsole
             log4net.Config.BasicConfigurator.Configure();
 
             string destination = "tcp://localhost.:6549";
-            string domainName = "example";
-            Type tessss = typeof(ExampleDomain.ExampleEnum);
-            String test = typeof(ExampleDomain.ExampleEnum).ToString();
+            string domainName = "plc";
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
 
@@ -52,7 +50,7 @@ namespace Bridge.ServiceTestConsole
             ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
             logEvent.name = "Example";
             logEvent.processId = 0;
-            logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
+            //logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
             logEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(logEvent);
             Console.ReadKey();

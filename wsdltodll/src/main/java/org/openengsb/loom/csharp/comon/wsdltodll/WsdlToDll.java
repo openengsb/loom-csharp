@@ -215,14 +215,13 @@ public class WsdlToDll extends AbstractMojo {
 
     private void executeACommand(Process child) throws IOException, MojoExecutionException, InterruptedException {
         BufferedReader brout = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        BufferedReader br = new BufferedReader(new InputStreamReader(child.getErrorStream()));
-        String error = "", tmp, input = "", last = "";
-        while ((tmp = br.readLine()) != null) {
-            error += tmp;
-        }
+        String error = "", tmp, input = "", last = "";        
         while ((tmp = brout.readLine()) != null) {
             input += tmp + "\n";
-            last = tmp;
+            last = tmp;            
+        }      
+        if (child.exitValue()>0){
+            throw new MojoExecutionException(input);
         }
         // Because the wsdl.exe can not be executed in a outputDirectory, the
         // file has to be moved to the corresponding

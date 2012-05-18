@@ -36,7 +36,7 @@ namespace Bridge.Implementation
         /// <param name="element">Message from the server</param>
         public void setDomainId(String element)
         {
-            logger.Info("setDomainId:" + element);
+            if (logger!=null) logger.Info("setDomainId:" + element);
         }
         /// <summary>
         /// Part of the registration process
@@ -44,7 +44,7 @@ namespace Bridge.Implementation
         /// <param name="element">Message from the server</param>
         public void setConnectorId(String element)
         {
-            logger.Info("setConnectorId:" + element);
+            if (logger != null) logger.Info("setConnectorId:" + element);
         }
     }
 }
