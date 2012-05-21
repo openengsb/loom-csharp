@@ -357,6 +357,11 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             {
                 object arg = methodCall.args[i];
                 RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
+                if (remoteType.LocalTypeFullName == null)
+                {
+                    args.Add(null);
+                    continue;
+                }
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
                 if (type == null)
                     type = Type.GetType(remoteType.LocalTypeFullName);
@@ -385,22 +390,11 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 
         /// <summary>
         /// Tries to find the method that should be called.
-        ///  TODO remove " if (methodCallWrapper.args.Count > methodCallWrapper.classes.Count)" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
         /// </summary>
         /// <param name="methodCallWrapper"></param>
         /// <returns></returns>
         private MethodInfo FindMethodInDomain(RemoteMethodCall methodCallWrapper)
         {
-            if (methodCallWrapper.args.Count > methodCallWrapper.classes.Count)
-            {
-                int tmp = methodCallWrapper.args.Count - methodCallWrapper.classes.Count;
-                int i;
-                Object[] nullObject = new object[1];
-                String nullObjectString = nullObject.GetType().ToString();
-                for (i = 0; i < tmp; i++)
-                    methodCallWrapper.classes.Add(nullObject.GetType().ToString());
-            }
-
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
                 if (methodCallWrapper.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
@@ -412,7 +406,6 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
                 if (!HelpMethods.TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>())) continue;
                 return methodInfo;
             }
-
             return null;
         }
         #endregion

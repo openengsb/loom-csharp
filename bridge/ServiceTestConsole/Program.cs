@@ -39,7 +39,7 @@ namespace Bridge.ServiceTestConsole
             log4net.Config.BasicConfigurator.Configure();
 
             string destination = "tcp://localhost.:6549";
-            string domainName = "plc";
+            string domainName = "example";
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
 
@@ -50,6 +50,11 @@ namespace Bridge.ServiceTestConsole
             ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
             logEvent.name = "Example";
             logEvent.processId = 0;
+
+
+            //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.
+
+
             //logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
             logEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(logEvent);

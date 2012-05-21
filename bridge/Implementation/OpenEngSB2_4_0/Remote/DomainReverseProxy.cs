@@ -347,6 +347,11 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             {
                 object arg = methodCall.args[i];
                 RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
+                if (remoteType.LocalTypeFullName == null)
+                {
+                    args.Add(null);
+                    continue;
+                }
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
 
                 if (type == null)
@@ -383,8 +388,10 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// <returns>MethodInfo</returns>
         private MethodInfo FindMethodInDomain(RemoteMethodCall methodCall)
         {
+            Boolean existNullParameters = false;
             if (methodCall.args.Count > methodCall.classes.Count)
             {
+                existNullParameters = true;
                 int tmp = methodCall.args.Count - methodCall.classes.Count;
                 int i;
                 Object[] nullObject = new object[1];
@@ -397,6 +404,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
                 if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
+                if (existNullParameters) return methodInfo;
                 List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
                 if (parameterResult.Count != methodCall.args.Count)
                 {
