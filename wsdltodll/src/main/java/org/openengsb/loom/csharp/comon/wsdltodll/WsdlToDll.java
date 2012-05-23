@@ -26,12 +26,12 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 public class WsdlToDll extends AbstractMojo {
 
     /**
-     * List of default pathes where to search for the installation of the .net
-     * framework.
+     * List of default pathes where to search for the installation of the .net framework.
      */
-    private static final String[] DEFAULT_PATHES = new String[] { "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\",
-            "C:\\Program Files\\Microsoft SDKs\\Windows\\", "C:\\Windows\\Microsoft.NET\\Framework64\\",
-            "C:\\Windows\\Microsoft.NET\\Framework\\" };
+    private static final String[] DEFAULT_PATHES = new String[]{
+        System.getenv("ProgramFiles(x86)") + "\\Microsoft SDKs\\Windows\\",
+        System.getenv("ProgramFiles") + "\\Microsoft SDKs\\Windows\\", "C:\\Windows\\Microsoft.NET\\Framework64\\",
+        "C:\\Windows\\Microsoft.NET\\Framework\\" };
 
     /**
      * Location of the file.
@@ -108,7 +108,12 @@ public class WsdlToDll extends AbstractMojo {
     private void createDllFromWsdlUsingWindowsMode() throws MojoExecutionException {
         List<String> sdkandFrameworkPathes = new LinkedList<String>();
         if (npanday_setting == null || !npanday_setting.exists()) {
-            getLog().info("npdanay-setting.xml could not be found. Trying default pathes");
+            if (npanday_setting != null)
+                getLog().info(
+                    "npdanay-setting.xml could not be found. Inidicated location:" + npanday_setting
+                            + "Trying default pathes");
+            else
+                getLog().info("npdanay-setting.xml has been indicated. Trying default pathes");
         } else {
             getLog().info("Searching in the npanday file, for wsdl.exe and csc.exe");
             DOMParser parser = new DOMParser();
@@ -157,9 +162,9 @@ public class WsdlToDll extends AbstractMojo {
                 cmd += "\\";
             }
             cmd += "wsdl.exe";
+            getLog().info("Trying path: " + cmd);
             if (new File(cmd).exists()) {
-                String[] command = new String[] { cmd, "/serverInterface", "/n:" + namespace, wsdl_location };
-                getLog().info("trying " + cmd);
+                String[] command = new String[]{ cmd, "/serverInterface", "/n:" + namespace, wsdl_location };
                 ProcessBuilder builder = new ProcessBuilder();
                 builder.redirectErrorStream(true);
                 builder.command(command);
@@ -188,11 +193,11 @@ public class WsdlToDll extends AbstractMojo {
                 cmd += "\\";
             }
             cmd += "csc.exe";
+            getLog().info("Trying " + cmd);
             if (!new File(cmd).exists()) {
                 continue;
             }
-            String[] command = new String[] { cmd, "/target:library", cspath };
-            getLog().info("trying " + cmd);
+            String[] command = new String[]{ cmd, "/target:library", cspath };
             ProcessBuilder builder = new ProcessBuilder();
             builder.redirectErrorStream(true);
             builder.directory(outputDirectory);
@@ -218,9 +223,9 @@ public class WsdlToDll extends AbstractMojo {
         String error = "", tmp, input = "", last = "";        
         while ((tmp = brout.readLine()) != null) {
             input += tmp + "\n";
-            last = tmp;            
-        }      
-        if (child.exitValue()>0){
+            last = tmp;
+        }
+        if (child.exitValue() > 0) {
             throw new MojoExecutionException(input);
         }
         // Because the wsdl.exe can not be executed in a outputDirectory, the
