@@ -54,8 +54,7 @@ public class WsdlToDll extends AbstractMojo {
      */
     private String wsdl_location;
     /**
-     * Namespace of the WSDL file. This should be the namespace in which a
-     * domain should be located.
+     * Namespace of the WSDL file. This should be the namespace in which a domain should be located.
      * 
      * @parameter
      * @required
@@ -92,11 +91,11 @@ public class WsdlToDll extends AbstractMojo {
         // String wsdlparameter = "-server -n:" + createNamespace() + " \"" +
         // wsdl_location + "\"";
         String errorMessage = new StringBuilder().append(
-                "========================================================================").append(
-                "========================================================================").append(
-                "This plugin can't be used under Linux").append(
-                "========================================================================").append(
-                "========================================================================").toString();
+            "========================================================================").append(
+            "========================================================================").append(
+            "This plugin can't be used under Linux").append(
+            "========================================================================").append(
+            "========================================================================").toString();
         throw new MojoExecutionException(errorMessage);
     }
 
@@ -206,10 +205,10 @@ public class WsdlToDll extends AbstractMojo {
                 executeACommand(builder.start());
             } catch (IOException e) {
                 throw new MojoExecutionException("Error, while executing command: " + Arrays.toString(command) + "\n",
-                        e);
+                    e);
             } catch (InterruptedException e) {
                 throw new MojoExecutionException("Error, while executing command: " + Arrays.toString(command) + "\n",
-                        e);
+                    e);
             }
             return true;
         }
@@ -220,7 +219,7 @@ public class WsdlToDll extends AbstractMojo {
 
     private void executeACommand(Process child) throws IOException, MojoExecutionException, InterruptedException {
         BufferedReader brout = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        String error = "", tmp, input = "", last = "";        
+        String error = "", tmp, input = "", last = "";
         while ((tmp = brout.readLine()) != null) {
             input += tmp + "\n";
             last = tmp;
@@ -248,8 +247,8 @@ public class WsdlToDll extends AbstractMojo {
     }
 
     /**
-     * Search in the default folder location of SDK and the .net Framework for
-     * the newest version. If the folder exist, add it to the list
+     * Search in the default folder location of SDK and the .net Framework for the newest version. If the folder exist,
+     * add it to the list
      */
     private void adddefaultSDKPath(List<String> exec) {
         for (String path : DEFAULT_PATHES) {
