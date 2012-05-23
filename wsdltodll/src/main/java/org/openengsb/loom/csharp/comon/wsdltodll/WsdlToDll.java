@@ -26,12 +26,12 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 public class WsdlToDll extends AbstractMojo {
 
     /**
-     * List of default pathes where to search for the installation of the .net
-     * framework.
+     * List of default pathes where to search for the installation of the .net framework.
      */
-    private static final String[] DEFAULT_PATHES = new String[] { "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\",
-            "C:\\Program Files\\Microsoft SDKs\\Windows\\", "C:\\Windows\\Microsoft.NET\\Framework64\\",
-            "C:\\Windows\\Microsoft.NET\\Framework\\" };
+    private static final String[] DEFAULT_PATHES = new String[]{
+        System.getenv("ProgramFiles(x86)") + "\\Microsoft SDKs\\Windows\\",
+        System.getenv("ProgramFiles") + "\\Microsoft SDKs\\Windows\\", "C:\\Windows\\Microsoft.NET\\Framework64\\",
+        "C:\\Windows\\Microsoft.NET\\Framework\\" };
 
     /**
      * Location of the file.
@@ -54,8 +54,7 @@ public class WsdlToDll extends AbstractMojo {
      */
     private String wsdl_location;
     /**
-     * Namespace of the WSDL file. This should be the namespace in which a
-     * domain should be located.
+     * Namespace of the WSDL file. This should be the namespace in which a domain should be located.
      * 
      * @parameter
      * @required
@@ -92,11 +91,11 @@ public class WsdlToDll extends AbstractMojo {
         // String wsdlparameter = "-server -n:" + createNamespace() + " \"" +
         // wsdl_location + "\"";
         String errorMessage = new StringBuilder().append(
-                "========================================================================").append(
-                "========================================================================").append(
-                "This plugin can't be used under Linux").append(
-                "========================================================================").append(
-                "========================================================================").toString();
+            "========================================================================").append(
+            "========================================================================").append(
+            "This plugin can't be used under Linux").append(
+            "========================================================================").append(
+            "========================================================================").toString();
         throw new MojoExecutionException(errorMessage);
     }
 
@@ -108,7 +107,12 @@ public class WsdlToDll extends AbstractMojo {
     private void createDllFromWsdlUsingWindowsMode() throws MojoExecutionException {
         List<String> sdkandFrameworkPathes = new LinkedList<String>();
         if (npanday_setting == null || !npanday_setting.exists()) {
-            getLog().info("npdanay-setting.xml could not be found. Trying default pathes");
+            if (npanday_setting != null)
+                getLog().info(
+                    "npdanay-setting.xml could not be found. Inidicated location:" + npanday_setting
+                            + "Trying default pathes");
+            else
+                getLog().info("npdanay-setting.xml has been indicated. Trying default pathes");
         } else {
             getLog().info("Searching in the npanday file, for wsdl.exe and csc.exe");
             DOMParser parser = new DOMParser();
@@ -157,9 +161,9 @@ public class WsdlToDll extends AbstractMojo {
                 cmd += "\\";
             }
             cmd += "wsdl.exe";
+            getLog().info("Trying path: " + cmd);
             if (new File(cmd).exists()) {
-                String[] command = new String[] { cmd, "/serverInterface", "/n:" + namespace, wsdl_location };
-                getLog().info("trying " + cmd);
+                String[] command = new String[]{ cmd, "/serverInterface", "/n:" + namespace, wsdl_location };
                 ProcessBuilder builder = new ProcessBuilder();
                 builder.redirectErrorStream(true);
                 builder.command(command);
@@ -188,11 +192,11 @@ public class WsdlToDll extends AbstractMojo {
                 cmd += "\\";
             }
             cmd += "csc.exe";
+            getLog().info("Trying " + cmd);
             if (!new File(cmd).exists()) {
                 continue;
             }
-            String[] command = new String[] { cmd, "/target:library", cspath };
-            getLog().info("trying " + cmd);
+            String[] command = new String[]{ cmd, "/target:library", cspath };
             ProcessBuilder builder = new ProcessBuilder();
             builder.redirectErrorStream(true);
             builder.directory(outputDirectory);
@@ -201,10 +205,10 @@ public class WsdlToDll extends AbstractMojo {
                 executeACommand(builder.start());
             } catch (IOException e) {
                 throw new MojoExecutionException("Error, while executing command: " + Arrays.toString(command) + "\n",
-                        e);
+                    e);
             } catch (InterruptedException e) {
                 throw new MojoExecutionException("Error, while executing command: " + Arrays.toString(command) + "\n",
-                        e);
+                    e);
             }
             return true;
         }
@@ -215,12 +219,12 @@ public class WsdlToDll extends AbstractMojo {
 
     private void executeACommand(Process child) throws IOException, MojoExecutionException, InterruptedException {
         BufferedReader brout = new BufferedReader(new InputStreamReader(child.getInputStream()));
-        String error = "", tmp, input = "", last = "";        
+        String error = "", tmp, input = "", last = "";
         while ((tmp = brout.readLine()) != null) {
             input += tmp + "\n";
-            last = tmp;            
-        }      
-        if (child.exitValue()>0){
+            last = tmp;
+        }
+        if (child.exitValue() > 0) {
             throw new MojoExecutionException(input);
         }
         // Because the wsdl.exe can not be executed in a outputDirectory, the
@@ -243,8 +247,8 @@ public class WsdlToDll extends AbstractMojo {
     }
 
     /**
-     * Search in the default folder location of SDK and the .net Framework for
-     * the newest version. If the folder exist, add it to the list
+     * Search in the default folder location of SDK and the .net Framework for the newest version. If the folder exist,
+     * add it to the list
      */
     private void adddefaultSDKPath(List<String> exec) {
         for (String path : DEFAULT_PATHES) {
