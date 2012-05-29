@@ -21,13 +21,14 @@ using System.Text;
 using System.Threading;
 using System.Reflection;
 using System.IO;
-using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Bridge.Implementation.Communication.Json;
-using Bridge.Implementation.Communication.Jms;
-using Bridge.Implementation.Communication;
-using Bridge.Implementation.Common;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Implementation.Communication.Json;
+using Implementation.Communication.Jms;
+using Implementation.Communication;
+using Implementation.Common;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObject;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
@@ -37,12 +38,13 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
     public class DomainReverseProxy<T> : IStoppable
     {
         #region Const.
-        private const string _CREATION_QUEUE = "receive";
+        private const string CREATION_QUEUE = "receive";
         private const string CREATION_SERVICE_ID = "connectorManager";
-        private const string _CREATION_METHOD_NAME = "create";
-        private const string _CREATION_DELETE_METHOD_NAME = "delete";
-        private const string _CREATION_PORT = "jms-json";
-        private const string _CREATION_CONNECTOR_TYPE = "external-connector-proxy";
+        private const string CREATION_METHOD_NAME = "createWithId";
+        private const string CREATION_DELETE_METHOD_NAME = "delete";
+        private const string CREATION_PORT = "jms-json";
+        private const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
+        private const string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         #endregion
         #region Variabels
         /// <summary>
@@ -81,13 +83,14 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
 
         private bool isEnabled;
-
-        private IMarshaller marshaller;
-
         /// <summary>
-        /// Identifies the service-instance.
+        /// The used marshaller
         /// </summary>
-        private ConnectorDefinition connectorDefinition;
+        private IMarshaller marshaller;
+        /// <summary>
+        /// The id, which has been used to register the connector
+        /// </summary>
+        private String registerId;
         #endregion
         #region Propreties
         public T DomainService
@@ -113,8 +116,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             this.queueThread = null;
             this.serviceId = serviceId;
             this.domainType = domainType;
-            this.portIn = new JmsIncomingPort(destination);
-            this.connectorDefinition = null;
+            this.portIn = new JmsIncomingPort(destination);            
             this.username = "admin";
             this.password = "password";
         }
@@ -137,7 +139,6 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.portIn = new JmsIncomingPort(destination);
-            this.connectorDefinition = null;
             this.username = username;
             this.password = password;
         }
@@ -182,37 +183,33 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            Guid id = Guid.NewGuid();
-
-            String classname = "org.openengsb.connector.usernamepassword.Password";
+            registerId= Guid.NewGuid().ToString();
+            
 
             IList<string> classes = new List<string>();
-            classes.Add("org.openengsb.core.api.model.ConnectorDefinition");
+            classes.Add("String");
             classes.Add("org.openengsb.core.api.model.ConnectorDescription");
 
             IList<object> args = new List<object>();
             ConnectorDescription connectorDescription = new ConnectorDescription();
             connectorDescription.attributes.Add("serviceId", serviceId);
-            connectorDescription.attributes.Add("portId", _CREATION_PORT);
+            connectorDescription.attributes.Add("portId", CREATION_PORT);
             connectorDescription.attributes.Add("destination", destination);
+            connectorDescription.connectorId = CREATION_CONNECTOR_TYPE;
+            connectorDescription.instanceId = serviceId;
+            connectorDescription.domainId = domainType;
 
-            connectorDefinition = new ConnectorDefinition();
-            connectorDefinition.connectorId = _CREATION_CONNECTOR_TYPE;
-            connectorDefinition.instanceId = serviceId;
-            connectorDefinition.domainId = domainType;
-
-            args.Add(connectorDefinition);
+            args.Add(registerId);
             args.Add(connectorDescription);
 
-            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(_CREATION_METHOD_NAME, args, metaData, classes, null);
-            Message message = Message.createInstance(creationCall, id.ToString(), true, "");
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);            
 
             Destination destinationinfo = new Destination(destination);
-            destinationinfo.Queue = _CREATION_QUEUE;
+            destinationinfo.Queue = CREATION_QUEUE;
 
-            Data data = Data.CreateInstance(password);
-            AuthenticationInfo autinfo = AuthenticationInfo.createInstance(classname, data);
-            SecureMethodCallRequest secureRequest = SecureMethodCallRequest.createInstance(username, autinfo, message);
+            BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            autinfo.data.Add(username, password);
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(),true,"");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request);
@@ -227,29 +224,26 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             metaData.Add("serviceId", CREATION_SERVICE_ID);
 
             IList<string> classes = new List<string>();
-            classes.Add("org.openengsb.core.api.model.ConnectorDefinition");
+            classes.Add("String");
 
             IList<object> args = new List<object>();
-            args.Add(connectorDefinition);
+            args.Add(registerId);
 
-            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(_CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
+            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
-            Guid id = Guid.NewGuid();
-            String classname = "org.openengsb.connector.usernamepassword.Password";
-            Data data = Data.CreateInstance(password);
-            AuthenticationInfo authentification = AuthenticationInfo.createInstance(classname, data);
-
-            Message message = Message.createInstance(deletionCall, id.ToString(), true, "");
-            SecureMethodCallRequest callRequest = SecureMethodCallRequest.createInstance(username, authentification, message);
+            Guid id = Guid.NewGuid();           
+            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            authentification.data.Add(username, password);
+            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id.ToString(), true, "");
 
             Destination destinationinfo = new Destination(destination);
-            destinationinfo.Queue = _CREATION_QUEUE;
+            destinationinfo.Queue = CREATION_QUEUE;
 
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request, id.ToString());
 
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId));
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.callId));
             string reply = portIn.Receive();
 
             MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
@@ -268,16 +262,16 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
 
                 if (textMsg == null)
                     continue;
-                SecureMethodCallRequest methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(SecureMethodCallRequest)) as SecureMethodCallRequest;
-                if (methodCallRequest.message.methodCall.args == null) methodCallRequest.message.methodCall.args = new List<Object>();
+                MethodCallMessage methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallMessage)) as MethodCallMessage;
+                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();
 
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
-                if (methodCallRequest.message.answer)
+                if (methodCallRequest.answer)
                 {
                     string returnMsg = marshaller.MarshallObject(methodReturnMessage);
                     Destination dest = new Destination(destination);
-                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId));
+                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId));
                     portOut.Send(returnMsg);
                 }
             }
@@ -288,13 +282,13 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         /// <param name="methodCall">Description of the call.</param>
         /// <returns></returns>
-        private MethodResultMessage CallMethod(SecureMethodCallRequest request)
+        private MethodResultMessage CallMethod(MethodCallMessage request)
         {
-            MethodInfo methInfo = FindMethodInDomain(request.message.methodCall);
+            MethodInfo methInfo = FindMethodInDomain(request.methodCall);
             if (methInfo == null)
                 throw new ApplicationException("No corresponding method found");
 
-            object[] arguments = CreateMethodArguments(request.message.methodCall, methInfo);
+            object[] arguments = CreateMethodArguments(request.methodCall, methInfo);
 
             object returnValue = null;
             try
@@ -303,15 +297,15 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             catch (Exception ex)
             {
-                return CreateMethodReturn(MethodResult.ReturnType.Exception, ex, request.message.callId);
+                return CreateMethodReturn(MethodResult.ReturnType.Exception, ex, request.callId);
             }
 
             MethodResultMessage returnMsg = null;
 
             if (returnValue == null)
-                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Void, "null", request.message.callId);
+                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Void, "null", request.callId);
             else
-                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Object, returnValue, request.message.callId);
+                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Object, returnValue, request.callId);
 
             return returnMsg;
         }

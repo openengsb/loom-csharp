@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using log4net;
 
-namespace Bridge.Implementation
+namespace Implementation
 {
     public partial class RegistrationFunctions
     {

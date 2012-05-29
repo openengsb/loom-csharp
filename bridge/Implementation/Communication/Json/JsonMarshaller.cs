@@ -23,7 +23,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Bridge.Implementation.Communication.Json
+namespace Implementation.Communication.Json
 {
     /// <summary>
     /// This class converts any given object to an json-message.

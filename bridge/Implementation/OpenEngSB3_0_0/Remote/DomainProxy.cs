@@ -17,14 +17,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Bridge.Implementation.Communication.Jms;
-using Bridge.Implementation.Communication;
-using Bridge.Implementation.Communication.Json;
-using Bridge.Implementation.Common;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Implementation.Communication.Jms;
+using Implementation.Communication;
+using Implementation.Communication.Json;
+using Implementation.Common;
 using System.Runtime.Remoting.Proxies;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
@@ -93,12 +93,12 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         public override IMessage Invoke(IMessage msg)
         {
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
-            SecureMethodCallRequest methodCallRequest = ToMethodCallRequest(callMessage);
+            MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
             IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
 
-            portOut.Send(methodCallMsg, methodCallRequest.message.callId);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
+            portOut.Send(methodCallMsg, methodCallRequest.callId);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId));
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
             return ToMessage(methodReturn.message.result, callMessage);
@@ -139,7 +139,7 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         /// <param name="msg">Information, to create a MethodCallRequest</param>
         /// <returns>A new instance of methodCallrequest</returns>
-        private SecureMethodCallRequest ToMethodCallRequest(IMethodCallMessage msg)
+        private MethodCallMessage ToMethodCallRequest(IMethodCallMessage msg)
         {
             Guid id = Guid.NewGuid();
 
@@ -158,10 +158,10 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             }            
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes,null);
             String classname = "org.openengsb.connector.usernamepassword.Password";
-            Data data = Data.CreateInstance("password");
-            AuthenticationInfo authentification = AuthenticationInfo.createInstance(classname,data);
-            Message message = Message.createInstance(call, id.ToString(), true, "");
-            return SecureMethodCallRequest.createInstance("admin",authentification, message);
+            BeanDescription authentification = BeanDescription.createInstance(classname);
+            authentification.data.Add(username, password);
+            MethodCallMessage message = MethodCallMessage.createInstance(username,authentification,call, id.ToString(), true, "");
+            return message;
         }
         #endregion
 

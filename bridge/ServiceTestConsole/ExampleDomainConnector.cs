@@ -21,8 +21,8 @@ using System.Web.Services;
 using System.Text;
 using log4net;
 using ExampleDomain;
-using Bridge.Implementation;
-namespace Bridge.ServiceTestConsole
+using Implementation;
+namespace ServiceTestConsole
 {
     /// <summary>
     /// Example implementation of the local domain

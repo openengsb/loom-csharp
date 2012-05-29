@@ -19,13 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for MethodResultMessage
     /// </summary>
-    public class MethodResultMessage
+    public class MethodResultMessage:MessageBase
     {
         #region Variables
         public MessageResult message { get; set; }
@@ -36,10 +37,12 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
         /// </summary>
         /// <param name="message">Message</param>
         /// <returns>Returns a new instance of MethodResultMessage</returns>
-        public static MethodResultMessage CreateInstance(MessageResult message)
+        public static MethodResultMessage CreateInstance(MessageResult message, String callid)
         {
             MethodResultMessage instance = new MethodResultMessage();
             instance.message = message;
+            instance.callId = callid;
+            instance.timestamp = DateTime.Now.Ticks;
             return instance;
         }
         #endregion

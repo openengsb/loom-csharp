@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using Apache.NMS;
 
-namespace Bridge.Implementation.Communication
+namespace Implementation.Communication
 {
     /// <summary>
     /// This interfaces specifies the operations for a communication port.

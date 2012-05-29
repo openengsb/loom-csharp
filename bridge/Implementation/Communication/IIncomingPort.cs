@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.Implementation.Communication
+namespace Implementation.Communication
 {
     /// <summary>
     /// Definiton, to receive a message

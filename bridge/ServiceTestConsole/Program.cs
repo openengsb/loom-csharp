@@ -21,12 +21,12 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using Bridge.Implementation;
-using Bridge.Interface;
+using Implementation;
+using Interface;
 using ExampleDomain;
 using ExampleDomainEvents;
 
-namespace Bridge.ServiceTestConsole
+namespace ServiceTestConsole
 {
     class Program
     {

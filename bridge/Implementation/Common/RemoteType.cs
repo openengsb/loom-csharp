@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace Bridge.Implementation.Common
+namespace Implementation.Common
 {
     /// <summary>
     /// This class maps a local type to a bus side type.

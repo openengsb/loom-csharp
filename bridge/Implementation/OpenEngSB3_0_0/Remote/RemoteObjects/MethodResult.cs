@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents the return value of an RPC.

@@ -22,9 +22,9 @@ using System.Text;
 using System.Reflection;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using Bridge.Implementation.Common;
+using Implementation.Common;
 
-namespace Bridge.Implementation
+namespace Implementation
 {
     public class HelpMethods
     {

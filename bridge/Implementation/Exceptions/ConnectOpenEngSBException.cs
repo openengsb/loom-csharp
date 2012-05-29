@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.Implementation.Exceptions
+namespace Implementation.Exceptions
 {
     /// <summary>
     /// Exception for Problems with the OpenEngSB Connection

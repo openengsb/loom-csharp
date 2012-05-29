@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Bridge.Implementation.Common;
-using Bridge.Implementation.OpenEngSB3_0_0.Remote;
-using Bridge.Interface;
+using Implementation.Common;
+using Implementation.OpenEngSB3_0_0.Remote;
+using Interface;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0
+namespace Implementation.OpenEngSB3_0_0
 {
     /// <summary>
     /// This class produces and manages proxies.

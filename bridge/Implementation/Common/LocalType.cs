@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.Implementation.Common
+namespace Implementation.Common
 {
     /// <summary>
     /// This class maps remote types on the bus to local types.

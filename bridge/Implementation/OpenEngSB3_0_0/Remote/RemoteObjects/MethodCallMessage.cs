@@ -14,41 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
-    /// Container for Message
+    /// Container for a Secured Method Call
     /// </summary>
-    public class Message
+    public class MethodCallMessage : MessageBase
     {
         #region Variables
         public RemoteMethodCall methodCall { get; set; }
-        public string callId { get; set; }
         public bool answer { get; set; }
-        public string destination { get; set; }        
+        public string destination { get; set; }
+        public String principal { get; set; }
+
+        public BeanDescription credentials { get; set; }
         #endregion
         #region Public Static Methods
         /// <summary>
-        /// Creates a new instance of Message
+        /// Creates an instance of SecureMethodCallRequest
         /// </summary>
-        /// <param name="methodCall">MethodCall</param>
-        /// <param name="callId">CallId</param>
-        /// <param name="answer">Answer</param>
-        /// <param name="destination">Destination</param>
-        /// <returns>returns a new Message of CreateInstance</returns>
-        public static Message createInstance(RemoteMethodCall methodCall, string callId, bool answer, string destination)
+        /// <param name="principal">Principal</param>
+        /// <param name="credentials">Credentials</param>
+        /// <param name="message">Message</param>
+        /// <returns>Instance of SecureMethodCallRequest</returns>
+        public static MethodCallMessage createInstance(String principal, BeanDescription credentials, RemoteMethodCall methodCall, string callId, bool answer, string destination)
         {
-            Message instance = new Message();
+            MethodCallMessage instance = new MethodCallMessage();
             instance.methodCall = methodCall;
             instance.callId = callId;
             instance.answer = answer;
-            instance.destination = destination;            
+            instance.destination = destination;
+            instance.principal = principal;
+            instance.credentials = credentials;
+            instance.timestamp = DateTime.Now.Ticks;
+            instance.credentials = credentials;
             return instance;
         }
         #endregion
