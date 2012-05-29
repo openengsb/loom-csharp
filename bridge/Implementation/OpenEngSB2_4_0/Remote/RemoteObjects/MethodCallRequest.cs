@@ -30,7 +30,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
         #region Variables
         public Authentification authenticationData { get; set; }
         public Message message { get; set; }
-        public long timestamp{get;set;}
+        public long timestamp { get; set; }
         #endregion
         #region Public static Methods
         /// <summary>

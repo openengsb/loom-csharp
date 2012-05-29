@@ -27,7 +27,7 @@ namespace Implementation.Communication
     /// in an arbitrary format. This is usually necessary for serializing
     /// and sending objects over any communication channels.
     /// </summary>
-    interface IMarshaller
+    public interface IMarshaller
     {
         /// <summary>
         /// Serialize a object

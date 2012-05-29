@@ -27,6 +27,8 @@ using Implementation.Communication.Jms;
 using Implementation.Communication;
 using Implementation.Common;
 using Implementation.OpenEngSB3_0_0.Remote.RemoteObject;
+using Implementation.Common.Enumeration;
+using Implementation.Common.RemoteObjects;
 
 namespace Implementation.OpenEngSB3_0_0.Remote
 {
@@ -35,69 +37,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
     /// client side for the bus.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DomainReverseProxy<T> : IStoppable
+    public class DomainReverseProxy<T> : DomainReverse<T>, IStoppable
     {
-        #region Const.
-        private const string CREATION_QUEUE = "receive";
-        private const string CREATION_SERVICE_ID = "connectorManager";
-        private const string CREATION_METHOD_NAME = "createWithId";
-        private const string CREATION_DELETE_METHOD_NAME = "delete";
-        private const string CREATION_PORT = "jms-json";
-        private const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
-        private const string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
-        #endregion
-        #region Variabels
-        /// <summary>
-        /// Username for the authentification
-        /// </summary>
-        private String username;
-        /// <summary>
-        /// Username for the password
-        /// </summary>
-        private String password;
-        // Thread listening for messages
-        private Thread queueThread;
-
-        // IO port
-        private IIncomingPort portIn;
-
-        private string destination;
-
-        /// <summary>
-        /// ServiceId of the proxy on the bus
-        /// </summary>
-        private string serviceId;
-
-        /// <summary>
-        ///  DomainType string required for OpenengSb
-        /// </summary>
-        private string domainType;
-
-        /// <summary>
-        /// domain-instance to act as reverse-proxy for
-        /// </summary>
-        private T domainService;
-
-        /// <summary>
-        /// flag indicating if the listening thread should run
-        /// </summary>
-
-        private bool isEnabled;
-        /// <summary>
-        /// The used marshaller
-        /// </summary>
-        private IMarshaller marshaller;
-        /// <summary>
-        /// The id, which has been used to register the connector
-        /// </summary>
-        private String registerId;
-        #endregion
-        #region Propreties
-        public T DomainService
-        {
-            get { return domainService; }
-        }
-        #endregion
         #region Constructor
         /// <summary>
         /// Default constructor
@@ -108,17 +49,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
+            : base(localDomainService, host, serviceId, domainType)
         {
-            this.marshaller = new JsonMarshaller();
-            this.isEnabled = true;
-            this.domainService = localDomainService;
-            this.destination = Destination.CreateDestinationString(host, serviceId);
-            this.queueThread = null;
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.portIn = new JmsIncomingPort(destination);            
-            this.username = "admin";
-            this.password = "password";
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         /// <summary>
         /// Constructor with Autehntification
@@ -130,61 +63,21 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
+            : base(localDomainService, host, serviceId, domainType, username, password)
         {
-            this.marshaller = new JsonMarshaller();
-            this.isEnabled = true;
-            this.domainService = localDomainService;
-            this.destination = Destination.CreateDestinationString(host, serviceId);
-            this.queueThread = null;
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.portIn = new JmsIncomingPort(destination);
-            this.username = username;
-            this.password = password;
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         #endregion
         #region Public Methods
         /// <summary>
-        /// Starts a thread which waits for messages.
-        /// An exception will be thrown, if the method has already been called.
-        /// </summary>
-        public void Start()
-        {
-            if (queueThread != null)
-                throw new ApplicationException("QueueThread already started!");
-
-            isEnabled = true;
-            CreateRemoteProxy();
-            // start thread which waits for messages
-            queueThread = new Thread(
-                new ThreadStart(Listen)
-                );
-
-            queueThread.Start();
-        }
-        /// <summary>
-        /// Stops the queue listening for messages and deletes the proxy on the bus.
-        /// </summary>
-        public void Stop()
-        {
-            if (queueThread != null)
-            {
-                isEnabled = false;
-                portIn.Close();
-                DeleteRemoteProxy();
-            }
-        }
-        #endregion
-        #region Private Methods
-        /// <summary>
         /// Creates an Proxy on the bus.
         /// </summary>
-        private void CreateRemoteProxy()
+        public override void CreateRemoteProxy()
         {
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            registerId= Guid.NewGuid().ToString();
-            
+            registerId = Guid.NewGuid().ToString();
+
 
             IList<string> classes = new List<string>();
             classes.Add("String");
@@ -202,14 +95,14 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             args.Add(registerId);
             args.Add(connectorDescription);
 
-            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);            
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add(username, password);
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(),true,"");
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request);
@@ -218,7 +111,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <summary>
         /// Deletes the created remote proxy on the bus.
         /// </summary>
-        private void DeleteRemoteProxy()
+        public override void DeleteRemoteProxy()
         {
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
@@ -231,7 +124,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
-            Guid id = Guid.NewGuid();           
+            Guid id = Guid.NewGuid();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             authentification.data.Add(username, password);
             MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id.ToString(), true, "");
@@ -247,14 +140,14 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             string reply = portIn.Receive();
 
             MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
-            if (result.message.result.type == MethodResult.ReturnType.Exception)
+            if (result.message.result.type == ReturnType.Exception)
                 throw new ApplicationException("Remote Exception while deleting service proxy");
         }
 
         /// <summary>
         /// Blocks an waits for messages.
         /// </summary>
-        private void Listen()
+        public override void Listen()
         {
             while (isEnabled)
             {
@@ -276,36 +169,31 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                 }
             }
         }
-
+        #endregion
+        #region Private Methods
         /// <summary>
         /// Calls a method according to MethodCall.
         /// </summary>
         /// <param name="methodCall">Description of the call.</param>
-        /// <returns></returns>
+        /// <returns></returns>        
         private MethodResultMessage CallMethod(MethodCallMessage request)
-        {
-            MethodInfo methInfo = FindMethodInDomain(request.methodCall);
-            if (methInfo == null)
-                throw new ApplicationException("No corresponding method found");
-
-            object[] arguments = CreateMethodArguments(request.methodCall, methInfo);
-
+        {                   
             object returnValue = null;
             try
             {
-                returnValue = methInfo.Invoke(domainService, arguments);
+                returnValue = invokeMethod(request.methodCall);
             }
             catch (Exception ex)
             {
-                return CreateMethodReturn(MethodResult.ReturnType.Exception, ex, request.callId);
+                return CreateMethodReturn(ReturnType.Exception, ex, request.callId);
             }
 
             MethodResultMessage returnMsg = null;
 
             if (returnValue == null)
-                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Void, "null", request.callId);
+                returnMsg = CreateMethodReturn(ReturnType.Void, "null", request.callId);
             else
-                returnMsg = CreateMethodReturn(MethodResult.ReturnType.Object, returnValue, request.callId);
+                returnMsg = CreateMethodReturn(ReturnType.Object, returnValue, request.callId);
 
             return returnMsg;
         }
@@ -317,7 +205,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="returnValue"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        private MethodResultMessage CreateMethodReturn(MethodResult.ReturnType type, object returnValue, string correlationId)
+        private MethodResultMessage CreateMethodReturn(ReturnType type, object returnValue, string correlationId)
         {
             MethodResult methodResult = new MethodResult();
             methodResult.type = type;
@@ -335,72 +223,6 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
             methodResultMessage.message.result = methodResult;
             return methodResultMessage;
-        }
-
-        /// <summary>
-        /// Unmarshalls the arguments of a MethodCall.
-        /// </summary>
-        /// <param name="methodCall">MethodCall</param>
-        /// <returns>Arguments</returns>
-        private object[] CreateMethodArguments(RemoteMethodCall methodCall, MethodInfo methodInfo)
-        {
-            IList<object> args = new List<object>();
-
-            Assembly asm = typeof(T).Assembly;
-            for (int i = 0; i < methodCall.args.Count; i++)
-            {
-                object arg = methodCall.args[i];
-                RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
-                if (remoteType.LocalTypeFullName == null)
-                {
-                    args.Add(null);
-                    continue;
-                }
-                Type type = asm.GetType(remoteType.LocalTypeFullName);
-                if (type == null)
-                    type = Type.GetType(remoteType.LocalTypeFullName);
-
-                if (type == null)
-                    throw new ApplicationException("no corresponding local type found");
-
-                object obj = null;
-                if (type.IsPrimitive || type.Equals(typeof(string)))
-                {
-                    obj = arg;
-                }
-                else if (type.IsEnum)
-                {
-                    obj = Enum.Parse(type, (string)arg);
-                }
-                else
-                {
-                    obj = marshaller.UnmarshallObject(arg.ToString(), type);
-                }
-                args.Add(obj);
-            }
-            HelpMethods.addTrueForSpecified(args, methodInfo);
-            return args.ToArray();
-        }
-
-        /// <summary>
-        /// Tries to find the method that should be called.
-        /// </summary>
-        /// <param name="methodCallWrapper"></param>
-        /// <returns></returns>
-        private MethodInfo FindMethodInDomain(RemoteMethodCall methodCallWrapper)
-        {
-            foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
-            {
-                if (methodCallWrapper.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
-                List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
-                if (parameterResult.Count != methodCallWrapper.args.Count)
-                {
-                    if (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCallWrapper.args.Count) continue;
-                }
-                if (!HelpMethods.TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>())) continue;
-                return methodInfo;
-            }
-            return null;
         }
         #endregion
     }

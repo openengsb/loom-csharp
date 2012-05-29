@@ -25,7 +25,7 @@ namespace Implementation.Communication
     /// <summary>
     /// Definiton, to receive a message
     /// </summary>
-    interface IIncomingPort: IPort
+    public interface IIncomingPort: IPort
     {
         /// <summary>
         /// Used to receive messages from a desination

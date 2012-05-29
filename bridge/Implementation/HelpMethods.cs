@@ -54,7 +54,7 @@ namespace Implementation
         /// </summary>
         /// <param name="fieldname">Method name or Parameter name</param>
         /// <returns>Packagename</returns>
-        public static String GetPackageName(String fieldname,Type type)
+        public static String GetPackageName(String fieldname, Type type)
         {
             MethodInfo method = type.GetMethod(fieldname);
             //Tests if it is a Mehtod or a Type

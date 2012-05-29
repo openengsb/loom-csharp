@@ -18,16 +18,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Implementation.Common.RemoteObjects;
+using Implementation.Common.Enumeration;
 
 namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents the return value of an RPC.
     /// </summary>
-    public class MethodResult
+    public class MethodResult:IMethodResult
     {
-        #region Variables
-        public enum ReturnType { Void, Object, Exception }
+        #region Variables        
 
         /// <summary>
         /// Type of the return value.
@@ -67,7 +68,6 @@ namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
             result.className = className;
             return result;
         }
-        #endregion
-
+        #endregion        
     }
 }
