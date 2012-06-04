@@ -8,6 +8,7 @@ using Implementation.Communication.Json;
 using System.Runtime.Remoting.Messaging;
 using Implementation.Common.RemoteObjects;
 using Implementation.Common.Enumeration;
+using log4net;
 
 namespace Implementation.Common
 {
@@ -17,7 +18,8 @@ namespace Implementation.Common
         /// <summary>
         /// Name of the queue the server listens to for calls.
         /// </summary>
-        protected const string HOST_QUEUE = "receive";                       
+        protected const string HOST_QUEUE = "receive";
+        protected static ILog logger = LogManager.GetLogger(typeof(T));
         #endregion
         #region Variables
         /// <summary>
@@ -85,6 +87,7 @@ namespace Implementation.Common
         /// <returns>The result of the Message</returns>
         protected IMessage ToMessage(IMethodResult methodReturn, IMethodCallMessage callMessage)
         {
+            logger.Info("Convert method call to String method and send it to the OpenEngSB");
             IMethodReturnMessage returnMessage = null;
             switch (methodReturn.type)
             {

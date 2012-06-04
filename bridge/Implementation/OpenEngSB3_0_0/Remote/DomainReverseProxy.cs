@@ -51,6 +51,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
             : base(localDomainService, host, serviceId, domainType)
         {
+            logger.Info("Connecting to OpenEngSB version 3.0");
             CREATION_METHOD_NAME = "createWithId";
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
@@ -66,6 +67,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
             : base(localDomainService, host, serviceId, domainType, username, password)
         {
+            logger.Info("Connecting to OpenEngSB version 3.0");
             CREATION_METHOD_NAME = "createWithId";
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }

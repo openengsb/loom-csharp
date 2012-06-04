@@ -11,6 +11,7 @@ using Implementation.Communication.Jms;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
 using Implementation.Common.Enumeration;
+using log4net;
 
 namespace Implementation.Common
 {
@@ -30,6 +31,10 @@ namespace Implementation.Common
         /// domain-instance to act as reverse-proxy for
         /// </summary>
         private T domainService;
+        /// <summary>
+        /// Logger
+        /// </summary>
+        protected static ILog logger = LogManager.GetLogger(typeof(T));
         #endregion
         #region Propreties
         public T DomainService
@@ -184,12 +189,19 @@ namespace Implementation.Common
         /// <returns>return value</returns>
         protected Object invokeMethod(IMethodCall request)
         {
+            logger.Info("Search and invoke method: "+request.methodName);
             MethodInfo methInfo = FindMethodInDomain(request);
             if (methInfo == null)
+            {
+                logger.Error("No corresponding method found");
                 throw new ApplicationException("No corresponding method found");
+            }
 
             object[] arguments = CreateMethodArguments(request, methInfo);
-            return methInfo.Invoke(DomainService, arguments); ;
+            
+            Object result= methInfo.Invoke(DomainService, arguments); ;
+            logger.Info("Invokation done");
+            return result;
         }
         /// <summary>
         /// Tries to find the method that should be called.
@@ -226,7 +238,7 @@ namespace Implementation.Common
         {
             if (queueThread != null)
                 throw new ApplicationException("QueueThread already started!");
-
+            logger.Info("Start open the Queue Thread to listen for messages from OpenEngSB.");
             isEnabled = true;
             CreateRemoteProxy();
             // start thread which waits for messages
@@ -247,6 +259,7 @@ namespace Implementation.Common
                 portIn.Close();
                 DeleteRemoteProxy();
             }
+            logger.Info("Connection closed");
         }
         #endregion
         #region Abstract Methods

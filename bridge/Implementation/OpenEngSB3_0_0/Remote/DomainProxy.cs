@@ -62,7 +62,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             return ToMessage(methodReturn.result, callMessage);
         }
         #endregion
-        #region Private methods        
+        #region Private methods
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.
         /// </summary>
