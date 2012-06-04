@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
 using Implementation.Common;
+using System.Web.Services;
 
 namespace Implementation
 {
@@ -48,7 +49,33 @@ namespace Implementation
             }
             return result;
         }
-
+        private static String FindCXFRequestNamespace(Type type, String fieldname)
+        {
+            List<String> elements = new List<string>();            
+            String name = fieldname;
+            if (name.Contains('.'))
+            {
+                int start = name.LastIndexOf('.')+1;
+                name = name.Substring(start, name.Length - start);
+            }
+            foreach (MethodInfo method in type.GetMethods())
+            {
+                foreach (Attribute attribute in method.GetCustomAttributes(false))
+                {
+                    if (attribute is SoapDocumentMethodAttribute)
+                    {
+                        SoapDocumentMethodAttribute soapAttribute = attribute as SoapDocumentMethodAttribute;
+                        String[] result = soapAttribute.RequestNamespace.Split(';');
+                        foreach (String s in result)
+                        {
+                            String[] element = s.Split(':');
+                            if (element.Length>1 && element[0].ToUpper().Equals(name.ToUpper())) return element[1];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
         /// <summary>
         /// Search in the interface for the Namespace (equal to the package structure in java)
         /// </summary>
@@ -56,16 +83,27 @@ namespace Implementation
         /// <returns>Packagename</returns>
         public static String GetPackageName(String fieldname, Type type)
         {
+            SoapDocumentMethodAttribute soapAttribute;            
+            foreach (Attribute attribute in type.GetCustomAttributes(false))
+            {
+                if (attribute is WebServiceBindingAttribute)
+                {
+                    WebServiceBindingAttribute webservice = attribute as WebServiceBindingAttribute;
+                    String result = FindCXFRequestNamespace(type, fieldname);
+                    if (!String.IsNullOrEmpty(result)) return result;
+                }
+            }
+
             MethodInfo method = type.GetMethod(fieldname);
             //Tests if it is a Mehtod or a Type
             if (method != null)
-            {
-                SoapDocumentMethodAttribute soapAttribute;
+            {                
+                
                 foreach (Attribute attribute in method.GetCustomAttributes(false))
                 {
                     if (attribute is SoapDocumentMethodAttribute)
                     {
-                        soapAttribute = attribute as SoapDocumentMethodAttribute;
+                        soapAttribute = attribute as SoapDocumentMethodAttribute;                        
                         return reverseURL(soapAttribute.RequestNamespace);
                     }
                 }
@@ -106,12 +144,13 @@ namespace Implementation
         public static void addTrueForSpecified(IList<object> args, MethodInfo m)
         {
             ParameterInfo[] paraminfo = m.GetParameters();
-            if (paraminfo.Length <= args.Count) return;
+            if (paraminfo.Length <= args.Count && paraminfo.Length < 2 && args.Count <= 0) return;
             int i = 0;
             while (i + 1 < paraminfo.Length)
             {
                 String paramName = paraminfo[i].Name + "Specified";
-                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
+                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && 
+                    paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
                 i = i + 2;
             }
         }
@@ -168,14 +207,14 @@ namespace Implementation
         /// <returns>If to types are equal</returns>
         private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
-            if (remoteType.Equals("null")) return true;
+            if (remoteType.Equals("null") || localType.Equals(typeof(object))) return true;            
             RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
 
             if (localType.Name.ToLower().Contains("nullable"))
             {
                 return (localType.FullName.Contains(remote_typ.Name));
             }
-            return (remote_typ.Name.Equals(localType.Name));
+            return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
 
     }

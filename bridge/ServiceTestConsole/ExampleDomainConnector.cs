@@ -27,36 +27,45 @@ namespace ServiceTestConsole
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoap11Binding
+    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoapBinding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
         
         public ExampleDomainConnector() : base(logger)
         {
-        }        
-
-        public string doSomethingWithLogEvent(LogEvent args0)
+        }
+        public string doSomethingWithEnum(exampleEnum arg0, bool arg0Specified)
         {
-            logger.Info("run doSomethingWithLogEvent with " + args0);
+            logger.Info("run doSomethingWithEnum with " + arg0);
             return "done";
         }
 
-        public string doSomethingWithMessage(string args0)
+        public string doSomethingWithLogEvent(logEvent arg0)
         {
-            logger.Info("run doSomethingWithMessage with " + args0);
+            logger.Info("run doSomethingWithLogEvent with " + arg0);
             return "done";
         }
 
-        public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
+        public string doSomethingWithMessage(string arg0)
         {
-            logger.Info("run doSomethingWithModel with " + args0);
+            logger.Info("run doSomethingWithMessage with " + arg0);
+            return "done";
+        }
+
+        public object doSomethingWithModel(object arg0)
+        {
+            logger.Info("run doSomethingWithModel with " + arg0);
             return null;
         }
 
-        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
+        public void getAliveState(out aliveState @return, out bool returnSpecified)
         {
-            logger.Info("run doSomethingWithEnum with " + args0);
-            return "done";
+            throw new NotImplementedException();
+        }
+
+        public string getInstanceId()
+        {
+            throw new NotImplementedException();
         }
     }
 }

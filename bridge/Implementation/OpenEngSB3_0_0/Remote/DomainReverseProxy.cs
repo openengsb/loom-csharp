@@ -51,6 +51,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
             : base(localDomainService, host, serviceId, domainType)
         {
+            CREATION_METHOD_NAME = "createWithId";
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         /// <summary>
@@ -65,6 +66,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
             : base(localDomainService, host, serviceId, domainType, username, password)
         {
+            CREATION_METHOD_NAME = "createWithId";
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         #endregion
@@ -80,7 +82,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
 
             IList<string> classes = new List<string>();
-            classes.Add("String");
+            LocalType localType = new LocalType(typeof(String));
+            classes.Add(localType.RemoteTypeFullName);
             classes.Add("org.openengsb.core.api.model.ConnectorDescription");
 
             IList<object> args = new List<object>();
@@ -88,20 +91,19 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             connectorDescription.attributes.Add("serviceId", serviceId);
             connectorDescription.attributes.Add("portId", CREATION_PORT);
             connectorDescription.attributes.Add("destination", destination);
-            connectorDescription.connectorId = CREATION_CONNECTOR_TYPE;
-            connectorDescription.instanceId = serviceId;
-            connectorDescription.domainId = domainType;
+            connectorDescription.connectorType = CREATION_CONNECTOR_TYPE;
+            connectorDescription.domainType = domainType;
 
             args.Add(registerId);
             args.Add(connectorDescription);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
-
+            
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            autinfo.data.Add(username, password);
+            autinfo.data.Add("value", password);
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
@@ -115,9 +117,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         {
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-
+            LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
-            classes.Add("String");
+            classes.Add(localType.RemoteTypeFullName);
 
             IList<object> args = new List<object>();
             args.Add(registerId);
@@ -126,7 +128,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
             Guid id = Guid.NewGuid();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            authentification.data.Add(username, password);
+            authentification.data.Add("value", password);
             MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id.ToString(), true, "");
 
             Destination destinationinfo = new Destination(destination);
@@ -136,11 +138,11 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request, id.ToString());
 
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.callId));
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id.ToString()));
             string reply = portIn.Receive();
 
             MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
-            if (result.message.result.type == ReturnType.Exception)
+            if (result.result.type == ReturnType.Exception)
                 throw new ApplicationException("Remote Exception while deleting service proxy");
         }
 
@@ -166,6 +168,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                     Destination dest = new Destination(destination);
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId));
                     portOut.Send(returnMsg);
+                    if (methodReturnMessage.result.type.Equals(ReturnType.Exception)) 
+                        throw new Exception(methodReturnMessage.result.arg.ToString());
                 }
             }
         }
@@ -209,10 +213,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         {
             MethodResult methodResult = new MethodResult();
             methodResult.type = type;
-            methodResult.arg = returnValue;
-            MethodResultMessage methodResultMessage = new MethodResultMessage();
-            methodResultMessage.message = new MessageResult();
-            methodResultMessage.message.callId = correlationId;
+            methodResult.arg = returnValue;            
+                                  
 
             if (returnValue == null)
                 methodResult.className = "null";
@@ -221,8 +223,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
             methodResult.metaData = new Dictionary<string, string>();
 
-            methodResultMessage.message.result = methodResult;
-            return methodResultMessage;
+            return MethodResultMessage.CreateInstance(methodResult, correlationId);  
         }
         #endregion
     }

@@ -26,21 +26,21 @@ namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
     /// <summary>
     /// Container for MethodResultMessage
     /// </summary>
-    public class MethodResultMessage:MessageBase
+    public class MethodResultMessage : MessageBase
     {
         #region Variables
-        public MessageResult message { get; set; }
+        public MethodResult result { get; set; }
         #endregion
         #region Public static Methods
         /// <summary>
         /// Creates a new instance of MethodResultMessage
         /// </summary>
-        /// <param name="message">Message</param>
+        /// <param name="result">Message</param>
         /// <returns>Returns a new instance of MethodResultMessage</returns>
-        public static MethodResultMessage CreateInstance(MessageResult message, String callid)
+        public static MethodResultMessage CreateInstance(MethodResult result, String callid)
         {
             MethodResultMessage instance = new MethodResultMessage();
-            instance.message = message;
+            instance.result = result;
             instance.callId = callid;
             instance.timestamp = DateTime.Now.Ticks;
             return instance;

@@ -45,19 +45,9 @@ namespace Implementation.Common
                 LocalTypeFullName = FullName;
                 foreach (ParameterInfo par in parameterInfos)
                 {
-                    if (par.ParameterType.FullName.Contains(Name))
-                    {
-                        String tmp = par.ParameterType.FullName;
-                        int start = 0;
-                        for (int i = tmp.IndexOf(Name) - 2; i >= 0; i--)
-                        {
-                            Char ts = tmp[i];
-                            if (!Char.IsLetter(tmp[i])) { start = i + 1; break; }
-                        }
-                        int xy = tmp.IndexOf(Name) - start + Name.Length;
-                        tmp = tmp.Substring(start, xy);
-
-                        LocalTypeFullName = tmp;
+                    if (par.ParameterType.FullName.ToUpper().Contains(Name.ToUpper()))
+                    {      
+                        LocalTypeFullName = par.ParameterType.FullName;
                     }
                 }
             }
@@ -66,7 +56,7 @@ namespace Implementation.Common
                 Name = FullName.Split('.').Last().Trim();
                 foreach (ParameterInfo par in parameterInfos)
                 {
-                    if (par.ParameterType.FullName.Contains(Name))
+                    if (par.ParameterType.FullName.Contains(Name)|| par.ParameterType.Equals(typeof(object)))
                     {
                         LocalTypeFullName = par.ParameterType.FullName;
                         break;

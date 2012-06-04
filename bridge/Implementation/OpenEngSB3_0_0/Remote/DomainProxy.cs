@@ -34,12 +34,12 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainProxy(string host, string serviceId, String domainType)
             : base(host, serviceId, domainType)
         {
-            AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         public DomainProxy(string host, string serviceId, String domainType, String username, String password)
             : base(host, serviceId, domainType, username, password)
         {
-            AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         #endregion
         #region Public Methods
@@ -52,14 +52,14 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         {
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
-            string methodCallMsg = marshaller.MarshallObject(ToMethodCallRequest(callMessage));
+            string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
             IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
 
             portOut.Send(methodCallMsg, methodCallRequest.callId);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId));
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
-            return ToMessage(methodReturn.message.result, callMessage);
+            return ToMessage(methodReturn.result, callMessage);
         }
         #endregion
         #region Private methods        
@@ -86,8 +86,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                 classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp+".","")));
             }            
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes,null);            
-            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            authentification.data.Add(username, password);
+
+            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);            
+            authentification.data.Add("value", password);
             MethodCallMessage message = MethodCallMessage.createInstance(username,authentification,call, id.ToString(), true, "");
             return message;
         }

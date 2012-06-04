@@ -19,7 +19,7 @@ namespace Implementation.Common
         #region Const.
         protected const string CREATION_QUEUE = "receive";
         protected const string CREATION_SERVICE_ID = "connectorManager";
-        protected const string CREATION_METHOD_NAME = "create";
+        protected string CREATION_METHOD_NAME = "create";
         protected const string CREATION_DELETE_METHOD_NAME = "delete";
         protected const string CREATION_PORT = "jms-json";
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
@@ -94,6 +94,7 @@ namespace Implementation.Common
             this.queueThread = null;
             this.serviceId = serviceId;
             this.domainType = domainType;
+            this.domainService = localDomainService;
             this.portIn = new JmsIncomingPort(destination);
             this.username = "admin";
             this.password = "password";
@@ -115,6 +116,7 @@ namespace Implementation.Common
             this.queueThread = null;
             this.serviceId = serviceId;
             this.domainType = domainType;
+            this.domainService = localDomainService;
             this.portIn = new JmsIncomingPort(destination);
             this.username = username;
             this.password = password;
@@ -141,9 +143,18 @@ namespace Implementation.Common
                     continue;
                 }
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
-
                 if (type == null)
                     type = Type.GetType(remoteType.LocalTypeFullName);
+                if (type == null)
+                {
+                    foreach (ParameterInfo param in methodInfo.GetParameters())
+                    {
+                        if (param.ParameterType.FullName.ToUpper().Equals(remoteType.LocalTypeFullName.ToUpper()))
+                        {
+                            type = param.ParameterType;
+                        }
+                    }
+                }
 
                 if (type == null)
                     throw new ApplicationException("no corresponding local type found");
@@ -160,11 +171,10 @@ namespace Implementation.Common
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
-                }
-                HelpMethods.addTrueForSpecified(args, methodInfo);
+                }                
                 args.Add(obj);
             }
-
+            HelpMethods.addTrueForSpecified(args, methodInfo);
             return args.ToArray();
         }
         /// <summary>
@@ -180,7 +190,7 @@ namespace Implementation.Common
 
             object[] arguments = CreateMethodArguments(request, methInfo);
             return methInfo.Invoke(DomainService, arguments); ;
-        }        
+        }
         /// <summary>
         /// Tries to find the method that should be called.
         /// </summary>
@@ -243,6 +253,6 @@ namespace Implementation.Common
         public abstract void CreateRemoteProxy();
         public abstract void DeleteRemoteProxy();
         public abstract void Listen();
-        #endregion       
+        #endregion
     }
 }

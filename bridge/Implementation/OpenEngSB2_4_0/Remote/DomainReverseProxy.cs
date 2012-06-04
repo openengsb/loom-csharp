@@ -50,6 +50,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
             : base(localDomainService, host, serviceId, domainType)
         {
+            CREATION_METHOD_NAME = "create";
             AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
         }
         /// <summary>
@@ -64,6 +65,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
             : base(localDomainService, host, serviceId, domainType, username, password)
         {
+            CREATION_METHOD_NAME = "create";
             AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
         }
         #endregion
@@ -174,6 +176,8 @@ namespace Implementation.OpenEngSB2_4_0.Remote
                     Destination dest = new Destination(destination);
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId));
                     portOut.Send(returnMsg);
+                    if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))
+                        throw new Exception(methodReturnMessage.message.result.arg.ToString());
                 }
             }
         }

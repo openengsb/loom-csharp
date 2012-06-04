@@ -30,9 +30,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObject
         #region Variables
         public IDictionary<String, Object> properties { get; set; }
         public IDictionary<String, String> attributes { get; set; }
-        public String domainId { get; set; }
-        public String connectorId { get; set; }
-        public String instanceId { get; set; }
+        public String domainType { get; set; }
+        public String connectorType { get; set; }
         #endregion
         #region Constructor
         /// <summary>

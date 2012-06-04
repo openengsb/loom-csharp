@@ -24,7 +24,7 @@ using System.IO;
 using Implementation;
 using Interface;
 using ExampleDomain;
-using ExampleDomainEvents;
+using ExampleDomainEvent;
 
 namespace ServiceTestConsole
 {
@@ -41,23 +41,19 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
-            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
+            IExampleDomainSoapBinding localDomain = new ExampleDomainConnector();
 
-            //Register the connecter on the osenEngSB
-            factory.RegisterDomainService(destination, localDomain, domainName);
+            //Register the connecter on the OpenEngSB
+           factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
-            ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
-            logEvent.name = "Example";
-            logEvent.processId = 0;
-
-
-            //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.
-
-
-            //logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
-            logEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(logEvent);
+            IExampleDomainEventsServiceSoapBinding remotedomain = factory.getEventhandler<IExampleDomainEventsServiceSoapBinding>(destination);
+            ExampleDomainEvent.logEvent lEvent= new ExampleDomainEvent.logEvent();
+            lEvent.name = "Example";
+            lEvent.processId = 0;
+            lEvent.level = ExampleDomainEvent.logLevel.DEBUG;
+            //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.            
+            lEvent.message = "remoteTestEventLog";
+            remotedomain.raiseEvent(lEvent);
             Console.ReadKey();
             factory.UnregisterDomainService(localDomain);            
         }

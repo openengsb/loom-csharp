@@ -35,10 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomainEventsInterfaces">
-      <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</HintPath>
+    <Reference Include="ExampleDomainEventsServiceInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsServiceInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ExampleDomainInterfaces">
+    <Reference Include="ExampleDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
