@@ -134,14 +134,20 @@ namespace Implementation.Common
         /// <param name="methodCall">MethodCall</param>
         /// <returns>Arguments</returns>
         protected object[] CreateMethodArguments(IMethodCall methodCall, MethodInfo methodInfo)
-        {
+        {                                             
             IList<object> args = new List<object>();
-
             Assembly asm = typeof(T).GetType().Assembly;
             for (int i = 0; i < methodCall.args.Count; ++i)
             {
-                object arg = methodCall.args[i];
-                RemoteType remoteType = new RemoteType(methodCall.classes[i], methodInfo.GetParameters());
+                Object arg = methodCall.args[i];
+                String methodClass = methodCall.classes[i];
+                if (methodCall.isWrapped())
+                {
+                    methodClass = ((OpenEngSBModelWrapper)arg).modelClass;
+                    arg = ConvertWrapperTypes(arg, methodInfo);                    
+                }
+                                
+                RemoteType remoteType = new RemoteType(methodClass, methodInfo.GetParameters());
                 if (remoteType.LocalTypeFullName == null)
                 {
                     args.Add(null);
@@ -165,7 +171,9 @@ namespace Implementation.Common
                     throw new ApplicationException("no corresponding local type found");
 
                 object obj = null;
-                if (type.IsPrimitive || type.Equals(typeof(string)))
+                if (type.IsInstanceOfType(arg)){
+                    obj=arg;
+                } else if (type.IsPrimitive || type.Equals(typeof(string)))
                 {
                     obj = arg;
                 }
@@ -176,11 +184,70 @@ namespace Implementation.Common
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
-                }                
+                }             
                 args.Add(obj);
             }
             HelpMethods.addTrueForSpecified(args, methodInfo);
-            return args.ToArray();
+            return args.ToArray();        
+        }
+        private Object ConvertWrapperTypes(Object wrappedObject,MethodInfo methodInfo)
+        {
+            OpenEngSBModelWrapper wrapper = wrappedObject as OpenEngSBModelWrapper;
+            IList<Object> result = new List<Object>();
+            RemoteType mt=new RemoteType(wrapper.modelClass, methodInfo.GetParameters());
+            Type usedType = findType(mt.LocalTypeFullName, methodInfo);
+            Object obj = Activator.CreateInstance(usedType);
+            foreach (OpenEngSBModelEntry entry in wrapper.entries)
+            {
+                PropertyInfo field = null;
+                foreach (PropertyInfo info in usedType.GetProperties())
+                {
+                    if (info.Name.ToUpper().Equals(entry.key.ToUpper()))
+                    {
+                        field = info;
+                        break;
+                    }
+                }
+                if (field == null) throw new ArgumentException("There is no field " + entry.key);
+                Object tmp=ConvertType(entry,methodInfo);
+                field.SetValue(obj, tmp,null);
+            }
+            return obj;
+        }
+
+        private Object ConvertType(OpenEngSBModelEntry entry,MethodInfo methodinfo)
+        {
+            String value = entry.value;
+            RemoteType remote = new RemoteType(entry.type,methodinfo.GetParameters());
+            Type type = findType(remote.LocalTypeFullName, methodinfo);
+            if (type.IsPrimitive || type.Equals(typeof(string)))
+            {
+                return Convert.ChangeType(value, type);
+            }
+            else if (type.IsEnum)
+            {
+                return Enum.Parse(type, value);
+            }
+            else
+            {
+                return marshaller.UnmarshallObject(value, type);
+            }
+        }
+        private Type findType(String typeString, MethodInfo methodInfo)
+        {            
+            Assembly asm = typeof(T).GetType().Assembly;
+            Type type = asm.GetType(typeString);
+            if (type == null)
+                type = Type.GetType(typeString);
+            if (type == null)
+            {
+                foreach (ParameterInfo param in methodInfo.GetParameters())
+                {
+                    if (param.ParameterType.FullName.ToUpper()
+                        .Equals(typeString.ToUpper())) type = param.ParameterType;
+                }
+            }
+            return type;
         }
         /// <summary>
         /// Invokes a method
@@ -188,7 +255,7 @@ namespace Implementation.Common
         /// <param name="request">Method informations</param>
         /// <returns>return value</returns>
         protected Object invokeMethod(IMethodCall request)
-        {
+        {            
             logger.Info("Search and invoke method: "+request.methodName);
             MethodInfo methInfo = FindMethodInDomain(request);
             if (methInfo == null)
@@ -196,9 +263,7 @@ namespace Implementation.Common
                 logger.Error("No corresponding method found");
                 throw new ApplicationException("No corresponding method found");
             }
-
-            object[] arguments = CreateMethodArguments(request, methInfo);
-            
+            Object[] arguments= CreateMethodArguments(request, methInfo);            
             Object result= methInfo.Invoke(DomainService, arguments); ;
             logger.Info("Invokation done");
             return result;
@@ -206,24 +271,42 @@ namespace Implementation.Common
         /// <summary>
         /// Tries to find the method that should be called.
         /// </summary>
-        /// <param name="methodCallWrapper"></param>
+        /// <param name="methodCall">The methodCall can be wrapped</param>
         /// <returns></returns>
-        protected MethodInfo FindMethodInDomain(IMethodCall methodCallWrapper)
+        protected MethodInfo FindMethodInDomain(IMethodCall methodCall)
         {
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
-                if (methodCallWrapper.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
+                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
                 List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
-                if (parameterResult.Count != methodCallWrapper.args.Count)
+                if ((parameterResult.Count != methodCall.args.Count) &&
+                    (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
+                    continue;
+                if (!methodCall.isWrapped())
                 {
-                    if (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCallWrapper.args.Count) continue;
+                    if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>())) continue;
                 }
-                if (!HelpMethods.TypesAreEqual(methodCallWrapper.classes, parameterResult.ToArray<ParameterInfo>())) continue;
+                else
+                {
+                    if (!HelpMethods.TypesAreEqual(convertToClassList(methodCall.args), parameterResult.ToArray<ParameterInfo>())) continue;
+                }
                 return methodInfo;
             }
             return null;
         }
-
+        /// <summary>
+        /// Converts a OpenEngsWrapper array to a String array
+        /// </summary>
+        /// <returns>List of strings</returns>
+        private IList<String> convertToClassList(IList<Object> wrappers)
+        {
+            IList<String> result = new List<String>();
+            foreach (OpenEngSBModelWrapper wrapper in wrappers)
+            {
+                result.Add(wrapper.modelClass);
+            }
+            return result;
+        }
         #endregion
         #region Public Methods
         public DomainReverse(T domainService)

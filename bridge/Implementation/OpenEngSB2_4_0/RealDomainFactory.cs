@@ -131,6 +131,10 @@ namespace Implementation.OpenEngSB2_4_0
         {
             return domainType + "+external-connector-proxy+" + serviceId;
         }
+        public String getServiceId()
+        {
+            return serviceId;
+        }
         #endregion
     }
 }

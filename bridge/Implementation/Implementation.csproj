@@ -62,8 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Domain.cs" />
+    <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ReturnType.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
+    <Compile Include="Common\RemoteObjects\OpenEngSBModelEntry.cs" />
+    <Compile Include="Common\RemoteObjects\OpenEngSBModelWrapper.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />

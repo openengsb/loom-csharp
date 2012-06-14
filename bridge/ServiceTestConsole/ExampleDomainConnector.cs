@@ -27,14 +27,14 @@ namespace ServiceTestConsole
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoapBinding
+    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoap11Binding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
         
         public ExampleDomainConnector() : base(logger)
         {
         }
-        public string doSomethingWithEnum(exampleEnum arg0, bool arg0Specified)
+        /*public string doSomethingWithEnum(exampleEnum arg0, bool arg0Specified)
         {
             logger.Info("run doSomethingWithEnum with " + arg0);
             return "done";
@@ -58,7 +58,7 @@ namespace ServiceTestConsole
             return null;
         }
 
-        public void getAliveState(out aliveState @return, out bool returnSpecified)
+        public void getAliveState(out ExampleDomain.aliveState @return, out bool returnSpecified)
         {
             throw new NotImplementedException();
         }
@@ -66,6 +66,30 @@ namespace ServiceTestConsole
         public string getInstanceId()
         {
             throw new NotImplementedException();
+        }*/
+
+        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string doSomethingWithLogEvent(LogEvent args0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string doSomethingWithMessage(string args0)
+        {
+            logger.Info("run doSomethingWithEnum with " + args0);
+            return "Hallo";
+        }
+
+        public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
+        {            
+            logger.Info("Message received in doSomethingWithModel");
+            ExampleResponseModel m=new ExampleResponseModel();
+            m.result = "RESULT";
+            return m;
         }
     }
 }

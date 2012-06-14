@@ -197,10 +197,18 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             {
                 returnValue = invokeMethod(request.message.methodCall);
             }
-            catch (Exception ex)
+            catch (ApplicationException)
             {
-                return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
+                try
+                {
+                    returnValue = invokeMethod(request.message.methodCall);
+                }
+                catch (ApplicationException ex)
+                {
+                    return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
+                }
             }
+
 
             MethodResultMessage returnMsg = null;
 

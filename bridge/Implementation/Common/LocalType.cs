@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Implementation.Common.Enumeration;
 
 namespace Implementation.Common
 {
@@ -27,25 +28,32 @@ namespace Implementation.Common
     public class LocalType
     {
         #region Variables
-        private Type _type;
+        private Type type;
         #endregion
         #region Propreties
         public string RemoteTypeFullName
         {
             get
             {
-                if (_type.Equals(typeof(string)))
+                if (type.Equals(typeof(string)))
                 {
                     return "java.lang.String";
                 }
-                return _type.FullName;
+                if (type.Equals(typeof(AliveState)))
+                {
+                    return "org.openengsb.core.api.AliveState";
+                }
+                if (type.IsPrimitive){
+                    return type.FullName;
+                }
+                return HelpMethods.GetPackageName(type.FullName, type);
             }
         }
         #endregion
         #region Constructor
         public LocalType(Type type)
         {
-            _type = type;
+            this.type = type;
         }
         #endregion
     }

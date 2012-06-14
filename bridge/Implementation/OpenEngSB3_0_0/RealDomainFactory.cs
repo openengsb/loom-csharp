@@ -114,9 +114,17 @@ namespace Implementation.OpenEngSB3_0_0
         {
             return new DomainProxy<T>(host, getDomainTypServiceId(),domainType).GetTransparentProxy();
         }
+        /// <summary>
+        /// returns the Domain+Txpe+ServiceId
+        /// </summary>
+        /// <returns></returns>
         public String getDomainTypServiceId()
         {
             return domainType + "+external-connector-proxy+" + serviceId;
+        }
+        public String getServiceId()
+        {
+            return serviceId;
         }
     }
 }

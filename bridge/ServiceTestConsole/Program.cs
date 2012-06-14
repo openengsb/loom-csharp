@@ -24,7 +24,8 @@ using System.IO;
 using Implementation;
 using Interface;
 using ExampleDomain;
-using ExampleDomainEvent;
+using ExampleDomainEvents;
+using log4net;
 
 namespace ServiceTestConsole
 {
@@ -37,25 +38,32 @@ namespace ServiceTestConsole
         static void Main(string[] args)
         {
             log4net.Config.BasicConfigurator.Configure();
+            ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
+            logger.Info("\n------------------------------------------------"
+            + "\n     Start Example wit the domain " + domainName
+            + "\n------------------------------------------------");
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
-            IExampleDomainSoapBinding localDomain = new ExampleDomainConnector();
-
+            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the OpenEngSB
-           factory.RegisterDomainService(destination, localDomain, domainName);
+            factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            IExampleDomainEventsServiceSoapBinding remotedomain = factory.getEventhandler<IExampleDomainEventsServiceSoapBinding>(destination);
-            ExampleDomainEvent.logEvent lEvent= new ExampleDomainEvent.logEvent();
+
+            IExampleDomainEventsServiceSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsServiceSoap11Binding>(destination);
+            /*ExampleDomainEvent.logEvent lEvent= new ExampleDomainEvent.logEvent();
             lEvent.name = "Example";
             lEvent.processId = 0;
             lEvent.level = ExampleDomainEvent.logLevel.DEBUG;
             //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.            
             lEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(lEvent);
+            remotedomain.raiseEvent(lEvent);*/
+            logger.Info("\n------------------------------------------------"
+            + "\n     Press enter to close the Connection"
+            + "\n------------------------------------------------");
             Console.ReadKey();
-            factory.UnregisterDomainService(localDomain);            
+            factory.UnregisterDomainService(localDomain);
         }
     }
 }

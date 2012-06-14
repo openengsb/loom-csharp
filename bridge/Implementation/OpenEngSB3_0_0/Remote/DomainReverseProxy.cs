@@ -80,8 +80,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         {
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            registerId = Guid.NewGuid().ToString();
-
+            //registerId = Guid.NewGuid().ToString();
+            registerId = serviceId;
 
             IList<string> classes = new List<string>();
             LocalType localType = new LocalType(typeof(String));
@@ -100,7 +100,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             args.Add(connectorDescription);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
-            
+
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
@@ -160,8 +160,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                 if (textMsg == null)
                     continue;
                 MethodCallMessage methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallMessage)) as MethodCallMessage;
-                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();
-
+                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();                
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.answer)
@@ -170,8 +169,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                     Destination dest = new Destination(destination);
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId));
                     portOut.Send(returnMsg);
-                    if (methodReturnMessage.result.type.Equals(ReturnType.Exception)) 
-                        throw new Exception(methodReturnMessage.result.arg.ToString());
+                    if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
+                        throw new ArgumentException(methodReturnMessage.result.arg.ToString());
                 }
             }
         }
@@ -183,7 +182,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="methodCall">Description of the call.</param>
         /// <returns></returns>        
         private MethodResultMessage CallMethod(MethodCallMessage request)
-        {                   
+        {
             object returnValue = null;
             try
             {
@@ -215,17 +214,20 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         {
             MethodResult methodResult = new MethodResult();
             methodResult.type = type;
-            methodResult.arg = returnValue;            
-                                  
+            methodResult.arg = returnValue;
 
             if (returnValue == null)
                 methodResult.className = "null";
             else
-                methodResult.className = new LocalType(returnValue.GetType()).RemoteTypeFullName;
-
+            {
+                if (!type.Equals(ReturnType.Exception))
+                {
+                    methodResult.className = new LocalType(returnValue.GetType()).RemoteTypeFullName;
+                }
+                else methodResult.className = returnValue.GetType().ToString();
+            }
             methodResult.metaData = new Dictionary<string, string>();
-
-            return MethodResultMessage.CreateInstance(methodResult, correlationId);  
+            return MethodResultMessage.CreateInstance(methodResult, correlationId);
         }
         #endregion
     }

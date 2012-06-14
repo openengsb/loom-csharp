@@ -14,21 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Services;
 using System.Text;
-
-namespace Interface
+using log4net;
+using Implementation;
+using PlcDomain;
+namespace ServiceTestConsole
 {
-    public interface IDomainFactory
+    /// <summary>
+    /// Example implementation of the local domain
+    /// </summary>
+    class PLCDomainConnector : RegistrationFunctions, IPlcDomainSoap11Binding
     {
-        T getEventhandler<T>(string host);
+        private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
-        void RegisterDomainService<T>(string destination, T service, string domainType);
-        void UnregisterDomainService(object service);
-        String getDomainTypServiceId();
-        String getServiceId();
+        public PLCDomainConnector()
+            : base(logger)
+        {
+        }
+
+
+        public void insertTestSignals()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void mergeFailed(MergeException args0)
+        {
+            logger.Info("Exception has been done");
+        }
+
+        public void mergeSuccessful()
+        {
+            logger.Info("merge has been done");
+        }
+
+        public void updateData(Plc[] args0)
+        {
+            logger.Info("Start invoking updateData");
+        }
     }
 }

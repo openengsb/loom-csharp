@@ -20,12 +20,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using log4net;
+using Implementation.Common.Enumeration;
 
 namespace Implementation
 {
     public partial class RegistrationFunctions
     {
         private ILog logger;
+        
         public RegistrationFunctions(ILog logger)
         {
             this.logger = logger;
@@ -46,6 +48,17 @@ namespace Implementation
         {
             logger.Info("setConnectorId:" + element);
         }
+        /// <summary>
+        /// Get invokes, when the OpenEngSB checks the connections
+        /// </summary>
+        /// <returns></returns>
+        public AliveState getAliveState()
+        {
+            logger.Info("GetAliveState called. Answering with ONLINE");
+            return AliveState.ONLINE;
+        }
+
+    
     }
 }
 

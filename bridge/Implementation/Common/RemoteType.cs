@@ -29,40 +29,50 @@ namespace Implementation.Common
     public class RemoteType
     {
         #region Propreties
-        public string FullName { get; set; }
-
+        public string RemoteTypeFullName { get; set; }
         public string Name { get; set; }
-
         public string LocalTypeFullName { get; set; }
         #endregion
         #region Constructor
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
-            FullName = typeString;
-            if (FullName.Contains("$"))
+            RemoteTypeFullName = typeString;            
+            if (RemoteTypeFullName.Contains("$"))
             {
-                Name = FullName.Split('$').Last().Trim();
-                LocalTypeFullName = FullName;
-                foreach (ParameterInfo par in parameterInfos)
-                {
-                    if (par.ParameterType.FullName.ToUpper().Contains(Name.ToUpper()))
-                    {      
-                        LocalTypeFullName = par.ParameterType.FullName;
-                    }
-                }
+                Name = RemoteTypeFullName.Split('$').Last().Trim();
+                createFullName(Name, parameterInfos);
             }
             else
             {
-                Name = FullName.Split('.').Last().Trim();
-                foreach (ParameterInfo par in parameterInfos)
+                createFullName(RemoteTypeFullName.Split('.').Last().Trim().Replace(";", ""), parameterInfos);
+                Name = LocalTypeFullName.Split('.').Last().Trim();
+            }
+        }
+        #endregion
+        #region Private Methods
+        private void createFullName(String methodName,ParameterInfo[] parameterInfos)
+        {
+            
+            foreach (ParameterInfo par in parameterInfos)
+            {
+                if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
                 {
-                    if (par.ParameterType.FullName.Contains(Name)|| par.ParameterType.Equals(typeof(object)))
-                    {
-                        LocalTypeFullName = par.ParameterType.FullName;
-                        break;
-                    }
+                    LocalTypeFullName = par.ParameterType.FullName;
                 }
             }
+
+            if (String.IsNullOrEmpty(LocalTypeFullName))
+            {
+                LocalTypeFullName = CheckPrimitivType(methodName.Split('.').Last().Trim());
+            }
+        }
+        private String CheckPrimitivType(String mehtodName)
+        {
+            if (mehtodName.ToUpper().Contains("INT")) return typeof(int).ToString();
+            if (mehtodName.ToUpper().Contains("STRING")) return typeof(string).ToString();
+            if (mehtodName.ToUpper().Contains("FLOAT")) return typeof(float).ToString();
+            if (mehtodName.ToUpper().Contains("DOUBLE")) return typeof(double).ToString();
+            return mehtodName;
         }
         #endregion
     }

@@ -37,21 +37,21 @@ namespace Implementation.Communication.Jms
         protected ISession session;
         protected IDestination destination;
         #endregion
-        #region Constructor 
+        #region Constructor
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
         protected JmsPort(string destination)
         {
-            connection = null;
-            factory = null;
-            session = null;
+            this.connection = null;
+            this.factory = null;
+            this.session = null;
             this.destination = null;
             Configure(destination);
         }
         #endregion
-        #region private Methods
+        #region Private Methods
         /// <summary>
         /// Configurate the Connection
         /// </summary>
