@@ -16,19 +16,10 @@
  ***/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Remoting.Proxies;
 using System.Runtime.Remoting.Messaging;
-using System.Web.Services.Protocols;
-using System.Reflection;
-using System.IO;
-using System.Xml.Serialization;
-using Implementation.Communication.Jms;
-using Implementation.Communication;
-using Implementation.Communication.Json;
 using Implementation.Common;
-using Implementation;
+using Implementation.Communication;
+using Implementation.Communication.Jms;
 using Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 namespace Implementation.OpenEngSB2_4_0.Remote
 {

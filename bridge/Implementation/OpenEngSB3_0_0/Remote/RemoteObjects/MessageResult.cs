@@ -14,12 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>

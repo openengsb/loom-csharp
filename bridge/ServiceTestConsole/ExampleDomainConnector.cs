@@ -15,13 +15,9 @@
  * limitations under the License.
  ***/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Services;
-using System.Text;
-using log4net;
 using ExampleDomain;
 using Implementation;
+using log4net;
 namespace ServiceTestConsole
 {
     /// <summary>
@@ -31,42 +27,7 @@ namespace ServiceTestConsole
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
         
-        public ExampleDomainConnector() : base(logger)
-        {
-        }
-        /*public string doSomethingWithEnum(exampleEnum arg0, bool arg0Specified)
-        {
-            logger.Info("run doSomethingWithEnum with " + arg0);
-            return "done";
-        }
-
-        public string doSomethingWithLogEvent(logEvent arg0)
-        {
-            logger.Info("run doSomethingWithLogEvent with " + arg0);
-            return "done";
-        }
-
-        public string doSomethingWithMessage(string arg0)
-        {
-            logger.Info("run doSomethingWithMessage with " + arg0);
-            return "done";
-        }
-
-        public object doSomethingWithModel(object arg0)
-        {
-            logger.Info("run doSomethingWithModel with " + arg0);
-            return null;
-        }
-
-        public void getAliveState(out ExampleDomain.aliveState @return, out bool returnSpecified)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getInstanceId()
-        {
-            throw new NotImplementedException();
-        }*/
+        public ExampleDomainConnector() : base(logger){}        
 
         public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
         {

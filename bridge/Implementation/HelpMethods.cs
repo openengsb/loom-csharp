@@ -18,12 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
+using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
 using Implementation.Common;
-using System.Web.Services;
 using Implementation.Common.RemoteObjects;
 using Implementation.Communication.Json;
 

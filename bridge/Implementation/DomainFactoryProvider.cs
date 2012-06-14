@@ -17,14 +17,11 @@
  ***/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using Interface;
-using Implementation.Exceptions;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
+using Implementation.Exceptions;
+using Interface;
 
 namespace Implementation
 {

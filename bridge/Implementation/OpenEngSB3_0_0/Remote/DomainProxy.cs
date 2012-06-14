@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Implementation.Common;
-using Implementation.Communication.Jms;
 using Implementation.Communication;
+using Implementation.Communication.Jms;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 
 namespace Implementation.OpenEngSB3_0_0.Remote
 {

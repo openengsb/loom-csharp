@@ -16,15 +16,10 @@
  ***/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using Implementation;
-using Interface;
 using ExampleDomain;
 using ExampleDomainEvents;
+using Implementation;
+using Interface;
 using log4net;
 
 namespace ServiceTestConsole
