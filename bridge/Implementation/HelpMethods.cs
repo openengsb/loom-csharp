@@ -82,30 +82,36 @@ namespace Implementation
         /// </summary>
         /// <param name="fieldname">Method name or Parameter name</param>
         /// <returns>Packagename</returns>
-        public static String GetPackageName(String fieldname, Type type)
+        public static String CreateClassWithPackageName(String fieldname, Type type)
         {
-            SoapDocumentMethodAttribute soapAttribute;            
+            String result = null;
+            //CFX plugin
+            SoapDocumentMethodAttribute soapAttribute;
             foreach (Attribute attribute in type.GetCustomAttributes(false))
             {
                 if (attribute is WebServiceBindingAttribute)
                 {
                     WebServiceBindingAttribute webservice = attribute as WebServiceBindingAttribute;
-                    String result = FindCXFRequestNamespace(type, fieldname);
-                    if (!String.IsNullOrEmpty(result)) return result;
+                    result = FindCXFRequestNamespace(type, fieldname);
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                        return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+
+                    }
                 }
             }
-
+            //axis plugin
             MethodInfo method = type.GetMethod(fieldname);
             //Tests if it is a Mehtod or a Type
             if (method != null)
-            {                
-                
+            {
+
                 foreach (Attribute attribute in method.GetCustomAttributes(false))
                 {
                     if (attribute is SoapDocumentMethodAttribute)
                     {
-                        soapAttribute = attribute as SoapDocumentMethodAttribute;                        
-                        return reverseURL(soapAttribute.RequestNamespace);
+                        soapAttribute = attribute as SoapDocumentMethodAttribute;
+                        result = reverseURL(soapAttribute.RequestNamespace);
                     }
                 }
             }
@@ -118,18 +124,21 @@ namespace Implementation
                     if (attribute is XmlTypeAttribute)
                     {
                         XmlTypeAttribute xmltype = attribute as XmlTypeAttribute;
-                        return reverseURL(xmltype.Namespace);
+                        result = reverseURL(xmltype.Namespace);
                     }
                 }
             }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            if (String.IsNullOrEmpty(result))
+                throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            else
+                return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
         }
         /// <summary>
         /// Makes the first character to a upper character
         /// </summary>
         /// <param name="element">Element to edit</param>
         /// <returns>String with the first character upper</returns>
-        public static String FirstLetterToUpper(String element)
+        private static String FirstLetterToUpper(String element)
         {
             if (element.Length <= 1) return element.ToUpper();
             String first = element.Substring(0, 1);

@@ -84,11 +84,11 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             {
                 String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
-                realClassImplementation.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName, typeof(T)));
-                classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName, typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp + ".", "")));
+                realClassImplementation.Add(HelpMethods.CreateClassWithPackageName(type.RemoteTypeFullName, typeof(T)));
+                classes.Add(HelpMethods.CreateClassWithPackageName(type.RemoteTypeFullName, typeof(T)));
             }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, realClassImplementation);
-            
+
             Data data = Data.CreateInstance(username, password);
             Authentification authentification = Authentification.createInstance(AUTHENTIFICATION_CLASS, data, BinaryData.CreateInstance());
             Message message = Message.createInstance(call, id.ToString(), true, "");

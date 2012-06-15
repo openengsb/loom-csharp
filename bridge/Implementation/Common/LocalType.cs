@@ -43,7 +43,7 @@ namespace Implementation.Common
                 if (type.IsPrimitive){
                     return type.FullName;
                 }
-                return HelpMethods.GetPackageName(type.FullName, type);
+                return HelpMethods.CreateClassWithPackageName(type.FullName, type);
             }
         }
         #endregion

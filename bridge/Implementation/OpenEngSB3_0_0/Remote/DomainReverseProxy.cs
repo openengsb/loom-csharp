@@ -153,7 +153,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                 if (textMsg == null)
                     continue;
                 MethodCallMessage methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallMessage)) as MethodCallMessage;
-                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();                
+                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.answer)
@@ -185,14 +185,11 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             {
                 return CreateMethodReturn(ReturnType.Exception, ex, request.callId);
             }
-
             MethodResultMessage returnMsg = null;
-
             if (returnValue == null)
-                returnMsg = CreateMethodReturn(ReturnType.Void, "null", request.callId);
+                returnMsg = CreateMethodReturn(ReturnType.Void, null, request.callId);
             else
                 returnMsg = CreateMethodReturn(ReturnType.Object, returnValue, request.callId);
-
             return returnMsg;
         }
 
