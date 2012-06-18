@@ -24,10 +24,11 @@ using Implementation.Communication;
 using Implementation.Communication.Jms;
 using Implementation.Communication.Json;
 using log4net;
+using Implementation.Common.Enumeration;
 
 namespace Implementation.Common
 {
-    public abstract class DomainReverse<T>
+    public abstract class DomainReverse<T>:IRegistration
     {
         #region Const.
         protected const string CREATION_QUEUE = "receive";
@@ -36,9 +37,18 @@ namespace Implementation.Common
         protected const string CREATION_DELETE_METHOD_NAME = "delete";
         protected const string CREATION_PORT = "jms-json";
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
-        protected string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
+        protected string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";        
         #endregion
         #region Variables
+        /// <summary>
+        /// indicates in witch state the registration is
+        /// </summary>
+        private ERegistration registrationprocess = ERegistration.NONE;
+        public Boolean Registered
+        {
+            get { return registrationprocess.Equals(ERegistration.REGISTERED); }
+        }
+
         /// <summary>
         /// domain-instance to act as reverse-proxy for
         /// </summary>
@@ -269,6 +279,7 @@ namespace Implementation.Common
         protected Object invokeMethod(IMethodCall request)
         {            
             logger.Info("Search and invoke method: "+request.methodName);
+            setRegrationLevel(request.methodName);
             MethodInfo methInfo = FindMethodInDomain(request);
             if (methInfo == null)
             {
@@ -279,6 +290,31 @@ namespace Implementation.Common
             Object result= methInfo.Invoke(DomainService, arguments); ;
             logger.Info("Invokation done");
             return result;
+        }
+        private void setRegrationLevel(String methodName)
+        {
+            switch (registrationprocess)
+            {
+                case ERegistration.REGISTERED: return;
+                case ERegistration.SETCONNECTORID:
+                    if (methodName.ToUpper().Equals("SETDOMAINID"))
+                        logger.Info("Registration done");
+                    registrationprocess = ERegistration.REGISTERED;
+                    return;
+                case ERegistration.SETDOMINID:
+                    if (methodName.ToUpper().Equals("SETCONNECTORID"))
+                        registrationprocess = ERegistration.REGISTERED;
+                    logger.Info("Registration done");
+                    return;
+                case ERegistration.NONE:
+                    if (methodName.ToUpper().Equals("SETDOMAINID"))
+                        registrationprocess = ERegistration.SETDOMINID;
+                    if (methodName.ToUpper().Equals("SETCONNECTORID"))
+                        registrationprocess = ERegistration.SETCONNECTORID;
+                    return;
+            }
+            throw new InvalidOperationException("The registaration isn't finished. The called method is: " + methodName);
+
         }
         /// <summary>
         /// Tries to find the method that should be called.

@@ -26,5 +26,6 @@ namespace Interface
         void UnregisterDomainService(object service);
         String getDomainTypServiceId();
         String getServiceId();
+        Boolean Registered(Object domainService);
     }
 }

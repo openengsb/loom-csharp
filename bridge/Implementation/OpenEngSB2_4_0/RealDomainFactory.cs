@@ -28,9 +28,11 @@ namespace Implementation.OpenEngSB2_4_0
     public class RealDomainFactory : IDomainFactory
     {
         #region Variables
-        private Dictionary<object, IStoppable> _proxies;
+        private Dictionary<object, IRegistration> proxies;
         private String serviceId;
-        private String domainType;
+        private String domainType;        
+        #endregion
+        #region Attributes       
         #endregion
         #region Constructor
         /// <summary>
@@ -47,10 +49,15 @@ namespace Implementation.OpenEngSB2_4_0
         /// </summary>
         private void Reset()
         {
-            _proxies = new Dictionary<object, IStoppable>();
+            proxies = new Dictionary<object, IRegistration>();
         }
         #endregion
         #region Public Methods
+
+        public bool Registered(object domainService)
+        {
+            return proxies[domainService].Registered;
+        }
         /// <summary>
         /// Creates, registers and starts a reverse proxy with defaul Authentification
         /// RENAME
@@ -64,7 +71,7 @@ namespace Implementation.OpenEngSB2_4_0
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -82,7 +89,7 @@ namespace Implementation.OpenEngSB2_4_0
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -91,11 +98,11 @@ namespace Implementation.OpenEngSB2_4_0
         /// <param name="service">proxy to delete</param>
         public void UnregisterDomainService(object service)
         {
-            IStoppable stoppable = null;
-            if(_proxies.TryGetValue(service, out stoppable))
+            IRegistration stoppable = null;
+            if(proxies.TryGetValue(service, out stoppable))
             {
                 stoppable.Stop();
-                _proxies.Remove(service);
+                proxies.Remove(service);
             }
         }
         /// <summary>

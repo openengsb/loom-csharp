@@ -59,7 +59,6 @@ namespace Implementation.Communication.Jms
         private void Configure(string destination)
         {
             Destination dest = new Destination(destination);
-
             Uri connectionUri = new Uri(dest.Host);
             factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
             connection = factory.CreateConnection();

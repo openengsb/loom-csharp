@@ -56,28 +56,29 @@ namespace Implementation.Common.RemoteObjects
             int fails = 0;
             for (int i = 0; i < args.Count; i++)
             {
-                try
+                if (isOpenEngSBModelWrapper(args[i].ToString()))
                 {
                     OpenEngSBModelWrapper element = (OpenEngSBModelWrapper)marshaller.UnmarshallObject(args[i].ToString(), typeof(OpenEngSBModelWrapper));
-                    if (element != null)
-                    {
-                        result.Add(element);
-                    }
-                    else
-                    {
-                        fails++;
-                        result.Add(args[i]);
-                    }
+                    result.Add(element);
                 }
-                catch (Exception ex)
+                else
                 {
-                    if (!ex.Source.ToString().ToUpper().Contains("JSON")) throw ex;
-                    result.Add(args[i]);
                     fails++;
-                }                
+                    result.Add(args[i]);
+                }
             }
             wrapped = fails < args.Count;
             if (wrapped.Value) args = result;           
+        }
+        private Boolean isOpenEngSBModelWrapper(String element)
+        {
+            foreach (PropertyInfo pr in typeof(OpenEngSBModelWrapper).GetProperties())
+            {
+                if (!element.ToUpper().Contains(pr.Name.ToUpper())){
+                    return false;
+                }
+            }
+            return true;
         }
         /// <summary>
         /// Converts an object to an object to a OpenEngSBWrapper

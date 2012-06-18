@@ -21,6 +21,7 @@ using ExampleDomainEvents;
 using Implementation;
 using Interface;
 using log4net;
+using System.Threading;
 
 namespace ServiceTestConsole
 {
@@ -45,7 +46,6 @@ namespace ServiceTestConsole
             //Register the connecter on the OpenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-
             IExampleDomainEventsServiceSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsServiceSoap11Binding>(destination);
             /*ExampleDomainEvent.logEvent lEvent= new ExampleDomainEvent.logEvent();
             lEvent.name = "Example";
@@ -56,8 +56,9 @@ namespace ServiceTestConsole
             remotedomain.raiseEvent(lEvent);*/
             logger.Info("\n------------------------------------------------"
             + "\n     Press enter to close the Connection"
-            + "\n------------------------------------------------");
+            + "\n------------------------------------------------");                
             Console.ReadKey();
+
             factory.UnregisterDomainService(localDomain);
         }
     }

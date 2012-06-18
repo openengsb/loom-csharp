@@ -27,7 +27,7 @@ namespace Implementation.OpenEngSB3_0_0
     /// </summary>
     public class RealDomainFactory : IDomainFactory
     {
-        private Dictionary<object, IStoppable> _proxies;
+        private Dictionary<object, IRegistration> proxies;
         private String serviceId;
         private String domainType;
         public RealDomainFactory()
@@ -37,9 +37,13 @@ namespace Implementation.OpenEngSB3_0_0
 
         private void Reset()
         {
-            _proxies = new Dictionary<object, IStoppable>();
+            proxies = new Dictionary<object, IRegistration>();
         }
 
+        public bool Registered(object domainService)
+        {
+            return proxies[domainService].Registered;
+        }
         /// <summary>
         /// Creates, registers and starts a reverse proxy.
         /// </summary>
@@ -54,7 +58,7 @@ namespace Implementation.OpenEngSB3_0_0
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -73,7 +77,7 @@ namespace Implementation.OpenEngSB3_0_0
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType,username,password);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -82,11 +86,11 @@ namespace Implementation.OpenEngSB3_0_0
         /// <param name="service"></param>
         public void UnregisterDomainService(object service)
         {
-            IStoppable stoppable = null;
-            if(_proxies.TryGetValue(service, out stoppable))
+            IRegistration stoppable = null;
+            if(proxies.TryGetValue(service, out stoppable))
             {
                 stoppable.Stop();
-                _proxies.Remove(service);
+                proxies.Remove(service);
             }
         }
         /// <summary>

@@ -83,7 +83,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             {
                 String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
-                classes.Add(HelpMethods.CreateClassWithPackageName(type.RemoteTypeFullName, typeof(T)));
+                classes.Add(type.RemoteTypeFullName);
             }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);

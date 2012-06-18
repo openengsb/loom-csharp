@@ -63,7 +63,9 @@
   <ItemGroup>
     <Compile Include="Common\Domain.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
+    <Compile Include="Common\Enumeration\ERegistration.cs" />
     <Compile Include="Common\Enumeration\ReturnType.cs" />
+    <Compile Include="Common\IRegistration.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelEntry.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelWrapper.cs" />

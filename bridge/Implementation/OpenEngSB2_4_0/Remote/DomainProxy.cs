@@ -84,8 +84,8 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             {
                 String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
-                realClassImplementation.Add(HelpMethods.CreateClassWithPackageName(type.RemoteTypeFullName, typeof(T)));
-                classes.Add(HelpMethods.CreateClassWithPackageName(type.RemoteTypeFullName, typeof(T)));
+                realClassImplementation.Add(type.RemoteTypeFullName);
+                classes.Add(type.RemoteTypeFullName);
             }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, realClassImplementation);
 
