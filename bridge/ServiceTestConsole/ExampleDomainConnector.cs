@@ -23,20 +23,15 @@ namespace ServiceTestConsole
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoap11Binding
+    class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-        
-        public ExampleDomainConnector() : base(logger){}        
 
-        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
-        {
-            throw new NotImplementedException();
-        }
-
+        public ExampleDomainConnector() : base(logger) { }
         public string doSomethingWithLogEvent(LogEvent args0)
         {
-            throw new NotImplementedException();
+            logger.Info("run doSomethingWithEnum with " + args0);
+            return "DEBUG";
         }
 
         public string doSomethingWithMessage(string args0)
@@ -46,9 +41,9 @@ namespace ServiceTestConsole
         }
 
         public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
-        {            
+        {
             logger.Info("Message received in doSomethingWithModel");
-            ExampleResponseModel m=new ExampleResponseModel();
+            ExampleResponseModel m = new ExampleResponseModel();
             m.result = "RESULT";
             return m;
         }

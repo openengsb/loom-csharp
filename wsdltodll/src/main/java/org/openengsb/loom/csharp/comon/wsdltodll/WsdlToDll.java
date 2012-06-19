@@ -196,7 +196,7 @@ public class WsdlToDll extends AbstractMojo {
             if (!new File(cmd).exists()) {
                 continue;
             }
-            String[] command = new String[]{ cmd, "/target:library","/r:System.Web.Services.dll", cspath };
+            String[] command = new String[]{ cmd, "/target:library", cspath };
             ProcessBuilder builder = new ProcessBuilder();
             builder.redirectErrorStream(true);
             builder.directory(outputDirectory);

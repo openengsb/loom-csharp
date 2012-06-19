@@ -4,11 +4,12 @@
     <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
   <artifactId>ServiceTestConsole</artifactId>
-  <packaging>dotnet-executable</packaging>
+  <packaging>exe</packaging>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ServiceTestConsole</name>
   <version>1.0.0-SNAPSHOT</version>
   <description>
@@ -58,22 +59,26 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ExampleDomainEventsInterfaces</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <groupId>ExampleDomainInterfaces</groupId>
       <artifactId>ExampleDomainInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>${basedir}\..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>ExampleDomainEventsInterfaces</groupId>
+      <artifactId>ExampleDomainEventsInterfaces</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>${basedir}\..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</systemPath>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_2</version>
       <type>dotnet-library</type>
-    </dependency>
+    </dependency>	
   </dependencies>
 </project>

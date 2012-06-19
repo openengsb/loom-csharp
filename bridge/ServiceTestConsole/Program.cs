@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using ExampleDomain;
-using ExampleDomainEvents;
 using Implementation;
 using Interface;
 using log4net;
 using System.Threading;
+using ExampleDomain;
+using ExampleDomainEvents;
 
 namespace ServiceTestConsole
 {
@@ -46,14 +45,13 @@ namespace ServiceTestConsole
             //Register the connecter on the OpenEngSB
             factory.RegisterDomainService(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
-            IExampleDomainEventsServiceSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsServiceSoap11Binding>(destination);
-            /*ExampleDomainEvent.logEvent lEvent= new ExampleDomainEvent.logEvent();
+            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
+            ExampleDomainEvents.LogEvent lEvent= new ExampleDomainEvents.LogEvent();
             lEvent.name = "Example";
-            lEvent.processId = 0;
-            lEvent.level = ExampleDomainEvent.logLevel.DEBUG;
+            lEvent.level = "DEBUG";
             //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.            
             lEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(lEvent);*/
+            remotedomain.raiseEvent(lEvent);
             logger.Info("\n------------------------------------------------"
             + "\n     Press enter to close the Connection"
             + "\n------------------------------------------------");                
