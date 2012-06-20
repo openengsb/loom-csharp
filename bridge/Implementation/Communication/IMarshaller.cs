@@ -16,18 +16,15 @@
  ***/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.Communication
+namespace Implementation.Communication
 {
     /// <summary>
     /// This interface specifies operations for marshalling objects
     /// in an arbitrary format. This is usually necessary for serializing
     /// and sending objects over any communication channels.
     /// </summary>
-    interface IMarshaller
+    public interface IMarshaller
     {
         /// <summary>
         /// Serialize a object

@@ -14,23 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Bridge.Implementation.Common;
-using Bridge.Implementation.OpenEngSB3_0_0.Remote;
-using Bridge.Interface;
+using Implementation.Common;
+using Implementation.OpenEngSB3_0_0.Remote;
+using Interface;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0
+namespace Implementation.OpenEngSB3_0_0
 {
     /// <summary>
     /// This class produces and manages proxies.
     /// </summary>
     public class RealDomainFactory : IDomainFactory
     {
-        private Dictionary<object, IStoppable> _proxies;
+        private Dictionary<object, IRegistration> proxies;
         private String serviceId;
         private String domainType;
         public RealDomainFactory()
@@ -40,9 +37,13 @@ namespace Bridge.Implementation.OpenEngSB3_0_0
 
         private void Reset()
         {
-            _proxies = new Dictionary<object, IStoppable>();
+            proxies = new Dictionary<object, IRegistration>();
         }
 
+        public bool Registered(object domainService)
+        {
+            return proxies[domainService].Registered;
+        }
         /// <summary>
         /// Creates, registers and starts a reverse proxy.
         /// </summary>
@@ -52,12 +53,12 @@ namespace Bridge.Implementation.OpenEngSB3_0_0
         /// <param name="serviceId"></param>
         /// <param name="domainType">local domain</param>
         /// <param name="domainType">remote domain</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
-            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType);
-            _proxies.Add(domainService, proxy);
+            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType,true);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -71,25 +72,25 @@ namespace Bridge.Implementation.OpenEngSB3_0_0
         /// <param name="domainType">remote domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType,String username,String password)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType, String username, String password)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
-            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType,username,password);
-            _proxies.Add(domainService, proxy);
+            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, true);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
         /// Deletes and stops the reverse proxy.
         /// </summary>
         /// <param name="service"></param>
-        public void UnregisterDomainService(object service)
+        public void DeleteDomainService(object service)
         {
-            IStoppable stoppable = null;
-            if(_proxies.TryGetValue(service, out stoppable))
+            IRegistration stoppable = null;
+            if(proxies.TryGetValue(service, out stoppable))
             {
                 stoppable.Stop();
-                _proxies.Remove(service);
+                proxies.Remove(service);
             }
         }
         /// <summary>
@@ -114,9 +115,44 @@ namespace Bridge.Implementation.OpenEngSB3_0_0
         {
             return new DomainProxy<T>(host, getDomainTypServiceId(),domainType).GetTransparentProxy();
         }
+        /// <summary>
+        /// returns the Domain+Txpe+ServiceId
+        /// </summary>
+        /// <returns></returns>
         public String getDomainTypServiceId()
         {
             return domainType + "+external-connector-proxy+" + serviceId;
+        }
+        public String getServiceId()
+        {
+            return serviceId;
+        }
+
+        public void RegisterConnector<T>(string destination, T domainService, String domainType)
+        {
+            this.domainType = domainType;
+            this.serviceId = Guid.NewGuid().ToString();
+
+            if (!proxies.ContainsKey(domainService))
+            {
+                DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, false);
+                proxies.Add(domainService, proxy);
+                proxy.Start();
+            }
+            else
+            {
+                ((DomainReverseProxy<T>)proxies[domainService]).RegisterConnector();
+            }
+        }
+
+        public void UnRegisterConnector(object service)
+        {
+            IRegistration stoppable = null;
+            if (proxies.TryGetValue(service, out stoppable))
+            {
+                stoppable.Stop();
+                proxies.Remove(service);
+            }
         }
     }
 }

@@ -15,48 +15,37 @@
  * limitations under the License.
  ***/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Services;
-using System.Text;
-using log4net;
 using ExampleDomain;
-using Bridge.Implementation;
-namespace Bridge.ServiceTestConsole
+using Implementation;
+using log4net;
+namespace ServiceTestConsole
 {
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : RegistrationFunctions,IExampleDomainSoap11Binding
+    class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-        
-        public ExampleDomainConnector() : base(logger)
-        {
-        }        
 
+        public ExampleDomainConnector() : base(logger) { }
         public string doSomethingWithLogEvent(LogEvent args0)
         {
-            logger.Info("run doSomethingWithLogEvent with " + args0);
-            return "done";
+            logger.Info("run doSomethingWithEnum with " + args0);
+            return "DEBUG";
         }
 
         public string doSomethingWithMessage(string args0)
         {
-            logger.Info("run doSomethingWithMessage with " + args0);
-            return "done";
+            logger.Info("run doSomethingWithEnum with " + args0);
+            return "Hallo";
         }
 
         public ExampleResponseModel doSomethingWithModel(ExampleRequestModel args0)
         {
-            logger.Info("run doSomethingWithModel with " + args0);
-            return null;
-        }
-
-        public string doSomethingWithEnum(ExampleDomain_ExampleEnum args0)
-        {
-            logger.Info("run doSomethingWithEnum with " + args0);
-            return "done";
+            logger.Info("Message received in doSomethingWithModel");
+            ExampleResponseModel m = new ExampleResponseModel();
+            m.result = "RESULT";
+            return m;
         }
     }
 }

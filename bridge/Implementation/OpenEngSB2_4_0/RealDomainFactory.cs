@@ -14,16 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Bridge.Implementation.Common;
-using Bridge.Interface;
-using Bridge.Implementation.OpenEngSB2_4_0.Remote;
+using Implementation.Common;
+using Implementation.OpenEngSB2_4_0.Remote;
+using Interface;
 
-namespace Bridge.Implementation.OpenEngSB2_4_0
+namespace Implementation.OpenEngSB2_4_0
 {
     /// <summary>
     /// This class produces and manages proxies.
@@ -31,9 +28,11 @@ namespace Bridge.Implementation.OpenEngSB2_4_0
     public class RealDomainFactory : IDomainFactory
     {
         #region Variables
-        private Dictionary<object, IStoppable> _proxies;
+        private Dictionary<object, IRegistration> proxies;
         private String serviceId;
-        private String domainType;
+        private String domainType;        
+        #endregion
+        #region Attributes     
         #endregion
         #region Constructor
         /// <summary>
@@ -50,10 +49,15 @@ namespace Bridge.Implementation.OpenEngSB2_4_0
         /// </summary>
         private void Reset()
         {
-            _proxies = new Dictionary<object, IStoppable>();
+            proxies = new Dictionary<object, IRegistration>();
         }
         #endregion
         #region Public Methods
+
+        public bool Registered(object domainService)
+        {
+            return proxies[domainService].Registered;
+        }
         /// <summary>
         /// Creates, registers and starts a reverse proxy with defaul Authentification
         /// RENAME
@@ -62,12 +66,12 @@ namespace Bridge.Implementation.OpenEngSB2_4_0
         /// <param name="destination">Destination</param>
         /// <param name="domainService">Local Domain</param>
         /// <param name="domainType">Name of the Domain</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
@@ -85,20 +89,20 @@ namespace Bridge.Implementation.OpenEngSB2_4_0
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
             DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password);
-            _proxies.Add(domainService, proxy);
+            proxies.Add(domainService, proxy);
             proxy.Start();
         }
         /// <summary>
         /// Deletes and stops the reverse proxy.
         /// </summary>
         /// <param name="service">proxy to delete</param>
-        public void UnregisterDomainService(object service)
+        public void DeleteDomainService(object service)
         {
-            IStoppable stoppable = null;
-            if(_proxies.TryGetValue(service, out stoppable))
+            IRegistration stoppable = null;
+            if(proxies.TryGetValue(service, out stoppable))
             {
                 stoppable.Stop();
-                _proxies.Remove(service);
+                proxies.Remove(service);
             }
         }
         /// <summary>
@@ -131,6 +135,22 @@ namespace Bridge.Implementation.OpenEngSB2_4_0
         {
             return domainType + "+external-connector-proxy+" + serviceId;
         }
+        public String getServiceId()
+        {
+            return serviceId;
+        }
+        public void RegisterConnector<T>(string destination, T service, string domainType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnRegisterConnector(object service)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
+
+
+
     }
 }

@@ -15,22 +15,7 @@
  * limitations under the License.
  ***/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.Common.Enumeration
 {
-    /// <summary>
-    /// This class  indentifies an Connector instance on the bus.
-    /// </summary>
-    public class ConnectorDefinition
-    {
-        #region Variables
-        public String domainId { get; set; }
-        public String connectorId { get; set; }
-        public String instanceId { get; set; }
-        #endregion
-    }
+    public enum ReturnType { Void, Object, Exception }
 }

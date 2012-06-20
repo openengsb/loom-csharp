@@ -15,33 +15,22 @@
  * limitations under the License.
  ***/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.Common.RemoteObjects
 {
-    /// <summary>
-    /// Container for the datas
-    /// </summary>
-    public class Data
+    public class OpenEngSBModelEntry
     {
-        #region Variables
+        public String key { get; set; }
         public String value { get; set; }
-        #endregion
-        #region Public Static Methods
-        /// <summary>
-        /// Creates a new instance of Data
-        /// </summary>
-        /// <param name="username">username</param>
-        /// <param name="value">password</param>
-        /// <returns>New instance of Data</returns>
-        public static Data CreateInstance(String value)
+        public String type { get; set; }
+        public OpenEngSBModelEntry() { }
+        public static OpenEngSBModelEntry getInstance(String key, String value, String type)
         {
-            Data instance = new Data();
-            instance.value= value;
-            return instance;
+            OpenEngSBModelEntry result = new OpenEngSBModelEntry();
+            result.key = key;
+            result.value = value;
+            result.type = type;
+            return result;
         }
-        #endregion
     }
 }

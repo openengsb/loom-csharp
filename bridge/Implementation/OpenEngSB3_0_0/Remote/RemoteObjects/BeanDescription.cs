@@ -17,19 +17,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for the Authentification
     /// </summary>
-    public class AuthenticationInfo
+    public class BeanDescription
     {
         #region Variables
         public String className { get; set; }
-        public Data data { get; set; }
+        public IDictionary<String, String> data { get; set; }
+        public IDictionary<String, byte[]> binaryData { get; set; } 
         #endregion
         #region Public static Methods
         /// <summary>
@@ -39,14 +38,22 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
         /// <param name="data">Data</param>
         /// <param name="binaryData">Binary Data</param>
         /// <returns>A new instance of Authentification</returns>
-        public static AuthenticationInfo createInstance(String className, Data data)//, BinaryData binaryData)
+        public static BeanDescription createInstance(String className,  IDictionary<String,String> data,IDictionary<String,byte[]> binaryData)
         {
-            AuthenticationInfo instance = new AuthenticationInfo();
+            BeanDescription instance = new BeanDescription();
             instance.className = className;
             instance.data = data;
-            //instance.binaryData = binaryData;
+            instance.binaryData = binaryData;
             return instance;
         }
+        public static BeanDescription createInstance(String className)
+        {
+            BeanDescription instance = new BeanDescription();
+            instance.className = className;
+            instance.data = new Dictionary<String,String>();
+            instance.binaryData = new Dictionary<String,byte[]>();
+            return instance;
+        }       
         #endregion
     }
 }

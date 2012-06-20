@@ -4,6 +4,7 @@
     <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
@@ -67,13 +68,13 @@
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ExampleDomainInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
+      <type>dotnet-library</type>      
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_2</version>
       <type>dotnet-library</type>
-    </dependency>
+    </dependency>	
   </dependencies>
 </project>

@@ -16,64 +16,29 @@
  ***/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Remoting.Proxies;
 using System.Runtime.Remoting.Messaging;
-using System.Web.Services.Protocols;
-using System.Reflection;
-using System.IO;
-using System.Xml.Serialization;
-using Bridge.Implementation.Communication.Jms;
-using Bridge.Implementation.Communication;
-using Bridge.Implementation.Communication.Json;
-using Bridge.Implementation.Common;
-using Bridge.Implementation;
-using Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
+using Implementation.Common;
+using Implementation.Communication;
+using Implementation.Communication.Jms;
+using Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
+namespace Implementation.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
     /// </summary>
     /// <typeparam name="T">Type to proxy.</typeparam>
-    public class DomainProxy<T> : RealProxy
+    public class DomainProxy<T> : Domain<T>
     {
-        #region Variables
-        /// <summary>
-        /// Name of the queue the server listens to for calls.
-        /// </summary>
-        private const string HOST_QUEUE = "receive";
-
-        /// <summary>
-        /// Id identifying the service instance on the bus.
-        /// </summary>
-        private string serviceId;
-        /// <summary>
-        /// Domain type
-        /// </summary>
-        private string domainType;
-
-        /// <summary>
-        /// Host string of the server.
-        /// </summary>
-        private string host;
-
-        private IMarshaller marshaller;
-        #endregion
         #region Constructors
-        /// <summary>
-        /// Defautl constrcutor
-        /// </summary>
-        /// <param name="host">Host</param>
-        /// <param name="serviceId">ServiceId</param>
-        /// <param name="domainType">DomainType</param>
-        public DomainProxy(string host, string serviceId,String domainType)
-            : base(typeof(T))
+        public DomainProxy(string host, string serviceId, String domainType)
+            : base(host, serviceId, domainType)
         {
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.host = host; ;
-            this.marshaller = new JsonMarshaller();
+            AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
+        }
+        public DomainProxy(string host, string serviceId, String domainType, String username, String password)
+            : base(host, serviceId, domainType, username, password)
+        {
+            AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
         }
         #endregion
         #region Public Methods
@@ -94,37 +59,8 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
             MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
             return ToMessage(methodReturn.message.result, callMessage);
         }
-
-        public new T GetTransparentProxy()
-        {
-            return (T)base.GetTransparentProxy();
-        }
         #endregion
         #region Private methods
-        /// <summary>
-        /// Builds an IMessage using MethodReturn.
-        /// </summary>
-        /// <param name="methodReturn">Servers return message</param>
-        /// <param name="callMessage">Method an parameters</param>
-        /// <returns>The result of the Message</returns>
-        private IMessage ToMessage(MethodResult methodReturn, IMethodCallMessage callMessage)
-        {
-            IMethodReturnMessage returnMessage = null;
-            switch (methodReturn.type)
-            {
-                case MethodResult.ReturnType.Exception:
-                    returnMessage = new ReturnMessage(new Exception(methodReturn.arg + "\n" + methodReturn.ToString()), callMessage);
-                   // returnMessage = new ReturnMessage((Exception)methodReturn.arg, callMessage);
-                    break;
-                case MethodResult.ReturnType.Void:
-                case MethodResult.ReturnType.Object:
-                    returnMessage = new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
-                    break;
-                default:
-                    return null;
-            }
-            return returnMessage;
-        }
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.       
         /// </summary>
@@ -133,7 +69,6 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
         private MethodCallRequest ToMethodCallRequest(IMethodCallMessage msg)
         {
             Guid id = Guid.NewGuid();
-
             string methodName = msg.MethodName;
             Dictionary<string, string> metaData = new Dictionary<string, string>();
             //The structure is always domain.DOMAINTYPE.events
@@ -144,22 +79,21 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote
 
             List<string> classes = new List<string>();
             //RealClassImplementation is optinal
-            List<string> realClassImplementation = new List<string>();            
-                foreach (object arg in msg.Args)
-                {
-                    String namesp = arg.GetType().Namespace;
-                    LocalType type = new LocalType(arg.GetType());
-                    realClassImplementation.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)));
-                    classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp + ".", "")));
-                }            
+            List<string> realClassImplementation = new List<string>();
+            foreach (object arg in msg.Args)
+            {
+                String namesp = arg.GetType().Namespace;
+                LocalType type = new LocalType(arg.GetType());
+                realClassImplementation.Add(type.RemoteTypeFullName);
+                classes.Add(type.RemoteTypeFullName);
+            }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, realClassImplementation);
-            String classname = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
-            Data data = Data.CreateInstance("admin", "password");
-            Authentification authentification = Authentification.createInstance(classname, data, BinaryData.CreateInstance());
+
+            Data data = Data.CreateInstance(username, password);
+            Authentification authentification = Authentification.createInstance(AUTHENTIFICATION_CLASS, data, BinaryData.CreateInstance());
             Message message = Message.createInstance(call, id.ToString(), true, "");
             return MethodCallRequest.CreateInstance(authentification, message);
         }
         #endregion
-
     }
 }

@@ -16,31 +16,16 @@
  ***/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Implementation.Common.RemoteObjects;
 
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents a RPC with its parameters, return types etc.
     /// </summary>
-    public class RemoteMethodCall
+    public class RemoteMethodCall : IMethodCall
     {
         #region Variables
-        /// <summary>
-        /// Fully qualified class names of the arguments.
-        /// </summary>
-        public IList<string> classes { get; set; }
-        /// <summary>
-        /// Name of the method to be called.
-        /// </summary>
-        public string methodName { get; set; }
-        
-        /// <summary>
-        /// Arguments of the call.
-        /// </summary>
-        public IList<object> args { get; set; }
-
         /// <summary>
         /// Metadata
         /// </summary>
@@ -61,6 +46,6 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
             call.realClassImplementation = realClassImplementation;
             return call;
         }
-        #endregion
+        #endregion        
     }
 }
