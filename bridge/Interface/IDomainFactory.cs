@@ -21,9 +21,10 @@ namespace Interface
     public interface IDomainFactory
     {
         T getEventhandler<T>(string host);
-
-        void RegisterDomainService<T>(string destination, T service, string domainType);
-        void UnregisterDomainService(object service);
+        void CreateDomainService<T>(string destination, T service, string domainType);
+        void DeleteDomainService(object service);
+        void RegisterConnector<T>(string destination, T service, string domainType);
+        void UnRegisterConnector(object service);
         String getDomainTypServiceId();
         String getServiceId();
         Boolean Registered(Object domainService);

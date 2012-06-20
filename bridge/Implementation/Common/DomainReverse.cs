@@ -33,21 +33,31 @@ namespace Implementation.Common
         #region Const.
         protected const string CREATION_QUEUE = "receive";
         protected const string CREATION_SERVICE_ID = "connectorManager";
-        protected string CREATION_METHOD_NAME = "create";
+        protected const string CREATION_REGISTRATION = "ProxyConnectorRegistry";
         protected const string CREATION_DELETE_METHOD_NAME = "delete";
         protected const string CREATION_PORT = "jms-json";
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
-        protected string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";        
+        protected const string REGISTRATION_METHOD_NAME = "registerConnector";
+        protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";        
         #endregion
         #region Variables
+        protected string CREATION_METHOD_NAME = "create";
+        protected string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         /// <summary>
         /// indicates in witch state the registration is
         /// </summary>
         private ERegistration registrationprocess = ERegistration.NONE;
+        /// <summary>
+        ///Descrips if the Registration has been done.
+        /// </summary>
         public Boolean Registered
         {
             get { return registrationprocess.Equals(ERegistration.REGISTERED); }
         }
+        /// <summary>
+        /// Defines if the connector should create a new connector or if it should register a existing one
+        /// </summary>
+        protected Boolean createService = true;
 
         /// <summary>
         /// domain-instance to act as reverse-proxy for
@@ -113,7 +123,7 @@ namespace Implementation.Common
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector)
         {
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
@@ -125,6 +135,7 @@ namespace Implementation.Common
             this.portIn = new JmsIncomingPort(destination);
             this.username = "admin";
             this.password = "password";
+            this.createService = createNewConnector;
         }
         /// <summary>
         /// Constructor with Autehntification
@@ -135,7 +146,7 @@ namespace Implementation.Common
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password,Boolean createNewConnector)
         {
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
@@ -147,6 +158,7 @@ namespace Implementation.Common
             this.portIn = new JmsIncomingPort(destination);
             this.username = username;
             this.password = password;
+            this.createService = createNewConnector;
         }
         #endregion
         #region Protected Methods
@@ -212,11 +224,11 @@ namespace Implementation.Common
             HelpMethods.addTrueForSpecified(args, methodInfo);
             return args.ToArray();        
         }
-        private Object ConvertWrapperTypes(Object wrappedObject,MethodInfo methodInfo)
+        private Object ConvertWrapperTypes(Object wrappedObject, MethodInfo methodInfo)
         {
             OpenEngSBModelWrapper wrapper = wrappedObject as OpenEngSBModelWrapper;
             IList<Object> result = new List<Object>();
-            RemoteType mt=new RemoteType(wrapper.modelClass, methodInfo.GetParameters());
+            RemoteType mt = new RemoteType(wrapper.modelClass, methodInfo.GetParameters());
             Type usedType = findType(mt.LocalTypeFullName, methodInfo);
             Object obj = Activator.CreateInstance(usedType);
             foreach (OpenEngSBModelEntry entry in wrapper.entries)
@@ -231,8 +243,8 @@ namespace Implementation.Common
                     }
                 }
                 if (field == null) throw new ArgumentException("There is no field " + entry.key);
-                Object tmp=ConvertType(entry,methodInfo);
-                field.SetValue(obj, tmp,null);
+                Object tmp = ConvertType(entry, methodInfo);
+                field.SetValue(obj, tmp, null);
             }
             return obj;
         }
@@ -371,7 +383,14 @@ namespace Implementation.Common
                 throw new ApplicationException("QueueThread already started!");
             logger.Info("Start open the Queue Thread to listen for messages from OpenEngSB.");
             isEnabled = true;
-            CreateRemoteProxy();
+            if (createService)
+            {
+                CreateRemoteProxy();
+            }
+            else
+            {
+                RegisterConnector();
+            }
             // start thread which waits for messages
             queueThread = new Thread(
                 new ThreadStart(Listen)
@@ -388,7 +407,14 @@ namespace Implementation.Common
             {
                 isEnabled = false;
                 portIn.Close();
-                DeleteRemoteProxy();
+                if (createService)
+                {
+                    DeleteRemoteProxy();
+                }
+                else
+                {
+                    UnRegisterConnector();
+                }
             }
             logger.Info("Connection closed");
         }
@@ -397,6 +423,8 @@ namespace Implementation.Common
         public abstract void CreateRemoteProxy();
         public abstract void DeleteRemoteProxy();
         public abstract void Listen();
+        public abstract void RegisterConnector();
+        public abstract void UnRegisterConnector();
         #endregion
     }
 }

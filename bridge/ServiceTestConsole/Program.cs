@@ -43,7 +43,8 @@ namespace ServiceTestConsole
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the OpenEngSB
-            factory.RegisterDomainService(destination, localDomain, domainName);
+            factory.CreateDomainService(destination, localDomain, domainName);
+        //    factory.RegisterConnector(destination, localDomain, domainName);
             //Get a remote handler, to raise events on obenEngSB
             IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
             ExampleDomainEvents.LogEvent lEvent= new ExampleDomainEvents.LogEvent();
@@ -57,7 +58,7 @@ namespace ServiceTestConsole
             + "\n------------------------------------------------");                
             Console.ReadKey();
 
-            factory.UnregisterDomainService(localDomain);
+            factory.DeleteDomainService(localDomain);
         }
     }
 }

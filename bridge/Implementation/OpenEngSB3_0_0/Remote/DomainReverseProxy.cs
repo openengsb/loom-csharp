@@ -30,8 +30,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
     /// client side for the bus.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DomainReverseProxy<T> : DomainReverse<T>, IStoppable
+    public class DomainReverseProxy<T> : DomainReverse<T>
     {
+
         #region Constructor
         /// <summary>
         /// Default constructor
@@ -41,8 +42,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
-            : base(localDomainService, host, serviceId, domainType)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType,Boolean createNewConnector)
+            : base(localDomainService, host, serviceId, domainType, createNewConnector)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
             CREATION_METHOD_NAME = "createWithId";
@@ -57,8 +58,8 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
-            : base(localDomainService, host, serviceId, domainType, username, password)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector)
+            : base(localDomainService, host, serviceId, domainType, username, password,createNewConnector)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
             CREATION_METHOD_NAME = "createWithId";
@@ -141,6 +142,61 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                 throw new ApplicationException("Remote Exception while deleting service proxy");
         }
 
+        /// <summary>
+        /// Creates an Proxy on the bus.
+        /// </summary>
+        public override void RegisterConnector()
+        {
+            IDictionary<string, string> metaData = new Dictionary<string, string>();
+            metaData.Add("serviceId", CREATION_REGISTRATION);
+            LocalType localType = new LocalType(typeof(String));
+            IList<string> classes = new List<string>();
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add(localType.RemoteTypeFullName);
+            IList<object> args = new List<object>();
+            args.Add(serviceId);
+            args.Add(CREATION_PORT);
+            args.Add(destination);
+
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(UNREGISTRATION_METHOD_NAME, args, metaData, classes, null);
+
+            Destination destinationinfo = new Destination(destination);
+            destinationinfo.Queue = CREATION_QUEUE;
+
+            BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            autinfo.data.Add("value", password);
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            string request = marshaller.MarshallObject(secureRequest);
+            portOut.Send(request);
+        }
+        /// <summary>
+        /// Creates an Proxy on the bus.
+        /// </summary>
+        public override void UnRegisterConnector()
+        {
+            IDictionary<string, string> metaData = new Dictionary<string, string>();
+            metaData.Add("serviceId", CREATION_REGISTRATION);
+            LocalType localType = new LocalType(typeof(String));
+            IList<string> classes = new List<string>();
+            classes.Add(localType.RemoteTypeFullName);
+
+            IList<object> args = new List<object>();
+            args.Add(serviceId);
+
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(UNREGISTRATION_METHOD_NAME, args, metaData, classes, null);
+
+            Destination destinationinfo = new Destination(destination);
+            destinationinfo.Queue = CREATION_QUEUE;
+
+            BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            autinfo.data.Add("value", password);
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            string request = marshaller.MarshallObject(secureRequest);
+            portOut.Send(request);
+        }
         /// <summary>
         /// Blocks an waits for messages.
         /// </summary>

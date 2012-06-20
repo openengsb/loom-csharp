@@ -29,7 +29,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
     /// client side for the bus.
     /// </summary>
     /// <typeparam name="T">Type of the Domain</typeparam>
-    public class DomainReverseProxy<T> : DomainReverse<T>, IStoppable
+    public class DomainReverseProxy<T> : DomainReverse<T>
     {
         #region Constructor
         /// <summary>
@@ -41,7 +41,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
-            : base(localDomainService, host, serviceId, domainType)
+            : base(localDomainService, host, serviceId, domainType,false)
         {
             logger.Info("Connecting to OpenEngSB version 2.4");
             CREATION_METHOD_NAME = "create";
@@ -57,7 +57,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
-            : base(localDomainService, host, serviceId, domainType, username, password)
+            : base(localDomainService, host, serviceId, domainType, username, password,false)
         {
             logger.Info("Connecting to OpenEngSB version 2.4");
             CREATION_METHOD_NAME = "create";
@@ -238,6 +238,14 @@ namespace Implementation.OpenEngSB2_4_0.Remote
 
             methodResultMessage.message.result = methodResult;
             return methodResultMessage;
+        }
+        public override void RegisterConnector()
+        {
+            throw new MissingMethodException("Not implemented for this version of openEngSB");
+        }
+        public override void UnRegisterConnector()
+        {
+            throw new MissingMethodException("Not implemented for this version of openEngSB");
         }
         #endregion
     }
