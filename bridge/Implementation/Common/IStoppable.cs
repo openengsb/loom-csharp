@@ -23,5 +23,6 @@ namespace Implementation.Common
     {
         //Description to stop a Thread
         void Stop();
+        void UnRegisterConnector();
     }
 }

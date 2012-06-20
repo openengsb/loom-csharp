@@ -32,7 +32,7 @@ namespace Implementation.OpenEngSB2_4_0
         private String serviceId;
         private String domainType;        
         #endregion
-        #region Attributes       
+        #region Attributes     
         #endregion
         #region Constructor
         /// <summary>
@@ -66,7 +66,7 @@ namespace Implementation.OpenEngSB2_4_0
         /// <param name="destination">Destination</param>
         /// <param name="domainService">Local Domain</param>
         /// <param name="domainType">Name of the Domain</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
@@ -96,7 +96,7 @@ namespace Implementation.OpenEngSB2_4_0
         /// Deletes and stops the reverse proxy.
         /// </summary>
         /// <param name="service">proxy to delete</param>
-        public void UnregisterDomainService(object service)
+        public void DeleteDomainService(object service)
         {
             IRegistration stoppable = null;
             if(proxies.TryGetValue(service, out stoppable))
@@ -139,6 +139,18 @@ namespace Implementation.OpenEngSB2_4_0
         {
             return serviceId;
         }
+        public void RegisterConnector<T>(string destination, T service, string domainType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnRegisterConnector(object service)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
+
+
+
     }
 }

@@ -53,11 +53,11 @@ namespace Implementation.OpenEngSB3_0_0
         /// <param name="serviceId"></param>
         /// <param name="domainType">local domain</param>
         /// <param name="domainType">remote domain</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
-            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType);
+            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType,true);
             proxies.Add(domainService, proxy);
             proxy.Start();
         }
@@ -72,11 +72,11 @@ namespace Implementation.OpenEngSB3_0_0
         /// <param name="domainType">remote domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public void RegisterDomainService<T>(string destination, T domainService, String domainType,String username,String password)
+        public void CreateDomainService<T>(string destination, T domainService, String domainType, String username, String password)
         {
             this.domainType = domainType;
             this.serviceId = Guid.NewGuid().ToString();
-            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType,username,password);
+            DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, true);
             proxies.Add(domainService, proxy);
             proxy.Start();
         }
@@ -84,7 +84,7 @@ namespace Implementation.OpenEngSB3_0_0
         /// Deletes and stops the reverse proxy.
         /// </summary>
         /// <param name="service"></param>
-        public void UnregisterDomainService(object service)
+        public void DeleteDomainService(object service)
         {
             IRegistration stoppable = null;
             if(proxies.TryGetValue(service, out stoppable))
@@ -126,6 +126,32 @@ namespace Implementation.OpenEngSB3_0_0
         public String getServiceId()
         {
             return serviceId;
+        }
+
+        public void RegisterConnector<T>(string destination, T domainService, String domainType)
+        {
+            this.domainType = domainType;
+            this.serviceId = Guid.NewGuid().ToString();
+
+            if (!proxies.ContainsKey(domainService))
+            {
+                DomainReverseProxy<T> proxy = new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, false);
+                proxies.Add(domainService, proxy);
+                proxy.Start();
+            }
+            else
+            {
+                ((DomainReverseProxy<T>)proxies[domainService]).RegisterConnector();
+            }
+        }
+
+        public void UnRegisterConnector(object service)
+        {
+            IRegistration stoppable = null;
+            if (proxies.TryGetValue(service, out stoppable))
+            {
+                stoppable.UnRegisterConnector();
+            }
         }
     }
 }

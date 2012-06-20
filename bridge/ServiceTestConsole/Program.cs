@@ -43,21 +43,21 @@ namespace ServiceTestConsole
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the OpenEngSB
-            factory.RegisterDomainService(destination, localDomain, domainName);
-            //Get a remote handler, to raise events on obenEngSB
+            factory.CreateDomainService(destination, localDomain, domainName);
+            factory.RegisterConnector(destination, localDomain, domainName);
+
             IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
             ExampleDomainEvents.LogEvent lEvent= new ExampleDomainEvents.LogEvent();
             lEvent.name = "Example";
             lEvent.level = "DEBUG";
-            //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.            
             lEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(lEvent);
             logger.Info("\n------------------------------------------------"
             + "\n     Press enter to close the Connection"
             + "\n------------------------------------------------");                
             Console.ReadKey();
-
-            factory.UnregisterDomainService(localDomain);
+            factory.UnRegisterConnector(localDomain);
+            factory.DeleteDomainService(localDomain);
         }
     }
 }
