@@ -44,7 +44,7 @@ namespace ServiceTestConsole
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the OpenEngSB
             factory.CreateDomainService(destination, localDomain, domainName);
-            factory.RegisterConnector(destination, localDomain, domainName);
+            factory.RegisterConnector(factory.getServiceId(), destination, localDomain, domainName);
 
             IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
             ExampleDomainEvents.LogEvent lEvent= new ExampleDomainEvents.LogEvent();

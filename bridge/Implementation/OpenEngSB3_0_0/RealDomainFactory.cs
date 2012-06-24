@@ -128,10 +128,10 @@ namespace Implementation.OpenEngSB3_0_0
             return serviceId;
         }
 
-        public void RegisterConnector<T>(string destination, T domainService, String domainType)
+        public void RegisterConnector<T>(string registrationId,string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
-            this.serviceId = Guid.NewGuid().ToString();
+            this.serviceId = registrationId;
 
             if (!proxies.ContainsKey(domainService))
             {
@@ -141,7 +141,8 @@ namespace Implementation.OpenEngSB3_0_0
             }
             else
             {
-                ((DomainReverseProxy<T>)proxies[domainService]).RegisterConnector();
+                DomainReverse<T> proxy= ((DomainReverseProxy<T>)proxies[domainService]);
+                proxy.RegisterConnector(registrationId);
             }
         }
 

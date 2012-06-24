@@ -149,8 +149,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <summary>
         /// Creates an Proxy on the bus.
         /// </summary>
-        public override void RegisterConnector()
+        public override void RegisterConnector(String serviceId)
         {
+            this.serviceId = serviceId;
             logger.Info("Register the connector with ID: "+serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_REGISTRATION);

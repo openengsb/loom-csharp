@@ -363,7 +363,7 @@ namespace Implementation.Common
             }
             else
             {
-                RegisterConnector();
+                RegisterConnector(serviceId);
             }
             // start thread which waits for messages
             queueThread = new Thread(
@@ -390,7 +390,7 @@ namespace Implementation.Common
         public abstract void CreateRemoteProxy();
         public abstract void DeleteRemoteProxy();
         public abstract void Listen();
-        public abstract void RegisterConnector();
+        public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
         #endregion
     }

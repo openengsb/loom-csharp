@@ -139,7 +139,7 @@ namespace Implementation.OpenEngSB2_4_0
         {
             return serviceId;
         }
-        public void RegisterConnector<T>(string destination, T service, string domainType)
+        public void RegisterConnector<T>(string registerId, string destination, T service, string domainType)
         {
             throw new NotImplementedException();
         }

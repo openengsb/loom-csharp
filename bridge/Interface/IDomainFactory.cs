@@ -23,7 +23,7 @@ namespace Interface
         T getEventhandler<T>(string host);
         void CreateDomainService<T>(string destination, T service, string domainType);
         void DeleteDomainService(object service);
-        void RegisterConnector<T>(string destination, T service, string domainType);
+        void RegisterConnector<T>(string registrationid, string destination, T service, string domainType);
         void UnRegisterConnector(object service);
         String getDomainTypServiceId();
         String getServiceId();

@@ -241,7 +241,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             methodResultMessage.message.result = methodResult;
             return methodResultMessage;
         }
-        public override void RegisterConnector()
+        public override void RegisterConnector(String registerId)
         {
             throw new MissingMethodException("Not implemented for this version of openEngSB");
         }
