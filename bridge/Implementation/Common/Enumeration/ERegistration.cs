@@ -7,6 +7,6 @@ namespace Implementation.Common.Enumeration
 {
     public enum ERegistration
     {
-        REGISTERED, CONNECTORCREATED, NONE
+        REGISTERED, CREATED, NONE
     }
 }

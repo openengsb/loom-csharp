@@ -37,9 +37,7 @@ namespace ServiceTestConsole
 
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
-            logger.Info("\n------------------------------------------------"
-            + "\n     Start Example wit the domain " + domainName
-            + "\n------------------------------------------------");
+            logger.Info("Start Example wit the domain " + domainName);
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             //Register the connecter on the OpenEngSB
@@ -52,9 +50,7 @@ namespace ServiceTestConsole
             lEvent.level = "DEBUG";
             lEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(lEvent);
-            logger.Info("\n------------------------------------------------"
-            + "\n     Press enter to close the Connection"
-            + "\n------------------------------------------------");                
+            logger.Info("Press enter to close the Connection");                
             Console.ReadKey();
             factory.UnRegisterConnector(localDomain);
             factory.DeleteDomainService(localDomain);

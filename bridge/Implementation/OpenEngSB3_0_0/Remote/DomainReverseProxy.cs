@@ -75,7 +75,6 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            //registerId = Guid.NewGuid().ToString();
             registerId = serviceId;
 
             IList<string> classes = new List<string>();
@@ -105,7 +104,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request);
-            registrationprocess = ERegistration.CONNECTORCREATED;
+            registrationprocess = ERegistration.CREATED;
         }
 
         /// <summary>
@@ -207,7 +206,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             portOut.Send(request);
             if (registrationprocess.Equals(ERegistration.REGISTERED))
             {
-                registrationprocess = ERegistration.CONNECTORCREATED;
+                registrationprocess = ERegistration.CREATED;
             }
             logger.Info("Unregister done");
         }

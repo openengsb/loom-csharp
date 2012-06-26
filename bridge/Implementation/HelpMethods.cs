@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using Implementation.Common;
 using Implementation.Common.RemoteObjects;
 using Implementation.Communication.Json;
+using Implementation.Communication;
 
 namespace Implementation
 {
@@ -50,33 +51,7 @@ namespace Implementation
             }
             return result;
         }
-        private static String FindCXFRequestNamespace(Type type, String fieldname)
-        {
-            List<String> elements = new List<string>();            
-            String name = fieldname;
-            if (name.Contains('.'))
-            {
-                int start = name.LastIndexOf('.')+1;
-                name = name.Substring(start, name.Length - start);
-            }
-            foreach (MethodInfo method in type.GetMethods())
-            {
-                foreach (Attribute attribute in method.GetCustomAttributes(false))
-                {
-                    if (attribute is SoapDocumentMethodAttribute)
-                    {
-                        SoapDocumentMethodAttribute soapAttribute = attribute as SoapDocumentMethodAttribute;
-                        String[] result = soapAttribute.RequestNamespace.Split(';');
-                        foreach (String s in result)
-                        {
-                            String[] element = s.Split(':');
-                            if (element.Length>1 && element[0].ToUpper().Equals(name.ToUpper())) return element[1];
-                        }
-                    }
-                }
-            }
-            return null;
-        }
+
         /// <summary>
         /// Search in the interface for the Namespace (equal to the package structure in java)
         /// </summary>
@@ -85,53 +60,49 @@ namespace Implementation
         public static String CreateClassWithPackageName(String fieldname, Type type)
         {
             String result = null;
-            //CFX plugin
-            SoapDocumentMethodAttribute soapAttribute;
-            foreach (Attribute attribute in type.GetCustomAttributes(false))
-            {
-                if (attribute is WebServiceBindingAttribute)
-                {
-                    WebServiceBindingAttribute webservice = attribute as WebServiceBindingAttribute;
-                    result = FindCXFRequestNamespace(type, fieldname);
-                    if (!String.IsNullOrEmpty(result))
-                    {
-                        return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
-
-                    }
-                }
-            }
             //axis plugin
             MethodInfo method = type.GetMethod(fieldname);
             //Tests if it is a Mehtod or a Type
             if (method != null)
             {
-
-                foreach (Attribute attribute in method.GetCustomAttributes(false))
-                {
-                    if (attribute is SoapDocumentMethodAttribute)
-                    {
-                        soapAttribute = attribute as SoapDocumentMethodAttribute;
-                        result = reverseURL(soapAttribute.RequestNamespace);
-                    }
-                }
+                result = searchSoapAttributes(method);
             }
             else
             {
-                Assembly ass = type.Assembly;
-                type = ass.GetType(fieldname);
-                foreach (Attribute attribute in Attribute.GetCustomAttributes(type))
-                {
-                    if (attribute is XmlTypeAttribute)
-                    {
-                        XmlTypeAttribute xmltype = attribute as XmlTypeAttribute;
-                        result = reverseURL(xmltype.Namespace);
-                    }
-                }
+                result = SearchInTheXMLType(fieldname, type);
             }
-            if (String.IsNullOrEmpty(result))
-                throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
-            else
-                return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+        }
+        /// <summary>
+        /// Searches for the packagenames in the XMLType Attribute
+        /// </summary>
+        /// <param name="fieldname">Typename</param>
+        /// <param name="type">IMplementation of the domain (dll)</param>
+        /// <returns>Packagename</returns>
+        private static String SearchInTheXMLType(String fieldname, Type type)
+        {
+            Assembly ass = type.Assembly;
+            type = ass.GetType(fieldname);
+            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
+            if (attribute != null)
+            {
+                return reverseURL(attribute.Namespace);
+            }
+            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+        }
+        /// <summary>
+        /// Searches for Packagenames in the SOAP attributes
+        /// </summary>
+        /// <param name="method">Method to check the SOAP attribute</param>
+        /// <returns>Packagename</returns>
+        private static String searchSoapAttributes(MethodInfo method)
+        {
+            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).First(element => element is SoapDocumentMethodAttribute);
+            if (attribute != null)
+            {
+                return reverseURL(attribute.RequestNamespace);
+            }
+            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
         /// <summary>
         /// Makes the first character to a upper character
@@ -159,7 +130,7 @@ namespace Implementation
             while (i + 1 < paraminfo.Length)
             {
                 String paramName = paraminfo[i].Name + "Specified";
-                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && 
+                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) &&
                     paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
                 i = i + 2;
             }
@@ -186,18 +157,7 @@ namespace Implementation
             }
             return parameterLength;
         }
-        /// <summary>
-        /// Tests if the list of type names are equal to the types of the method parameter.
-        /// </summary>
-        /// <param name="typeStrings"></param>
-        /// <param name="parameterInfos"></param>
-        /// <returns></returns>
-        public static bool TypeModuleAreEqual(String args, ParameterInfo[] parameterInfos)
-        {            
-            OpenEngSBModelWrapper element = (OpenEngSBModelWrapper)(new JsonMarshaller()).UnmarshallObject(args, typeof(OpenEngSBModelWrapper));
-            if (element == null) throw new ArgumentException("No method could be found");
-            return TypesAreEqual(new List<String>(){element.modelClass},parameterInfos);
-        }
+
         /// <summary>
         /// Tests if the list of type names are equal to the types of the method parameter.
         /// </summary>
@@ -221,9 +181,9 @@ namespace Implementation
         /// <returns>If to types are equal</returns>
         private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
-            if (localType.Equals(typeof(object))) return true;            
-            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);            
-            if (localType.Name.ToLower().Contains("nullable")) return (localType.FullName.Contains(remote_typ.Name));            
+            if (localType.Equals(typeof(object))) return true;
+            RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
+            if (localType.Name.ToLower().Contains("nullable")) return (localType.FullName.Contains(remote_typ.Name));
             return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
 
