@@ -54,11 +54,10 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
             IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
-
             portOut.Send(methodCallMsg, methodCallRequest.callId);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId));
             string methodReturnMsg = portIn.Receive();
-            MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
+            MethodResultMessage methodReturn = marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.result, callMessage);
         }
         #endregion

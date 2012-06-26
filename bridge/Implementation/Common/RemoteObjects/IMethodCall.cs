@@ -24,6 +24,7 @@ namespace Implementation.Common.RemoteObjects
 {
     public abstract class IMethodCall
     {
+        #region Variables
         private Boolean? wrapped = null;
         /// <summary>
         /// Fully qualified class names of the arguments.
@@ -38,11 +39,11 @@ namespace Implementation.Common.RemoteObjects
         /// Arguments of the call.
         /// </summary>
         public IList<object> args { get; set; }
-
+        #endregion
         #region Public Method
         public Boolean isWrapped()
         {
-            if (!wrapped.HasValue) 
+            if (!wrapped.HasValue)
                 ConvertWrapper(new JsonMarshaller());
             return wrapped.Value;
         }
@@ -51,14 +52,15 @@ namespace Implementation.Common.RemoteObjects
         /// </summary>        
         public void ConvertWrapper(IMarshaller marshaller)
         {
-            if (wrapped != null) return;
+            if (wrapped != null)
+                return;
             List<Object> result = new List<Object>();
             int fails = 0;
             for (int i = 0; i < args.Count; i++)
             {
                 if (isOpenEngSBModelWrapper(args[i].ToString()))
                 {
-                    OpenEngSBModelWrapper element = (OpenEngSBModelWrapper)marshaller.UnmarshallObject(args[i].ToString(), typeof(OpenEngSBModelWrapper));
+                    OpenEngSBModelWrapper element = marshaller.UnmarshallObject<OpenEngSBModelWrapper>(args[i].ToString());
                     result.Add(element);
                 }
                 else
@@ -68,13 +70,20 @@ namespace Implementation.Common.RemoteObjects
                 }
             }
             wrapped = fails < args.Count;
-            if (wrapped.Value) args = result;           
+            if (wrapped.Value)
+                args = result;
         }
+        /// <summary>
+        /// Checks if the String is an OpenEngSBModell
+        /// </summary>
+        /// <param name="element">String to convert</param>
+        /// <returns>if it is a instance of OpenEngSBModelWrapper</returns>
         private Boolean isOpenEngSBModelWrapper(String element)
         {
             foreach (PropertyInfo pr in typeof(OpenEngSBModelWrapper).GetProperties())
             {
-                if (!element.ToUpper().Contains(pr.Name.ToUpper())){
+                if (!element.ToUpper().Contains(pr.Name.ToUpper()))
+                {
                     return false;
                 }
             }
@@ -86,7 +95,7 @@ namespace Implementation.Common.RemoteObjects
         /// <param name="obj">object to convert</param>
         /// <param name="pos">position of the object in the list</param>
         /// <returns></returns>
-        private Object ConvertToOpenEngsModelWrapper(Object obj,int pos)
+        private Object ConvertToOpenEngsModelWrapper(Object obj, int pos)
         {
             OpenEngSBModelWrapper wrapper = new OpenEngSBModelWrapper();
             IList<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
@@ -99,6 +108,5 @@ namespace Implementation.Common.RemoteObjects
             return wrapper;
         }
         #endregion
-
     }
 }

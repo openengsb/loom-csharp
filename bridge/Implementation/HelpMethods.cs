@@ -57,7 +57,7 @@ namespace Implementation
         /// </summary>
         /// <param name="fieldname">Method name or Parameter name</param>
         /// <returns>Packagename</returns>
-        public static String CreateClassWithPackageName(String fieldname, Type type)
+        public static String createClassWithPackageName(String fieldname, Type type)
         {
             String result = null;
             //axis plugin
@@ -69,9 +69,9 @@ namespace Implementation
             }
             else
             {
-                result = SearchInTheXMLType(fieldname, type);
+                result = searchInTheXMLType(fieldname, type);
             }
-            return result + "." + HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            return result + "." + HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
         }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
@@ -79,7 +79,7 @@ namespace Implementation
         /// <param name="fieldname">Typename</param>
         /// <param name="type">IMplementation of the domain (dll)</param>
         /// <returns>Packagename</returns>
-        private static String SearchInTheXMLType(String fieldname, Type type)
+        private static String searchInTheXMLType(String fieldname, Type type)
         {
             Assembly ass = type.Assembly;
             type = ass.GetType(fieldname);
@@ -109,7 +109,7 @@ namespace Implementation
         /// </summary>
         /// <param name="element">Element to edit</param>
         /// <returns>String with the first character upper</returns>
-        private static String FirstLetterToUpper(String element)
+        private static String firstLetterToUpper(String element)
         {
             if (element.Length <= 1) return element.ToUpper();
             String first = element.Substring(0, 1);
@@ -140,7 +140,7 @@ namespace Implementation
         /// </summary>
         /// <param name="args">List of parameters for a methodcall</param>
         /// <param name="m">Methodinfo</param>
-        public static int AddTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        public static int addTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;

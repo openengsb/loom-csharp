@@ -21,6 +21,7 @@ using Implementation.Common.Enumeration;
 using Implementation.Communication;
 using Implementation.Communication.Jms;
 using Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
+using Implementation.Exceptions;
 
 namespace Implementation.OpenEngSB2_4_0.Remote
 {
@@ -149,10 +150,10 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId));
             string reply = portIn.Receive();
 
-            MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
+            MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
             registrationprocess = ERegistration.NONE;
             if (result.message.result.type == ReturnType.Exception)
-                throw new ApplicationException("Remote Exception while deleting service proxy");
+                throw new OpenEngSBException("Remote Exception while deleting service proxy", new BridgeException(result.message.result.className));
         }
 
         /// <summary>
@@ -167,8 +168,9 @@ namespace Implementation.OpenEngSB2_4_0.Remote
                 if (textMsg == null)
                     continue;
 
-                MethodCallRequest methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallRequest)) as MethodCallRequest;
-                if (methodCallRequest.message.methodCall.args == null) methodCallRequest.message.methodCall.args = new List<Object>();
+                MethodCallRequest methodCallRequest = marshaller.UnmarshallObject<MethodCallRequest>(textMsg);
+                if (methodCallRequest.message.methodCall.args == null)
+                    methodCallRequest.message.methodCall.args = new List<Object>();
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.message.answer)
@@ -178,7 +180,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId));
                     portOut.Send(returnMsg);
                     if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))
-                        throw new Exception(methodReturnMessage.message.result.arg.ToString());
+                        throw new OpenEngSBException("A problem with the invokation of a method happened", new BridgeException(methodReturnMessage.message.result.arg.ToString()));
                 }
             }
         }
@@ -196,26 +198,15 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             {
                 returnValue = invokeMethod(request.message.methodCall);
             }
-            catch (ApplicationException)
-            {
-                try
-                {
-                    returnValue = invokeMethod(request.message.methodCall);
-                }
-                catch (ApplicationException ex)
-                {
-                    return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
-                }
+            catch (BridgeException ex)
+            {                
+              return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
             }
-
-
             MethodResultMessage returnMsg = null;
-
             if (returnValue == null)
                 returnMsg = CreateMethodReturn(ReturnType.Void, "null", request.message.callId);
             else
                 returnMsg = CreateMethodReturn(ReturnType.Object, returnValue, request.message.callId);
-
             return returnMsg;
         }
 

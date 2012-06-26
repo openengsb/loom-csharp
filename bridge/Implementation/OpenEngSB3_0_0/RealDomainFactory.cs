@@ -123,11 +123,22 @@ namespace Implementation.OpenEngSB3_0_0
         {
             return domainType + "+external-connector-proxy+" + serviceId;
         }
+        /// <summary>
+        /// return only the GUID of the service
+        /// </summary>
+        /// <returns>GUID from the service</returns>
         public String getServiceId()
         {
             return serviceId;
         }
-
+        /// <summary>
+        /// Registers the connector again
+        /// </summary>
+        /// <typeparam name="T">Type of the domain</typeparam>
+        /// <param name="registrationId">Id to register the connector</param>
+        /// <param name="destination">URL to the OpenEngSB</param>
+        /// <param name="domainService">Local implementation</param>
+        /// <param name="domainType">Domain name</param>
         public void RegisterConnector<T>(string registrationId,string destination, T domainService, String domainType)
         {
             this.domainType = domainType;
@@ -145,7 +156,10 @@ namespace Implementation.OpenEngSB3_0_0
                 proxy.RegisterConnector(registrationId);
             }
         }
-
+        /// <summary>
+        /// Unregisters a connector
+        /// </summary>
+        /// <param name="service">The service</param>
         public void UnRegisterConnector(object service)
         {
             IRegistration stoppable = null;

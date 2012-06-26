@@ -22,6 +22,7 @@ using Implementation.Communication;
 using Implementation.Communication.Jms;
 using Implementation.OpenEngSB3_0_0.Remote.RemoteObject;
 using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Implementation.Exceptions;
 
 namespace Implementation.OpenEngSB3_0_0.Remote
 {
@@ -49,10 +50,10 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType,Boolean createNewConnector)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector)
             : base(localDomainService, host, serviceId, domainType, createNewConnector)
         {
-            logger.Info("Connecting to OpenEngSB version 3.0");            
+            logger.Info("Connecting to OpenEngSB version 3.0");
         }
         /// <summary>
         /// Constructor with Autehntification
@@ -64,7 +65,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector)
-            : base(localDomainService, host, serviceId, domainType, username, password,createNewConnector)
+            : base(localDomainService, host, serviceId, domainType, username, password, createNewConnector)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
         }
@@ -115,7 +116,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void DeleteRemoteProxy()
         {
-            logger.Info("Delete the connector with ID: "+serviceId);
+            logger.Info("Delete the connector with ID: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
             LocalType localType = new LocalType(typeof(String));
@@ -142,9 +143,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id.ToString()));
             string reply = portIn.Receive();
             registrationprocess = ERegistration.NONE;
-            MethodResultMessage result = marshaller.UnmarshallObject(reply, typeof(MethodResultMessage)) as MethodResultMessage;
+            MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
             if (result.result.type == ReturnType.Exception)
-                throw new ApplicationException("Remote Exception while deleting service proxy");
+                throw new OpenEngSBException("Remote Exception while deleting service proxy", new Exception(result.result.className));
             logger.Info("Delete done");
         }
 
@@ -154,7 +155,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public override void RegisterConnector(String serviceId)
         {
             this.serviceId = serviceId;
-            logger.Info("Register the connector with ID: "+serviceId);
+            logger.Info("Register the connector with ID: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_REGISTRATION);
             LocalType localType = new LocalType(typeof(String));
@@ -186,7 +187,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void UnRegisterConnector()
         {
-            logger.Info("Unregister the connector with ID: "+serviceId);
+            logger.Info("Unregister the connector with ID: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_REGISTRATION);
             LocalType localType = new LocalType(typeof(String));
@@ -224,8 +225,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
 
                 if (textMsg == null)
                     continue;
-                MethodCallMessage methodCallRequest = marshaller.UnmarshallObject(textMsg, typeof(MethodCallMessage)) as MethodCallMessage;
-                if (methodCallRequest.methodCall.args == null) methodCallRequest.methodCall.args = new List<Object>();
+                MethodCallMessage methodCallRequest = marshaller.UnmarshallObject<MethodCallMessage>(textMsg);
+                if (methodCallRequest.methodCall.args == null)
+                    methodCallRequest.methodCall.args = new List<Object>();
                 MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                 if (methodCallRequest.answer)
@@ -235,7 +237,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId));
                     portOut.Send(returnMsg);
                     if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
-                        throw new ArgumentException(methodReturnMessage.result.arg.ToString());
+                        throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
                 }
             }
         }
@@ -253,9 +255,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             {
                 returnValue = invokeMethod(request.methodCall);
             }
-            catch (Exception ex)
+            catch (BridgeException bridgeEx)
             {
-                return CreateMethodReturn(ReturnType.Exception, ex, request.callId);
+                return CreateMethodReturn(ReturnType.Exception, bridgeEx, request.callId);
             }
             MethodResultMessage returnMsg = null;
             if (returnValue == null)
@@ -283,10 +285,9 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             else
             {
                 if (!type.Equals(ReturnType.Exception))
-                {
                     methodResult.className = new LocalType(returnValue.GetType()).RemoteTypeFullName;
-                }
-                else methodResult.className = returnValue.GetType().ToString();
+                else
+                    methodResult.className = returnValue.GetType().ToString();
             }
             methodResult.metaData = new Dictionary<string, string>();
             return MethodResultMessage.CreateInstance(methodResult, correlationId);

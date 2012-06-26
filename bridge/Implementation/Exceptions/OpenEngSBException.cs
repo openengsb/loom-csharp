@@ -21,23 +21,23 @@ namespace Implementation.Exceptions
     /// <summary>
     /// Exception for Problems with the OpenEngSB Connection
     /// </summary>
-    public class ConnectOpenEngSBException : Exception
+    public class OpenEngSBException : Exception
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ConnectOpenEngSBException() { }
+        public OpenEngSBException() { }
         /// <summary>
         /// Consructor
         /// </summary>
         /// <param name="message">Exception message</param>
-        public ConnectOpenEngSBException(string message) : base(message) { }
+        public OpenEngSBException(string message) : base(message) { }
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="message">Exception Message</param>
         /// <param name="inner">Inner Exception</param>
-        public ConnectOpenEngSBException(string message, Exception inner)
+        public OpenEngSBException(string message, Exception inner)
             : base(message, inner) { }
     }
 }

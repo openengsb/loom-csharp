@@ -14,37 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
 
-namespace Implementation.Communication
+namespace Implementation.Exceptions
 {
     /// <summary>
-    /// This interface specifies operations for marshalling objects
-    /// in an arbitrary format. This is usually necessary for serializing
-    /// and sending objects over any communication channels.
+    /// Exception for Problems with the OpenEngSB Connection
     /// </summary>
-    public interface IMarshaller
+    public class BridgeException : Exception
     {
         /// <summary>
-        /// Serialize a object
+        /// Default constructor
         /// </summary>
-        /// <param name="obj">Object to serialize</param>
-        /// <returns>Serialized string</returns>
-        string MarshallObject(object obj);
+        public BridgeException() { }
         /// <summary>
-        /// Deserialze a object
+        /// Consructor
         /// </summary>
-        /// <param name="jsonText">Json object in string format</param>
-        /// <param name="objectType">Type of the object to return</param>
-        /// <returns>The deserialized object</returns>
-        object UnmarshallObject(string jsonText, Type objectType);
+        /// <param name="message">Exception message</param>
+        public BridgeException(string message) : base(message) { }
         /// <summary>
-        /// Deserialze a object
+        /// Constructor
         /// </summary>
-        /// <typeparam name="T">Type of the object</typeparam>
-        /// <param name="jsonText">Json object in string format</param>
-        /// <returns>The deserialized object</returns>
-        T UnmarshallObject<T>(string jsonText);
+        /// <param name="message">Exception Message</param>
+        /// <param name="inner">Inner Exception</param>
+        public BridgeException(string message, Exception inner)
+            : base(message, inner) { }
     }
 }

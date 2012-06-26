@@ -56,7 +56,7 @@ namespace Implementation.OpenEngSB2_4_0.Remote
             portOut.Send(methodCallMsg);
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
             string methodReturnMsg = portIn.Receive();
-            MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
+            MethodResultMessage methodReturn = marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.message.result, callMessage);
         }
         #endregion

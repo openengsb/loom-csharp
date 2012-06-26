@@ -25,6 +25,7 @@ using Implementation.Communication.Jms;
 using Implementation.Communication.Json;
 using log4net;
 using Implementation.Common.Enumeration;
+using Implementation.Exceptions;
 
 namespace Implementation.Common
 {
@@ -202,7 +203,7 @@ namespace Implementation.Common
                 }
 
                 if (type == null)
-                    throw new ApplicationException("no corresponding local type found");
+                    throw new BridgeException("no corresponding local type found");
 
                 object obj = null;
                 if (type.IsInstanceOfType(arg))
@@ -299,11 +300,11 @@ namespace Implementation.Common
             if (methInfo == null)
             {
                 logger.Error("No corresponding method found");
-                throw new ApplicationException("No corresponding method found");
+                throw new BridgeException("No corresponding method found");
             }
             Object[] arguments = CreateMethodArguments(request, methInfo);
             Object result = methInfo.Invoke(DomainService, arguments);
-            ;
+            
             logger.Info("Invokation done");
             return result;
         }
@@ -320,7 +321,7 @@ namespace Implementation.Common
                     continue;
                 List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
                 if ((parameterResult.Count != methodCall.args.Count) &&
-                    (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
+                    (HelpMethods.addTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
                     continue;
                 if (!methodCall.isWrapped())
                 {

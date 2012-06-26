@@ -49,7 +49,7 @@ namespace Implementation
             }
             catch 
             {
-                throw new ConnectOpenEngSBException("Unable to receive the actually version from: "+stringVersion);
+                throw new OpenEngSBException("Unable to receive the actually version from: "+stringVersion);
             }
         }
         /// <summary>

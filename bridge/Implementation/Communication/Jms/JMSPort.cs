@@ -74,6 +74,7 @@ namespace Implementation.Communication.Jms
         protected void Close()
         {
             connection.Close();
+            connection = null;
         }
         #endregion
     }

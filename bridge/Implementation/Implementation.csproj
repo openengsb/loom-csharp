@@ -69,6 +69,7 @@
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelEntry.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelWrapper.cs" />
+    <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageBase.cs" />
     <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Communication\Jms\ReplyTo.cs" />
-    <Compile Include="Exceptions\ConnectOpenEngSBException.cs" />
+    <Compile Include="Exceptions\OpenEngSBException.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
     <Compile Include="Common\IStoppable.cs" />

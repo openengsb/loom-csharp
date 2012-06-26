@@ -17,6 +17,7 @@
 using System;
 
 using Newtonsoft.Json;
+using Implementation.Exceptions;
 
 namespace Implementation.Communication.Json
 {
@@ -26,15 +27,20 @@ namespace Implementation.Communication.Json
     public class JsonMarshaller : IMarshaller
     {
         #region Methods
-        /// <summary>
-        /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects
         /// </summary>
-        /// <param name="jsonText">Json Object</param>
-        /// <param name="objectType">Object Typ</param>
+        /// <typeparam name="T">Object Typ</typeparam>
+        /// <param name="jsonText">Object in String format</param>
         /// <returns>Deserialize Objects</returns>
-        public object UnmarshallObject(string jsonText, Type objectType)
+        public T UnmarshallObject<T>(string jsonText)
         {
-            return JsonConvert.DeserializeObject(jsonText, objectType);
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                throw new BridgeException("A json message couldn't be deserised the message", new BridgeException(jsonText, ex));
+            }
         }
 
         /// <summary>
@@ -54,6 +60,23 @@ namespace Implementation.Communication.Json
             json.UseUTCDateTime=false;
             json.UsingGlobalTypes=false;            
             return json.ToJSON(obj);
+        }
+        /// <summary>
+        /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects
+        /// </summary>
+        /// <param name="jsonText">Json Object</param>
+        /// <param name="objectType">Object Typ</param>
+        /// <returns>Deserialize Objects</returns>
+        public object UnmarshallObject(string jsonText, Type objectType)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject(jsonText,objectType);
+            }
+            catch (Exception ex)
+            {
+                throw new BridgeException("A json message couldn't be deserised the message", new BridgeException(jsonText, ex));
+            }
         }
         #endregion
     }

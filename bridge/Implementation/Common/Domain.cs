@@ -22,11 +22,12 @@ using Implementation.Common.RemoteObjects;
 using Implementation.Communication;
 using Implementation.Communication.Json;
 using log4net;
+using Implementation.Exceptions;
 
 namespace Implementation.Common
 {
     public abstract class Domain<T> : RealProxy
-    { 
+    {
         #region Const.
         /// <summary>
         /// Name of the queue the server listens to for calls.
@@ -79,7 +80,7 @@ namespace Implementation.Common
         {
             this.serviceId = serviceId;
             this.domainType = domainType;
-            this.host = host; ;
+            this.host = host;
             this.marshaller = new JsonMarshaller();
             this.username = username;
             this.password = password;
@@ -101,20 +102,16 @@ namespace Implementation.Common
         protected IMessage ToMessage(IMethodResult methodReturn, IMethodCallMessage callMessage)
         {
             logger.Info("Convert method call to String method and send it to the OpenEngSB");
-            IMethodReturnMessage returnMessage = null;
             switch (methodReturn.type)
             {
                 case ReturnType.Exception:
-                    returnMessage = new ReturnMessage(new Exception(methodReturn.arg + "\n" + methodReturn.ToString()), callMessage);
-                    break;
+                    return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
                 case ReturnType.Void:
                 case ReturnType.Object:
-                    returnMessage = new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
-                    break;
+                    return new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
                 default:
                     return null;
             }
-            return returnMessage;
         }
         #endregion
     }
