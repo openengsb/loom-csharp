@@ -28,7 +28,7 @@ using Implementation.Common.Enumeration;
 
 namespace Implementation.Common
 {
-    public abstract class DomainReverse<T>:IRegistration
+    public abstract class DomainReverse<T> : IRegistration
     {
         #region Const.
         protected const string CREATION_QUEUE = "receive";
@@ -38,11 +38,11 @@ namespace Implementation.Common
         protected const string CREATION_PORT = "jms-json";
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
         protected const string REGISTRATION_METHOD_NAME = "registerConnector";
-        protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";        
+        protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";
         #endregion
         #region Variables
-        protected string CREATION_METHOD_NAME = "create";
-        protected string AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
+        protected abstract string CREATION_METHOD_NAME { get; }
+        protected abstract string AUTHENTIFICATION_CLASS { get; }
         /// <summary>
         /// indicates in witch state the registration is
         /// </summary>
@@ -146,7 +146,7 @@ namespace Implementation.Common
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password,Boolean createNewConnector)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector)
         {
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
@@ -168,7 +168,7 @@ namespace Implementation.Common
         /// <param name="methodCall">MethodCall</param>
         /// <returns>Arguments</returns>
         protected object[] CreateMethodArguments(IMethodCall methodCall, MethodInfo methodInfo)
-        {                                             
+        {
             IList<object> args = new List<object>();
             Assembly asm = typeof(T).GetType().Assembly;
             for (int i = 0; i < methodCall.args.Count; ++i)
@@ -178,9 +178,9 @@ namespace Implementation.Common
                 if (methodCall.isWrapped())
                 {
                     methodClass = ((OpenEngSBModelWrapper)arg).modelClass;
-                    arg = ConvertWrapperTypes(arg, methodInfo);                    
+                    arg = ConvertWrapperTypes(arg, methodInfo);
                 }
-                                
+
                 RemoteType remoteType = new RemoteType(methodClass, methodInfo.GetParameters());
                 if (remoteType.LocalTypeFullName == null)
                 {
@@ -205,9 +205,11 @@ namespace Implementation.Common
                     throw new ApplicationException("no corresponding local type found");
 
                 object obj = null;
-                if (type.IsInstanceOfType(arg)){
-                    obj=arg;
-                } else if (type.IsPrimitive || type.Equals(typeof(string)))
+                if (type.IsInstanceOfType(arg))
+                {
+                    obj = arg;
+                }
+                else if (type.IsPrimitive || type.Equals(typeof(string)))
                 {
                     obj = arg;
                 }
@@ -218,11 +220,11 @@ namespace Implementation.Common
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
-                }             
+                }
                 args.Add(obj);
             }
             HelpMethods.addTrueForSpecified(args, methodInfo);
-            return args.ToArray();        
+            return args.ToArray();
         }
         private Object ConvertWrapperTypes(Object wrappedObject, MethodInfo methodInfo)
         {
@@ -242,17 +244,18 @@ namespace Implementation.Common
                         break;
                     }
                 }
-                if (field == null) throw new ArgumentException("There is no field " + entry.key);
+                if (field == null)
+                    throw new ArgumentException("There is no field " + entry.key);
                 Object tmp = ConvertType(entry, methodInfo);
                 field.SetValue(obj, tmp, null);
             }
             return obj;
         }
 
-        private Object ConvertType(OpenEngSBModelEntry entry,MethodInfo methodinfo)
+        private Object ConvertType(OpenEngSBModelEntry entry, MethodInfo methodinfo)
         {
             String value = entry.value;
-            RemoteType remote = new RemoteType(entry.type,methodinfo.GetParameters());
+            RemoteType remote = new RemoteType(entry.type, methodinfo.GetParameters());
             Type type = findType(remote.LocalTypeFullName, methodinfo);
             if (type.IsPrimitive || type.Equals(typeof(string)))
             {
@@ -268,7 +271,7 @@ namespace Implementation.Common
             }
         }
         private Type findType(String typeString, MethodInfo methodInfo)
-        {            
+        {
             Assembly asm = typeof(T).GetType().Assembly;
             Type type = asm.GetType(typeString);
             if (type == null)
@@ -278,7 +281,8 @@ namespace Implementation.Common
                 foreach (ParameterInfo param in methodInfo.GetParameters())
                 {
                     if (param.ParameterType.FullName.ToUpper()
-                        .Equals(typeString.ToUpper())) type = param.ParameterType;
+                        .Equals(typeString.ToUpper()))
+                        type = param.ParameterType;
                 }
             }
             return type;
@@ -289,16 +293,17 @@ namespace Implementation.Common
         /// <param name="request">Method informations</param>
         /// <returns>return value</returns>
         protected Object invokeMethod(IMethodCall request)
-        {            
-            logger.Info("Search and invoke method: "+request.methodName);
+        {
+            logger.Info("Search and invoke method: " + request.methodName);
             MethodInfo methInfo = FindMethodInDomain(request);
             if (methInfo == null)
             {
                 logger.Error("No corresponding method found");
                 throw new ApplicationException("No corresponding method found");
             }
-            Object[] arguments= CreateMethodArguments(request, methInfo);            
-            Object result= methInfo.Invoke(DomainService, arguments); ;
+            Object[] arguments = CreateMethodArguments(request, methInfo);
+            Object result = methInfo.Invoke(DomainService, arguments);
+            ;
             logger.Info("Invokation done");
             return result;
         }
@@ -311,18 +316,21 @@ namespace Implementation.Common
         {
             foreach (MethodInfo methodInfo in domainService.GetType().GetMethods())
             {
-                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower()) continue;
+                if (methodCall.methodName.ToLower() != methodInfo.Name.ToLower())
+                    continue;
                 List<ParameterInfo> parameterResult = methodInfo.GetParameters().ToList<ParameterInfo>();
                 if ((parameterResult.Count != methodCall.args.Count) &&
                     (HelpMethods.AddTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
                     continue;
                 if (!methodCall.isWrapped())
                 {
-                    if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>())) continue;
+                    if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>()))
+                        continue;
                 }
                 else
                 {
-                    if (!HelpMethods.TypesAreEqual(convertToClassList(methodCall.args), parameterResult.ToArray<ParameterInfo>())) continue;
+                    if (!HelpMethods.TypesAreEqual(convertToClassList(methodCall.args), parameterResult.ToArray<ParameterInfo>()))
+                        continue;
                 }
                 return methodInfo;
             }

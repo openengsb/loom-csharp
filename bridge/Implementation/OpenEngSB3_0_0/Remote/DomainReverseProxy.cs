@@ -32,7 +32,14 @@ namespace Implementation.OpenEngSB3_0_0.Remote
     /// <typeparam name="T"></typeparam>
     public class DomainReverseProxy<T> : DomainReverse<T>
     {
-
+        protected override string CREATION_METHOD_NAME
+        {
+            get { return "createWithId"; }
+        }
+        protected override string AUTHENTIFICATION_CLASS
+        {
+            get { return "org.openengsb.connector.usernamepassword.Password"; }
+        }
         #region Constructor
         /// <summary>
         /// Default constructor
@@ -45,9 +52,7 @@ namespace Implementation.OpenEngSB3_0_0.Remote
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType,Boolean createNewConnector)
             : base(localDomainService, host, serviceId, domainType, createNewConnector)
         {
-            logger.Info("Connecting to OpenEngSB version 3.0");
-            CREATION_METHOD_NAME = "createWithId";
-            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
+            logger.Info("Connecting to OpenEngSB version 3.0");            
         }
         /// <summary>
         /// Constructor with Autehntification
@@ -62,8 +67,6 @@ namespace Implementation.OpenEngSB3_0_0.Remote
             : base(localDomainService, host, serviceId, domainType, username, password,createNewConnector)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
-            CREATION_METHOD_NAME = "createWithId";
-            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         #endregion
         #region Public Methods
