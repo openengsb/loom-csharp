@@ -41,9 +41,12 @@ namespace Implementation.Common
         protected const string REGISTRATION_METHOD_NAME = "registerConnector";
         protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";
         #endregion
-        #region Variables
+        #region Propreties
         protected abstract string CREATION_METHOD_NAME { get; }
         protected abstract string AUTHENTIFICATION_CLASS { get; }
+        public string ServiceID { get { return serviceId; } }
+        #endregion
+        #region Variables
         /// <summary>
         /// indicates in witch state the registration is
         /// </summary>
@@ -390,7 +393,6 @@ namespace Implementation.Common
             {
                 isEnabled = false;
                 portIn.Close();
-                DeleteRemoteProxy();
             }
             logger.Info("Connection closed");
         }

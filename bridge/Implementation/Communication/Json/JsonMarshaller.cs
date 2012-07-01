@@ -50,15 +50,15 @@ namespace Implementation.Communication.Json
         /// <returns>Returns a Json Message</returns>
         public string MarshallObject(object obj)
         {
-            fastJSON.JSON json=fastJSON.JSON.Instance;
-            json.IndentOutput=false;
-            json.SerializeNullValues=true;
-            json.ShowReadOnlyProperties=false;
-            json.UseFastGuid=false;
-            json.UseOptimizedDatasetSchema=false;
-            json.UseSerializerExtension=false;
-            json.UseUTCDateTime=false;
-            json.UsingGlobalTypes=false;            
+            fastJSON.JSON json = fastJSON.JSON.Instance;
+            json.IndentOutput = false;
+            json.SerializeNullValues = true;
+            json.ShowReadOnlyProperties = false;
+            json.UseFastGuid = false;
+            json.UseOptimizedDatasetSchema = false;
+            json.UseSerializerExtension = false;
+            json.UseUTCDateTime = false;
+            json.UsingGlobalTypes = false;
             return json.ToJSON(obj);
         }
         /// <summary>
@@ -71,7 +71,7 @@ namespace Implementation.Communication.Json
         {
             try
             {
-                return JsonConvert.DeserializeObject(jsonText,objectType);
+                return JsonConvert.DeserializeObject(jsonText, objectType);
             }
             catch (Exception ex)
             {

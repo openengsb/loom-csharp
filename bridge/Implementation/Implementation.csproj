@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\AbstractRealDomainFactory.cs" />
     <Compile Include="Common\Domain.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ERegistration.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="Exceptions\OpenEngSBException.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
-    <Compile Include="Common\IStoppable.cs" />
     <Compile Include="Communication\IIncomingPort.cs" />
     <Compile Include="Communication\IMarshaller.cs" />
     <Compile Include="Communication\IOutgoingPort.cs" />

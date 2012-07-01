@@ -20,13 +20,14 @@ namespace Interface
 {
     public interface IDomainFactory
     {
-        T getEventhandler<T>(string host);
-        void CreateDomainService<T>(string destination, T service, string domainType);
-        void DeleteDomainService(object service);
-        void RegisterConnector<T>(string registrationid, string destination, T service, string domainType);
-        void UnRegisterConnector(object service);
-        String getDomainTypServiceId();
-        String getServiceId();
-        Boolean Registered(Object domainService);
+        A getEventhandler<A>(String domainType);
+        void CreateDomainService(String domainType);
+        void DeleteDomainService(String domainType);
+        void RegisterConnector(String registrationid, String domainType);
+        void UnRegisterConnector(String domainType);
+        void StopConnection(String domainType);
+        String getDomainTypServiceId(String domainType);
+        String getServiceId(String domainType);
+        Boolean Registered(String domainService);
     }
 }

@@ -38,22 +38,24 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
             logger.Info("Start Example wit the domain " + domainName);
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
-            //Register the connecter on the OpenEngSB
-            factory.CreateDomainService(destination, localDomain, domainName);
-            factory.RegisterConnector(factory.getServiceId(), destination, localDomain, domainName);
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
 
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
-            ExampleDomainEvents.LogEvent lEvent= new ExampleDomainEvents.LogEvent();
+            //Register the connecter on the OpenEngSB
+            factory.CreateDomainService(domainName);
+            factory.RegisterConnector(factory.getServiceId(domainName), domainName);
+
+            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
+            ExampleDomainEvents.LogEvent lEvent = new ExampleDomainEvents.LogEvent();
             lEvent.name = "Example";
             lEvent.level = "DEBUG";
             lEvent.message = "remoteTestEventLog";
             remotedomain.raiseEvent(lEvent);
-            logger.Info("Press enter to close the Connection");                
+            logger.Info("Press enter to close the Connection");
             Console.ReadKey();
-            factory.UnRegisterConnector(localDomain);
-            factory.DeleteDomainService(localDomain);
+            factory.UnRegisterConnector(domainName);
+            factory.DeleteDomainService(domainName);
+            factory.StopConnection(domainName);
         }
     }
 }
