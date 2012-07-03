@@ -17,10 +17,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObject
 {
     /// <summary>
     /// This class represents an Connector instance on the bus.
@@ -30,6 +28,8 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         #region Variables
         public IDictionary<String, Object> properties { get; set; }
         public IDictionary<String, String> attributes { get; set; }
+        public String domainType { get; set; }
+        public String connectorType { get; set; }
         #endregion
         #region Constructor
         /// <summary>

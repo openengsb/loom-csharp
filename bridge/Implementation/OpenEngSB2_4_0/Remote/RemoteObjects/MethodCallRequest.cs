@@ -16,11 +16,8 @@
  ***/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for MethodCallRequest
@@ -30,7 +27,7 @@ namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
         #region Variables
         public Authentification authenticationData { get; set; }
         public Message message { get; set; }
-        public long timestamp{get;set;}
+        public long timestamp { get; set; }
         #endregion
         #region Public static Methods
         /// <summary>

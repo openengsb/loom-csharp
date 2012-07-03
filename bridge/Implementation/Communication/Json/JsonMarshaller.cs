@@ -14,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-using System.Text;
-using System.IO;
 using Newtonsoft.Json;
+using Implementation.Exceptions;
 
-namespace Bridge.Implementation.Communication.Json
+namespace Implementation.Communication.Json
 {
     /// <summary>
     /// This class converts any given object to an json-message.
@@ -31,15 +27,20 @@ namespace Bridge.Implementation.Communication.Json
     public class JsonMarshaller : IMarshaller
     {
         #region Methods
-        /// <summary>
-        /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects
         /// </summary>
-        /// <param name="jsonText">Json Object</param>
-        /// <param name="objectType">Object Typ</param>
+        /// <typeparam name="T">Object Typ</typeparam>
+        /// <param name="jsonText">Object in String format</param>
         /// <returns>Deserialize Objects</returns>
-        public object UnmarshallObject(string jsonText, Type objectType)
+        public T UnmarshallObject<T>(string jsonText)
         {
-            return JsonConvert.DeserializeObject(jsonText, objectType);
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                throw new BridgeException("A json message couldn't be deserised the message", new BridgeException(jsonText, ex));
+            }
         }
 
         /// <summary>
@@ -49,16 +50,33 @@ namespace Bridge.Implementation.Communication.Json
         /// <returns>Returns a Json Message</returns>
         public string MarshallObject(object obj)
         {
-            fastJSON.JSON json=fastJSON.JSON.Instance;
-            json.IndentOutput=false;
-            json.SerializeNullValues=true;
-            json.ShowReadOnlyProperties=false;
-            json.UseFastGuid=false;
-            json.UseOptimizedDatasetSchema=false;
-            json.UseSerializerExtension=false;
-            json.UseUTCDateTime=false;
-            json.UsingGlobalTypes=false;            
+            fastJSON.JSON json = fastJSON.JSON.Instance;
+            json.IndentOutput = false;
+            json.SerializeNullValues = true;
+            json.ShowReadOnlyProperties = false;
+            json.UseFastGuid = false;
+            json.UseOptimizedDatasetSchema = false;
+            json.UseSerializerExtension = false;
+            json.UseUTCDateTime = false;
+            json.UsingGlobalTypes = false;
             return json.ToJSON(obj);
+        }
+        /// <summary>
+        /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects
+        /// </summary>
+        /// <param name="jsonText">Json Object</param>
+        /// <param name="objectType">Object Typ</param>
+        /// <returns>Deserialize Objects</returns>
+        public object UnmarshallObject(string jsonText, Type objectType)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject(jsonText, objectType);
+            }
+            catch (Exception ex)
+            {
+                throw new BridgeException("A json message couldn't be deserised the message", new BridgeException(jsonText, ex));
+            }
         }
         #endregion
     }

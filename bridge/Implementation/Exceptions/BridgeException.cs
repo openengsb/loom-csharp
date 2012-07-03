@@ -14,20 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.Common
+namespace Implementation.Exceptions
 {
     /// <summary>
-    /// Interfacedescription for stopping a Thread
+    /// Exception for Problems with the OpenEngSB Connection
     /// </summary>
-    public interface IStoppable
+    public class BridgeException : Exception
     {
-        //Description to stop a Thread
-        void Stop();
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public BridgeException() { }
+        /// <summary>
+        /// Consructor
+        /// </summary>
+        /// <param name="message">Exception message</param>
+        public BridgeException(string message) : base(message) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Exception Message</param>
+        /// <param name="inner">Inner Exception</param>
+        public BridgeException(string message, Exception inner)
+            : base(message, inner) { }
     }
 }

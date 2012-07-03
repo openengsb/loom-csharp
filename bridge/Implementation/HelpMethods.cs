@@ -18,13 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
+using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using Bridge.Implementation.Common;
+using Implementation.Common;
+using Implementation.Common.RemoteObjects;
+using Implementation.Communication.Json;
+using Implementation.Communication;
 
-namespace Bridge.Implementation
+namespace Implementation
 {
     public class HelpMethods
     {
@@ -54,34 +57,50 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="fieldname">Method name or Parameter name</param>
         /// <returns>Packagename</returns>
-        public static String GetPackageName(String fieldname,Type type)
+        public static String createClassWithPackageName(String fieldname, Type type)
         {
+            String result = null;
+            //axis plugin
             MethodInfo method = type.GetMethod(fieldname);
             //Tests if it is a Mehtod or a Type
             if (method != null)
             {
-                SoapDocumentMethodAttribute soapAttribute;
-                foreach (Attribute attribute in method.GetCustomAttributes(false))
-                {
-                    if (attribute is SoapDocumentMethodAttribute)
-                    {
-                        soapAttribute = attribute as SoapDocumentMethodAttribute;
-                        return reverseURL(soapAttribute.RequestNamespace);
-                    }
-                }
+                result = searchSoapAttributes(method);
             }
             else
             {
-                Assembly ass = type.Assembly;
-                type = ass.GetType(fieldname);
-                foreach (Attribute attribute in Attribute.GetCustomAttributes(type))
-                {
-                    if (attribute is XmlTypeAttribute)
-                    {
-                        XmlTypeAttribute xmltype = attribute as XmlTypeAttribute;
-                        return reverseURL(xmltype.Namespace);
-                    }
-                }
+                result = searchInTheXMLType(fieldname, type);
+            }
+            return result + "." + HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+        }
+        /// <summary>
+        /// Searches for the packagenames in the XMLType Attribute
+        /// </summary>
+        /// <param name="fieldname">Typename</param>
+        /// <param name="type">IMplementation of the domain (dll)</param>
+        /// <returns>Packagename</returns>
+        private static String searchInTheXMLType(String fieldname, Type type)
+        {
+            Assembly ass = type.Assembly;
+            type = ass.GetType(fieldname);
+            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
+            if (attribute != null)
+            {
+                return reverseURL(attribute.Namespace);
+            }
+            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+        }
+        /// <summary>
+        /// Searches for Packagenames in the SOAP attributes
+        /// </summary>
+        /// <param name="method">Method to check the SOAP attribute</param>
+        /// <returns>Packagename</returns>
+        private static String searchSoapAttributes(MethodInfo method)
+        {
+            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).First(element => element is SoapDocumentMethodAttribute);
+            if (attribute != null)
+            {
+                return reverseURL(attribute.RequestNamespace);
             }
             throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
@@ -90,7 +109,7 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="element">Element to edit</param>
         /// <returns>String with the first character upper</returns>
-        public static String FirstLetterToUpper(String element)
+        private static String firstLetterToUpper(String element)
         {
             if (element.Length <= 1) return element.ToUpper();
             String first = element.Substring(0, 1);
@@ -106,12 +125,13 @@ namespace Bridge.Implementation
         public static void addTrueForSpecified(IList<object> args, MethodInfo m)
         {
             ParameterInfo[] paraminfo = m.GetParameters();
-            if (paraminfo.Length <= args.Count) return;
+            if (paraminfo.Length <= args.Count && paraminfo.Length < 2 && args.Count <= 0) return;
             int i = 0;
             while (i + 1 < paraminfo.Length)
             {
                 String paramName = paraminfo[i].Name + "Specified";
-                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
+                if ((paraminfo[i + 1].ParameterType.Equals(typeof(System.Boolean))) &&
+                    paramName.Equals(paraminfo[i + 1].Name)) args.Insert(i + 1, true);
                 i = i + 2;
             }
         }
@@ -120,7 +140,7 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="args">List of parameters for a methodcall</param>
         /// <param name="m">Methodinfo</param>
-        public static int AddTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        public static int addTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;
@@ -137,6 +157,7 @@ namespace Bridge.Implementation
             }
             return parameterLength;
         }
+
         /// <summary>
         /// Tests if the list of type names are equal to the types of the method parameter.
         /// </summary>
@@ -145,37 +166,25 @@ namespace Bridge.Implementation
         /// <returns></returns>
         public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
         {
-            if (typeStrings.Count != parameterInfos.Length)
-                throw new ApplicationException("length of type-string-arrays are not equal");
-
             for (int i = 0; i < parameterInfos.Length; ++i)
             {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
-                {
-                    return false;
-                }
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos)) return false;
             }
-
             return true;
         }
 
         /// <summary>
         /// Test if two types are equal
-        /// TODO remove "null" if the Bug OPENENGSB-2423/OPENENGSB-2429 is fixed
         /// </summary>
         /// <param name="remoteType">Remote Type</param>
         /// <param name="localType">Local Type</param>
         /// <returns>If to types are equal</returns>
         private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
-            if (remoteType.Equals("null")) return true;
+            if (localType.Equals(typeof(object))) return true;
             RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
-
-            if (localType.Name.ToLower().Contains("nullable"))
-            {
-                return (localType.FullName.Contains(remote_typ.Name));
-            }
-            return (remote_typ.Name.Equals(localType.Name));
+            if (localType.Name.ToLower().Contains("nullable")) return (localType.FullName.Contains(remote_typ.Name));
+            return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
 
     }

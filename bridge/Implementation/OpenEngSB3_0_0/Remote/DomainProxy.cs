@@ -17,71 +17,29 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Bridge.Implementation.Communication.Jms;
-using Bridge.Implementation.Communication;
-using Bridge.Implementation.Communication.Json;
-using Bridge.Implementation.Common;
-using System.Runtime.Remoting.Proxies;
+using Implementation.Common;
+using Implementation.Communication;
+using Implementation.Communication.Jms;
+using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.OpenEngSB3_0_0.Remote
 {
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
     /// </summary>
     /// <typeparam name="T">Type to proxy.</typeparam>
-    public class DomainProxy<T> : RealProxy
+    public class DomainProxy<T> : Domain<T>
     {
-        #region Variables
-        /// <summary>
-        /// Username for the authentification
-        /// </summary>
-        private String username;
-        /// <summary>
-        /// Password for the authentification
-        /// </summary>
-        private String password;
-        /// <summary>
-        /// Name of the queue the server listens to for calls.
-        /// </summary>
-        private const string HOST_QUEUE = "receive";
-
-        /// <summary>
-        /// Id identifying the service instance on the bus.
-        /// </summary>
-        private string serviceId;
-        /// <summary>
-        /// Domain type
-        /// </summary>
-        private string domainType;
-
-        /// <summary>
-        /// Host string of the server.
-        /// </summary>
-        private string host;
-
-        private IMarshaller marshaller;
-        #endregion
         #region Constructors
         public DomainProxy(string host, string serviceId, String domainType)
-            : base(typeof(T))
+            : base(host, serviceId, domainType)
         {
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.host = host;
-            this.marshaller = new JsonMarshaller();
-            this.username = "admin";
-            this.password = "password";
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
-        public DomainProxy(string host, string serviceId, String domainType,String username,String password)
-            : base(typeof(T))
+        public DomainProxy(string host, string serviceId, String domainType, String username, String password)
+            : base(host, serviceId, domainType, username, password)
         {
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.host = host; ;
-            this.marshaller = new JsonMarshaller();
-            this.username = username;
-            this.password = password;
+            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
         #endregion
         #region Public Methods
@@ -93,53 +51,23 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
         public override IMessage Invoke(IMessage msg)
         {
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
-            SecureMethodCallRequest methodCallRequest = ToMethodCallRequest(callMessage);
+            MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
             IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE));
-
-            portOut.Send(methodCallMsg, methodCallRequest.message.callId);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.message.callId));
+            portOut.Send(methodCallMsg, methodCallRequest.callId);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId));
             string methodReturnMsg = portIn.Receive();
-            MethodResultMessage methodReturn = marshaller.UnmarshallObject(methodReturnMsg, typeof(MethodResultMessage)) as MethodResultMessage;
-            return ToMessage(methodReturn.message.result, callMessage);
-        }
-        public new T GetTransparentProxy()
-        {
-            return (T)base.GetTransparentProxy();
+            MethodResultMessage methodReturn = marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
+            return ToMessage(methodReturn.result, callMessage);
         }
         #endregion
         #region Private methods
-        /// <summary>
-        /// Builds an IMessage using MethodReturn.
-        /// </summary>
-        /// <param name="methodReturn">Servers return message</param>
-        /// <param name="callMessage">Method an parameters</param>
-        /// <returns>The result of the Message</returns>
-        private IMessage ToMessage(MethodResult methodReturn, IMethodCallMessage callMessage)
-        {
-            IMethodReturnMessage returnMessage = null;
-            switch (methodReturn.type)
-            {
-                case MethodResult.ReturnType.Exception:
-                    returnMessage = new ReturnMessage((Exception)methodReturn.arg, callMessage);
-                    break;
-                case MethodResult.ReturnType.Void:
-                case MethodResult.ReturnType.Object:
-                    returnMessage = new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
-                    break;
-                default:
-                    return null;
-            }
-            return returnMessage;
-        }
-
-       
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.
         /// </summary>
         /// <param name="msg">Information, to create a MethodCallRequest</param>
         /// <returns>A new instance of methodCallrequest</returns>
-        private SecureMethodCallRequest ToMethodCallRequest(IMethodCallMessage msg)
+        private MethodCallMessage ToMethodCallRequest(IMethodCallMessage msg)
         {
             Guid id = Guid.NewGuid();
 
@@ -154,14 +82,13 @@ namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
             {
                 String namesp = arg.GetType().Namespace;
                 LocalType type = new LocalType(arg.GetType());
-                classes.Add(HelpMethods.GetPackageName(type.RemoteTypeFullName,typeof(T)) + "." + HelpMethods.FirstLetterToUpper(type.RemoteTypeFullName.Replace(namesp+".","")));
-            }            
-            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes,null);
-            String classname = "org.openengsb.connector.usernamepassword.Password";
-            Data data = Data.CreateInstance("password");
-            AuthenticationInfo authentification = AuthenticationInfo.createInstance(classname,data);
-            Message message = Message.createInstance(call, id.ToString(), true, "");
-            return SecureMethodCallRequest.createInstance("admin",authentification, message);
+                classes.Add(type.RemoteTypeFullName);
+            }
+            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
+            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            authentification.data.Add("value", password);
+            MethodCallMessage message = MethodCallMessage.createInstance(username, authentification, call, id.ToString(), true, "");
+            return message;
         }
         #endregion
 

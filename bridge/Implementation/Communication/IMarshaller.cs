@@ -16,18 +16,15 @@
  ***/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.Communication
+namespace Implementation.Communication
 {
     /// <summary>
     /// This interface specifies operations for marshalling objects
     /// in an arbitrary format. This is usually necessary for serializing
     /// and sending objects over any communication channels.
     /// </summary>
-    interface IMarshaller
+    public interface IMarshaller
     {
         /// <summary>
         /// Serialize a object
@@ -42,5 +39,12 @@ namespace Bridge.Implementation.Communication
         /// <param name="objectType">Type of the object to return</param>
         /// <returns>The deserialized object</returns>
         object UnmarshallObject(string jsonText, Type objectType);
+        /// <summary>
+        /// Deserialze a object
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="jsonText">Json object in string format</param>
+        /// <returns>The deserialized object</returns>
+        T UnmarshallObject<T>(string jsonText);
     }
 }

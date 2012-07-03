@@ -16,24 +16,21 @@
  ***/
 using System;
 
-namespace Implementation.Communication
+namespace Implementation.Common.RemoteObjects
 {
-    /// <summary>
-    /// This interfaces specifies the operations for a communication port.
-    /// The interface supports sending and receiving text messages over any arbitrary protocol.
-    /// </summary>
-    public interface IOutgoingPort: IPort
+    public class OpenEngSBModelEntry
     {
-        /// <summary>
-        /// Definition to send a message
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
-        /// <summary>
-        /// Definition to send a message and define ReplyTo
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+        public String key { get; set; }
+        public String value { get; set; }
+        public String type { get; set; }
+        public OpenEngSBModelEntry() { }
+        public static OpenEngSBModelEntry getInstance(String key, String value, String type)
+        {
+            OpenEngSBModelEntry result = new OpenEngSBModelEntry();
+            result.key = key;
+            result.value = value;
+            result.type = type;
+            return result;
+        }
     }
 }

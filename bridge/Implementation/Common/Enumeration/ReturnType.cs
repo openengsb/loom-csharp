@@ -14,34 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Implementation.Common.Enumeration
 {
-    /// <summary>
-    /// Container for the datas
-    /// </summary>
-    public class Data
-    {
-        #region Variables
-        public String value { get; set; }
-        #endregion
-        #region Public Static Methods
-        /// <summary>
-        /// Creates a new instance of Data
-        /// </summary>
-        /// <param name="username">username</param>
-        /// <param name="value">password</param>
-        /// <returns>New instance of Data</returns>
-        public static Data CreateInstance(String value)
-        {
-            Data instance = new Data();
-            instance.value= value;
-            return instance;
-        }
-        #endregion
-    }
+    public enum ReturnType { Void, Object, Exception }
 }

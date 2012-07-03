@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using Apache.NMS;
 
-namespace Bridge.Implementation.Communication.Jms
+namespace Implementation.Communication.Jms
 {
     /// <summary>
     /// Abstract class to connect to a destination
@@ -37,21 +37,21 @@ namespace Bridge.Implementation.Communication.Jms
         protected ISession session;
         protected IDestination destination;
         #endregion
-        #region Constructor 
+        #region Constructor
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
         protected JmsPort(string destination)
         {
-            connection = null;
-            factory = null;
-            session = null;
+            this.connection = null;
+            this.factory = null;
+            this.session = null;
             this.destination = null;
             Configure(destination);
         }
         #endregion
-        #region private Methods
+        #region Private Methods
         /// <summary>
         /// Configurate the Connection
         /// </summary>
@@ -59,7 +59,6 @@ namespace Bridge.Implementation.Communication.Jms
         private void Configure(string destination)
         {
             Destination dest = new Destination(destination);
-
             Uri connectionUri = new Uri(dest.Host);
             factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
             connection = factory.CreateConnection();
@@ -75,6 +74,7 @@ namespace Bridge.Implementation.Communication.Jms
         protected void Close()
         {
             connection.Close();
+            connection = null;
         }
         #endregion
     }
