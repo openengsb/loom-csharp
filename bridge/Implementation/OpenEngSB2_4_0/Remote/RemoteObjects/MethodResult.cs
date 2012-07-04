@@ -14,21 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Implementation.Common.Enumeration;
+using Implementation.Common.RemoteObjects;
 
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+
+namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents the return value of an RPC.
     /// </summary>
-    public class MethodResult
+    public class MethodResult:IMethodResult
     {
         #region Variables
-        public enum ReturnType { Void, Object, Exception }
-
         /// <summary>
         /// Type of the return value.
         /// </summary>

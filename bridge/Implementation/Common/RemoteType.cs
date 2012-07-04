@@ -14,14 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 
-namespace Bridge.Implementation.Common
+namespace Implementation.Common
 {
     /// <summary>
     /// This class maps a local type to a bus side type.
@@ -29,50 +26,50 @@ namespace Bridge.Implementation.Common
     public class RemoteType
     {
         #region Propreties
-        public string FullName { get; set; }
-
+        public string RemoteTypeFullName { get; set; }
         public string Name { get; set; }
-
         public string LocalTypeFullName { get; set; }
         #endregion
         #region Constructor
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
-            FullName = typeString;
-            if (FullName.Contains("$"))
+            RemoteTypeFullName = typeString;            
+            if (RemoteTypeFullName.Contains("$"))
             {
-                Name = FullName.Split('$').Last().Trim();
-                LocalTypeFullName = FullName;
-                foreach (ParameterInfo par in parameterInfos)
-                {
-                    if (par.ParameterType.FullName.Contains(Name))
-                    {
-                        String tmp = par.ParameterType.FullName;
-                        int start = 0;
-                        for (int i = tmp.IndexOf(Name) - 2; i >= 0; i--)
-                        {
-                            Char ts = tmp[i];
-                            if (!Char.IsLetter(tmp[i])) { start = i + 1; break; }
-                        }
-                        int xy = tmp.IndexOf(Name) - start + Name.Length;
-                        tmp = tmp.Substring(start, xy);
-
-                        LocalTypeFullName = tmp;
-                    }
-                }
+                Name = RemoteTypeFullName.Split('$').Last().Trim();
+                createFullName(Name, parameterInfos);
             }
             else
             {
-                Name = FullName.Split('.').Last().Trim();
-                foreach (ParameterInfo par in parameterInfos)
+                createFullName(RemoteTypeFullName.Split('.').Last().Trim().Replace(";", ""), parameterInfos);
+                Name = LocalTypeFullName.Split('.').Last().Trim();
+            }
+        }
+        #endregion
+        #region Private Methods
+        private void createFullName(String methodName,ParameterInfo[] parameterInfos)
+        {
+            
+            foreach (ParameterInfo par in parameterInfos)
+            {
+                if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
                 {
-                    if (par.ParameterType.FullName.Contains(Name))
-                    {
-                        LocalTypeFullName = par.ParameterType.FullName;
-                        break;
-                    }
+                    LocalTypeFullName = par.ParameterType.FullName;
                 }
             }
+
+            if (String.IsNullOrEmpty(LocalTypeFullName))
+            {
+                LocalTypeFullName = CheckPrimitivType(methodName.Split('.').Last().Trim());
+            }
+        }
+        private String CheckPrimitivType(String mehtodName)
+        {
+            if (mehtodName.ToUpper().Contains("INT")) return typeof(int).ToString();
+            if (mehtodName.ToUpper().Contains("STRING")) return typeof(string).ToString();
+            if (mehtodName.ToUpper().Contains("FLOAT")) return typeof(float).ToString();
+            if (mehtodName.ToUpper().Contains("DOUBLE")) return typeof(double).ToString();
+            return mehtodName;
         }
         #endregion
     }

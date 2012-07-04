@@ -35,10 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomainEventsInterfaces">
+    <Reference Include="ExampleDomainEventsInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ExampleDomainInterfaces">
+    <Reference Include="ExampleDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
@@ -61,9 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Implementation\Implementation.csproj">
       <Project>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</Project>
       <Name>Implementation</Name>
@@ -72,6 +71,9 @@
       <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

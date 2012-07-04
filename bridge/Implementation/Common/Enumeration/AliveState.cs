@@ -14,26 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using System;
 
-namespace Implementation.Communication
+namespace Implementation.Common.Enumeration
 {
-    /// <summary>
-    /// This interfaces specifies the operations for a communication port.
-    /// The interface supports sending and receiving text messages over any arbitrary protocol.
-    /// </summary>
-    public interface IOutgoingPort: IPort
+    public enum AliveState
     {
-        /// <summary>
-        /// Definition to send a message
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
-        /// <summary>
-        /// Definition to send a message and define ReplyTo
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+        CONNECTING = 0,
+        ONLINE = 1,
+        OFFLINE = 2,
+        DISCONNECTED = 3,
     }
 }

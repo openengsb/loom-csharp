@@ -15,25 +15,23 @@
  * limitations under the License.
  ***/
 using System;
+using System.Collections.Generic;
 
-namespace Implementation.Communication
+namespace Implementation.Common.RemoteObjects
 {
-    /// <summary>
-    /// This interfaces specifies the operations for a communication port.
-    /// The interface supports sending and receiving text messages over any arbitrary protocol.
-    /// </summary>
-    public interface IOutgoingPort: IPort
+    public class OpenEngSBModelWrapper
     {
-        /// <summary>
-        /// Definition to send a message
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
-        /// <summary>
-        /// Definition to send a message and define ReplyTo
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+        public String modelClass{get;set;}
+        public IList<OpenEngSBModelEntry> entries { get; set; }
+
+        public OpenEngSBModelWrapper() { }
+
+        public static OpenEngSBModelWrapper getInstance(String modelClass, IList<OpenEngSBModelEntry> entries)
+        {
+            OpenEngSBModelWrapper result = new OpenEngSBModelWrapper();
+            result.modelClass = modelClass;
+            result.entries = entries;
+            return result;
+        }
     }
 }

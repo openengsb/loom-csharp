@@ -1,4 +1,4 @@
-﻿/***
+﻿﻿/***
  * Licensed to the Austrian Association for Software Tool Integration (AASTI)
  * under one or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information regarding copyright
@@ -14,13 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for the Binary Data

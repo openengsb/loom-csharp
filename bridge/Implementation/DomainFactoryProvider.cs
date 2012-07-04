@@ -15,18 +15,14 @@
 
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using Bridge.Interface;
-using Bridge.Implementation.Exceptions;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
+using Implementation.Exceptions;
+using Interface;
 
-namespace Bridge.Implementation
+namespace Implementation
 {
     /// <summary>
     /// Factory Provider
@@ -38,7 +34,7 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
         /// <returns>Factory</returns>
-        public static IDomainFactory GetDomainFactoryInstance(String stringVersion)
+        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service)
         {
             try
             {
@@ -46,13 +42,15 @@ namespace Bridge.Implementation
                 Regex rgx = new Regex("-.*");
                 versionnbr = rgx.Replace(versionnbr, "");
                 int version = int.Parse(versionnbr);
-                if (version >= 300) return new Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory();
-                if (version >= 240) return new Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory();
+                if (version >= 300)
+                    return new Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
+                if (version >= 240)
+                    return new Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
                 return null;
             }
-            catch 
+            catch
             {
-                throw new ConnectOpenEngSBException("Unable to receive the actually version from: "+stringVersion);
+                throw new BridgeException("Unable to receive the actually version from: " + stringVersion);
             }
         }
         /// <summary>
@@ -60,14 +58,15 @@ namespace Bridge.Implementation
         /// </summary>
         /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
         /// <returns>factory</returns>
-        public static IDomainFactory GetDomainFactoryInstance(Uri urlVersion)
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service)
         {
             Uri uri = urlVersion;
-            if (!uri.ToString().Contains("system/framework.version.info")) uri = new Uri(uri.ToString() + "system/framework.version.info");
+            if (!uri.ToString().Contains("system/framework.version.info"))
+                uri = new Uri(uri.ToString() + "system/framework.version.info");
             WebClient myWebClient = new WebClient();
             Byte[] myDataBuffer = myWebClient.DownloadData(uri);
             String stringVersion = Encoding.ASCII.GetString(myDataBuffer);
-            return GetDomainFactoryInstance(stringVersion);
+            return GetDomainFactoryInstance(stringVersion, destination, service);
         }
     }
 }

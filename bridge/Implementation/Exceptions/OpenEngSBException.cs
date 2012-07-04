@@ -14,23 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Implementation.Exceptions
 {
     /// <summary>
-    /// This class  indentifies an Connector instance on the bus.
+    /// Exception for Problems with the OpenEngSB Connection
     /// </summary>
-    public class ConnectorDefinition
+    public class OpenEngSBException : Exception
     {
-        #region Variables
-        public String domainId { get; set; }
-        public String connectorId { get; set; }
-        public String instanceId { get; set; }
-        #endregion
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public OpenEngSBException() { }
+        /// <summary>
+        /// Consructor
+        /// </summary>
+        /// <param name="message">Exception message</param>
+        public OpenEngSBException(string message) : base(message) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Exception Message</param>
+        /// <param name="inner">Inner Exception</param>
+        public OpenEngSBException(string message, Exception inner)
+            : base(message, inner) { }
     }
 }

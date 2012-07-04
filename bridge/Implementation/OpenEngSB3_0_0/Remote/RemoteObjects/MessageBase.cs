@@ -14,26 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using System;
-
-namespace Implementation.Communication
+namespace Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
-    /// <summary>
-    /// This interfaces specifies the operations for a communication port.
-    /// The interface supports sending and receiving text messages over any arbitrary protocol.
-    /// </summary>
-    public interface IOutgoingPort: IPort
-    {
-        /// <summary>
-        /// Definition to send a message
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
-        /// <summary>
-        /// Definition to send a message and define ReplyTo
-        /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+    public abstract class MessageBase
+    {       
+        public long timestamp { get; set; }
+        public string callId { get; set; }       
     }
 }

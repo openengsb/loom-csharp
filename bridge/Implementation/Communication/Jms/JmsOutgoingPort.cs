@@ -15,11 +15,8 @@
  * limitations under the License.
  ***/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Apache.NMS;
-namespace Bridge.Implementation.Communication.Jms
+namespace Implementation.Communication.Jms
 {
     /// <summary>
     /// Send Message
@@ -34,7 +31,8 @@ namespace Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsOutgoingPort(string destination): base(destination)
+        public JmsOutgoingPort(string destination)
+            : base(destination)
         {
             producer = session.CreateProducer(this.destination);
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
@@ -48,7 +46,7 @@ namespace Bridge.Implementation.Communication.Jms
         /// <param name="receiver">Queue name on server side</param>
         public void Send(string text)
         {
-            ITextMessage message = session.CreateTextMessage(text);            
+            ITextMessage message = session.CreateTextMessage(text);
             producer.Send(message);
         }
         /// <summary>
@@ -56,9 +54,9 @@ namespace Bridge.Implementation.Communication.Jms
         /// </summary>
         /// <param name="text">Text to send</param>
         /// <param name="replyTo">Reply destination</param>
-        public void Send(string text,String queueName)
+        public void Send(string text, String queueName)
         {
-            ITextMessage message = session.CreateTextMessage(text);            
+            ITextMessage message = session.CreateTextMessage(text);
             message.NMSReplyTo = session.GetQueue(queueName);
             producer.Send(message);
         }

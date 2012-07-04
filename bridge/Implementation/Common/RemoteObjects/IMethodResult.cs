@@ -14,26 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using System;
+using Implementation.Common.Enumeration;
 
-namespace Implementation.Communication
-{
-    /// <summary>
-    /// This interfaces specifies the operations for a communication port.
-    /// The interface supports sending and receiving text messages over any arbitrary protocol.
-    /// </summary>
-    public interface IOutgoingPort: IPort
-    {
+namespace Implementation.Common.RemoteObjects
+{    
+    public interface IMethodResult
+    {       
         /// <summary>
-        /// Definition to send a message
+        /// Type of the return value.
         /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
+        ReturnType type { get; set; }
         /// <summary>
-        /// Definition to send a message and define ReplyTo
+        /// Return value of the RPC.
         /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+        object arg { get; set; }
     }
 }

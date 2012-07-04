@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Interface
+namespace Interface
 {
     public interface IDomainFactory
     {
-        T getEventhandler<T>(string host);
-
-        void RegisterDomainService<T>(string destination, T service, string domainType);
-        void UnregisterDomainService(object service);
-        String getDomainTypServiceId();        
+        A getEventhandler<A>(String domainType);
+        void CreateDomainService(String domainType);
+        void DeleteDomainService(String domainType);
+        void RegisterConnector(String registrationid, String domainType);
+        void UnRegisterConnector(String domainType);
+        void StopConnection(String domainType);
+        String getDomainTypServiceId(String domainType);
+        String getServiceId(String domainType);
+        Boolean Registered(String domainService);
     }
 }

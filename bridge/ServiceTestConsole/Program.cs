@@ -14,19 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using Bridge.Implementation;
-using Bridge.Interface;
+using Implementation;
+using Interface;
+using log4net;
+using System.Threading;
 using ExampleDomain;
 using ExampleDomainEvents;
 
-namespace Bridge.ServiceTestConsole
+namespace ServiceTestConsole
 {
     class Program
     {
@@ -37,29 +33,29 @@ namespace Bridge.ServiceTestConsole
         static void Main(string[] args)
         {
             log4net.Config.BasicConfigurator.Configure();
+            ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0");
+            logger.Info("Start Example wit the domain " + domainName);
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
 
-            //Register the connecter on the osenEngSB
-            factory.RegisterDomainService(destination, localDomain, domainName);
-            //Get a remote handler, to raise events on obenEngSB
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(destination);
-            ExampleDomainEvents.LogEvent logEvent = new ExampleDomainEvents.LogEvent();
-            logEvent.name = "Example";
-            logEvent.processId = 0;
+            //Register the connecter on the OpenEngSB
+            factory.CreateDomainService(domainName);
+            factory.RegisterConnector(factory.getServiceId(domainName), domainName);
 
-
-            //Error in the wsdlplugin. This example can be created, when the wsdl generation is correct.
-
-
-            //logEvent.level = ExampleDomainEvents.LogLevel.DEBUG;
-            logEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(logEvent);
+            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
+            ExampleDomainEvents.LogEvent lEvent = new ExampleDomainEvents.LogEvent();
+            lEvent.name = "Example";
+            lEvent.level = "DEBUG";
+            lEvent.message = "remoteTestEventLog";
+            remotedomain.raiseEvent(lEvent);
+            logger.Info("Press enter to close the Connection");
             Console.ReadKey();
-            factory.UnregisterDomainService(localDomain);            
+            factory.UnRegisterConnector(domainName);
+            factory.DeleteDomainService(domainName);
+            factory.StopConnection(domainName);
         }
     }
 }

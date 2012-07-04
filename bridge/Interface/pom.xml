@@ -60,14 +60,10 @@
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
             <includeSource>IDomainFactory.cs</includeSource>
-            <includeSource>MessageMethodInvocation.cs</includeSource>
-            <includeSource>MethodInvocation.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>
-

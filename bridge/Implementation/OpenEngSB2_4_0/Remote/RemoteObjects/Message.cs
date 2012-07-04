@@ -15,12 +15,8 @@
  * limitations under the License.
  ***/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for Message
