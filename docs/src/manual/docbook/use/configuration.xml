@@ -1,95 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xml:id="use.configuration" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook">
   <title>How to use</title>
-  <para>This section explains, how to use the .netbridge.</para>
+  <para>This section explains, how to use the .Net Bridge.</para>
   <section>
     <title>Introducation</title>
-    <para> This section explains how to use the .netbridge. All the domains and connectors in
-      OpenEngSB are written in java. So if you want to use a onther language like for example C# to
+    <para>This section explains how to use the .Net Bridge. All the domains and connectors in
+      OpenEngSB are written in java. So if you want to use another language like for example C# to
       communicate with the domain, you have to translate all the commands from java to C# and back.
       If you had to do that for every connector, it would be a lot of work and it would be difficult
-      to handel changes on versions. For this problem, the .netbridge has been created. It registers
-      a connector and profites the functions, to invoke methods in the domain.</para>
-    <para>In the <xref xlink:href="#Domaindecription"/>, the domain description will be
-      explained, which the .Net bridge need as dll. How to create the dll is explaned in <xref xlink:href="#WSDLTODLLPLUGIN"/>
-      or <xref xlink:href="#WSDLTODLLNoPLUGIN"/> and in the <xref xlink:href="#Example"/> it is explaned, how to invoke a method. In the last
-      Section, a example of the .Net Bridge is shown.</para>
+      to handle changes on versions. For this problem, the .Net Bridge has been created. It creates
+      and registers a connector and provides the functions, to invoke methods in the domain.</para>
+    <para>In the <xref xlink:href="#Domaindecription"/>, the domain description will be explained,
+      which the .Net Bridge need as dll. How to create the dll is explained in <xref
+        xlink:href="#WSDLTODLLPLUGIN"/> or <xref xlink:href="#WSDLTODLLNoPLUGIN"/> and in the <xref
+        xlink:href="#Example"/> it is  explained , how to invoke a method. In the last Section, a
+      example of the .Net Bridge is shown.</para>
   </section>
   <section xml:id="Domaindecription">
     <title>Domain description</title>
-    <para> To communicate with a domain, it is required to get the interfacedesciptions. These have
-      the nameconvention: "DomainName"Domain and "DomainName"DomainEvents. When building the domain,
-      these information are encoded in a WSDL. In other words, after building there are two WSDL's,
-      which descripes how to communicate with this domain. These informations have to be translated
-      to dll and included into C#. There are two ways to do this, which are explaned in the
-      following paragraphs </para>
+    <para>To communicate with a domain, it is required to get the interface descriptions. These have
+      the name convention: "DomainName"Domain and "DomainName"DomainEvents. When building the
+      domain, this information is encoded in a WSDL. In other words, after building there are two
+      WSDL's, which describes how to communicate with this domain. This information has to be
+      translated to dll and included into .Net. There are two ways to do this, which are explained
+      in the following paragraphs.</para>
   </section>
 
   <section xml:id="WSDLTODLLPLUGIN">
     <title>Wsdl to dll (With the maven plugin)</title>
-    <para><emphasis role="bold"><emphasis role="italic">To use this plugin, NPanday is
-          regired!</emphasis></emphasis></para>
-    <para> To have an easy and fast way, to build the dll from a wsdl, a maven plugin has been
+    <para>To have an easy and fast way, to build the dll from a wsdl, a maven plugin has been
       introduced. The plugin has the following structur:</para>
     <para><programlisting>&lt;plugin>
   &lt;groupId>org.openengsb.plugin&lt;/groupId>
-  &lt;artifactId>generate-cs-dll&lt;/artifactId>
-  &lt;version>VersionNumber&lt;/version>
+  &lt;groupId>org.openengsb.loom.csharp.common&lt;/groupId>
+  &lt;artifactId>wsdltodll-maven-plugin&lt;/artifactId>
   &lt;configuration>
-    &lt;npanday_setting>${user.home}\.m2\npanday-settings.xml&lt;/npanday_setting>
     &lt;wsdl_location>Location to the WSDL FILE&lt;/wsdl_location>
+    &lt;namespace>Choose a namespace for the C# class&lt;/namespace>
+    &lt;wsdlExeFolderLocation>Optinal&lt;/wsdlExeFolderLocation>
+    &lt;cscFolderLocation>Optinal&lt;/cscFolderLocation>
   &lt;/configuration>
 &lt;/plugin></programlisting></para>
-    <para>After maven install, the corresponding dll is in the target folder.</para>
+    <para>When the SDK and the .Net framwork are both installed on the default paths then the
+        <emphasis role="italic">wsdlExeFolderLocation</emphasis> and <emphasis role="italic"
+        >wsdlExeFolderLocation</emphasis> are not needed. In the other case indicated absolute path
+      to the <emphasis role="italic">csc.exe</emphasis> folder in <emphasis role="italic"
+        >cscFolderLocation</emphasis> and the absolute path to the <emphasis role="italic"
+        >wsdl.exe</emphasis> folder in <emphasis role="italic"
+      >wsdlExeFolderLocation</emphasis>.</para>
+    <para>After <emphasis role="italic">mvn install</emphasis>, the corresponding dll is in the
+      target folder.</para>
   </section>
   <section xml:id="WSDLTODLLNoPLUGIN">
     <title>Wsdl to dll (Without the plugin)</title>
-    <para>If you do not want to install NPanday, you can generate the dll manually. First you need
+    <para>If you do not want to use the plugin, you can generate the dll manually. First you need
       the location of the WSDL from the corresponding domain. Then you can use the following command
       in the "Visual studio command Prompt" </para>
-    <para><code>wsdl /serverInterface namespace_name wsdl_location </code>. </para>
+    <para><code>wsdl /serverInterface /n:namespace_name wsdl_location </code>. </para>
     <para>After this step, a <emphasis role="italic">cs</emphasis> file has been created. This
-        <emphasis role="italic">cs</emphasis> file has to bee compiled to a dll. This can be done by
-      executing the following command in the "Visual studio command Prompt"</para>
+        <emphasis role="italic">cs</emphasis> file has to be compiled to a dll by executing the
+      following command in the "Visual studio command Prompt"</para>
     <para><code>csc.exe /target:library  cs_file_path</code></para>
-    <para>Finnally, the dll has been created.</para>
+    <para> Finally, the dll has been created.</para>
     <para><emphasis role="bold">Note:</emphasis> If you do not have the "Visual studio command
       Prompt" then you can browse with the Windows Command prompt (cmd) to the wsdl.exe/csc.exe
-      location and execute it like meanched before. These filese can also be downloaded from the
+      location and execute it like mentioned before. These files can also be downloaded from the
       web.</para>
   </section>
   <section xml:id="Connector">
-    <title>Register a connector and invoke methods</title>
-    <para>There are two ways, to get a instance of the factory, which is used to get the
-      eventhandler. The first way, the OpenEngSB version is indicted. This call would looke like
+    <title>Create, Register, Unregister and Delete a connector and invoke methods</title>
+    <para>There are two ways, to get an instance of the factory, which is used to get the event
+      handler. The first way, the OpenEngSB version is indicted. This call would look like
       this:</para>
-    <para><code>DomainFactoryProvider.GetDomainFactoryInstance("3.0.0")</code></para>
-    <para>The other way, is by indicating the URL, whcih returns the version number. This could look
+    <para><code>DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination,
+        localDomain);</code></para>
+    <para>The other way, is by indicating the URL, which returns the version number. This could look
       like this:</para>
-    <para><code>DomainFactoryProvider.GetDomainFactoryInstance(new Uri("http://localhost:8090"));</code></para>
-    <para>In the next step, the methods for the answer from the Domain has to be specified. The
+    <para><code>DomainFactoryProvider.GetDomainFactoryInstance(new Uri("http://localhost:8090"),
+        destination, localDomain);</code></para>
+    <para>In the next step the methods for the answer from the Domain have to be specified. The
       methods, which can be invoked by the domain are defined in the "DomainName"Domain and have to
-      be implementend in a class (inherite from the corresponding dll). Furthermore, the specified
-      class has to inherite the partial class <emphasis role="italic"
-        >RegistrationFunctions</emphasis>. This partial class contains the function for the
-      registration calls from the domain. These methods can be overriden, if desired.  With the
-      following call, the bridge will be registrating the bridge as connector:</para>
-    <para><code>factory.RegisterDomainService(destination, localDomain, domainName);</code></para>
-    <para>Last but not least, the a proxy can be created, to invoke methods on the domain. This is
+      be implemented in a class (inherit from the corresponding dll). Furthermore, the specified
+      class has to inherit the partial class RegistrationFunctions. This partial class contains the
+      function for the registration calls from the domain. These methods can be overridden, if
+      desired. With the following call, the bridge will create a remote connector:</para>
+    <para><code>factory.CreateDomainService(domainName);</code></para>
+    <para>The following command, registers a connector on a specified domain:</para>
+    <para><code>factory.RegisterConnector("UUID of the connector", domainName);</code></para>
+    <para>Last but not least, the proxy can be created, to invoke methods on the domain. This is
       done by invoking the following method:</para>
     <para><code>factory.getEventhandler&lt;"DomainName"DomainEvents>(destination);</code></para>
     <para>Now it is possible, to invoke methods on the domain. For example:</para>
     <para><code>remotedomain.raiseTestStartEvent(TestStartEvent);</code></para>
+    <para>The unregistration and/or deleting of the connector can be done with the following
+      commands:</para>
+    <para><code> factory.UnRegisterConnector(domainName);</code></para>
+    <para><code>factory.DeleteDomainService(domainName);</code></para>
+    <para>To stop the bridge correctly, invoke at the end the stop method:</para>
+    <para><code>factory.StopConnection(domainName);</code></para>
   </section>
   <section xml:id="Example">
-    <title>Example of the netbridge, with the OpenEngSB Test-domain</title>
+    <title>Example of the netbridge, with the OpenEngSB Example-domain</title>
     <para> The library <emphasis role="italic">ServiceTestConsole</emphasis> in the .Net Bridge
-      contains the example, to connect with the Test-domain. This exanple has the following
+      contains the example, to connect with the Example-domain. This exanple has the following
       stucture</para>
     <para><inlinemediaobject>
         <imageobject>
           <imagedata fileref="graphics/Example1.png"/>
         </imageobject>
       </inlinemediaobject></para>
+    <para>The complett example is located in <emphasis role="italic"
+        >loom-csharp\bridge\ServiceTestConsole</emphasis> and the generation of the dlls is in the
+      folder <emphasis role="italic">loom-csharp\bridge\WsdlToDll</emphasis>.</para>
   </section>
 </chapter>

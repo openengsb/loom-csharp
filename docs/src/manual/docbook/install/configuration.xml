@@ -13,19 +13,20 @@
   </section>
   <section>
     <title>Source installation</title>
-    <para> To install the .netbridge, you have to download the source code and using maven to build
-      the project. This will creates the all the dlls , which can be inclueded to every
+    <para>To install the .Net Bridge you have to download the source code and using maven to build
+      the project. This will creates the all the dlls, which can be included to every
       project.</para>
-  </section>
-  <section>
-    <para>
-      The netbridge has some dependencies, which are generated as well and included in the zip
-      file in the folder assembly/target.
-    </para>
-  </section>
-  <section>
-    <para> If you use npanday in your project, instade of adding the file from the .netbridge zip
-      (assembly/target), you can add the dependencies over npanday visual studio plugin.</para>
+    <para>The .Net Bridge has some dependencies which are generated as well and included in the zip
+      file in the folder assembly/target. </para>
+    <para>If you use NPanday in your project, instead of adding the file from the .Net Bridge zip
+      (assembly/target), you can add the dependencies over NPanday visual studio plugin.  Please use
+        <emphasis role="italic">mvn clean install</emphasis> before.</para>
+    <ns:para>After building the .Net Bridge and opening the source code with visual studio some references can’t be found. When using the NPanday visual studio plugin the references can be added again via the plugin. This is done by resynchronizing the references which is shown in the following picture.</ns:para>
+    <para><inlinemediaobject>
+        <imageobject>
+          <imagedata fileref="graphics/NPandayResync.png"/>
+        </imageobject>
+      </inlinemediaobject></para>
   </section>
 </chapter>
 
