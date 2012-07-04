@@ -59,20 +59,16 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>ExampleDomainEventsInterfaces</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ExampleDomainEventsInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\DomainEvents\target\ExampleDomainEventsInterfaces.dll</systemPath>
     </dependency>
     <dependency>
-      <groupId>ExampleDomainInterfaces</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ExampleDomainInterfaces</artifactId>
       <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>${basedir}\..\WsdlToDll\Domain\target\ExampleDomainInterfaces.dll</systemPath>
+      <type>dotnet-library</type>      
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
