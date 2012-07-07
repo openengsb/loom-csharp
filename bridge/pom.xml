@@ -38,6 +38,7 @@
     <module>WsdlToDll/DomainEvents</module>
     <module>Implementation</module>
     <module>ServiceTestConsole</module>
+    <module>BridgeTest</module>
   </modules>
 
   <scm>
