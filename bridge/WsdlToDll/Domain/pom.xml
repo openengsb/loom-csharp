@@ -70,6 +70,15 @@
                   <outputDirectory>${project.build.directory}</outputDirectory>
                   <destFileName>ExampleDomain.wsdl</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.openengsb.domain</groupId>
+                  <artifactId>org.openengsb.domain.example</artifactId>
+                  <classifier>ExampleDomainEvents</classifier>
+                  <type>wsdl</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>ExampleDomainEvents.wsdl</destFileName>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
@@ -79,7 +88,10 @@
         <groupId>org.openengsb.loom.csharp.common</groupId>
         <artifactId>wsdltodll-maven-plugin</artifactId>
         <configuration>
-          <wsdl_location>${project.build.directory}/ExampleDomain.wsdl</wsdl_location>
+          <wsdl_locations>
+          	<wsdl_location>${project.build.directory}/ExampleDomain.wsdl</wsdl_location>
+          	<wsdl_location>${project.build.directory}/ExampleDomainEvents.wsdl</wsdl_location>
+          </wsdl_locations>
           <namespace>ExampleDomain</namespace>
         </configuration>
         <executions>
@@ -104,7 +116,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/ExampleDomainInterfaces.dll</file>
+                  <file>target/ExampleDomain.dll</file>
                   <type>dll</type>
                 </artifact>
               </artifacts>
