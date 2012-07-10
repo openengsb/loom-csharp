@@ -134,12 +134,7 @@ public class WsdlToDll extends AbstractMojo {
             sdkandFrameworkPathes.add(cscFolderLocation.getAbsolutePath());
         }
         adddefaultSDKPath(sdkandFrameworkPathes);
-        if (!wsdlCommand(sdkandFrameworkPathes)) {
-            throw new MojoExecutionException(""
-                    + "wsdl.exe could not be found. Add "
-                    + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> "
-                    + "to the NPanday file and configurate the plugin");
-        }
+        wsdlCommand(sdkandFrameworkPathes);
         if (!cscCommand(sdkandFrameworkPathes)) {
             throw new MojoExecutionException(""
                     + "csc.exe could not be found Add "
@@ -148,39 +143,40 @@ public class WsdlToDll extends AbstractMojo {
         }
     }
 
+    private String findWsdlPath(List<String> possiblePaths)
+        throws MojoExecutionException {
+        for (String path : possiblePaths) {
+            File file = new File(path, "wsdl.exe");
+            if (file.exists()) {
+                return file.getAbsolutePath();
+            }
+        }
+        throw new MojoExecutionException("unable to find wsdl.exe in paths "
+                + possiblePaths + "\n " + "Add "
+                + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> "
+                + "to the NPanday file and configurate the plugin");
+    }
+
     /**
      * Search for the wsdl command and execute it when it is found
      */
-    private boolean wsdlCommand(List<String> possiblepathes)
+    private void wsdlCommand(List<String> possiblepathes)
         throws MojoExecutionException {
-        for (String path : possiblepathes) {
-            String cmd = path;
-            if (cmd.lastIndexOf("\\") < path.length() - 1) {
-                cmd += "\\";
-            }
-            cmd += "wsdl.exe";
-            getLog().info("Trying path: " + cmd);
-            if (new File(cmd).exists()) {
-                String[] command = new String[]{ cmd, "/serverInterface",
-                    "/n:" + namespace, wsdl_location };
-                ProcessBuilder builder = new ProcessBuilder();
-                builder.redirectErrorStream(true);
-                builder.command(command);
-                try {
-                    executeACommand(builder.start());
-                } catch (IOException e) {
-                    throw new MojoExecutionException(
-                        "Error, while executing command: "
-                                + Arrays.toString(command) + "\n", e);
-                } catch (InterruptedException e) {
-                    throw new MojoExecutionException(
-                        "Error, while executing command: "
-                                + Arrays.toString(command) + "\n", e);
-                }
-                return true;
-            }
+        String cmd = findWsdlPath(possiblepathes);
+        String[] command = new String[]{ cmd, "/serverInterface",
+            "/n:" + namespace, wsdl_location };
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.redirectErrorStream(true);
+        builder.command(command);
+        try {
+            executeACommand(builder.start());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Error, while executing command: "
+                    + Arrays.toString(command) + "\n", e);
+        } catch (InterruptedException e) {
+            throw new MojoExecutionException("Error, while executing command: "
+                    + Arrays.toString(command) + "\n", e);
         }
-        return false;
     }
 
     /**
