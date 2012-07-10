@@ -20,7 +20,6 @@ using Interface;
 using log4net;
 using System.Threading;
 using ExampleDomain;
-using ExampleDomainEvents;
 
 namespace ServiceTestConsole
 {
@@ -46,7 +45,7 @@ namespace ServiceTestConsole
             factory.RegisterConnector(factory.getServiceId(domainName), domainName);
 
             IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
-            ExampleDomainEvents.LogEvent lEvent = new ExampleDomainEvents.LogEvent();
+            LogEvent lEvent = new LogEvent();
             lEvent.name = "Example";
             lEvent.level = "DEBUG";
             lEvent.message = "remoteTestEventLog";

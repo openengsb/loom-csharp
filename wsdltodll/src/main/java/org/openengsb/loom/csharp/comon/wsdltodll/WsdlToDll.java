@@ -3,12 +3,19 @@ package org.openengsb.loom.csharp.comon.wsdltodll;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -59,10 +66,12 @@ public class WsdlToDll extends AbstractMojo {
     /**
      * Location of the wsdl file
      * 
-     * @parameter expression="${base.dir}/target"
+     * @parameter
      * @required
      */
-    private String wsdl_location;
+    private List<String> wsdl_locations; // = new String[0];
+    // private String wsdl_location;
+
     /**
      * Namespace of the WSDL file. This should be the namespace in which a domain should be located.
      * 
@@ -70,6 +79,14 @@ public class WsdlToDll extends AbstractMojo {
      * @required
      */
     private String namespace;
+
+    private List<String> cspath = new ArrayList<String>();
+
+    private List<String> handledClasses = new ArrayList<String>();
+
+    private static final Pattern CLASS_START_PATTERN = Pattern.compile(
+        "    /// <remarks/>\n(    \\[System.*\\]\n)+ {4}public partial class [A-Za-z0-9 :]+ \\{\n",
+        Pattern.MULTILINE);
 
     /**
      * Find and executes the commands wsdl.exe and csc.exe
@@ -193,20 +210,85 @@ public class WsdlToDll extends AbstractMojo {
     private void wsdlCommand()
         throws MojoExecutionException {
         String cmd = findWsdlCommand();
-        String[] command = new String[]{ cmd, "/serverInterface",
-            "/n:" + namespace, wsdl_location };
-        ProcessBuilder builder = new ProcessBuilder();
-        builder.redirectErrorStream(true);
-        builder.command(command);
-        try {
-            executeACommand(builder.start());
-        } catch (IOException e) {
-            throw new MojoExecutionException("Error, while executing command: "
-                    + Arrays.toString(command) + "\n", e);
-        } catch (InterruptedException e) {
-            throw new MojoExecutionException("Error, while executing command: "
-                    + Arrays.toString(command) + "\n", e);
+        int i = 0;
+        for (String location : wsdl_locations) {
+            String outputFilename = new File(outputDirectory, namespace + (i++) + ".cs").getAbsolutePath();
+            String[] command = new String[]{ cmd, "/serverInterface",
+                "/n:" + namespace, location, "/out:" + outputFilename };
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.redirectErrorStream(true);
+            builder.command(command);
+            try {
+                executeACommand(builder.start());
+            } catch (IOException e) {
+                throw new MojoExecutionException("Error, while executing command: "
+                        + Arrays.toString(command) + "\n", e);
+            } catch (InterruptedException e) {
+                throw new MojoExecutionException("Error, while executing command: "
+                        + Arrays.toString(command) + "\n", e);
+            }
+            try {
+                readClassesFromFile(outputFilename);
+            } catch (IOException e) {
+                throw new MojoExecutionException("unable to postprocess generated outputfile", e);
+            }
+            cspath.add(outputFilename);
         }
+
+    }
+
+    private Collection<String> findAllClassDefs(String fileString) {
+        String[] parts = fileString.split("\n {4}\\}");
+        Collection<String> result = new HashSet<String>();
+        for (String p : parts) {
+            Matcher matcher = CLASS_START_PATTERN.matcher(p);
+            if (!matcher.find()) {
+                continue;
+            }
+            int index = matcher.start();
+            String classDefString = p.substring(index) + "\n    }\n";
+            result.add(classDefString);
+        }
+        return result;
+    }
+
+    private String replaceDuplicateClasses(final String fileString) {
+        String result = fileString;
+        for (String classDefString : findAllClassDefs(fileString)) {
+            if (!handledClasses.contains(classDefString)) {
+                handledClasses.add(classDefString);
+            } else {
+                result = result.replace(classDefString, "");
+            }
+        }
+        return result;
+    }
+
+    private void readClassesFromFile(String outputFilename) throws IOException {
+        String fileString = readFileToString(new File(outputFilename));
+        String processed = replaceDuplicateClasses(fileString);
+        if (processed.equals(fileString)) {
+            return;
+        }
+        getLog().info("rewriting " + outputFilename);
+        FileWriter fileWriter = new FileWriter(new File(outputFilename));
+        fileWriter.append(processed);
+        fileWriter.close();
+    }
+
+    private static String readFileToString(File file) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try {
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+        } finally {
+            bufferedReader.close();
+        }
+        return sb.toString();
     }
 
     /**
@@ -215,7 +297,11 @@ public class WsdlToDll extends AbstractMojo {
     private void cscCommand()
         throws MojoExecutionException {
         String cscPath = findCscCommand();
-        String[] command = new String[]{ cscPath, "/target:library", cspath };
+        List<String> commandList = new LinkedList<String>(cspath);
+        commandList.add(0, cscPath);
+        commandList.add(1, "/target:library");
+        commandList.add(2, "/out:" + namespace + ".dll");
+        String[] command = commandList.toArray(new String[commandList.size()]);
         ProcessBuilder builder = new ProcessBuilder();
         builder.redirectErrorStream(true);
         builder.directory(outputDirectory);
@@ -232,8 +318,6 @@ public class WsdlToDll extends AbstractMojo {
                         + Arrays.toString(command) + "\n", e);
         }
     }
-
-    String cspath;
 
     private void executeACommand(Process child) throws IOException,
         MojoExecutionException, InterruptedException {
@@ -259,7 +343,6 @@ public class WsdlToDll extends AbstractMojo {
                 throw new MojoExecutionException("Unable to move file: "
                         + file.getAbsolutePath());
             }
-            cspath = outputDirectory + "\\" + file.getName();
             input += "Moving file " + file.getName() + " to " + cspath + "\n";
             getLog().info(input);
         }
