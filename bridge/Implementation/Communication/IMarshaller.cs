@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Implementation.Communication
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
 {
     /// <summary>
     /// This interface specifies operations for marshalling objects

@@ -15,8 +15,8 @@
  * limitations under the License.
  ***/
 using System;
-using Implementation;
-using Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
 using System.Threading;
 using ExampleDomain;

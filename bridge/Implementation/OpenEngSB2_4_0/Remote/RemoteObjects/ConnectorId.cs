@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class  indentifies an Connector instance on the bus.

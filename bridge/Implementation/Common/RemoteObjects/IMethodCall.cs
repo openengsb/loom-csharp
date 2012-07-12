@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Implementation.Communication;
-using Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 
-namespace Implementation.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {
     public abstract class IMethodCall
     {
