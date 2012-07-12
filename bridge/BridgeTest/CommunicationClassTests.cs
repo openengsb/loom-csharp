@@ -17,11 +17,11 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Implementation.Communication;
-using Implementation.Communication.Jms;
-using Implementation.Communication.Json;
-using Implementation.Exceptions;
-using Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using NUnit.Framework;
 
 namespace BridgeTest

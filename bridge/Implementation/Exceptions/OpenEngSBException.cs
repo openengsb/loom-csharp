@@ -16,7 +16,7 @@
  ***/
 using System;
 
-namespace Implementation.Exceptions
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions
 {
     /// <summary>
     /// Exception for Problems with the OpenEngSB Connection

@@ -15,7 +15,7 @@
  * limitations under the License.
  ***/
 
-namespace Implementation.Common.Enumeration
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration
 {
     public enum ReturnType { Void, Object, Exception }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Implementation.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public interface IRegistration
     {

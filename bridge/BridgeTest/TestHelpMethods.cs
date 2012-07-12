@@ -18,8 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Services.Protocols;
-using Implementation;
-using Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using NUnit.Framework;
 
 namespace BridgeTest
