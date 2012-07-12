@@ -47,13 +47,13 @@ public class WsdlToDll extends AbstractMojo {
     /**
      * Location of the wsdl.exe command
      * 
-     * @parameter
+     * @parameter default-Value=null expression="${wsdlExeFolderLocation}"
      */
     private File wsdlExeFolderLocation;
     /**
      * Location of the csc command.
      * 
-     * @parameter
+     * @parameter default-Value=null expression="${cscFolderLocation}"
      */
     private File cscFolderLocation;
     /**
@@ -135,9 +135,9 @@ public class WsdlToDll extends AbstractMojo {
             }
         }
         throw new MojoExecutionException("unable to find " + WSDL_EXE + " in paths "
-                + Arrays.toString(DEFAULT_WSDL_PATHS) + "\n " + "Add "
-                + "<sdkInstallRoot>SDKPath/bin</sdkInstallRoot> "
-                + "to the NPanday file and configurate the plugin");
+                + Arrays.toString(DEFAULT_WSDL_PATHS) + "\n "
+                + "You can specify the path manually by adding the argument \n"
+                + " -DwsdlExeFolderLocation=\"C:\\path\\to\\wsdl.exe\"");
     }
 
     private String findCscCommand() throws MojoExecutionException {
@@ -152,10 +152,10 @@ public class WsdlToDll extends AbstractMojo {
                 return file.getAbsolutePath();
             }
         }
-        throw new MojoExecutionException(""
-                + "csc.exe could not be found Add "
-                + "<executablePath>.NetFrameworkPath</executablePath> "
-                + "to the NPanday file and configurate the plugin");
+        throw new MojoExecutionException("unable to find " + CSC_EXE + " in paths "
+                + Arrays.toString(DEFAULT_CSC_PATHS) + "\n "
+                + "You can specify the path manually by adding the argument \n"
+                + " -DcscFolderLocation=\"C:\\path\\to\\csc.exe\"");
     }
 
     private Collection<File> findAllInstalledSDKs(String[] paths) {
