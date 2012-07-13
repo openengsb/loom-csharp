@@ -69,7 +69,6 @@
     <Compile Include="Common\IRegistration.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelEntry.cs" />
-    <Compile Include="Common\RemoteObjects\OpenEngSBModelWrapper.cs" />
     <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />

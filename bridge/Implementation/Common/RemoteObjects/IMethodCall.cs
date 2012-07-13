@@ -22,91 +22,22 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {
-    public abstract class IMethodCall
+    public interface IMethodCall
     {
         #region Variables
-        private Boolean? wrapped = null;
         /// <summary>
         /// Fully qualified class names of the arguments.
         /// </summary>
-        public IList<string> classes { get; set; }
+        IList<string> classes { get; set; }
         /// <summary>
         /// Name of the method to be called.
         /// </summary>
-        public string methodName { get; set; }
+        string methodName { get; set; }
 
         /// <summary>
         /// Arguments of the call.
         /// </summary>
-        public IList<object> args { get; set; }
-        #endregion
-        #region Public Method
-        public Boolean isWrapped()
-        {
-            if (!wrapped.HasValue)
-                ConvertWrapper(new JsonMarshaller());
-            return wrapped.Value;
-        }
-        /// <summary>
-        /// Checks if the message is a wrapped method and set it when it  is one
-        /// </summary>        
-        public void ConvertWrapper(IMarshaller marshaller)
-        {
-            if (wrapped != null)
-                return;
-            List<Object> result = new List<Object>();
-            int fails = 0;
-            for (int i = 0; i < args.Count; i++)
-            {
-                if (isOpenEngSBModelWrapper(args[i].ToString()))
-                {
-                    OpenEngSBModelWrapper element = marshaller.UnmarshallObject<OpenEngSBModelWrapper>(args[i].ToString());
-                    result.Add(element);
-                }
-                else
-                {
-                    fails++;
-                    result.Add(args[i]);
-                }
-            }
-            wrapped = fails < args.Count;
-            if (wrapped.Value)
-                args = result;
-        }
-        /// <summary>
-        /// Checks if the String is an OpenEngSBModell
-        /// </summary>
-        /// <param name="element">String to convert</param>
-        /// <returns>if it is a instance of OpenEngSBModelWrapper</returns>
-        private Boolean isOpenEngSBModelWrapper(String element)
-        {
-            foreach (PropertyInfo pr in typeof(OpenEngSBModelWrapper).GetProperties())
-            {
-                if (!element.ToUpper().Contains(pr.Name.ToUpper()))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        /// <summary>
-        /// Converts an object to an object to a OpenEngSBWrapper
-        /// </summary>
-        /// <param name="obj">object to convert</param>
-        /// <param name="pos">position of the object in the list</param>
-        /// <returns></returns>
-        private Object ConvertToOpenEngsModelWrapper(Object obj, int pos)
-        {
-            OpenEngSBModelWrapper wrapper = new OpenEngSBModelWrapper();
-            IList<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
-            foreach (PropertyInfo info in obj.GetType().GetProperties())
-            {
-                elements.Add(OpenEngSBModelEntry.getInstance(info.Name, info.GetValue(obj, null).ToString(), info.GetType().ToString()));
-            }
-            wrapper.entries = elements;
-            wrapper.modelClass = classes[pos];
-            return wrapper;
-        }
+        IList<object> args { get; set; }
         #endregion
     }
 }
