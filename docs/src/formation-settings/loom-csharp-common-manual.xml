@@ -20,7 +20,7 @@
 <book xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
   <info>
-    <title>OpenEngSB Manual</title>
+    <title>Formation settings for C# with Visual studio</title>
     <copyright>
       <year>2009</year>
       <year>2010</year>
@@ -36,20 +36,9 @@
       <email>openengsb-dev at googlegroups.com</email>
     </author>
   </info>
-  <part xml:id="formation.manual">
-    <title>Formation settings for C# with Visual studio</title>
+  <part xml:id="installation.manual">
+    <title>Fomation settings</title>
     <xi:include href="docbook/formation/configuration.xml"/>
   </part>
-  <part xml:id="installation.manual">
-    <title>Installation</title>
-    <xi:include href="docbook/install/configuration.xml"/>
-  </part>
-  <part xml:id="use.manual">
-    <title>How to use the .netbridge</title>
-    <xi:include href="docbook/use/configuration.xml"/>
-  </part>
-  <part xml:id="developer.manual">
-    <title>Developer manual</title>
-    <xi:include href="docbook/developer/configuration.xml"/>
-  </part>
+  
 </book>
