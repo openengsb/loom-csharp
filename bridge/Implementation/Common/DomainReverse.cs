@@ -179,11 +179,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 Object arg = methodCall.args[i];
                 String methodClass = methodCall.classes[i];
-                if (methodCall.isWrapped())
-                {
-                    methodClass = ((OpenEngSBModelWrapper)arg).modelClass;
-                    arg = ConvertWrapperTypes(arg, methodInfo);
-                }
 
                 RemoteType remoteType = new RemoteType(methodClass, methodInfo.GetParameters());
                 if (remoteType.LocalTypeFullName == null)
@@ -230,31 +225,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             HelpMethods.addTrueForSpecified(args, methodInfo);
             return args.ToArray();
         }
-        private Object ConvertWrapperTypes(Object wrappedObject, MethodInfo methodInfo)
-        {
-            OpenEngSBModelWrapper wrapper = wrappedObject as OpenEngSBModelWrapper;
-            IList<Object> result = new List<Object>();
-            RemoteType mt = new RemoteType(wrapper.modelClass, methodInfo.GetParameters());
-            Type usedType = findType(mt.LocalTypeFullName, methodInfo);
-            Object obj = Activator.CreateInstance(usedType);
-            foreach (OpenEngSBModelEntry entry in wrapper.entries)
-            {
-                PropertyInfo field = null;
-                foreach (PropertyInfo info in usedType.GetProperties())
-                {
-                    if (info.Name.ToUpper().Equals(entry.key.ToUpper()))
-                    {
-                        field = info;
-                        break;
-                    }
-                }
-                if (field == null)
-                    throw new ArgumentException("There is no field " + entry.key);
-                Object tmp = ConvertType(entry, methodInfo);
-                field.SetValue(obj, tmp, null);
-            }
-            return obj;
-        }
+      
 
         private Object ConvertType(OpenEngSBModelEntry entry, MethodInfo methodinfo)
         {
@@ -326,16 +297,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 if ((parameterResult.Count != methodCall.args.Count) &&
                     (HelpMethods.addTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
                     continue;
-                if (!methodCall.isWrapped())
-                {
-                    if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>()))
-                        continue;
-                }
-                else
-                {
-                    if (!HelpMethods.TypesAreEqual(convertToClassList(methodCall.args), parameterResult.ToArray<ParameterInfo>()))
-                        continue;
-                }
+               
+                if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>()))
+                    continue;
+
                 return methodInfo;
             }
             return null;
@@ -344,15 +309,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// Converts a OpenEngsWrapper array to a String array
         /// </summary>
         /// <returns>List of strings</returns>
-        private IList<String> convertToClassList(IList<Object> wrappers)
-        {
-            IList<String> result = new List<String>();
-            foreach (OpenEngSBModelWrapper wrapper in wrappers)
-            {
-                result.Add(wrapper.modelClass);
-            }
-            return result;
-        }
         #endregion
         #region Public Methods
         public DomainReverse(T domainService)
