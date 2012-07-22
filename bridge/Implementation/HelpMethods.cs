@@ -22,13 +22,13 @@ using System.Reflection;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using Implementation.Common;
-using Implementation.Common.RemoteObjects;
-using Implementation.Communication.Json;
-using Implementation.Communication;
-using Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
-namespace Implementation
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public class HelpMethods
     {

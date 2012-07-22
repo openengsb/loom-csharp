@@ -16,7 +16,7 @@
  ***/
 using Apache.NMS;
 
-namespace Implementation.Communication.Jms
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     class ReplyTo:IDestination
     {

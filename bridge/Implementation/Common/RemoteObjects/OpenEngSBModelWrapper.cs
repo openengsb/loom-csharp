@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Implementation.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {
     public class OpenEngSBModelWrapper
     {

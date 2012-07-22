@@ -16,7 +16,7 @@
  ***/
 using System;
 
-namespace Interface
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
     public interface IDomainFactory
     {

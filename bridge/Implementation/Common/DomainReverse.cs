@@ -19,15 +19,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Implementation.Common.RemoteObjects;
-using Implementation.Communication;
-using Implementation.Communication.Jms;
-using Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
-using Implementation.Common.Enumeration;
-using Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
-namespace Implementation.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class DomainReverse<T> : IRegistration
     {

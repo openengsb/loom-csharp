@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
-namespace Implementation.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class AbstractRealDomainFactory<T> : IDomainFactory
     {

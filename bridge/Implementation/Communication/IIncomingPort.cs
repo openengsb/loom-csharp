@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-namespace Implementation.Communication
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
 {
     /// <summary>
     /// Definiton, to receive a message

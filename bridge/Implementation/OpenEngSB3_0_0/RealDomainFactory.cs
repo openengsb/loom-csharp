@@ -16,11 +16,11 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Implementation.Common;
-using Implementation.OpenEngSB3_0_0.Remote;
-using Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
-namespace Implementation.OpenEngSB3_0_0
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0
 {
     /// <summary>
     /// This class produces and manages proxies.

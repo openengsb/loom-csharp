@@ -16,14 +16,14 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Implementation.Common;
-using Implementation.Common.Enumeration;
-using Implementation.Communication;
-using Implementation.Communication.Jms;
-using Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
-using Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
-namespace Implementation.OpenEngSB2_4_0.Remote
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
