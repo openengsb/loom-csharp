@@ -34,7 +34,6 @@
 
   <modules>
     <module>Interface</module>
-    <module>WsdlToDll/Domain</module>
     <module>Implementation</module>
     <module>ServiceTestConsole</module>
     <module>BridgeTest</module>
@@ -55,4 +54,3 @@
   </licenses>
 
 </project>
-

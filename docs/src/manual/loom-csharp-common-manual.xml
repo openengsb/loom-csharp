@@ -45,7 +45,7 @@
     <xi:include href="docbook/install/configuration.xml"/>
   </part>
   <part xml:id="use.manual">
-    <title>How to use the .netbridge</title>
+    <title>How to use the .Net Bridge</title>
     <xi:include href="docbook/use/configuration.xml"/>
   </part>
   <part xml:id="developer.manual">
