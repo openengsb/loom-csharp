@@ -35,8 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomainInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ExampleDomain">
       <HintPath>..\WsdlToDll\Domain\target\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
