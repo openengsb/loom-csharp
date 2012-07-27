@@ -37,12 +37,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="serviceId"></param>
         /// <param name="domainType">local domain</param>
         /// <param name="domainType">remote domain</param>
-        public void CreateDomainService(String domainType)
+        /// <returns>ServiceID</returns>
+        public String CreateDomainService(String domainType)
         {
             String serviceId = Guid.NewGuid().ToString();
             DomainReverse<T> proxy = createInstance(serviceId, domainType, true);
             proxies.Add(domainType, proxy);
             proxy.Start();
+            return serviceId;
         }
         /// <summary>
         /// Creates, registers and starts a reverse proxy.
@@ -55,12 +57,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainType">remote domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public void CreateDomainService(String domainType, String username, String password)
+        /// <returns>ServiceID</returns>
+        public String CreateDomainService(String domainType, String username, String password)
         {
             String serviceId = Guid.NewGuid().ToString();
             DomainReverse<T> proxy = createInstance(serviceId, domainType, true, username, password);
             proxies.Add(domainType, proxy);
             proxy.Start();
+            return serviceId;
         }
         /// <summary>
         /// Deletes and stops the reverse proxy.
