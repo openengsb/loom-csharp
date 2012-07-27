@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
+  <parent>
+    <artifactId>loom-csharp-common-bridge-parent</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+  <artifactId>ETMTCP</artifactId>
+  <packaging>library</packaging>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ETMTCP</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <description>
+    TCP implementation for the ETM
+  </description>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
+    <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
+    <url>https://github.com/openengsb/loom-csharp-common</url>
+  </scm>
+  <build>
+    <sourceDirectory>./</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.npanday.plugins</groupId>
+        <artifactId>maven-compile-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <frameworkVersion>4.0</frameworkVersion>
+          <includeSources>
+            <includeSource>ETMList.cs</includeSource>
+            <includeSource>ETMTCP.cs</includeSource>
+            <includeSource>Properties\AssemblyInfo.cs</includeSource>
+            <includeSource>StateObject.cs</includeSource>
+            <includeSource>InteractionMessage.cs</includeSource>
+          </includeSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>Apache.NMS.ActiveMQ</artifactId>
+      <version>1.5.0_3</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>log4net</artifactId>
+      <version>1.2.11_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>Protocols</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+  </dependencies>
+</project>
