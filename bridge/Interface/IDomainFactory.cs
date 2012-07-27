@@ -21,7 +21,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
     public interface IDomainFactory
     {
         A getEventhandler<A>(String domainType);
-        void CreateDomainService(String domainType);
+        String CreateDomainService(String domainType);
         void DeleteDomainService(String domainType);
         void RegisterConnector(String registrationid, String domainType);
         void UnRegisterConnector(String domainType);
