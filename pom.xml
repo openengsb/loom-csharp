@@ -24,7 +24,7 @@
 
   <modules>
     <module>wsdltodll</module>
-    <module>testframework</module>
+    <module>testproject</module>
     <module>bridge/WsdlToDll/domain</module>
     <module>bridge</module>
     <!-- OPENENGSB-2890 -->

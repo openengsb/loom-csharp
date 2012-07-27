@@ -66,7 +66,6 @@ namespace BridgeTest
             Assert.IsTrue(result.Contains("[\"Classes\"]"));
             Assert.IsTrue(result.Contains("methodName"));
             Assert.IsTrue(result.Contains("TestCase"));
-            Assert.IsTrue(result.Contains("c"));
             Assert.IsTrue(result.Contains("\"callId\":\"123\""));
         }
         [Test]
