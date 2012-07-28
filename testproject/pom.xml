@@ -22,10 +22,11 @@
     <groupId>org.openengsb.loom.csharp.common</groupId>
     <artifactId>loom-csharp-common-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+	<relativePath>..</relativePath>
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>loom-csharp-common-bridge-etm</artifactId>
+  <artifactId>loom-csharp-common-bridge-etm-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
