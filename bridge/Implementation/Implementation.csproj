@@ -8,7 +8,7 @@
     <ProjectGuid>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.loom.CSharp.Bridge.Implementation</RootNamespace>
+    <RootNamespace>Org.Openengsb.Loom.CSharp.Bridge.Implementation</RootNamespace>
     <AssemblyName>Implementation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
