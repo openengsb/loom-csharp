@@ -28,7 +28,7 @@
     <module>bridge/WsdlToDll/domain</module>
     <module>bridge</module>
     <!-- OPENENGSB-2890 -->
-    <!--<module>mockup</module> -->
+    <module>mockup</module>
     <module>docs</module>
     <module>assembly</module>
   </modules>

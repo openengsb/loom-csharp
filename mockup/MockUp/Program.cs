@@ -1,87 +1,60 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 using TCPHandling;
-using Protocols;
-using System.Net;
-using Protocols.ActiveMQ;
 using log4net;
-using ExampleDomain;
 using Apache.NMS.ActiveMQ.Commands;
 using Apache.NMS.ActiveMQ.OpenWire;
-using NUnit.Framework;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Protocols.ActiveMQ;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using ExampleDomain;
+using System.Net;
 using Protocols.ActiveMQConfiguration;
-
-namespace ETMTest
+namespace MockUp
 {
-    [TestFixture]
-    public class ActiveMQTesting
+    class Program
     {
-        #region Variables
-        private ETMTCP ETM;        
-        private ExampleDomainConnector localDomain;
-        private string destination = "tcp://localhost.:6549";
-        private string domainName = "example";
-        IDomainFactory factory;
-        #endregion
-        [TestFixtureSetUp]
-        public void startup()
-        {
-            localDomain = new ExampleDomainConnector();
-        }
-        [Test]
-        public void TestBridge()
+        private static ILog logger;
+        static void Main(string[] args)
         {
             log4net.Config.BasicConfigurator.Configure();
-            ILog logger = LogManager.GetLogger(typeof(ETMTCP));
+            logger = LogManager.GetLogger(typeof(ETMTCP));
+            logger.Info("The mock-up is going to be started, after pressing any key. When the ETM is running," +
+                "you can invoke a method by pressing 1. Any other key will terminate the ETM");
+            Console.ReadKey();
             logger.Info("START ETM");
-            ETM = new ETMTCP(getETMConfiguration());
+            ETMTCP ETM = new ETMTCP(getETMConfiguration());
             ETM.Start(IPAddress.Loopback, 6549);
-            startBridge();
-            ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgeAnswerInvoke(0, 0, ETM.ReceivedMessages, getTestCase()));
-            stopBridge();
-            Assert.AreEqual(localDomain.message, "TestCase1");
-            Assert.AreEqual(localDomain.level, "12");
-            Assert.AreEqual(localDomain.name, "Test");
-            Assert.AreEqual(localDomain.origin, "123");
-            Assert.IsTrue(localDomain.processId == 123);
-            Assert.AreEqual(localDomain.processIdSpecified, true);
+            readKey(ETM, 1);
+            ETM.Dispose();
         }
-        #region Configuration
-
-        private void startBridge()
+        private static void readKey(ETMTCP ETM, int i)
         {
-            factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
-            factory.CreateDomainService(domainName);
-            factory.RegisterConnector(factory.getServiceId(domainName), domainName);
-
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
-            LogEvent lEvent = new LogEvent();
-            lEvent.name = "Example";
-            lEvent.level = "DEBUG";
-            lEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(lEvent);
+            if (Console.ReadKey().Key.Equals(ConsoleKey.D1))
+            {
+                logger.Info("Invoke doSomethingWithLogEvent");
+                invokedoSomethingWithLogEvent(ETM, 8 + i);
+                readKey(ETM, i + 1);
+            }
+            logger.Info("Close ETM");
+            return;
         }
-        private String getBrideVoidAnswer()
+        private static void invokedoSomethingWithLogEvent(ETMTCP ETM, int socketID)
         {
-            return "{\"callId\":\"25069bc6-d3c5-4c96-8a92-3e5799316f4c\"" +
-                ",\"timestamp\":" + new DateTime().Ticks + ",\"result\":{\"className\":null,\"arg\":null,\"type\":\"Void\"" +
-            ",\"metaData\":{\"serviceId\":\"domain.example.events\",\"contextId\":\"foo\"}}}";
+            try
+            {
+                ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgeAnswerInvoke(0, 0, ETM.ReceivedMessages, getdoSomethingWithLogEvent()));
+                ETM.AddInteraction(ActiveMQConfiguration.getConsumerInfo(socketID));
+                ETM.AddInteraction(ActiveMQConfiguration.getConnectionInfo(socketID));
+                ETM.AddInteraction(ActiveMQConfiguration.getSendToConsumerVoidMessage(socketID, getBrideVoidAnswer()));
+            }
+            catch
+            {
+                logger.Info("Inpossible to invoke a method. Maybe the bridge isn't registered or started yer");
+            }
         }
-
-        private void stopBridge()
-        {
-            factory.UnRegisterConnector(domainName);
-            factory.DeleteDomainService(domainName);
-            factory.StopConnection(domainName);
-        }
-        private List<InteractionMessage> getETMConfiguration()
+        private static List<InteractionMessage> getETMConfiguration()
         {
             WireFormatInfo wire = ActiveMQConfiguration.getWireFormatInfo();
             ActiveMQProtocol.format = new OpenWireFormat();
@@ -106,7 +79,14 @@ namespace ETMTest
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(8, getBrideVoidAnswer()));
             return result;
         }
-        private String getTestCase()
+        private static String getBrideVoidAnswer()
+        {
+            return "{\"callId\":\"25069bc6-d3c5-4c96-8a92-3e5799316f4c\"" +
+                ",\"timestamp\":" + new DateTime().Ticks + ",\"result\":{\"className\":null,\"arg\":null,\"type\":\"Void\"" +
+            ",\"metaData\":{\"serviceId\":\"domain.example.events\",\"contextId\":\"foo\"}}}";
+        }
+
+        private static String getdoSomethingWithLogEvent()
         {
             IMarshaller marshaller = new JsonMarshaller();
             MethodCallMessage methodCall = new MethodCallMessage();
@@ -116,7 +96,6 @@ namespace ETMTest
             IDictionary<string, string> dic = new Dictionary<String, String>();
             List<Object> args = new List<Object>();
             LogEvent logevent = new LogEvent();
-            localDomain.message = "TestCase1";
             logevent.level = "12";
             logevent.name = "Test";
             logevent.origin = "123";
@@ -139,11 +118,5 @@ namespace ETMTest
             return marshaller.MarshallObject(methodCall);
         }
 
-        #endregion
-        [TestFixtureTearDown]
-        public void cleanup()
-        {
-            ETM.Dispose();
-        }
     }
 }

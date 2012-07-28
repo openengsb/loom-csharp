@@ -244,6 +244,14 @@ namespace TCPHandling
         }
         #endregion
         #region Public methods
+        /// <summary>
+        /// Add Interaction to the list
+        /// </summary>
+        /// <param name="message">Message to add</param>
+        public void AddInteraction(InteractionMessage message)
+        {
+            interationConfiguration.Add(message);
+        }
         public void Start(IPEndPoint endpoint)
         {
             ListenToTCP(endpoint);
