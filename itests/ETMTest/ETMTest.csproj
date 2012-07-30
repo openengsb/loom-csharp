@@ -37,9 +37,8 @@
     <Reference Include="Apache.NMS.ActiveMQ">
       <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_3\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ExampleDomain">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomain-1.0.0-SNAPSHOT\ExampleDomain.dll</HintPath>
-    </Reference>
+    <Reference Include="ETMTCP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="ExampleDomain, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="fastJSON">
       <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
     </Reference>
@@ -59,6 +58,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\NUnit\NUnit.Framework-2.2.8.0\NUnit.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Protocols, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -81,16 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ETMTCP\ETMTCP.csproj">
-      <Project>{C63B34FA-BE65-4674-8572-7432A938BA36}</Project>
-      <Name>ETMTCP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Protocols\Protocols.csproj">
-      <Project>{64A58547-111A-4F3D-A37D-8189326E1DB1}</Project>
-      <Name>Protocols</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

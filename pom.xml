@@ -24,11 +24,11 @@
 
   <modules>
     <module>wsdltodll</module>
-    <module>testproject</module>
-    <module>bridge/WsdlToDll/domain</module>
     <module>bridge</module>
+    <module>testproject</module>
     <!-- OPENENGSB-2890 -->
     <module>mockup</module>
+    <module>itests</module>
     <module>docs</module>
     <module>assembly</module>
   </modules>
