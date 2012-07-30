@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
   <parent>
-    <artifactId>loom-csharp-common-bridge-etm-parent</artifactId>
-    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+    <artifactId>loom-csharp-common-bridge-itests-parent</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge.itests</groupId>
     <version>1.0.0-SNAPSHOT</version>
-	<relativePath>..</relativePath>
+    <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
@@ -68,12 +68,6 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ExampleDomain</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS</artifactId>
       <version>1.5.0_2</version>
@@ -105,13 +99,13 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Implementation</artifactId>
+      <artifactId>Interface</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Interface</artifactId>
+      <artifactId>Implementation</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
@@ -124,6 +118,12 @@
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Protocols</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>ExampleDomain</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
