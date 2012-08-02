@@ -40,8 +40,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static String reverseURL(String url)
         {
             String tmp = url.Replace("http://", "");
-            tmp = tmp.Substring(0, tmp.IndexOf("/"));
-            tmp = tmp.Replace("/", "");
+            if (tmp.Contains("/")) tmp = tmp.Substring(0, tmp.IndexOf("/"));
             String[] elements = tmp.Split('.');
             int i;
             String result = "";
@@ -167,6 +166,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns></returns>
         public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
         {
+            if (typeStrings.Count != parameterInfos.Length)
+                throw new BridgeException("The method has not the same amount of parameters");
             for (int i = 0; i < parameterInfos.Length; ++i)
             {
                 if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos)) return false;
