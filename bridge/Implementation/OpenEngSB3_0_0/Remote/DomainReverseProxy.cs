@@ -101,14 +101,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
-
+            String id = Guid.NewGuid().ToString();
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", password);
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request);
+            portOut.Send(request,id);
+            waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.CREATED;
+            logger.Info("Create done");
         }
 
         /// <summary>
@@ -128,24 +130,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
-            Guid id = Guid.NewGuid();
+            String id = Guid.NewGuid().ToString();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             authentification.data.Add("value", password);
-            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id.ToString(), true, "");
+            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id, true, "");
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(callRequest);
-            portOut.Send(request, id.ToString());
+            portOut.Send(request, id);
 
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id.ToString()));
-            string reply = portIn.Receive();
+            waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.NONE;
-            MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
-            if (result.result.type == ReturnType.Exception)
-                throw new OpenEngSBException("Remote Exception while deleting service proxy", new Exception(result.result.className));
             logger.Info("Delete done");
         }
 
@@ -157,6 +155,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             this.serviceId = serviceId;
             logger.Info("Register the connector with ID: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
+            String id= Guid.NewGuid().ToString();
             metaData.Add("serviceId", CREATION_REGISTRATION);
             LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
@@ -175,12 +174,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", password);
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
+
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall,id, true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request);
+            portOut.Send(request,id);
+            waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.REGISTERED;
             logger.Info("Register done");
+        }
+        private void waitAndCheckAnswer(Destination destinationinfo, String id)
+        {
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id));
+            string reply = portIn.Receive();
+            registrationprocess = ERegistration.NONE;
+            MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
+            if (result.result.type == ReturnType.Exception)
+                throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
         }
         /// <summary>
         /// Creates an Proxy on the bus.
@@ -204,10 +214,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", password);
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, Guid.NewGuid().ToString(), true, "");
+            String id=Guid.NewGuid().ToString();
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
             string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request);
+            portOut.Send(request,id);
+            waitAndCheckAnswer(destinationinfo, id);
             if (registrationprocess.Equals(ERegistration.REGISTERED))
             {
                 registrationprocess = ERegistration.CREATED;
