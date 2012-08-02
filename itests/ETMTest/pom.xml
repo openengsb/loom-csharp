@@ -99,18 +99,6 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Interface</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Implementation</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ETMTCP</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
@@ -124,6 +112,18 @@
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ExampleDomain</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>Interface</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>Implementation</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>

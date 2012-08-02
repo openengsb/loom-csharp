@@ -109,10 +109,16 @@ namespace ETMTest
                 result.Add(ActiveMQConfiguration.getConnectionInfo(i));
                 result.Add(ActiveMQConfiguration.getConsumerInfo(i));
             }
-
+            //Answer for the create MethodCall
+            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(2, getBrideVoidAnswer()));
+            //Answer for the register MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(4, getBrideVoidAnswer()));
+            //Answer for the Invoke MethodCall
+            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(6, getBrideVoidAnswer()));
+            //Answer for the Unregister MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(7, getBrideVoidAnswer()));
-            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(8, getBrideVoidAnswer()));
+            //Answer for the delete MethodCall
+            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(9, getBrideVoidAnswer()));
             return result;
         }
         private String getTestCase()
