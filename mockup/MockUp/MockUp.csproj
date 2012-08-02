@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2419D40D-544D-45FB-985D-A067F72626F0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MockUp</RootNamespace>
+    <AssemblyName>MockUp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Apache.NMS">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_2\Apache.NMS.dll</HintPath>
+    </Reference>
+    <Reference Include="Apache.NMS.ActiveMQ">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_3\Apache.NMS.ActiveMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="ETMTCP">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ETMTCP-1.0.0-SNAPSHOT\ETMTCP.dll</HintPath>
+    </Reference>
+    <Reference Include="ETMTest">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ETMTest-1.0.0-SNAPSHOT\ETMTest.dll</HintPath>
+    </Reference>
+    <Reference Include="ExampleDomain">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomain-1.0.0-SNAPSHOT\ExampleDomain.dll</HintPath>
+    </Reference>
+    <Reference Include="fastJSON">
+      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
+    </Reference>
+    <Reference Include="Implementation">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Implementation-1.0.0-SNAPSHOT\Implementation.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Protocols">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Protocols-1.0.0-SNAPSHOT\Protocols.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
