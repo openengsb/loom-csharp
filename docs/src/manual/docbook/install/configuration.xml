@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0"
-         xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd   http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd   http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema-instance.xsd"
-         xml:id="install.configuration" xmlns="http://docbook.org/ns/docbook"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         xmlns:ns="http://docbook.org/ns/docbook">
-  <title>How to install the .netbridge</title>
+<chapter version="5.0" xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd   http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd   http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema-instance.xsd" xml:id="install.configuration" xmlns="http://docbook.org/ns/docbook" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns="http://docbook.org/ns/docbook">
+  <title>How to install the .Net bridge</title>
+  <section>
+    <title>Pre-conditions</title>
+    <para>To execute the tests, you need nunit. </para>
+    <ns:para><emphasis role="underline">Windows user:</emphasis>
+      <link>
+        <link xlink:href="http://www.nunit.org/">http://www.nunit.org/</link>
+      </link></ns:para>
+    <ns:para><emphasis role="underline">Linux user: </emphasis>  <emphasis role="italic">sudo
+        apt-get install nunit-console</emphasis>
+    </ns:para>
+    <para>Without nunit, you have build the project without tests</para>
+  </section>
   <section>
     <title>Binary installation</title>
-    <para> If you are downloading the binary files, you just have to include all the dll's from the
+    <para>If you are downloading the binary files, you just have to include all the dll's from the
       downloaded file.</para>
   </section>
   <section>
@@ -29,4 +36,3 @@
       </inlinemediaobject></para>
   </section>
 </chapter>
-
