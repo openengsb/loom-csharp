@@ -36,6 +36,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected static ILog logger = LogManager.GetLogger(typeof(T));
         #endregion
         #region Variables
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
         /// <summary>
         /// Authenifaction class
         /// </summary>
@@ -65,7 +66,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected IMarshaller marshaller;
         #endregion
         #region Constructors
-        public Domain(string host, string serviceId, String domainType)
+        public Domain(string host, string serviceId, String domainType, EExceptionHandling exceptionhandling)
             : base(typeof(T))
         {
             this.serviceId = serviceId;
@@ -74,14 +75,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.marshaller = new JsonMarshaller();
             this.username = "admin";
             this.password = "password";
+            this.exceptionhandling = exceptionhandling;
         }
-        public Domain(string host, string serviceId, String domainType, String username, String password)
-            : base(typeof(T))
+        public Domain(string host, string serviceId, String domainType, String username, String password,EExceptionHandling exceptionhandling)
+            : this(host,serviceId,domainType,exceptionhandling)
         {
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.host = host;
-            this.marshaller = new JsonMarshaller();
             this.username = username;
             this.password = password;
         }
