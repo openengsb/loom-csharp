@@ -60,6 +60,7 @@
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
             <includeSource>Common\Domain.cs</includeSource>
+            <includeSource>Common\EExceptionHandling.cs</includeSource>
             <includeSource>Common\Enumeration\AliveState.cs</includeSource>
             <includeSource>Common\Enumeration\ERegistration.cs</includeSource>
             <includeSource>Common\Enumeration\ReturnType.cs</includeSource>

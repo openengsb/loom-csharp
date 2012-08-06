@@ -16,6 +16,7 @@
  ***/
 
 using Apache.NMS;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -31,7 +32,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsIncomingPort(string destination) : base(destination)
+        public JmsIncomingPort(string destination, EExceptionHandling exceptionhandling)
+            : base(destination,exceptionhandling)
         {
             consumer = session.CreateConsumer(this.destination);
         }
@@ -44,7 +46,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <returns>Read message. Null if the connection is closed.</returns>
         public string Receive()
         {
-            ITextMessage message = consumer.Receive() as ITextMessage;
+            ITextMessage message = null;
+            try
+            {
+                message = consumer.Receive() as ITextMessage;
+            }
+            catch
+            {
+                if (!close)
+                {
+                    Configure();
+                    return Receive();
+                }
+            }
 
             if (message == null)
                 return null;
