@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Apache.NMS;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
@@ -36,19 +37,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         protected IConnectionFactory factory;
         protected ISession session;
         protected IDestination destination;
+        private string string_destination;
+        private EExceptionHandling handling;
+        private int nbrretry;
+        private int maxretries=int.MaxValue;
+        protected Boolean close = false;
         #endregion
         #region Constructor
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
-        protected JmsPort(string destination)
+        protected JmsPort(string destination, EExceptionHandling handling)
         {
             this.connection = null;
             this.factory = null;
             this.session = null;
             this.destination = null;
-            Configure(destination);
+            this.string_destination=destination;
+            this.handling=handling;
+            this.nbrretry = 0;
+            Configure();
         }
         #endregion
         #region Private Methods
@@ -56,15 +65,38 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Configurate the Connection
         /// </summary>
         /// <param name="destination">Destionation</param>
-        private void Configure(string destination)
+        protected void Configure()
         {
-            Destination dest = new Destination(destination);
-            Uri connectionUri = new Uri(dest.Host);
-            factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
-            connection = factory.CreateConnection();
-            session = connection.CreateSession();
-            connection.Start();
-            this.destination = session.GetDestination(dest.Queue);
+            if (close) return;
+            if (nbrretry++ >= maxretries)
+                handling = EExceptionHandling.ForwardException;
+            
+            try
+            {
+                Destination dest = new Destination(string_destination);
+                Uri connectionUri = new Uri(dest.Host);
+                factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
+                connection = factory.CreateConnection();
+                session = connection.CreateSession();
+                connection.Start();
+                this.destination = session.GetDestination(dest.Queue);
+                nbrretry = 0;
+            }
+            catch
+            {
+                switch (handling)
+                {
+                    case EExceptionHandling.ForwardException:
+                        {
+                            throw;
+                        }
+                    case EExceptionHandling.Retry:
+                        {
+                            Configure();
+                            break;
+                        }
+                }
+            }
         }
         #endregion
         #region Protected Methods
@@ -75,6 +107,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         {
             connection.Close();
             connection = null;
+            close = true;
         }
         #endregion
     }

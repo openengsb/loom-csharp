@@ -16,6 +16,7 @@
  ***/
 using System;
 using Apache.NMS;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -31,8 +32,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsOutgoingPort(string destination)
-            : base(destination)
+        public JmsOutgoingPort(string destination, EExceptionHandling handling)
+            : base(destination, handling)
         {
             producer = session.CreateProducer(this.destination);
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
@@ -46,8 +47,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="receiver">Queue name on server side</param>
         public void Send(string text)
         {
-            ITextMessage message = session.CreateTextMessage(text);
-            producer.Send(message);
+            try
+            {
+                ITextMessage message = session.CreateTextMessage(text);
+                producer.Send(message);
+            }
+            catch{
+                Configure();
+                Send(text);
+            }
         }
         /// <summary>
         /// Send a string over NMS and defines the replyTo field
@@ -56,9 +64,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="replyTo">Reply destination</param>
         public void Send(string text, String queueName)
         {
-            ITextMessage message = session.CreateTextMessage(text);
-            message.NMSReplyTo = session.GetQueue(queueName);
-            producer.Send(message);
+            try
+            {
+                ITextMessage message = session.CreateTextMessage(text);
+                message.NMSReplyTo = session.GetQueue(queueName);
+                producer.Send(message);
+            }
+            catch
+            {
+                if (!close)
+                {
+                    Configure();
+                    Send(text, queueName);
+                }
+            }
         }
 
         /// <summary>
