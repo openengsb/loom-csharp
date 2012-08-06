@@ -71,6 +71,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// Logger
         /// </summary>
         protected static ILog logger = LogManager.GetLogger(typeof(T));
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
         #endregion
         #region Propreties
         public T DomainService
@@ -127,8 +128,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector,EExceptionHandling exceptionhandling)
         {
+            this.exceptionhandling = exceptionhandling;
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
             this.destination = Destination.CreateDestinationString(host, serviceId);
@@ -136,7 +138,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.domainService = localDomainService;
-            this.portIn = new JmsIncomingPort(destination);
+            this.portIn = new JmsIncomingPort(destination,exceptionhandling);
             this.username = "admin";
             this.password = "password";
             this.createService = createNewConnector;
@@ -150,19 +152,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector,EExceptionHandling exceptionhandling)
+            :this(localDomainService,host,serviceId,domainType,createNewConnector,exceptionhandling)
         {
-            this.marshaller = new JsonMarshaller();
-            this.isEnabled = true;
-            this.destination = Destination.CreateDestinationString(host, serviceId);
-            this.queueThread = null;
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.domainService = localDomainService;
-            this.portIn = new JmsIncomingPort(destination);
             this.username = username;
             this.password = password;
-            this.createService = createNewConnector;
         }
         #endregion
         #region Protected Methods

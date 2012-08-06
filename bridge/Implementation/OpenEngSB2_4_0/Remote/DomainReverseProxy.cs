@@ -49,8 +49,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType)
-            : base(localDomainService, host, serviceId, domainType, false)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType,EExceptionHandling exceptionhandling)
+            : base(localDomainService, host, serviceId, domainType, false,exceptionhandling)
         {
             logger.Info("Connecting to OpenEngSB version 2.4");            
         }
@@ -63,8 +63,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password)
-            : base(localDomainService, host, serviceId, domainType, username, password, false)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, EExceptionHandling exceptionhandling)
+            : base(localDomainService, host, serviceId, domainType, username, password, false, exceptionhandling)
         {
             logger.Info("Connecting to OpenEngSB version 2.4");
         }
@@ -110,7 +110,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionhandling);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request);
             registrationprocess = ERegistration.REGISTERED;
@@ -143,11 +143,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request);
 
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId));
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId), exceptionhandling);
             string reply = portIn.Receive();
 
             MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
@@ -177,7 +177,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 {
                     string returnMsg = marshaller.MarshallObject(methodReturnMessage);
                     Destination dest = new Destination(destination);
-                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId));
+                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId), exceptionhandling);
                     portOut.Send(returnMsg);
                     if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))
                         throw new OpenEngSBException("A problem with the invokation of a method happened", new BridgeException(methodReturnMessage.message.result.arg.ToString()));

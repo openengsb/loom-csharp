@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Common\AbstractRealDomainFactory.cs" />
     <Compile Include="Common\Domain.cs" />
+    <Compile Include="Common\EExceptionHandling.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ERegistration.cs" />
     <Compile Include="Common\Enumeration\ReturnType.cs" />
