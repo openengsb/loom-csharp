@@ -31,7 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Implementation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Implementation">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Implementation-1.0.0-SNAPSHOT\Implementation.dll</HintPath>
+    </Reference>
     <Reference Include="NUnit.Framework, Version=2.2.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\NUnit\NUnit.Framework-2.2.8.0\NUnit.Framework.dll</HintPath>

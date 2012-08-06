@@ -44,7 +44,7 @@ namespace ETMTest
             ETM = new ETMTCP(getETMConfiguration());
             ETM.Start(IPAddress.Loopback, 6549);
             startBridge();
-            ETM.TriggerMessage(getNetBridgeAnswerInvoke(0, 0, ETM.ReceivedMessages));
+            ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgInvokeMessageOnReceiveQueue(0, 0, getTestCase(), ETM.ReceivedMessages));
             stopBridge();
             Assert.AreEqual(localDomain.message, "TestCase1");
             Assert.AreEqual(localDomain.level, "12");

@@ -6,6 +6,7 @@ using Apache.NMS.ActiveMQ.Commands;
 using TCPHandling;
 using Protocols.ActiveMQ;
 using System.Net;
+using Protocols;
 
 namespace AcitveMQProtocol.ActiveMQConfiguration
 {
@@ -26,21 +27,17 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, new ActiveMQProtocol(new MessageAck(), SocketID), null);
             return activeMQMessage;
         }
-        public static InteractionMessage getNetBridgeAnswerInvoke(int socketID, int answerSocket, String message)
+
+        public static InteractionMessage getNetBridgInvokeMessageOnReceiveQueue(int socketID, int answerSocket, String messasge, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
         {
-            //getBrideVoidAnswer
-            MessageDispatch dispatcher = new MessageDispatch();
-            dispatcher.Message = new ActiveMQTextMessage(message);
-            MessageId messageId = new MessageId();
-            messageId.BrokerSequenceId = 1;
-            messageId.ProducerSequenceId = 1;
-            dispatcher.Message.MessageId = messageId;
+            IProtocol prot = receivedMessages[socketID].Last(element => element.Value is ActiveMQProtocol && ((ActiveMQProtocol)element.Value).Message is ConsumerInfo).Value;
+            prot.SocketNumber = socketID;
+            MessageDispatch dispatcher = getDispatcher(new ActiveMQTextMessage(messasge));
+            dispatcher.Destination = new ActiveMQQueue("receive");
             InteractionMessage activeMQMessageAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(dispatcher, answerSocket), null);
-            InteractionMessage activeMQMessageresponse = new InteractionMessage(6549, null, new ActiveMQProtocol(getResponse(), socketID), null);
-            InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, new ActiveMQProtocol(new ActiveMQTextMessage(), socketID), new List<InteractionMessage>() { activeMQMessageresponse, activeMQMessageAnswer });
+            InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, prot, new List<InteractionMessage>() { activeMQMessageAnswer });
             return activeMQMessage;
         }
-
         public static InteractionMessage getShutdownInfo(int SocketID)
         {
             InteractionMessage activeMQMessageresponse = new InteractionMessage(null, 6549, new ActiveMQProtocol(getResponse(),

@@ -290,6 +290,14 @@ namespace TCPHandling
             IProtocol prot = messagetoSend.protocol;
             sentResponses(messagetoSend, socketId, prot);
         }
+        /// <summary>
+        /// Add an Interaction to the list
+        /// </summary>
+        /// <param name="interactionMessage">Interaction Message</param>
+        public void AddInteraction(InteractionMessage interactionMessage)
+        {
+            interationConfiguration.Add(interactionMessage);
+        }
         public void Dispose()
         {
             stopListeningClient = true;
