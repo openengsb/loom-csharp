@@ -8,7 +8,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
-    /// New List, which overs the possibility to pars the elements
+    /// This new implemenation of a list take into account the aready picked elements. Always the lowest
+    /// choosen element will be returned, if the search criterias are the same
     /// </summary>
     class ETMList : IList
     {
@@ -26,7 +27,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         {
             foreach (InteractionMessage element in elements)
             {
-                this.Add(element);                
+                this.Add(element);
             }
         }
         #endregion
@@ -49,11 +50,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <param name="item">Search parameter</param>
         /// <param name="socketID">Socket, on which the message has been received</param>
         /// <returns>Found element</returns>
-        public InteractionMessage getElement(IProtocol item,int socketID)
+        public InteractionMessage getElement(IProtocol item, int socketID)
         {
             InteractionMessage canidates = null;
             int min = int.MaxValue;
-            
+
             foreach (InteractionMessage message in listelements)
             {
                 if (compaire(item, socketID, message))
@@ -71,7 +72,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             {
                 elements[canidates]++;
             }
-            return canidates.Clone() as InteractionMessage;            
+            return canidates.Clone() as InteractionMessage;
         }
         /// <summary>
         /// Compaires if the protocol is the same
@@ -82,7 +83,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <returns>Compaire result</returns>
         private bool compaire(IProtocol item, int socketID, InteractionMessage message)
         {
-            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && message.Protocol.CompaireProtocols(item);
+            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && (message.Protocol.CompareTo(item) == 1);
         }
         /// <summary>
         /// Find a interaction in the list
@@ -131,7 +132,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             listelements.Add(element);
             elements.Add(element, 0);
             AddProtocolType(element);
-            return listelements.Count-1;
+            return listelements.Count - 1;
         }
         /// <summary>
         /// Deletes all the elements
@@ -158,7 +159,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <returns>postion</returns>
         public int IndexOf(object value)
         {
-            return listelements.IndexOf((InteractionMessage) value);
+            return listelements.IndexOf((InteractionMessage)value);
         }
         /// <summary>
         /// Insert a element
@@ -185,35 +186,40 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 
         public void Remove(object value)
         {
-            InteractionMessage element=value as InteractionMessage;
+            InteractionMessage element = value as InteractionMessage;
             listelements.Remove(element);
             elements.Remove(element);
         }
 
         public void RemoveAt(int index)
-        {            
+        {
             elements.Remove(listelements[index]);
             listelements.RemoveAt(index);
         }
 
         public object this[int index]
         {
-               get
-            {                
+            get
+            {
                 return listelements[index];
             }
             set
             {
                 AddProtocolType((InteractionMessage)value);
-                listelements[index] = (InteractionMessage) value;
+                listelements[index] = (InteractionMessage)value;
             }
         }
-
         public void CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            if (array is InteractionMessage[])
+            {
+                listelements.CopyTo(array as InteractionMessage[], index);
+            }
+            else
+            {
+                throw new ArgumentException("The array is not a InteractionMessage");
+            }
         }
-
         public int Count
         {
             get { return listelements.Count; }
@@ -233,6 +239,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         {
             return listelements.GetEnumerator();
         }
-#endregion
+        #endregion
     }
 }

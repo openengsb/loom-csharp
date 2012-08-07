@@ -68,7 +68,7 @@ namespace ETMTest
             socket.Bind(new IPEndPoint(IPAddress.Loopback, remoteSocketPort));
             socket.Connect(new IPEndPoint(IPAddress.Loopback, localSocketPort));
             ASCIIEncoding encoder = new ASCIIEncoding();
-            socket.Send((Byte[])SendMessage.Protocol.getMessage());
+            socket.Send((Byte[])SendMessage.Protocol.GetMessage());
 
             message = new byte[4096];
             int bytesRead;

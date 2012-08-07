@@ -80,10 +80,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveMQConfiguration\ActiveMQConfiguration.cs" />
-    <Compile Include="ActiveMQTesting.cs" />
-    <Compile Include="ETMTCPTest.cs" />
-    <Compile Include="ExampleDomainConnector.cs" />
+    <Compile Include="ComponentTests\ActiveMQTesting.cs" />
+    <Compile Include="ComponentTests\ETMTCPTest.cs" />
+    <Compile Include="ComponentTests\ExampleDomainConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocoltests\ActiveMQProtocolTest.cs" />
+    <Compile Include="Protocoltests\SoapProtocolTest.cs" />
+    <Compile Include="Protocoltests\TcpProtocolTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -91,6 +94,7 @@
   <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

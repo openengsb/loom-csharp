@@ -197,7 +197,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void UnRegisterConnector()
         {
-            if (!registrationprocess.Equals(ERegistration.REGISTERED)) return;
+            if (!registrationprocess.Equals(ERegistration.REGISTERED))
+            {
+                return;
+            }
             logger.Info("Unregister the connector with ID: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_REGISTRATION);

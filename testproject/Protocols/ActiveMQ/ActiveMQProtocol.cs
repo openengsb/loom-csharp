@@ -27,6 +27,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
         public static OpenWireFormat format;
 #endregion
         #region Constructors
+        /// <summary>
+        /// Stores an Object and a Socketnumber. When the Object is a Wirewormat, then this
+        /// object is used to configure the stored Wireformat
+        /// </summary>
+        /// <param name="obj">Object</param>
+        /// <param name="socketNumber">SocketNumber</param>
         public ActiveMQProtocol(Object obj, int socketNumber)
         {
             this.SocketNumber = socketNumber;
@@ -61,15 +67,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
                 return null;
             }
         }
-
-        public bool CompaireProtocols(object protocol)
+        public int CompareTo(IProtocol protocol)
         {
             if (protocol is ActiveMQProtocol)
             {
                 ActiveMQProtocol pr = (ActiveMQProtocol)protocol;
-                return pr.Message.GetType().IsInstanceOfType(Message) && Message.GetType().IsInstanceOfType(pr.Message);
+                if (pr.Message.GetType().IsInstanceOfType(Message) && Message.GetType().IsInstanceOfType(pr.Message))
+                {
+                    return 1;
+                }
             }
-            return false;
+            return 0;
         }
 
         public byte[] GetMessage()

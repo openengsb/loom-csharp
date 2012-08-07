@@ -38,16 +38,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
         public byte[] GetMessage() {
             return message; 
         }
-        public bool CompaireProtocols(Object protocol)
+        public int CompareTo(IProtocol protocol)
         {
             if (protocol is TCPProtocol)
             {
                 TCPProtocol tcp = (TCPProtocol)protocol;
-                return compaireObject(tcp.GetMessage(), message);
+                if (CompaireByteArraysWithoutLength(tcp.GetMessage(), message))
+                {
+                    return 1;
+                }
             }
-            return false;
+            return 0;
         }
-        private Boolean compaireObject(Byte[] array1, Byte[] array2)
+        /// <summary>
+        /// Compaires two arrays if they are equal.
+        /// </summary>
+        /// <param name="array1">The received message from the ETM</param>
+        /// <param name="array2">The stored array</param>
+        /// <returns></returns>
+        private Boolean CompaireByteArraysWithoutLength(Byte[] array1, Byte[] array2)
         {
             if (array1 == null || array2 == null)
             {

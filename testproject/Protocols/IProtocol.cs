@@ -2,7 +2,7 @@
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
 {
-    public interface IProtocol : ICloneable
+    public interface IProtocol : ICloneable,IComparable<IProtocol>
     {
         /// <summary>
         /// The id of the socket on which the message should be
@@ -21,12 +21,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
         /// <param name="message">Message to convert in bytes</param>
         /// <returns>IProtocol</returns>
         IProtocol ConvertToProtocol(Byte[] message);
-        /// <summary>
-        /// Compaires if a protocol is the same.
-        /// </summary>
-        /// <param name="protocol">The protocol to check</param>
-        /// <returns>If two protocols are the same</returns>
-        Boolean CompaireProtocols(Object protocol);
         /// <summary>
         /// Offers the protocol the possibility to get information from the received message.
         /// </summary>

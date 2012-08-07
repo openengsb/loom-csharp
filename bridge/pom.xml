@@ -34,7 +34,7 @@
 
   <modules>
     <module>Interface</module>
-    <module>WsdlToDll/domain</module>
+    <module>WsdlToDll/Domain</module>
     <module>Implementation</module>
     <module>ServiceTestConsole</module>
   </modules>

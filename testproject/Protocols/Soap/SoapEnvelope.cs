@@ -91,8 +91,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
             ASCIIEncoding asci = new ASCIIEncoding();
             return new SoapEnvelope(asci.GetString(message),-1);
         }
-        
-        public bool CompaireProtocols(Object protocol)
+
+        public int CompareTo(IProtocol protocol)
         {
             Boolean result = true;
             SoapEnvelope envelopr = (SoapEnvelope)protocol;
@@ -118,7 +118,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
                         result = result && foundone;
                         if (!result)
                         {
-                            return false;
+                            return 0;
                         }
                     }
                 }
@@ -131,10 +131,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
                 }
                 else
                 {
-                    return false;
+                    return 0;
                 }
             }
-            return result && body.Comapire(envelopr.body);
+            if (result && body.Comapire(envelopr.body))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
 
