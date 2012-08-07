@@ -50,8 +50,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector)
-            : base(localDomainService, host, serviceId, domainType, createNewConnector)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector,EExceptionHandling exceptionhandle)
+            : base(localDomainService, host, serviceId, domainType, createNewConnector,exceptionhandle)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
         }
@@ -64,8 +64,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector)
-            : base(localDomainService, host, serviceId, domainType, username, password, createNewConnector)
+        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector, EExceptionHandling exceptionhandling)
+            : base(localDomainService, host, serviceId, domainType, username, password, createNewConnector,exceptionhandling)
         {
             logger.Info("Connecting to OpenEngSB version 3.0");
         }
@@ -105,7 +105,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", password);
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionhandling);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request,id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -138,7 +138,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
 
@@ -176,7 +176,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             autinfo.data.Add("value", password);
 
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall,id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionhandling);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request,id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -185,7 +185,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         }
         private void waitAndCheckAnswer(Destination destinationinfo, String id)
         {
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id));
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), exceptionhandling);
             string reply = portIn.Receive();
             registrationprocess = ERegistration.NONE;
             MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
@@ -216,7 +216,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             autinfo.data.Add("value", password);
             String id=Guid.NewGuid().ToString();
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
             string request = marshaller.MarshallObject(secureRequest);
             portOut.Send(request,id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -246,7 +246,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                 {
                     string returnMsg = marshaller.MarshallObject(methodReturnMessage);
                     Destination dest = new Destination(destination);
-                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId));
+                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), exceptionhandling);
                     portOut.Send(returnMsg);
                     if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
                         throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));

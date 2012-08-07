@@ -27,6 +27,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0
     /// </summary>
     public class RealDomainFactory<T> : AbstractRealDomainFactory<T>
     {
+        public RealDomainFactory(string destination, T domainService, EExceptionHandling exceptionhandling)
+            : base(destination, domainService, exceptionhandling)
+        {
+        }
         public RealDomainFactory(string destination, T domainService)
             : base(destination, domainService)
         {
@@ -34,15 +38,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0
         #region Abstact Method Implementation
         protected override A getSubEventhandler<A>(String domainType)
         {
-            return new DomainProxy<A>(destination, getDomainTypServiceId(domainType), domainType).GetTransparentProxy();
+            return new DomainProxy<A>(destination, getDomainTypServiceId(domainType), domainType,exceptionhandling).GetTransparentProxy();
         }
         protected override DomainReverse<T> createInstance(string serviceId, string domainType, bool createConstructor)
         {
-            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, createConstructor);
+            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, createConstructor, exceptionhandling);
         }
         protected override DomainReverse<T> createInstance(string serviceId, string domainType, bool createConstructor, string username, string password)
         {
-            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, createConstructor);
+            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, createConstructor, exceptionhandling);
         }
         #endregion
 

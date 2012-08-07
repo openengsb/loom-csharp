@@ -12,10 +12,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         private Dictionary<String, IRegistration> proxies;
         protected String destination;
         protected T domainService;
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
+        #endregion
+        #region Propreties
+        public EExceptionHandling ExceptionHandling
+        {
+            get { return exceptionhandling; }
+            set { exceptionhandling = value; }
+        }
         #endregion
         #region Constructors
         public AbstractRealDomainFactory(string destination, T domainService)
         {
+            this.destination = destination;
+            this.domainService = domainService;
+            proxies = new Dictionary<String, IRegistration>();
+        }
+        public AbstractRealDomainFactory(string destination, T domainService, EExceptionHandling exceptionhandling)
+        {
+            this.exceptionhandling = exceptionhandling;
             this.destination = destination;
             this.domainService = domainService;
             proxies = new Dictionary<String, IRegistration>();
