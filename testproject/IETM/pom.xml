@@ -8,11 +8,11 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>ETMTCP</artifactId>
+  <artifactId>IETM</artifactId>
   <packaging>library</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ETMTCP</name>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Interfaces</name>
   <version>1.0.0-SNAPSHOT</version>
-  <description>TCP implementation for the ETM</description>
+  <description>Interface description for the ETM</description>
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -35,11 +35,8 @@
         <configuration>
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
-            <includeSource>ETMList.cs</includeSource>
-            <includeSource>ETMTCP.cs</includeSource>
+            <includeSource>IETM.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
-            <includeSource>StateObject.cs</includeSource>
-            <includeSource>InteractionMessage.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
@@ -47,26 +44,8 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_3</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Protocols</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>log4net</artifactId>
-      <version>1.2.11_2</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>IETM</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>

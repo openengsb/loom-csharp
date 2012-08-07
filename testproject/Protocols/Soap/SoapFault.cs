@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Protocols.Soap.FaultElements;
-using Protocols.Soap.Parents;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.FaultElements;
 
-namespace Protocols.Soap
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
 {
     class SoapFault : NodeElements
     {
@@ -30,8 +28,7 @@ namespace Protocols.Soap
                 faultactor = new FaultActor(result);
                 message = message.Replace(result, "");
             }
-            if (
-                !String.IsNullOrEmpty(result = base.splittext("faultstring", message)))
+            if (!String.IsNullOrEmpty(result = base.splittext("faultstring", message)))
             {
                 faultstring = new Faultstring(result);
                 message = message.Replace(result, "");

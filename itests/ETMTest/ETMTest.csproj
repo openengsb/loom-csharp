@@ -46,6 +46,9 @@
     <Reference Include="fastJSON">
       <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
     </Reference>
+    <Reference Include="IETM">
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\IETM-1.0.0-SNAPSHOT\IETM.dll</HintPath>
+    </Reference>
     <Reference Include="Implementation">
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Implementation-1.0.0-SNAPSHOT\Implementation.dll</HintPath>
     </Reference>

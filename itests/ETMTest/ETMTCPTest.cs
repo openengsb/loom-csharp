@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
-using TCPHandling;
 using System.Net.Sockets;
 using System.Net;
-using System.Threading;
-using Protocols.TCP;
 using NUnit.Framework;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 namespace ETMTest
 {
     [TestFixture]
     public class ETMTCPTest
     {
         private List<InteractionMessage> workflow;
-        private ETMTCP tcphanding;
+        private IETM tcphanding;
         private byte[] message = null;
         private byte[] messageSendFromProgram;
         private byte[] messageSendFromMyFramework;
@@ -68,7 +68,7 @@ namespace ETMTest
             socket.Bind(new IPEndPoint(IPAddress.Loopback, remoteSocketPort));
             socket.Connect(new IPEndPoint(IPAddress.Loopback, localSocketPort));
             ASCIIEncoding encoder = new ASCIIEncoding();
-            socket.Send((Byte[])SendMessage.protocol.getMessage());
+            socket.Send((Byte[])SendMessage.Protocol.getMessage());
 
             message = new byte[4096];
             int bytesRead;

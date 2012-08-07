@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace TCPHandling
+namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
     /// State Object for asynchronious send/receive

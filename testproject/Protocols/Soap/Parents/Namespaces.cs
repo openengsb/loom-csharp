@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Protocols.Soap.Parents
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents
 {
     public class Namespaces
     {
@@ -34,7 +32,10 @@ namespace Protocols.Soap.Parents
             {
                 result += name + "=" + "\"" + namespaces[name] + "\" ";
             }
-            if (!String.IsNullOrEmpty(result)) result = result.Substring(0, result.Length - 1);
+            if (!String.IsNullOrEmpty(result))
+            {
+                result = result.Substring(0, result.Length - 1);
+            }
             return result;
         }
         public String getValue(String message)

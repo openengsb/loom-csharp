@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 
-namespace Protocols.TCP
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
 {
     /// <summary>
     /// Simulation of the TCP protocol
@@ -48,19 +49,24 @@ namespace Protocols.TCP
         }
         private Boolean compaireObject(Byte[] array1, Byte[] array2)
         {
-
             if (array1 == null || array2 == null)
+            {
                 return false;
+            }
             if (array1.Length > array2.Length)
             {
                 Array.Resize(ref array2, array1.Length);
             }
             else if (array1.Length != array2.Length)
+            {
                 return false;
+            }
             for (int i = 0; i < array1.Length; i++)
             {
                 if (array1[i] != array2[i])
+                {
                     return false;
+                }
             }
             return true;
         }

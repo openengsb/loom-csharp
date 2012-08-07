@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Protocols.Soap.Parents
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents
 {
     public class NodeElements : Namespaces
     {
@@ -12,7 +11,10 @@ namespace Protocols.Soap.Parents
         public NodeElements() { }
         public NodeElements(String input)
         {
-            if (!input.Contains("<")) return;
+            if (!input.Contains("<"))
+            {
+                return;
+            }
             String message = input;
             int start = 0;
             if (message.Replace(" ", "").ToUpper().Contains("<?XML"))
@@ -24,7 +26,7 @@ namespace Protocols.Soap.Parents
             else
             {
                 start = message.IndexOf("<");
-                message = message.Substring(start, message.Length-start);
+                message = message.Substring(start, message.Length - start);
             }
             start = 1;
             base.addNewElements(message);
@@ -54,7 +56,10 @@ namespace Protocols.Soap.Parents
                 result += prefix + ":";
             }
             result += name;
-            if (base.dictSet()) result += " " + base.ToString();
+            if (base.dictSet())
+            {
+                result += " " + base.ToString();
+            }
             result += ">";
             foreach (Object element in elements) result += printObject(element);
             result += "</";
@@ -67,14 +72,23 @@ namespace Protocols.Soap.Parents
         }
         public String printObject(Object obj)
         {
-            if (obj != null) return obj.ToString();
-            else return "";
+            if (obj != null)
+            {
+                return obj.ToString();
+            }
+            else
+            {
+                return "";
+            }
         }
         public String splittext(String elementName, String message)
         {
             String name = elementName.ToUpper();
             int start = message.ToUpper().IndexOf(name);
-            if (start <= 0) return "";
+            if (start <= 0)
+            {
+                return "";
+            }
             String tmpMessage = message.Substring(0, start);
             start = tmpMessage.LastIndexOf("<");
             int end = message.ToUpper().LastIndexOf(name);
@@ -82,13 +96,17 @@ namespace Protocols.Soap.Parents
             end = end + tmpMessage.IndexOf(">") + 1;
             String result = message.Substring(start, end - start);
             String testelement = result + " ";
-            int tmpend=testelement.IndexOf("\"");
+            int tmpend = testelement.IndexOf("\"");
             end = testelement.IndexOf(" ");
-            if (tmpend<end && tmpend>0){
-                end=tmpend;
+            if (tmpend < end && tmpend > 0)
+            {
+                end = tmpend;
             }
             testelement = testelement.Substring(0, testelement.IndexOf(" "));
-            if (testelement.ToUpper().Contains(elementName.ToUpper())) return result;
+            if (testelement.ToUpper().Contains(elementName.ToUpper()))
+            {
+                return result;
+            }
             else
             {
                 return "";

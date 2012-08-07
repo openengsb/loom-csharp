@@ -8,7 +8,7 @@
     <ProjectGuid>{64A58547-111A-4F3D-A37D-8189326E1DB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Protocols</RootNamespace>
+    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.Protocols</RootNamespace>
     <AssemblyName>Protocols</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveMQ\ActiveMQProtocol.cs" />
+    <Compile Include="InteractionMessage.cs" />
     <Compile Include="IProtocol.cs" />
     <Compile Include="Soap\FaultElements\Detail.cs" />
     <Compile Include="Soap\FaultElements\FaultActor.cs" />

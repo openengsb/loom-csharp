@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C63B34FA-BE65-4674-8572-7432A938BA36}</ProjectGuid>
+    <ProjectGuid>{1B04F673-90AA-46FD-99A8-818DC03B7FB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.ETMTCP</RootNamespace>
-    <AssemblyName>ETMTCP</AssemblyName>
+    <RootNamespace>Org.Openengsb.Loom.Csharp.Common.Bridge.IETM</RootNamespace>
+    <AssemblyName>IETM</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,15 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Apache.NMS.ActiveMQ">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_3\Apache.NMS.ActiveMQ.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,19 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ETMList.cs" />
-    <Compile Include="ETMTCP.cs" />
+    <Compile Include="IETM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StateObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IETM\IETM.csproj">
-      <Project>{1B04F673-90AA-46FD-99A8-818DC03B7FB5}</Project>
-      <Name>IETM</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Protocols\Protocols.csproj">
       <Project>{64A58547-111A-4F3D-A37D-8189326E1DB1}</Project>
       <Name>Protocols</Name>

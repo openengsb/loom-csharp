@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Apache.NMS.ActiveMQ.OpenWire;
 using Apache.NMS.ActiveMQ.Commands;
-using Apache.NMS.ActiveMQ.Util;
 using Apache.NMS.Util;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 
-namespace Protocols.ActiveMQ
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
 {
     /// <summary>
     /// Simulation of the ActiveMQ protocol
@@ -45,9 +42,13 @@ namespace Protocols.ActiveMQ
         public IProtocol ConvertToProtocol(Object message)
         {
             if (message is String)
+            {
                 Message = new ActiveMQTextMessage((String)message);
+            }
             else
+            {
                 Message = (Command)message;
+            }
             return new ActiveMQProtocol(Message, -1);
         }
         public IProtocol ConvertToProtocol(byte[] Message)
@@ -104,17 +105,21 @@ namespace Protocols.ActiveMQ
         private void AddInfoToMessage(IProtocol receivedMessage)
         {
             if (Message is Response)
+            {
                 ((Response)Message).CorrelationId = ((ActiveMQProtocol)receivedMessage).Message.CommandId;
-
+            }
             if (Message is MessageDispatch)
             {
                 MessageDispatch dispatcher = Message as MessageDispatch;
                 ConsumerInfo consumerinfo = ((ActiveMQProtocol)receivedMessage).Message as ConsumerInfo;
                 if (dispatcher.ConsumerId == null)
+                {
                     dispatcher.ConsumerId = consumerinfo.ConsumerId;
-
+                }
                 if (dispatcher.Destination == null)
+                {
                     dispatcher.Destination = consumerinfo.Destination;
+                }
                 Message = dispatcher;
             }
         }

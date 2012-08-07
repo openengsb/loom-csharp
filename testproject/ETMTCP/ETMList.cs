@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Protocols;
 using System.Collections;
-using Protocols.ActiveMQ;
-using Apache.NMS.ActiveMQ.Commands;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 
-namespace TCPHandling
+namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
     /// New List, which overs the possibility to pars the elements
@@ -38,9 +37,11 @@ namespace TCPHandling
         /// <param name="element">Element to add</param>
         public void AddProtocolType(InteractionMessage element)
         {
-            IProtocol protocol = element.protocol;
+            IProtocol protocol = element.Protocol;
             if (!protocolTypes.Exists(pr => { return protocol.GetType().IsInstanceOfType(pr); }))
+            {
                 protocolTypes.Add(protocol);
+            }
         }
         /// <summary>
         /// Search for an element and returns it when it could be found
@@ -81,7 +82,7 @@ namespace TCPHandling
         /// <returns>Compaire result</returns>
         private bool compaire(IProtocol item, int socketID, InteractionMessage message)
         {
-            return (message.protocol.SocketNumber == socketID || message.protocol.SocketNumber < 0) && message.protocol.Compaire(item);
+            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && message.Protocol.Compaire(item);
         }
         /// <summary>
         /// Find a interaction in the list
@@ -114,7 +115,9 @@ namespace TCPHandling
                 }
             }
             if (moreData)
+            {
                 return null;
+            }
             throw new ArgumentException("It was unpossible, to find a configuration for the indicated format");
         }
         /// <summary>

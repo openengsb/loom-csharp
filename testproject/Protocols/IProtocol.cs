@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Protocols
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
 {
     public interface IProtocol : ICloneable
     {

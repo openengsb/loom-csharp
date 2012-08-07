@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Protocols.Soap.Parents;
-using System.Xml;
-using System.IO;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents;
 
-namespace Protocols.Soap
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
 {
     public class SoapEnvelope : NodeElements, IProtocol
     {
@@ -31,8 +29,11 @@ namespace Protocols.Soap
             }
             end = message.IndexOf("<");
             htmlInfo = message.Substring(start, end).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            
-            if (end <= 0) end = 1;
+
+            if (end <= 0)
+            {
+                end = 1;
+            }
             String result=message.Substring(end-1,message.Length-end+1);
             result=result.Replace("\n", "").Replace("\r\n","");
             start = 0;
@@ -44,9 +45,15 @@ namespace Protocols.Soap
             }
 
             String sbody = splittext("body", result);
-            if (!String.IsNullOrEmpty(sbody)) body = new SoapBody(sbody);
+            if (!String.IsNullOrEmpty(sbody))
+            {
+                body = new SoapBody(sbody);
+            }
             String sheader = splittext("header", result);
-            if (!String.IsNullOrEmpty(sheader)) header = new SoapHeader(sheader);
+            if (!String.IsNullOrEmpty(sheader))
+            {
+                header = new SoapHeader(sheader);
+            }
         }
         
         public override String ToString()
@@ -57,8 +64,14 @@ namespace Protocols.Soap
             String htmlresult = "";
             for (int i=0; i < htmlInfo.Length; i++)
             {
-                if (String.IsNullOrEmpty(htmlInfo[i])) continue;
-                if (i + 1 < htmlInfo.Length) htmlresult += htmlInfo[i] + Environment.NewLine;                
+                if (String.IsNullOrEmpty(htmlInfo[i]))
+                {
+                    continue;
+                }
+                if (i + 1 < htmlInfo.Length)
+                {
+                    htmlresult += htmlInfo[i] + Environment.NewLine;
+                }
             }
             
             htmlresult = htmlresult.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
@@ -90,26 +103,36 @@ namespace Protocols.Soap
                     foreach (String element in envelopr.htmlInfo)
                     {
                         if (String.IsNullOrEmpty(element))
+                        {
                             continue;
+                        }
                         Boolean foundone = false;
                         foreach (String elementTocheck in htmlInfo)
                         {
                             foundone = element.Equals(elementTocheck);
                             if (foundone)
+                            {
                                 break;
+                            }
                         }
                         result = result && foundone;
                         if (!result)
+                        {
                             return false;
+                        }
                     }
                 }
             }
             else
             {
                 if (envelopr.htmlInfo == null && htmlInfo == null)
+                {
                     result = true;
+                }
                 else
+                {
                     return false;
+                }
             }
             return result && body.Comapire(envelopr.body);
         }

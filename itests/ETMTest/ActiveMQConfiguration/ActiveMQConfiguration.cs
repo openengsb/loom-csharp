@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Apache.NMS.ActiveMQ.Commands;
-using TCPHandling;
-using Protocols.ActiveMQ;
 using System.Net;
-using Protocols;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 
 namespace AcitveMQProtocol.ActiveMQConfiguration
 {
@@ -30,7 +28,14 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
 
         public static InteractionMessage getNetBridgInvokeMessageOnReceiveQueue(int socketID, int answerSocket, String messasge, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
         {
-            IProtocol prot = receivedMessages[socketID].Last(element => element.Value is ActiveMQProtocol && ((ActiveMQProtocol)element.Value).Message is ConsumerInfo).Value;
+            IProtocol prot=null;
+            foreach (KeyValuePair<int, IProtocol> dic in receivedMessages[socketID])
+            {
+                if (dic.Value is ActiveMQProtocol && ((ActiveMQProtocol)dic.Value).Message is ConsumerInfo)
+                {
+                    prot = ((ActiveMQProtocol)dic.Value);
+                }
+            }
             prot.SocketNumber = socketID;
             MessageDispatch dispatcher = getDispatcher(new ActiveMQTextMessage(messasge));
             dispatcher.Destination = new ActiveMQQueue("receive");

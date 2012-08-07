@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using Protocols;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 
-namespace TCPHandling
+namespace Org.Openengsb.Loom.CSharp.Bridge.ETM
 {
     /// <summary>
-    /// Devition of an interaction between the component and the ETM
+    /// Devition of the interaction betwwen a component and the ETM.
+    /// The devition inculdes the Endpoint (IP and Port) on which the components send the messages,
+    /// the send message and a list of response, which should be sent as answer.
     /// </summary>
     public class InteractionMessage : IComparable, ICloneable
     {
         #region Variables
         public int? SourcePort { get; set; }
         public int? DestinationPort { get; set; }
-        public IProtocol protocol { get; set; }
+        public IProtocol Protocol { get; set; }
         public long Timestamp { get; set; }
         public IPAddress SourceIPAddress { get; set; }
         public IPAddress DestinationIPAddress { get; set; }
@@ -24,7 +26,7 @@ namespace TCPHandling
         {
             this.SourcePort = source;
             this.DestinationPort = dest;
-            this.protocol = protocol;
+            this.Protocol = protocol;
             this.Timestamp = DateTime.Now.Ticks;
             this.DestinationIPAddress = IPAddress.Loopback;
             this.SourceIPAddress = IPAddress.Loopback;
@@ -62,7 +64,7 @@ namespace TCPHandling
                     result.Add((InteractionMessage)tr.Clone());
                 }
             }
-            return new InteractionMessage(SourcePort, DestinationPort, (IProtocol)protocol.Clone(), result, SourceIPAddress, DestinationIPAddress);
+            return new InteractionMessage(SourcePort, DestinationPort, (IProtocol)Protocol.Clone(), result, SourceIPAddress, DestinationIPAddress);
         }
         #endregion
     }

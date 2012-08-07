@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using Protocols.Soap.Parents;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents;
 
-namespace Protocols.Soap
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
 {
     class SoapBody : NodeElements
     {
@@ -43,7 +40,10 @@ namespace Protocols.Soap
             }
             else
             {
-                if (body.body == null && body == null) result = true;
+                if (body.body == null && body == null)
+                {
+                    result = true;
+                }
             }
             if (body.fault != null && fault != null)
             {
@@ -51,7 +51,10 @@ namespace Protocols.Soap
             }
             else
             {
-                if (body.fault == null && fault == null) result = result && true;
+                if (body.fault == null && fault == null)
+                {
+                    result = result && true;
+                }
             }
             return result;
         }

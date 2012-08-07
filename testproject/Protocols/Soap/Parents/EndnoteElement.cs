@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Protocols.Soap.Parents
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents
 {
     class EndnoteElement : NodeElements
     {

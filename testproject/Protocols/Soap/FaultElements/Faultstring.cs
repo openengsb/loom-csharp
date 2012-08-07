@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Protocols.Soap.Parents;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.Parents;
 
-namespace Protocols.Soap.FaultElements
+namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap.FaultElements
 {
     class Faultstring : EndnoteElement
     {

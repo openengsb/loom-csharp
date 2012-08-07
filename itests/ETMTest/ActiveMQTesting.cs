@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
-using TCPHandling;
-using Protocols;
 using System.Net;
-using Protocols.ActiveMQ;
 using log4net;
 using ExampleDomain;
 using Apache.NMS.ActiveMQ.Commands;
@@ -17,6 +12,10 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using AcitveMQProtocol.ActiveMQConfiguration;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
+using Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP;
 
 namespace ETMTest
 {
@@ -24,7 +23,7 @@ namespace ETMTest
     public class ActiveMQTesting
     {
         #region Variables
-        private ETMTCP ETM;        
+        private IETM ETM;        
         private ExampleDomainConnector localDomain;
         private string destination = "tcp://localhost.:6549";
         private string domainName = "example";
@@ -39,7 +38,7 @@ namespace ETMTest
         public void TestBridge()
         {
             log4net.Config.BasicConfigurator.Configure();
-            ILog logger = LogManager.GetLogger(typeof(ETMTCP));
+            ILog logger = LogManager.GetLogger(typeof(IETM));
             logger.Info("START ETM");
             ETM = new ETMTCP(getETMConfiguration());
             ETM.Start(IPAddress.Loopback, 6549);
@@ -54,16 +53,6 @@ namespace ETMTest
             Assert.AreEqual(localDomain.processIdSpecified, true);
         }
         #region Configuration
-        private InteractionMessage getNetBridgeAnswerInvoke(int socketID, int answerSocket, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
-        {
-            IProtocol prot = receivedMessages[socketID].Last(element => element.Value is ActiveMQProtocol && ((ActiveMQProtocol)element.Value).Message is ConsumerInfo).Value;
-            prot.SocketNumber = socketID;
-            MessageDispatch dispatcher = ActiveMQConfiguration.getDispatcher(new ActiveMQTextMessage(getTestCase()));
-            dispatcher.Destination = new ActiveMQQueue("receive");
-            InteractionMessage activeMQMessageAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(dispatcher, answerSocket), null);
-            InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, prot, new List<InteractionMessage>() { activeMQMessageAnswer });
-            return activeMQMessage;
-        }
         private void startBridge()
         {
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);

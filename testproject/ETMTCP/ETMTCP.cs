@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net;
-using Protocols;
 using System.Collections.Concurrent;
-using Protocols.ActiveMQ;
 using Apache.NMS.ActiveMQ.Commands;
-using System.Collections;
 using log4net;
+using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
+using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
 
-namespace TCPHandling
+namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
-    /// ETM witch is listening on TCP
+    /// Implementation of the ETM which listens on the TCP protocol
     /// </summary>
-    public class ETMTCP : IDisposable
+    public class ETMTCP : IETM
     {
         #region Variables
         private ILog logging = LogManager.GetLogger(typeof(ETMTCP));
@@ -48,7 +46,9 @@ namespace TCPHandling
         private void ListenToTCP(IPEndPoint endpoint)
         {
             if (serverSocket != null)
+            {
                 Dispose();
+            }
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             serverSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, false);
             serverSocket.Bind(endpoint);
@@ -68,8 +68,9 @@ namespace TCPHandling
             {
                 StateObject state = (StateObject)ar.AsyncState;
                 if (checkClient(state))
+                {
                     return;
-                state.socket.EndSend(ar);
+                } state.socket.EndSend(ar);
             }
             catch
             {
@@ -87,9 +88,10 @@ namespace TCPHandling
             foreach (InteractionMessage responsemessage in messagetoSend.Responses)
             {
                 if (responsemessage.DestinationPort == null || responsemessage.DestinationPort.Value <= 0)
+                {
                     responsemessage.DestinationPort = ((IPEndPoint)openClients[socketId].RemoteEndPoint).Port;
-
-                responsemessage.protocol.RetrieveInfoFromReceivdeMessage(prot);
+                }
+                responsemessage.Protocol.RetrieveInfoFromReceivdeMessage(prot);
                 logging.Info(getLoggingMsg(responsemessage, socketId));
                 SendToTCP(responsemessage, socketId);
             }
@@ -102,8 +104,9 @@ namespace TCPHandling
         private Boolean checkClient(StateObject clientObject)
         {
             if (!openClients.ContainsKey(clientObject.SocketID))
+            {
                 return true;
-
+            }
             Socket client = openClients[clientObject.SocketID];
             if (!client.Connected)
             {
@@ -127,12 +130,18 @@ namespace TCPHandling
                 int bytesRead = client.EndReceive(ar);
                 StateObject receivestate = new StateObject(state.socket, state.SocketID);
                 if (checkClient(state))
+                {
                     return;
+                }
                 client.BeginReceive(receivestate.Buffer, 0, receivestate.BufferSize, 0, new AsyncCallback(ReceiveCallback), receivestate);
                 if (bytesRead > 0)
+                {
                     HandleActions(state.Buffer, state.SocketID);
+                }
                 else if (checkClient(state))
+                {
                     return;
+                }
             }
             catch (Exception e)
             {
@@ -143,7 +152,9 @@ namespace TCPHandling
         {
             logging.Info("waitig");
             if (stopListeningClient)
+            {
                 return;
+            }
             Socket server = (Socket)ar.AsyncState;
             Socket client = null;
             try
@@ -197,25 +208,34 @@ namespace TCPHandling
         private void HandleActions(byte[] input, int socketId)
         {
             if (isEmpty(input))
+            {
                 return;
+            }
             byte[] message = input;
             IProtocol prot = null;
             InteractionMessage transactions = interationConfiguration.findInteraction(message, socketId, out prot);
             if (prot == null)
+            {
                 return;
+            }
             message = copyArray(input, prot.getMessage().Length);
 
             if (prot is ActiveMQProtocol)
+            {
                 logging.Info(((ActiveMQProtocol)prot).Message.GetType().Name + " on socket: " + socketId + " with commandID: " + ((ActiveMQProtocol)prot).Message.CommandId);
+            }
             if (!receivedMessages.ContainsKey(socketId))
+            {
                 receivedMessages.Add(socketId, new Dictionary<int, IProtocol>());
-
+            }
             semaphore.WaitOne();
             receivedMessages[socketId].Add(receivedMessageposition[socketId]++, prot);
             semaphore.Release();
 
             if (transactions.Responses == null || transactions.Responses.Count <= 0)
+            {
                 return;
+            }
             sentResponses(transactions, socketId, prot);
             if (!isEmpty(message))
             {
@@ -232,12 +252,12 @@ namespace TCPHandling
         private String getLoggingMsg(InteractionMessage responsemessage, int SocketID)
         {
             String result = "";
-            if (responsemessage.protocol is ActiveMQProtocol)
+            if (responsemessage.Protocol is ActiveMQProtocol)
             {
-                result += "send response: " + ((ActiveMQProtocol)responsemessage.protocol).Message.GetType().Name + " on socket: " + SocketID + "\n";
-                if (((ActiveMQProtocol)responsemessage.protocol).Message is Response)
+                result += "send response: " + ((ActiveMQProtocol)responsemessage.Protocol).Message.GetType().Name + " on socket: " + SocketID + "\n";
+                if (((ActiveMQProtocol)responsemessage.Protocol).Message is Response)
                 {
-                    result += " with CorrelatedID: " + (((ActiveMQProtocol)responsemessage.protocol).Message as Response).CorrelationId + "\n";
+                    result += " with CorrelatedID: " + (((ActiveMQProtocol)responsemessage.Protocol).Message as Response).CorrelationId + "\n";
                 }
             }
             return result;
@@ -259,12 +279,16 @@ namespace TCPHandling
         /// <param name="socketID">Socket number, on which should be send</param>
         public void SendToTCP(InteractionMessage trans, int socketID)
         {
-            if (trans == null || trans.protocol == null)
+            if (trans == null || trans.Protocol == null)
+            {
                 return;
+            }
             Socket socket;
-            int destinationSocketID = trans.protocol.SocketNumber;
+            int destinationSocketID = trans.Protocol.SocketNumber;
             if (destinationSocketID < 0)
+            {
                 destinationSocketID = socketID;
+            }
             openClients.TryGetValue(socketID, out socket);
             //ToDo
             if (socket == null || !socket.Connected)//|| !socket.RemoteEndPoint.Equals(new IPEndPoint(trans.DestinationIPAddress, trans.DestinationPort.Value)))
@@ -273,7 +297,7 @@ namespace TCPHandling
                 socket.Bind(new IPEndPoint(trans.SourceIPAddress, trans.SourcePort.Value));
                 socket.Connect(new IPEndPoint(trans.DestinationIPAddress, trans.DestinationPort.Value));
             }
-            Byte[] result = trans.protocol.getMessage();
+            Byte[] result = trans.Protocol.getMessage();
             socket.BeginSend(result, 0, result.Length, SocketFlags.None, new AsyncCallback(SendCallback), new StateObject(socket, destinationSocketID));
             return;
         }
@@ -283,11 +307,13 @@ namespace TCPHandling
         /// <param name="messagetoSend">Configuration</param>
         public void TriggerMessage(InteractionMessage messagetoSend)
         {
-            byte[] input = messagetoSend.protocol.getMessage();
+            byte[] input = messagetoSend.Protocol.getMessage();
             if (isEmpty(input))
+            {
                 return;
-            int socketId = messagetoSend.protocol.SocketNumber;
-            IProtocol prot = messagetoSend.protocol;
+            }
+            int socketId = messagetoSend.Protocol.SocketNumber;
+            IProtocol prot = messagetoSend.Protocol;
             sentResponses(messagetoSend, socketId, prot);
         }
         /// <summary>
