@@ -92,7 +92,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
             return new SoapEnvelope(asci.GetString(message),-1);
         }
         
-        public bool Compaire(Object protocol)
+        public bool CompaireProtocols(Object protocol)
         {
             Boolean result = true;
             SoapEnvelope envelopr = (SoapEnvelope)protocol;
@@ -138,20 +138,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
         }
 
 
-        public byte[] getMessage()
+        public byte[] GetMessage()
         {
             ASCIIEncoding encoder = new ASCIIEncoding();
             return encoder.GetBytes(this.ToString());
         }
 
 
-        public bool getMoreBytes()
+        public bool GetMoreBytes()
         {
             return body == null && base.NeedData();
         }
 
 
-        public void RetrieveInfoFromReceivdeMessage(IProtocol receivedMessage)
+        public void RetrieveInfoFromReceivedMessage(IProtocol receivedMessage)
         {
             return;
         }

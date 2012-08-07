@@ -26,21 +26,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
         /// </summary>
         /// <param name="protocol">The protocol to check</param>
         /// <returns>If two protocols are the same</returns>
-        Boolean Compaire(Object protocol);
+        Boolean CompaireProtocols(Object protocol);
         /// <summary>
         /// Offers the protocol the possibility to get information from the received message.
         /// </summary>
         /// <param name="receivedMessage">Received Message</param>
-        void RetrieveInfoFromReceivdeMessage(IProtocol receivedMessage);
+        void RetrieveInfoFromReceivedMessage(IProtocol receivedMessage);
         /// <summary>
         /// Converts the message from the protocol to a byte array
         /// </summary>
         /// <returns>protocol message in byte format</returns>
-        Byte[] getMessage();
+        Byte[] GetMessage();
         /// <summary>
         /// Indicates if a a protocol has received all bytes or if some bytes aren't still transmitted
         /// </summary>
         /// <returns>Need more bytes</returns>
-        Boolean getMoreBytes();
+        Boolean GetMoreBytes();
     }
 }

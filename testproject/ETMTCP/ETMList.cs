@@ -82,7 +82,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <returns>Compaire result</returns>
         private bool compaire(IProtocol item, int socketID, InteractionMessage message)
         {
-            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && message.Protocol.Compaire(item);
+            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && message.Protocol.CompaireProtocols(item);
         }
         /// <summary>
         /// Find a interaction in the list
@@ -101,7 +101,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 receivedmessage = protocol.ConvertToProtocol(message);
                 if (receivedmessage != null)
                 {
-                    if (!receivedmessage.getMoreBytes())
+                    if (!receivedmessage.GetMoreBytes())
                     {
                         InteractionMessage canidat = getElement(receivedmessage, SocketId);
                         if (canidat != null)

@@ -27,7 +27,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
         public static OpenWireFormat format;
 #endregion
         #region Constructors
-        public ActiveMQProtocol() {}
         public ActiveMQProtocol(Object obj, int socketNumber)
         {
             this.SocketNumber = socketNumber;
@@ -53,20 +52,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
         }
         public IProtocol ConvertToProtocol(byte[] Message)
         {
-            return convert(Message);
-        }
-        private IProtocol convert(byte[] message)
-        {
             try
             {
-                return new ActiveMQProtocol(format.Unmarshal(new EndianBinaryReader(new MemoryStream((byte[])message.Clone()))), -1);
+                return new ActiveMQProtocol(format.Unmarshal(new EndianBinaryReader(new MemoryStream((byte[])Message.Clone()))), -1);
             }
             catch
             {
                 return null;
             }
         }
-        public bool Compaire(object protocol)
+
+        public bool CompaireProtocols(object protocol)
         {
             if (protocol is ActiveMQProtocol)
             {
@@ -76,7 +72,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
             return false;
         }
 
-        public byte[] getMessage()
+        public byte[] GetMessage()
         {
             byte[] buffer = new byte[8192];
             MemoryStream mem = new MemoryStream(buffer);
@@ -87,11 +83,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
             Array.Copy(buffer, result, mem.Position);
             return result;
         }
-        public bool getMoreBytes()
+        public bool GetMoreBytes()
         {
             return Message == null;
         }
-        public void RetrieveInfoFromReceivdeMessage(IProtocol receivedMessage)
+        public void RetrieveInfoFromReceivedMessage(IProtocol receivedMessage)
         {
             if (receivedMessage is ActiveMQProtocol)
             {

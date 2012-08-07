@@ -35,15 +35,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
         {
             return new TCPProtocol(message, -1);
         }
-        public byte[] getMessage() {
+        public byte[] GetMessage() {
             return message; 
         }
-        public bool Compaire(Object protocol)
+        public bool CompaireProtocols(Object protocol)
         {
             if (protocol is TCPProtocol)
             {
                 TCPProtocol tcp = (TCPProtocol)protocol;
-                return compaireObject(tcp.getMessage(), message);
+                return compaireObject(tcp.GetMessage(), message);
             }
             return false;
         }
@@ -76,11 +76,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
             return asci.GetString(message);
         }
 
-        public bool getMoreBytes()
+        public bool GetMoreBytes()
         {
             return message.Length < 10;
         }
-        public void RetrieveInfoFromReceivdeMessage(IProtocol receivedMessage)
+        public void RetrieveInfoFromReceivedMessage(IProtocol receivedMessage)
         {
             return;
         }
@@ -91,7 +91,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
         /// <returns></returns>
         public object Clone()
         {
-            return new TCPProtocol(getMessage(), -1);
+            return new TCPProtocol(GetMessage(), -1);
         }
         #endregion
     }

@@ -91,7 +91,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 {
                     responsemessage.DestinationPort = ((IPEndPoint)openClients[socketId].RemoteEndPoint).Port;
                 }
-                responsemessage.Protocol.RetrieveInfoFromReceivdeMessage(prot);
+                responsemessage.Protocol.RetrieveInfoFromReceivedMessage(prot);
                 logging.Info(getLoggingMsg(responsemessage, socketId));
                 SendToTCP(responsemessage, socketId);
             }
@@ -218,7 +218,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             {
                 return;
             }
-            message = copyArray(input, prot.getMessage().Length);
+            message = copyArray(input, prot.GetMessage().Length);
 
             if (prot is ActiveMQProtocol)
             {
@@ -297,7 +297,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 socket.Bind(new IPEndPoint(trans.SourceIPAddress, trans.SourcePort.Value));
                 socket.Connect(new IPEndPoint(trans.DestinationIPAddress, trans.DestinationPort.Value));
             }
-            Byte[] result = trans.Protocol.getMessage();
+            Byte[] result = trans.Protocol.GetMessage();
             socket.BeginSend(result, 0, result.Length, SocketFlags.None, new AsyncCallback(SendCallback), new StateObject(socket, destinationSocketID));
             return;
         }
@@ -307,7 +307,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <param name="messagetoSend">Configuration</param>
         public void TriggerMessage(InteractionMessage messagetoSend)
         {
-            byte[] input = messagetoSend.Protocol.getMessage();
+            byte[] input = messagetoSend.Protocol.GetMessage();
             if (isEmpty(input))
             {
                 return;
