@@ -28,7 +28,6 @@
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
   <build>
-    <sourceDirectory>./</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.npanday.plugins</groupId>
