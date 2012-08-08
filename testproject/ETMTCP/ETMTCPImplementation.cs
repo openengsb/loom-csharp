@@ -96,7 +96,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             try
             {
                 StateObject state = (StateObject)ar.AsyncState;
-                if (CheckClientIsStillConnected(state))
+                if (ClientIsStillConnected(state))
                 {
                     return;
                 } state.socket.EndSend(ar);
@@ -137,7 +137,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 
                 int bytesRead = client.EndReceive(ar);
                 StateObject receivestate = new StateObject(state.socket, state.SocketID);
-                if (CheckClientIsStillConnected(state))
+                if (ClientIsStillConnected(state))
                 {
                     return;
                 }
@@ -146,7 +146,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 {
                     HandleActions(state.Buffer, state.SocketID);
                 }
-                else if (CheckClientIsStillConnected(state))
+                else if (ClientIsStillConnected(state))
                 {
                     return;
                 }
@@ -162,7 +162,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// </summary>
         /// <param name="clientObject">Client socket informations</param>
         /// <returns></returns>
-        private Boolean CheckClientIsStillConnected(StateObject clientObject)
+        private Boolean ClientIsStillConnected(StateObject clientObject)
         {
             Socket client;
             if (!openClients.ContainsKey(clientObject.SocketID))
