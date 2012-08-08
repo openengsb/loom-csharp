@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ETMList.cs" />
-    <Compile Include="ETMTCP.cs" />
+    <Compile Include="ETMTCPImplementation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateObject.cs" />
   </ItemGroup>

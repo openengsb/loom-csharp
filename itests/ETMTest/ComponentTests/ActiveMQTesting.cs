@@ -40,7 +40,7 @@ namespace ETMTest
             log4net.Config.BasicConfigurator.Configure();
             ILog logger = LogManager.GetLogger(typeof(IETM));
             logger.Info("START ETM");
-            ETM = new ETMTCP(getETMConfiguration());
+            ETM = new ETMTCPImplementation(getETMConfiguration());
             ETM.Start(IPAddress.Loopback, 6549);
             startBridge();
             ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgInvokeMessageOnReceiveQueue(0, 0, getTestCase(), ETM.ReceivedMessages));

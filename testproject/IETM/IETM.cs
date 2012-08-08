@@ -27,12 +27,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
         /// </summary>
         IDictionary<int, Dictionary<int, IProtocol>> ReceivedMessages { get; }
         /// <summary>
-        /// Send over TCP a message
-        /// </summary>
-        /// <param name="trans">Information, which should be send</param>
-        /// <param name="socketID">Socket number, on which should be send</param>
-        void SendToTCP(InteractionMessage trans, int socketID);
-        /// <summary>
         /// Sends a message to a client
         /// </summary>
         /// <param name="messagetoSend">Configuration</param>

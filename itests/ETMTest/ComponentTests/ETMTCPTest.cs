@@ -58,7 +58,7 @@ namespace ETMTest
         }
         private void StartMyFrameworkWithTCPProtocol()
         {
-            tcphanding = new ETMTCP(workflow);
+            tcphanding = new ETMTCPImplementation(workflow);
             tcphanding.Start(IPAddress.Loopback, localSocketPort);
         }
         private void StartTCPComponentForTestingTCPConnection()
