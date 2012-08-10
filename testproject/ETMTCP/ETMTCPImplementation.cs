@@ -216,7 +216,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             }
             byte[] message = input;
             IProtocol prot = null;
-            InteractionMessage transactions = interationConfiguration.findInteraction(message, socketId, out prot);
+            InteractionMessage transactions = interationConfiguration.FindInteraction(message, socketId, out prot);
             if (prot == null)
             {
                 return;

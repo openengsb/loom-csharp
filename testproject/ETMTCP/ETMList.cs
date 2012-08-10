@@ -14,8 +14,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
     class ETMList : IList
     {
         #region Variables
-        private IDictionary<InteractionMessage, int> elements = new ConcurrentDictionary<InteractionMessage, int>();
-        private IList<InteractionMessage> listelements = new List<InteractionMessage>();
+        private IDictionary<InteractionMessage, int> returnCounterForInteraciton = new ConcurrentDictionary<InteractionMessage, int>();
+        private IList<InteractionMessage> interactionMessages = new List<InteractionMessage>();
         private List<IProtocol> protocolTypes = new List<IProtocol>();
         #endregion
         #region Constructors
@@ -50,49 +50,53 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <param name="item">Search parameter</param>
         /// <param name="socketID">Socket, on which the message has been received</param>
         /// <returns>Found element</returns>
-        public InteractionMessage getElement(IProtocol item, int socketID)
+        public InteractionMessage SearchElement(IProtocol item, int socketID)
         {
             InteractionMessage canidates = null;
             int min = int.MaxValue;
 
-            foreach (InteractionMessage message in listelements)
+            foreach (InteractionMessage message in interactionMessages)
             {
-                if (compaire(item, socketID, message))
+                if (CompaireProtocolAndInteractionmessage(item, socketID, message))
                 {
                     // When there are two messages in a configuration with the same type then
                     // the choosen message will be returned and then will be the last for the next serch
-                    if (elements[message] < min)
+                    if (returnCounterForInteraciton[message] < min)
                     {
                         canidates = message;
-                        min = elements[message];
+                        min = returnCounterForInteraciton[message];
                     }
                 }
             }
             if (canidates != null)
             {
-                elements[canidates]++;
+                returnCounterForInteraciton[canidates]++;
+            }
+            else
+            {
+                return null;
             }
             return canidates.Clone() as InteractionMessage;
         }
         /// <summary>
-        /// Compaires if the protocol is the same
+        /// Compaires if a protocol is the same as the protocol, specified in an interactionmessage.
         /// </summary>
         /// <param name="item">element1 to compaire</param>
         /// <param name="socketID">Socket number</param>
-        /// <param name="message">element2 to compaire</param>
+        /// <param name="message">interaction message</param>
         /// <returns>Compaire result</returns>
-        private bool compaire(IProtocol item, int socketID, InteractionMessage message)
+        private bool CompaireProtocolAndInteractionmessage(IProtocol item, int socketID, InteractionMessage message)
         {
             return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && (message.Protocol.CompareTo(item) == 1);
         }
         /// <summary>
-        /// Find a interaction in the list
+        /// Search in the list for an element, which is has the same type and the same has as configuration the same socket.
         /// </summary>
         /// <param name="message">received message from a socket</param>
-        /// <param name="SocketId">the socket number</param>
+        /// <param name="SocketId">the socket number on which the message has been received</param>
         /// <param name="convertedprotocol">Return value for the converted protocol</param>
-        /// <returns>The result of the search</returns>
-        public InteractionMessage findInteraction(byte[] message, int SocketId, out IProtocol convertedprotocol)
+        /// <returns>The search result</returns>
+        public InteractionMessage FindInteraction(byte[] message, int SocketId, out IProtocol convertedprotocol)
         {
             IProtocol receivedmessage;
             Boolean moreData = false;
@@ -100,26 +104,38 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             foreach (IProtocol protocol in protocolTypes)
             {
                 receivedmessage = protocol.ConvertToProtocol(message);
-                if (receivedmessage != null)
+                if (IsProtocolValid(receivedmessage))
                 {
-                    if (!receivedmessage.GetMoreBytes())
+                    InteractionMessage canidat = SearchElement(receivedmessage, SocketId);
+                    if (canidat != null)
                     {
-                        InteractionMessage canidat = getElement(receivedmessage, SocketId);
-                        if (canidat != null)
-                        {
-                            convertedprotocol = receivedmessage;
-                            return (InteractionMessage)canidat.Clone();
-                        }
+                        convertedprotocol = receivedmessage;
+                        return (InteractionMessage)canidat.Clone();
                     }
-                    else
-                        moreData = true;
                 }
+                else
+                {
+                    moreData = moreData || receivedmessage!=null && receivedmessage.GetMoreBytes() ;
+                }
+                
             }
             if (moreData)
             {
                 return null;
             }
-            throw new ArgumentException("It was unpossible, to find a configuration for the indicated format");
+            throw new ArgumentException("It was impossible, to find a configuration for the indicated format");
+        }
+
+        private static bool IsProtocolValid(IProtocol receivedmessage)
+        {
+            if (receivedmessage != null)
+            {
+                return !receivedmessage.GetMoreBytes();
+            }
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// Adds a element to the list
@@ -129,18 +145,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         public int Add(object value)
         {
             InteractionMessage element = (InteractionMessage)value;
-            listelements.Add(element);
-            elements.Add(element, 0);
+            interactionMessages.Add(element);
+            returnCounterForInteraciton.Add(element, 0);
             AddProtocolType(element);
-            return listelements.Count - 1;
+            return interactionMessages.Count - 1;
         }
         /// <summary>
         /// Deletes all the elements
         /// </summary>
         public void Clear()
         {
-            elements.Clear();
-            listelements.Clear();
+            returnCounterForInteraciton.Clear();
+            interactionMessages.Clear();
         }
         /// <summary>
         /// Checks if the list contains the element
@@ -150,7 +166,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         public bool Contains(object value)
         {
             InteractionMessage element = (InteractionMessage)value;
-            return listelements.Contains(element);
+            return interactionMessages.Contains(element);
         }
         /// <summary>
         /// returns Position of the element
@@ -159,7 +175,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <returns>postion</returns>
         public int IndexOf(object value)
         {
-            return listelements.IndexOf((InteractionMessage)value);
+            return interactionMessages.IndexOf((InteractionMessage)value);
         }
         /// <summary>
         /// Insert a element
@@ -169,9 +185,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         public void Insert(int index, object value)
         {
             InteractionMessage element = (InteractionMessage)value;
-            elements.Add(element, 0);
+            returnCounterForInteraciton.Add(element, 0);
             AddProtocolType(element);
-            listelements.Insert(index, element);
+            interactionMessages.Insert(index, element);
         }
 
         public bool IsFixedSize
@@ -181,39 +197,39 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 
         public bool IsReadOnly
         {
-            get { return listelements.IsReadOnly; }
+            get { return interactionMessages.IsReadOnly; }
         }
 
         public void Remove(object value)
         {
             InteractionMessage element = value as InteractionMessage;
-            listelements.Remove(element);
-            elements.Remove(element);
+            interactionMessages.Remove(element);
+            returnCounterForInteraciton.Remove(element);
         }
 
         public void RemoveAt(int index)
         {
-            elements.Remove(listelements[index]);
-            listelements.RemoveAt(index);
+            returnCounterForInteraciton.Remove(interactionMessages[index]);
+            interactionMessages.RemoveAt(index);
         }
 
         public object this[int index]
         {
             get
             {
-                return listelements[index];
+                return interactionMessages[index];
             }
             set
             {
                 AddProtocolType((InteractionMessage)value);
-                listelements[index] = (InteractionMessage)value;
+                interactionMessages[index] = (InteractionMessage)value;
             }
         }
         public void CopyTo(Array array, int index)
         {
             if (array is InteractionMessage[])
             {
-                listelements.CopyTo(array as InteractionMessage[], index);
+                interactionMessages.CopyTo(array as InteractionMessage[], index);
             }
             else
             {
@@ -222,7 +238,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         }
         public int Count
         {
-            get { return listelements.Count; }
+            get { return interactionMessages.Count; }
         }
 
         public bool IsSynchronized
@@ -237,7 +253,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 
         public IEnumerator GetEnumerator()
         {
-            return listelements.GetEnumerator();
+            return interactionMessages.GetEnumerator();
         }
         #endregion
     }

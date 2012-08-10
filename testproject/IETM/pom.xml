@@ -27,7 +27,7 @@
   <packaging>library</packaging>
   <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Interfaces</name>
   <version>1.0.0-SNAPSHOT</version>
-  <description>Interface description for the ETM</description>
+  <description>Interface description for the Effective Tester in the Middle</description>
   <licenses>
     <license>
       <name>Apache 2</name>
