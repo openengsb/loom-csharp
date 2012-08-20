@@ -22,9 +22,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Goal which creates a DLL from a WSDL file.
- * 
+ *
  * @goal run
- * 
+ *
  * @phase process-sources
  */
 public class WsdlToDll extends AbstractMojo {
@@ -46,26 +46,26 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Location of the file.
-     * 
+     *
      * @parameter expression="${project.build.directory}"
      * @required
      */
     private File outputDirectory;
     /**
      * Location of the wsdl.exe command
-     * 
+     *
      * @parameter default-Value=null expression="${wsdlExeFolderLocation}"
      */
     private File wsdlExeFolderLocation;
     /**
      * Location of the csc command.
-     * 
+     *
      * @parameter default-Value=null expression="${cscFolderLocation}"
      */
     private File cscFolderLocation;
     /**
      * Location of the wsdl file
-     * 
+     *
      * @parameter
      * @required
      */
@@ -74,11 +74,18 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Namespace of the WSDL file. This should be the namespace in which a domain should be located.
-     * 
+     *
      * @parameter
      * @required
      */
     private String namespace;
+
+    /**
+     * Version that should be written to the resulting DLL
+     *
+     * @parameter
+     */
+    private String targetVersion;
 
     private List<String> cspath = new ArrayList<String>();
 
@@ -111,7 +118,7 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Linux mode for maven execution
-     * 
+     *
      * @throws MojoExecutionException
      */
     private void createDllFromWsdlUsingLinuxMode()
@@ -130,7 +137,7 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Windows mode for maven execution
-     * 
+     *
      * @throws MojoExecutionException
      */
     private void createDllFromWsdlUsingWindowsMode()
@@ -296,6 +303,7 @@ public class WsdlToDll extends AbstractMojo {
      */
     private void cscCommand()
         throws MojoExecutionException {
+        generateAssemblyInfo();
         String cscPath = findCscCommand();
         List<String> commandList = new LinkedList<String>(cspath);
         commandList.add(0, cscPath);
@@ -317,6 +325,37 @@ public class WsdlToDll extends AbstractMojo {
                 "Error, while executing command: "
                         + Arrays.toString(command) + "\n", e);
         }
+    }
+
+    private void generateAssemblyInfo() throws MojoExecutionException {
+        StringBuilder assemblyInfoBuilder = new StringBuilder();
+        assemblyInfoBuilder.append("using System.Reflection;\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyTitle(\"").append(namespace).append("\")]\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyProduct(\"").append(namespace).append("\")]\n");
+
+        if (targetVersion != null) {
+            String truncatedVersion = targetVersion.replaceAll("-.*", "");
+            assemblyInfoBuilder.append("[assembly: AssemblyVersion(\"").append(truncatedVersion).append("\")]\n");
+            assemblyInfoBuilder.append("[assembly: AssemblyFileVersion(\"").append(truncatedVersion).append("\")]\n");
+            assemblyInfoBuilder.append("[assembly: AssemblyInformationalVersion(\"").append(targetVersion).append("\")]\n");
+        }
+        File assemblyInfo = new File(outputDirectory, "AssemblyInfo.cs");
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(assemblyInfo);
+            writer.write(assemblyInfoBuilder.toString());
+        } catch (IOException e) {
+            throw new MojoExecutionException("unable to write generated AssemblyInfo.cs", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    // ignore that
+                }
+            }
+        }
+        cspath.add(assemblyInfo.getAbsolutePath());
     }
 
     private void executeACommand(Process child) throws IOException,
