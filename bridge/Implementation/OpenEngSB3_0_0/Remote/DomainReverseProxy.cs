@@ -237,7 +237,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             while (isEnabled)
             {
-                String textMsg = portIn.Receive();
+                String textMsg;
+                try
+                {
+                    textMsg = portIn.Receive();
+                }
+                catch (Exception e)
+                {
+                    if (this.exceptionhandling == EExceptionHandling.Retry)
+                    {
+                        this.RegisterConnector(this.serviceId);
+                        continue;
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
 
                 if (textMsg == null)
                     continue;
