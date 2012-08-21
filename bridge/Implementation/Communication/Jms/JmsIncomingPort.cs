@@ -60,7 +60,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             }
             catch (Exception e)
             {
-                logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - %s (%s).", e.Message, e.GetType().Name);
+                logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - {0} ({1}).", e.Message, e.GetType().Name);
                 if (!close)
                 {
                     logger.Warn("trying to reconnect");
@@ -73,7 +73,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 
             if (message == null)
                 return null;
-            logger.DebugFormat("recieved message: %s", message.Text);
+            logger.DebugFormat("recieved message: {0}", message.Text);
             return message.Text;
         }
         /// <summary>
