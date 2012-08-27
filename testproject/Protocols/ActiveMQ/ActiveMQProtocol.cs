@@ -44,18 +44,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
         }
         #endregion
         #region Public Methods
-        public IProtocol ConvertToProtocol(Object message)
-        {
-            if (message is String)
-            {
-                Message = new ActiveMQTextMessage((String)message);
-            }
-            else
-            {
-                Message = (Command)message;
-            }
-            return new ActiveMQProtocol(Message, -1);
-        }
         public IProtocol ConvertToProtocol(byte[] Message)
         {
             try
@@ -91,7 +79,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ
             Array.Copy(buffer, result, mem.Position);
             return result;
         }
-        public bool GetMoreBytes()
+        public bool Valid()
         {
             return Message == null;
         }

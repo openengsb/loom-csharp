@@ -10,12 +10,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
         /// </summary>
         int SocketNumber { get; set; }
         /// <summary>
-        /// Convert a message to a the indicated Protocol
-        /// </summary>
-        /// <param name="message">Message to convert</param>
-        /// <returns>IProtocol</returns>
-        IProtocol ConvertToProtocol(Object message);
-        /// <summary>
         /// Convert a byte message to a the indicated Protocol
         /// </summary>
         /// <param name="message">Message to convert in bytes</param>
@@ -35,6 +29,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interfaces
         /// Indicates if a a protocol has received all bytes or if some bytes aren't still transmitted
         /// </summary>
         /// <returns>Need more bytes</returns>
-        Boolean GetMoreBytes();
+        Boolean Valid();
     }
 }

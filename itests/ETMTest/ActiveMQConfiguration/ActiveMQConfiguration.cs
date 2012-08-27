@@ -20,7 +20,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             dispatcher.Message.MessageId = messageId;
             return dispatcher;
         }
-        public static InteractionMessage getAsked(int SocketID)
+        public static InteractionMessage getAskedAnswer(int SocketID)
         {
             InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, new ActiveMQProtocol(new MessageAck(), SocketID), null);
             return activeMQMessage;
@@ -43,7 +43,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             InteractionMessage activeMQMessage = new InteractionMessage(null, 6549, prot, new List<InteractionMessage>() { activeMQMessageAnswer });
             return activeMQMessage;
         }
-        public static InteractionMessage getShutdownInfo(int SocketID)
+        public static InteractionMessage getShutdownInfoAnswer(int SocketID)
         {
             InteractionMessage activeMQMessageresponse = new InteractionMessage(null, 6549, new ActiveMQProtocol(getResponse(),
                 SocketID), null);
@@ -51,7 +51,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
                 SocketID), new List<InteractionMessage>() { activeMQMessageresponse });
             return activeMQMessage;
         }
-        public static InteractionMessage getRemoveInfo(int SocketID)
+        public static InteractionMessage getRemoveInfoAnswer(int SocketID)
         {
 
             InteractionMessage activeMQMessageresponse = new InteractionMessage(null, 6549, new ActiveMQProtocol(getResponse(),
@@ -70,23 +70,23 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
         {
             MessageDispatch dispatcher = getDispatcher(new ActiveMQTextMessage(message));
             InteractionMessage activeMQMessageAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(dispatcher, socketID), null);
-            InteractionMessage result = getConsumerInfo(socketID);
+            InteractionMessage result = getConsumerInfoAnswer(socketID);
             result.Responses.Add(activeMQMessageAnswer);
             return result;
         }
-        public static InteractionMessage getConsumerInfo(int socketID)
+        public static InteractionMessage getConsumerInfoAnswer(int socketID)
         {
             InteractionMessage consumerInfoAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(getResponse(), socketID), null);
             InteractionMessage consumerInfo = new InteractionMessage(null, 6549, new ActiveMQProtocol(new ConsumerInfo(), socketID), new List<InteractionMessage>() { consumerInfoAnswer });
             return consumerInfo;
         }
-        public static InteractionMessage getProducerInfo(int socketID)
+        public static InteractionMessage getProducerInfoAnswer(int socketID)
         {
             InteractionMessage producerInfoAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(getResponse(), socketID), null);
             InteractionMessage producerInfo = new InteractionMessage(null, 6549, new ActiveMQProtocol(new ProducerInfo(), socketID), new List<InteractionMessage>() { producerInfoAnswer });
             return producerInfo;
         }
-        public static InteractionMessage getSessionInfo(int socketID)
+        public static InteractionMessage getSessionInfoAnswer(int socketID)
         {
             InteractionMessage sessionInfoAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(getResponse(), socketID), null);
             InteractionMessage sessionInfo = new InteractionMessage(null, 6549, new ActiveMQProtocol(new SessionInfo(), socketID), new List<InteractionMessage>() { sessionInfoAnswer });
@@ -107,7 +107,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             wire.TightEncodingEnabled = false;
             return wire;
         }
-        public static InteractionMessage getOpenConnection(WireFormatInfo info, int socketID)
+        public static InteractionMessage getWireFormatAnswer(WireFormatInfo info, int socketID)
         {
             BrokerInfo broker = new BrokerInfo();
             BrokerId id = new BrokerId();
@@ -121,13 +121,13 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             InteractionMessage openConnection = new InteractionMessage(null, 6549, new ActiveMQProtocol(info, socketID), new List<InteractionMessage>() { openConnectionAnswer, brokerInfo });
             return openConnection;
         }
-        public static InteractionMessage getKeepAlive(int socketID)
+        public static InteractionMessage getKeepAliveAnswer(int socketID)
         {
             InteractionMessage keepAliveAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(new KeepAliveInfo(), socketID), null);
             InteractionMessage keepAlive = new InteractionMessage(null, 6549, new ActiveMQProtocol(new KeepAliveInfo(), socketID), new List<InteractionMessage>() { keepAliveAnswer });
             return keepAlive;
         }
-        public static InteractionMessage getConnectionInfo(int socketID)
+        public static InteractionMessage getConnectionInfoAnswer(int socketID)
         {
             InteractionMessage ConnectionInfoAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(getResponse(), socketID), null);
             InteractionMessage ConnectionInfo = new InteractionMessage(null, 6549, new ActiveMQProtocol(new ConnectionInfo(), socketID), new List<InteractionMessage>() { ConnectionInfoAnswer });

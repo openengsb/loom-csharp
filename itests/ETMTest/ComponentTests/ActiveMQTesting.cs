@@ -84,19 +84,18 @@ namespace ETMTest
             WireFormatInfo wire = ActiveMQConfiguration.getWireFormatInfo();
             ActiveMQProtocol.format = new OpenWireFormat();
             List<InteractionMessage> result = new List<InteractionMessage>() { };
-            result.Add(ActiveMQConfiguration.getRemoveInfo(-1));
-            result.Add(ActiveMQConfiguration.getShutdownInfo(-1));
-            result.Add(ActiveMQConfiguration.getKeepAlive(-1));
-            result.Add(ActiveMQConfiguration.getOpenConnection(wire, -1));
+            result.Add(ActiveMQConfiguration.getRemoveInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getShutdownInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getKeepAliveAnswer(-1));
+            result.Add(ActiveMQConfiguration.getWireFormatAnswer(wire, -1));
             result.Add(ActiveMQConfiguration.getNetBridgeTextMessageAnswer(-1));
-            result.Add(ActiveMQConfiguration.getAsked(-1));
-            result.Add(ActiveMQConfiguration.getSessionInfo(-1));
-            result.Add(ActiveMQConfiguration.getProducerInfo(-1));
-
+            result.Add(ActiveMQConfiguration.getAskedAnswer(-1));
+            result.Add(ActiveMQConfiguration.getSessionInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getProducerInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getConnectionInfoAnswer(-1));
             for (int i = 0; i <= 9; i++)
             {
-                result.Add(ActiveMQConfiguration.getConnectionInfo(i));
-                result.Add(ActiveMQConfiguration.getConsumerInfo(i));
+                result.Add(ActiveMQConfiguration.getConsumerInfoAnswer(i));
             }
             //Answer for the create MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(2, getBrideVoidAnswer()));

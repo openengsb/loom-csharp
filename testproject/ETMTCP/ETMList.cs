@@ -115,7 +115,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 }
                 else
                 {
-                    moreData = moreData || receivedmessage!=null && receivedmessage.GetMoreBytes() ;
+                    moreData = moreData || receivedmessage!=null && receivedmessage.Valid() ;
                 }
                 
             }
@@ -130,7 +130,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         {
             if (receivedmessage != null)
             {
-                return !receivedmessage.GetMoreBytes();
+                return !receivedmessage.Valid();
             }
             else
             {

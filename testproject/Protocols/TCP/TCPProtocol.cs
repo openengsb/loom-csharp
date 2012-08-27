@@ -25,12 +25,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
         }
         #endregion
         #region Public methods
-        public IProtocol ConvertToProtocol(Object message)
-        {
-            ASCIIEncoding asci = new ASCIIEncoding();
-            return new TCPProtocol(asci.GetBytes((String)message), -1);
-        }
-
         public IProtocol ConvertToProtocol(byte[] message)
         {
             return new TCPProtocol(message, -1);
@@ -84,8 +78,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
             ASCIIEncoding asci = new ASCIIEncoding();
             return asci.GetString(message);
         }
-
-        public bool GetMoreBytes()
+        public bool Valid()
         {
             return message.Length < 10;
         }
@@ -93,7 +86,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Tcp
         {
             return;
         }
-
         /// <summary>
         /// Create a copy of the protocol
         /// </summary>

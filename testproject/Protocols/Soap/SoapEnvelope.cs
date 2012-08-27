@@ -79,19 +79,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
             String result = htmlresult + xmlversion + base.GetString(tmp).Replace("\r\n", "").Replace("\n", "");
             return result;
         }
-
-        public IProtocol ConvertToProtocol(Object message)
-        {
-            return new SoapEnvelope((String)message,-1);
-        }
-
-
         public IProtocol ConvertToProtocol(byte[] message)
         {
             ASCIIEncoding asci = new ASCIIEncoding();
             return new SoapEnvelope(asci.GetString(message),-1);
         }
-
         public int CompareTo(IProtocol protocol)
         {
             Boolean result = true;
@@ -152,9 +144,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Protocol.Soap
         }
 
 
-        public bool GetMoreBytes()
+        public bool Valid()
         {
-            return body == null && base.NeedData();
+            return htmlInfo != null && header!=null && body != null && base.NeedData();
         }
 
 
