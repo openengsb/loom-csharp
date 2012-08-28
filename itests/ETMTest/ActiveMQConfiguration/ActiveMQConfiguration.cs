@@ -5,11 +5,31 @@ using System.Net;
 using Org.Openengsb.Loom.CSharp.Bridge.ETM;
 using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
 using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
+using Apache.NMS.ActiveMQ.OpenWire;
 
 namespace AcitveMQProtocol.ActiveMQConfiguration
 {
     public class ActiveMQConfiguration
     {
+        public static List<InteractionMessage> getConfiguration()
+        {
+            return getConfiguration(getWireFormatInfo());
+        }
+        public static List<InteractionMessage> getConfiguration(WireFormatInfo wire)
+        {
+            List<InteractionMessage> result = new List<InteractionMessage>();
+            result.Add(ActiveMQConfiguration.getRemoveInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getShutdownInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getKeepAliveAnswer(-1));
+            result.Add(ActiveMQConfiguration.getWireFormatAnswer(wire, -1));
+            result.Add(ActiveMQConfiguration.getNetBridgeTextMessageAnswer(-1));
+            result.Add(ActiveMQConfiguration.getAskedAnswer(-1));
+            result.Add(ActiveMQConfiguration.getSessionInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getProducerInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getConnectionInfoAnswer(-1));
+            result.Add(ActiveMQConfiguration.getConsumerInfoAnswer(-1));
+            return result;
+        }
         public static MessageDispatch getDispatcher(Message message)
         {
             MessageDispatch dispatcher = new MessageDispatch();
@@ -28,7 +48,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
 
         public static InteractionMessage getNetBridgInvokeMessageOnReceiveQueue(int socketID, int answerSocket, String messasge, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
         {
-            IProtocol prot=null;
+            IProtocol prot = null;
             foreach (KeyValuePair<int, IProtocol> dic in receivedMessages[socketID])
             {
                 if (dic.Value is ActiveMQProtocol && ((ActiveMQProtocol)dic.Value).Message is ConsumerInfo)
@@ -94,6 +114,7 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
         }
         public static WireFormatInfo getWireFormatInfo()
         {
+            ActiveMQProtocol.format = new OpenWireFormat();
             WireFormatInfo wire = new WireFormatInfo();
             wire.CommandId = 1;
             wire.Version = 6;

@@ -23,7 +23,7 @@ namespace ETMTest
     public class ActiveMQTesting
     {
         #region Variables
-        private IETM ETM;        
+        private IETM ETM;
         private ExampleDomainConnector localDomain;
         private string destination = "tcp://localhost.:6549";
         private string domainName = "example";
@@ -56,9 +56,8 @@ namespace ETMTest
         private void startBridge()
         {
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
-            factory.CreateDomainService(domainName);
-            factory.RegisterConnector(factory.getServiceId(domainName), domainName);
-
+            String id = factory.CreateDomainService(domainName);
+            factory.RegisterConnector(id, domainName);
             IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
             LogEvent lEvent = new LogEvent();
             lEvent.name = "Example";
@@ -81,22 +80,8 @@ namespace ETMTest
         }
         private List<InteractionMessage> getETMConfiguration()
         {
-            WireFormatInfo wire = ActiveMQConfiguration.getWireFormatInfo();
-            ActiveMQProtocol.format = new OpenWireFormat();
-            List<InteractionMessage> result = new List<InteractionMessage>() { };
-            result.Add(ActiveMQConfiguration.getRemoveInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getShutdownInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getKeepAliveAnswer(-1));
-            result.Add(ActiveMQConfiguration.getWireFormatAnswer(wire, -1));
-            result.Add(ActiveMQConfiguration.getNetBridgeTextMessageAnswer(-1));
-            result.Add(ActiveMQConfiguration.getAskedAnswer(-1));
-            result.Add(ActiveMQConfiguration.getSessionInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getProducerInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getConnectionInfoAnswer(-1));
-            for (int i = 0; i <= 9; i++)
-            {
-                result.Add(ActiveMQConfiguration.getConsumerInfoAnswer(i));
-            }
+            List<InteractionMessage> result = ActiveMQConfiguration.getConfiguration();
+
             //Answer for the create MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(2, getBrideVoidAnswer()));
             //Answer for the register MethodCall

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CountInteractionMessage.cs" />
     <Compile Include="ETMList.cs" />
     <Compile Include="ETMTCPImplementation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

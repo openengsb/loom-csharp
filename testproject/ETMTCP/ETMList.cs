@@ -9,13 +9,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
     /// This new implemenation of a list take into account the aready picked elements. Always the lowest
-    /// choosen element will be returned, if the search criterias are the same
+    /// chosen element will be returned, if the search criterias are the same
     /// </summary>
     class ETMList : IList
     {
         #region Variables
-        private IDictionary<InteractionMessage, int> returnCounterForInteraciton = new ConcurrentDictionary<InteractionMessage, int>();
+        private IDictionary<int, List<CountedInteractionMessage>> interactionMessagesPerSocket = new ConcurrentDictionary<int, List<CountedInteractionMessage>>();
         private IList<InteractionMessage> interactionMessages = new List<InteractionMessage>();
+        private IList<InteractionMessage> interactionMessagesForAllSockets = new List<InteractionMessage>();
         private List<IProtocol> protocolTypes = new List<IProtocol>();
         #endregion
         #region Constructors
@@ -29,6 +30,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             {
                 this.Add(element);
             }
+            SortMessagesToSockets();
         }
         #endregion
         #region Public methods
@@ -45,6 +47,75 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             }
         }
         /// <summary>
+        /// Sorts a list of interactions to socket number
+        /// </summary>
+        private void SortMessagesToSockets()
+        {
+            interactionMessagesPerSocket = new ConcurrentDictionary<int, List<CountedInteractionMessage>>();
+            SortMessagesToSpecificSockets();
+            AddInteractionMessagesToAllSockets();
+        }
+        /// <summary>
+        /// First, the InteractionMessages are sorted to Messages that are for all sockets and to specific sockets.
+        /// Second, the InteractionMessages for the specific sockets are added
+        /// </summary>
+        private void SortMessagesToSpecificSockets()
+        {
+            int socketnumber;
+            foreach (InteractionMessage message in interactionMessages)
+            {
+                socketnumber = message.Protocol.SocketNumber;
+                if (socketnumber >= 0)
+                {
+                    if (!interactionMessagesPerSocket.ContainsKey(socketnumber))
+                    {
+                        interactionMessagesPerSocket.Add(socketnumber, new List<CountedInteractionMessage>());
+                    }
+                    interactionMessagesPerSocket[socketnumber].Add(new CountedInteractionMessage(message));
+                }
+                else
+                {
+                    interactionMessagesForAllSockets.Add(message);
+                }
+            }
+        }
+        /// <summary>
+        /// Add the messages that are for all sockets to all sockets.
+        /// </summary>
+        /// <param name="socket">Specific socket</param>
+        private void AddMessagesForAllSocketsToSpecificSocket(int socket)
+        {
+            if (!interactionMessagesPerSocket.ContainsKey(socket))
+            {
+                interactionMessagesPerSocket.Add(socket, new List<CountedInteractionMessage>());
+                foreach (InteractionMessage message in interactionMessagesForAllSockets)
+                {
+                    interactionMessagesPerSocket[socket].Insert(0, new CountedInteractionMessage(message));
+                }
+            }
+        }
+        /// <summary>
+        /// Adds all the InterationMessages to the sockets. This is used while the start up of the ETM
+        /// </summary>
+        private void AddInteractionMessagesToAllSockets()
+        {
+            foreach (InteractionMessage message in interactionMessagesForAllSockets)
+            {
+                AddInteractionMessageToAllSockets(message);
+            }
+        }
+        /// <summary>
+        /// One InteractionMessage (with socketnumber -1) is added to all sockets
+        /// </summary>
+        /// <param name="message">InteractionMessage with id -1</param>
+        private void AddInteractionMessageToAllSockets(InteractionMessage message)
+        {
+            foreach (int key in interactionMessagesPerSocket.Keys)
+            {
+                interactionMessagesPerSocket[key].Insert(0, new CountedInteractionMessage(message));
+            }
+        }
+        /// <summary>
         /// Search for an element and returns it when it could be found
         /// </summary>
         /// <param name="item">Search parameter</param>
@@ -52,31 +123,35 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <returns>Found element</returns>
         public InteractionMessage SearchElement(IProtocol item, int socketID)
         {
-            InteractionMessage canidates = null;
+            AddMessagesForAllSocketsToSpecificSocket(socketID);
+            CountedInteractionMessage canidates = null;
             int min = int.MaxValue;
-
-            foreach (InteractionMessage message in interactionMessages)
+            if (!interactionMessagesPerSocket.ContainsKey(socketID))
+            {
+                throw new ArgumentOutOfRangeException("There is no configuration for the presented socket");
+            }
+            foreach (CountedInteractionMessage message in interactionMessagesPerSocket[socketID])
             {
                 if (CompaireProtocolAndInteractionmessage(item, socketID, message))
                 {
                     // When there are two messages in a configuration with the same type then
                     // the choosen message will be returned and then will be the last for the next serch
-                    if (returnCounterForInteraciton[message] < min)
+                    if (message.PickedNumber < min)
                     {
                         canidates = message;
-                        min = returnCounterForInteraciton[message];
+                        min = message.PickedNumber;
                     }
                 }
             }
             if (canidates != null)
             {
-                returnCounterForInteraciton[canidates]++;
+                canidates.PickedNumber++;
             }
             else
             {
                 return null;
             }
-            return canidates.Clone() as InteractionMessage;
+            return canidates.InteractionMessage.Clone() as InteractionMessage;
         }
         /// <summary>
         /// Compaires if a protocol is the same as the protocol, specified in an interactionmessage.
@@ -85,9 +160,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// <param name="socketID">Socket number</param>
         /// <param name="message">interaction message</param>
         /// <returns>Compaire result</returns>
-        private bool CompaireProtocolAndInteractionmessage(IProtocol item, int socketID, InteractionMessage message)
+        private bool CompaireProtocolAndInteractionmessage(IProtocol item, int socketID, CountedInteractionMessage message)
         {
-            return (message.Protocol.SocketNumber == socketID || message.Protocol.SocketNumber < 0) && (message.Protocol.CompareTo(item) == 1);
+            return (message.InteractionMessage.Protocol.SocketNumber == socketID || message.InteractionMessage.Protocol.SocketNumber < 0)
+                && (message.InteractionMessage.Protocol.CompareTo(item) == 1);
         }
         /// <summary>
         /// Search in the list for an element, which is has the same type and the same has as configuration the same socket.
@@ -115,9 +191,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 }
                 else
                 {
-                    moreData = moreData || receivedmessage!=null && receivedmessage.Valid() ;
+                    moreData = moreData || receivedmessage != null && receivedmessage.Valid();
                 }
-                
+
             }
             if (moreData)
             {
@@ -125,7 +201,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             }
             throw new ArgumentException("It was impossible, to find a configuration for the indicated format");
         }
-
+        /// <summary>
+        /// Checks if a protocol is valid
+        /// </summary>
+        /// <param name="receivedmessage">Message that has been received from the ETM</param>
+        /// <returns></returns>
         private static bool IsProtocolValid(IProtocol receivedmessage)
         {
             if (receivedmessage != null)
@@ -146,17 +226,34 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         {
             InteractionMessage element = (InteractionMessage)value;
             interactionMessages.Add(element);
-            returnCounterForInteraciton.Add(element, 0);
             AddProtocolType(element);
+            AddInteractionMessage(element);
             return interactionMessages.Count - 1;
+        }
+        /// <summary>
+        /// Adds an InteractionMessage while the ETM runs
+        /// </summary>
+        /// <param name="element">InteractionMessage</param>
+        private void AddInteractionMessage(InteractionMessage element)
+        {
+            int socketnumber = element.Protocol.SocketNumber;
+            AddMessagesForAllSocketsToSpecificSocket(socketnumber);
+            if (socketnumber >= 0)
+            {
+                interactionMessagesPerSocket[socketnumber].Add(new CountedInteractionMessage(element));
+            }
+            else
+            {
+                AddInteractionMessageToAllSockets(element);
+            }
         }
         /// <summary>
         /// Deletes all the elements
         /// </summary>
         public void Clear()
         {
-            returnCounterForInteraciton.Clear();
             interactionMessages.Clear();
+            interactionMessagesPerSocket.Clear();
         }
         /// <summary>
         /// Checks if the list contains the element
@@ -185,8 +282,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         public void Insert(int index, object value)
         {
             InteractionMessage element = (InteractionMessage)value;
-            returnCounterForInteraciton.Add(element, 0);
             AddProtocolType(element);
+            AddInteractionMessage(element);
             interactionMessages.Insert(index, element);
         }
 
@@ -204,13 +301,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         {
             InteractionMessage element = value as InteractionMessage;
             interactionMessages.Remove(element);
-            returnCounterForInteraciton.Remove(element);
+            RemoveElementFromAllSockets(element);
+        }
+
+        /// <summary>
+        /// Remove all the elements to a specific socket
+        /// </summary>
+        /// <param name="element"></param>
+        private void RemoveElementFromAllSockets(InteractionMessage element)
+        {
+            foreach (int key in interactionMessagesPerSocket.Keys)
+            {
+                interactionMessagesPerSocket[key].RemoveAll(message => message.InteractionMessage.Equals(element));
+            }
         }
 
         public void RemoveAt(int index)
         {
-            returnCounterForInteraciton.Remove(interactionMessages[index]);
+            InteractionMessage element = interactionMessages[index];
             interactionMessages.RemoveAt(index);
+            RemoveElementFromAllSockets(element);
         }
 
         public object this[int index]
@@ -222,7 +332,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             set
             {
                 AddProtocolType((InteractionMessage)value);
-                interactionMessages[index] = (InteractionMessage)value;
+                Insert(index, value);
             }
         }
         public void CopyTo(Array array, int index)
