@@ -46,17 +46,18 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
             return activeMQMessage;
         }
 
-        public static InteractionMessage getNetBridgInvokeMessageOnReceiveQueue(int socketID, int answerSocket, String messasge, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
+        public static InteractionMessage getNetBridgeInvokeMessageOnReceiveQueue(String messasge, IDictionary<int, Dictionary<int, IProtocol>> receivedMessages)
         {
+            int answerSocket = 0;
             IProtocol prot = null;
-            foreach (KeyValuePair<int, IProtocol> dic in receivedMessages[socketID])
+            foreach (KeyValuePair<int, IProtocol> dic in receivedMessages[0])
             {
                 if (dic.Value is ActiveMQProtocol && ((ActiveMQProtocol)dic.Value).Message is ConsumerInfo)
                 {
                     prot = ((ActiveMQProtocol)dic.Value);
                 }
             }
-            prot.SocketNumber = socketID;
+            prot.SocketNumber = 0;
             MessageDispatch dispatcher = getDispatcher(new ActiveMQTextMessage(messasge));
             dispatcher.Destination = new ActiveMQQueue("receive");
             InteractionMessage activeMQMessageAnswer = new InteractionMessage(6549, null, new ActiveMQProtocol(dispatcher, answerSocket), null);

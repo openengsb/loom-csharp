@@ -43,7 +43,7 @@ namespace ETMTest
             ETM = new ETMTCPImplementation(getETMConfiguration());
             ETM.Start(IPAddress.Loopback, 6549);
             startBridge();
-            ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgInvokeMessageOnReceiveQueue(0, 0, getTestCase(), ETM.ReceivedMessages));
+            ETM.TriggerMessage(ActiveMQConfiguration.getNetBridgeInvokeMessageOnReceiveQueue(getTestCase(), ETM.ReceivedMessages));
             stopBridge();
             Assert.AreEqual(localDomain.message, "TestCase1");
             Assert.AreEqual(localDomain.level, "12");
@@ -58,12 +58,6 @@ namespace ETMTest
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
             String id = factory.CreateDomainService(domainName);
             factory.RegisterConnector(id, domainName);
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
-            LogEvent lEvent = new LogEvent();
-            lEvent.name = "Example";
-            lEvent.level = "DEBUG";
-            lEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(lEvent);
         }
         private String getBrideVoidAnswer()
         {
@@ -86,12 +80,10 @@ namespace ETMTest
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(2, getBrideVoidAnswer()));
             //Answer for the register MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(4, getBrideVoidAnswer()));
-            //Answer for the Invoke MethodCall
-            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(6, getBrideVoidAnswer()));
             //Answer for the Unregister MethodCall
-            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(7, getBrideVoidAnswer()));
+            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(6, getBrideVoidAnswer()));
             //Answer for the delete MethodCall
-            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(9, getBrideVoidAnswer()));
+            result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(8, getBrideVoidAnswer()));
             return result;
         }
         private String getTestCase()
@@ -118,7 +110,7 @@ namespace ETMTest
             remote.classes = new List<String>() { "org.openengsb.domain.example.event.LogEvent" };
             remote.realClassImplementation = new List<String>() { "org.openengsb.domain.example.event.LogEvent" };
             methodCall.methodCall = remote;
-            methodCall.answer = true;
+            methodCall.answer = false;
             methodCall.destination = "tcp://localhost.:6549?0e25f8d8-174b-470a-bc18-65c84c3df01a";
             methodCall.principal = null;
             methodCall.credentials = null;
