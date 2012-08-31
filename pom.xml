@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.openengsb</groupId>
     <artifactId>openengsb-root</artifactId>
-    <version>32</version>
+    <version>34-SNAPSHOT</version>
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common</groupId>
@@ -47,14 +47,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- OpenEngSB Dependencies -->
-      <dependency>
-        <groupId>org.openengsb</groupId>
-        <artifactId>openengsb-shared-settings</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <!-- WSDL Test References -->
       <!-- DONT GENERALIZE THEM! OPENENGSB-2889 -->
       <!-- Maven Plugin Development Dependencies -->
