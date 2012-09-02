@@ -9,34 +9,30 @@ using Apache.NMS.ActiveMQ.Commands;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
+using Org.Openengsb.Loom.Csharp.Common.Bridge.Abstract;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 {
     /// <summary>
     /// Implementation of the ETM which listens on the TCP protocol
     /// </summary>
-    public class ETMTCPImplementation : IETM
+    public class ETMTCPImplementation : AETM
     {
         #region Variables
-        private ILog logging = LogManager.GetLogger(typeof(ETMTCPImplementation));
-        private ETMList interationConfiguration;
+        private static ILog logging = LogManager.GetLogger(typeof(ETMTCPImplementation));
         private IDictionary<int, Socket> openClients = new ConcurrentDictionary<int, Socket>();
         private Socket serverSocket;
         /// <summary>
         /// Every message gets a position. This position is bind to the socket
         /// </summary>
-        private IDictionary<int, int> receivedMessageposition = new ConcurrentDictionary<int, int>();
-        private static Semaphore semaphore = new Semaphore(1, 1);
-        public IDictionary<int, Dictionary<int, IProtocol>> ReceivedMessages { get; set; }
         #endregion
         #region Constructors
-        public ETMTCPImplementation(List<InteractionMessage> workflow)
+        public ETMTCPImplementation(List<InteractionMessage> workflow):base(logging, new ETMList(workflow))
         {
             ReceivedMessages = new Dictionary<int, Dictionary<int, IProtocol>>();
-            this.interationConfiguration = new ETMList(workflow);
         }
         #endregion        
-        #region Private Methods
+        #region Asychnore Socket handling methods
         /// <summary>
         /// Listen to all sockets, which could connect to this configurations
         /// </summary>
@@ -78,7 +74,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 return;
             }
             clientID = openClients.Count;
-            //TODO
             logging.Info("New Client connected: " + clientID);
             receivedMessageposition.Add(clientID, 0);
             openClients.Add(clientID, client);
@@ -86,43 +81,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
 
             client.BeginReceive(state.Buffer, 0, state.BufferSize, 0,
               new AsyncCallback(ReceiveCallback), state);
-        }
-        /// <summary>
-        /// Asynchronous Send
-        /// </summary>
-        /// <param name="ar"></param>
-        private void SendCallback(IAsyncResult ar)
-        {
-            try
-            {
-                StateObject state = (StateObject)ar.AsyncState;
-                if (ClientIsStillConnected(state))
-                {
-                    return;
-                } state.socket.EndSend(ar);
-            }
-            catch
-            {
-            }
-        } 
-        /// <summary>
-        /// Send the Responses
-        /// </summary>
-        /// <param name="messagetoSend"></param>
-        /// <param name="socketId"></param>
-        /// <param name="prot"></param>
-        private void SentResponses(InteractionMessage messagetoSend, int socketId, IProtocol prot)
-        {
-            foreach (InteractionMessage responsemessage in messagetoSend.Responses)
-            {
-                if (responsemessage.DestinationPort == null || responsemessage.DestinationPort.Value <= 0)
-                {
-                    responsemessage.DestinationPort = ((IPEndPoint)openClients[socketId].RemoteEndPoint).Port;
-                }
-                responsemessage.Protocol.RetrieveInfoFromReceivedMessage(prot);
-                logging.Info(GetLoggingMsg(responsemessage, socketId));
-                SendToTCP(responsemessage, socketId);
-            }
         }
         /// <summary>
         /// Asynchronous receive
@@ -158,6 +116,45 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         }
 
         /// <summary>
+        /// Asynchronous Send
+        /// </summary>
+        /// <param name="ar"></param>
+        private void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                StateObject state = (StateObject)ar.AsyncState;
+                if (ClientIsStillConnected(state))
+                {
+                    return;
+                } state.socket.EndSend(ar);
+            }
+            catch
+            {
+            }
+        }
+        #endregion
+        #region Private Methods
+        /// <summary>
+        /// Send the Responses
+        /// </summary>
+        /// <param name="messagetoSend"></param>
+        /// <param name="socketId"></param>
+        /// <param name="prot"></param>
+        protected override void SentResponses(InteractionMessage messagetoSend, int socketId, IProtocol prot)
+        {
+            foreach (InteractionMessage responsemessage in messagetoSend.Responses)
+            {
+                if (responsemessage.DestinationPort == null || responsemessage.DestinationPort.Value <= 0)
+                {
+                    responsemessage.DestinationPort = ((IPEndPoint)openClients[socketId].RemoteEndPoint).Port;
+                }
+                responsemessage.Protocol.RetrieveInfoFromReceivedMessage(prot);
+                logging.Info(GetLoggingMsg(responsemessage, socketId));
+                SendToTCP(responsemessage, socketId);
+            }
+        }
+        /// <summary>
         /// Checks if the connection to the client is still valid
         /// </summary>
         /// <param name="clientObject">Client socket informations</param>
@@ -179,73 +176,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             return false;
         }
 
-        /// <summary>
-        /// Checks if an array is empty or has just 0's;
-        /// </summary>
-        /// <param name="array">array to check</param>
-        /// <returns></returns>
-        private Boolean IsEmpty(Byte[] array)
-        {
-            return !array.Any(b => b != 0);
-        }
-        /// <summary>
-        /// Copies all the array from a starting postion to the end
-        /// </summary>
-        /// <param name="source">array</param>
-        /// <param name="start">start position</param>
-        /// <returns>new array</returns>
-        private byte[] CopyArray(Byte[] source, int start)
-        {
-            byte[] result = new byte[source.Length - start];
-            for (int i = 0; i < source.Length - start; i++)
-            {
-                result[i] = source[start + i];
-            }
-            return result;
-        }
-        /// <summary>
-        /// Handels the incoming messages from a socket.
-        /// </summary>
-        /// <param name="input">The received message from a socket</param>
-        /// <param name="socketId">The socket number</param>
-        private void HandleActions(byte[] input, int socketId)
-        {
-            if (IsEmpty(input))
-            {
-                return;
-            }
-            byte[] message = input;
-            IProtocol prot = null;
-            InteractionMessage transactions = interationConfiguration.FindInteraction(message, socketId, out prot);
-            if (prot == null)
-            {
-                return;
-            }
-            message = CopyArray(input, prot.GetMessage().Length);
-
-            if (prot is ActiveMQProtocol)
-            {
-                logging.Info(((ActiveMQProtocol)prot).Message.GetType().Name + " on socket: " + socketId + " with commandID: " + ((ActiveMQProtocol)prot).Message.CommandId);
-            }
-            if (!ReceivedMessages.ContainsKey(socketId))
-            {
-                ReceivedMessages.Add(socketId, new Dictionary<int, IProtocol>());
-            }
-            semaphore.WaitOne();
-            ReceivedMessages[socketId].Add(receivedMessageposition[socketId]++, prot);
-            semaphore.Release();
-
-            if (transactions.Responses == null || transactions.Responses.Count <= 0)
-            {
-                return;
-            }
-            SentResponses(transactions, socketId, prot);
-            if (!IsEmpty(message))
-            {
-                HandleActions(message, socketId);
-            }
-            return;
-        }
         /// <summary>
         /// Returns a logging message. The logging will be adjust in a later issues
         /// </summary>
@@ -296,11 +226,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         }
         #endregion
         #region Public methods
-        public void Start(IPEndPoint endpoint)
+        public override void Start(IPEndPoint endpoint)
         {
             ListenToTCP(endpoint);
         }
-        public void Start(IPAddress adresse, int port)
+        public override void Start(IPAddress adresse, int port)
         {
             ListenToTCP(new IPEndPoint(adresse, port));
         }
@@ -309,7 +239,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         /// Sends a message to a client
         /// </summary>
         /// <param name="messagetoSend">Configuration</param>
-        public void TriggerMessage(InteractionMessage messagetoSend)
+        public override void TriggerMessage(InteractionMessage messagetoSend)
         {
             byte[] input = messagetoSend.Protocol.GetMessage();
             if (IsEmpty(input))
@@ -320,15 +250,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             IProtocol prot = messagetoSend.Protocol;
             SentResponses(messagetoSend, socketId, prot);
         }
-        /// <summary>
-        /// Add an Interaction to the list
-        /// </summary>
-        /// <param name="interactionMessage">Interaction Message</param>
-        public void AddInteraction(InteractionMessage interactionMessage)
-        {
-            interationConfiguration.Add(interactionMessage);
-        }
-        public void Dispose()
+
+        public override void Dispose()
         {
             foreach (Socket socket in openClients.Values)
                 socket.Close();

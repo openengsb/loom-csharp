@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AETM.cs" />
+    <Compile Include="CountInteractionMessage.cs" />
+    <Compile Include="ETMList.cs" />
     <Compile Include="IETM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

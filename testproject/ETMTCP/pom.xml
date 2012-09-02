@@ -49,12 +49,9 @@
         <configuration>
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
-            <includeSource>ETMList.cs</includeSource>
             <includeSource>ETMTCPImplementation.cs</includeSource>
-            <includeSource>CountInteractionMessage.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
             <includeSource>StateObject.cs</includeSource>
-            <includeSource>InteractionMessage.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
