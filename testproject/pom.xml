@@ -22,21 +22,21 @@
     <groupId>org.openengsb.loom.csharp.common</groupId>
     <artifactId>loom-csharp-common-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>loom-csharp-common-bridge-parent</artifactId>
+  <artifactId>loom-csharp-common-bridge-etm-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Root</name>
-  <description>Describes the parent pom of the .net Bridge Component in the framework.</description>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Effective Tester in the Middle</name>
+  <description>Test framework to simulate remote dependent components</description>
 
   <modules>
-    <module>Interface</module>
-    <module>WsdlToDll/Domain</module>
-    <module>Implementation</module>
-    <module>ServiceTestConsole</module>
+    <module>Protocols</module>
+    <module>IETM</module>   
+    <module>ETMTCP</module>   
   </modules>
 
   <scm>

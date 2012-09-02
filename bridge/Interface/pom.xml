@@ -51,7 +51,6 @@
   </scm>
 
   <build>
-    <sourceDirectory>./</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.npanday.plugins</groupId>

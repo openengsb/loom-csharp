@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://maven.apache.org/POM/4.0.0">
-  <parent>
-    <artifactId>loom-csharp-common-bridge-parent</artifactId>
-    <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+  <parent>  
+    <artifactId>loom-csharp-common-bridge-itests-parent</artifactId>
+    <groupId>org.openengsb.loom.csharp.common.bridge.itests</groupId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>ServiceTestConsole</artifactId>
-  <packaging>dotnet-executable</packaging>
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ServiceTestConsole</name>
+  <artifactId>TestBridge</artifactId>
+  <packaging>library</packaging>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Tests</name>
   <version>1.0.0-SNAPSHOT</version>
   <description>
-    Exe bundle to be started and executed seperately to test the OpenEngSB.
+    Unit tests for methods without network connection
   </description>
   <licenses>
     <license>
@@ -36,36 +36,32 @@
         <configuration>
           <frameworkVersion>4.0</frameworkVersion>
           <includeSources>
-            <includeSource>ExampleDomainConnector.cs</includeSource>
-            <includeSource>Program.cs</includeSource>
+            <includeSource>CommunicationClassTests.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
+            <includeSource>TestHelpMethods.cs</includeSource>
           </includeSources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.npanday.plugins</groupId>
+        <artifactId>maven-test-plugin</artifactId>
+        <configuration>
+          <integrationTest>true</integrationTest>
+          <executionFrameworkVersion>4.0</executionFrameworkVersion>
         </configuration>
       </plugin>
     </plugins>
   </build>
   <dependencies>
     <dependency>
+      <groupId>NUnit</groupId>
+      <artifactId>NUnit.Framework</artifactId>
+      <version>2.2.8.0</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Implementation</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Interface</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>log4net</artifactId>
-      <version>1.2.11_2</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ExampleDomain</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>

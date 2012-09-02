@@ -22,35 +22,18 @@
     <groupId>org.openengsb.loom.csharp.common</groupId>
     <artifactId>loom-csharp-common-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
 
-  <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>loom-csharp-common-bridge-parent</artifactId>
+  <groupId>org.openengsb.loom.csharp.common.bridge.itests</groupId>
+  <artifactId>loom-csharp-common-bridge-itests-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Root</name>
-  <description>Describes the parent pom of the .net Bridge Component in the framework.</description>
-
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: ITests :: Root</name>
+  <description>Describes the parent pom of the ITests for the .Net Bridge Component in the framework.</description>
   <modules>
-    <module>Interface</module>
-    <module>WsdlToDll/Domain</module>
-    <module>Implementation</module>
-    <module>ServiceTestConsole</module>
+    <module>ETMTest</module>
+    <module>BridgeTest</module>
   </modules>
-
-  <scm>
-    <connection>scm:git:git://github.com/openengsb/loom-csharp-common.git</connection>
-    <developerConnection>scm:git:git@github.com:openengsb/loom-csharp-common.git</developerConnection>
-    <url>https://github.com/openengsb/loom-csharp-common</url>
-  </scm>
-
-  <licenses>
-    <license>
-      <name>Apache 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
 </project>

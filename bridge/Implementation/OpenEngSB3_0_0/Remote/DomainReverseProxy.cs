@@ -76,6 +76,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void CreateRemoteProxy()
         {
+            if (!registrationprocess.Equals(ERegistration.REGISTERED)) return;
             logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
@@ -187,7 +188,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), exceptionhandling);
             string reply = portIn.Receive();
-            registrationprocess = ERegistration.NONE;
             MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
             if (result.result.type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
