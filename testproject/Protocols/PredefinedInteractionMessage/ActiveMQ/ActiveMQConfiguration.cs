@@ -7,7 +7,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
 using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 using Apache.NMS.ActiveMQ.OpenWire;
 
-namespace AcitveMQProtocol.ActiveMQConfiguration
+namespace Org.Openengsb.Loom.Csharp.Common.Bridge.Protocols.PredefinedInteractionMessage.ActiveMQ
 {
     public class ActiveMQConfiguration
     {
@@ -18,16 +18,16 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
         public static List<InteractionMessage> getConfiguration(WireFormatInfo wire)
         {
             List<InteractionMessage> result = new List<InteractionMessage>();
-            result.Add(ActiveMQConfiguration.getRemoveInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getShutdownInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getKeepAliveAnswer(-1));
-            result.Add(ActiveMQConfiguration.getWireFormatAnswer(wire, -1));
-            result.Add(ActiveMQConfiguration.getNetBridgeTextMessageAnswer(-1));
-            result.Add(ActiveMQConfiguration.getAskedAnswer(-1));
-            result.Add(ActiveMQConfiguration.getSessionInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getProducerInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getConnectionInfoAnswer(-1));
-            result.Add(ActiveMQConfiguration.getConsumerInfoAnswer(-1));
+            result.Add(getRemoveInfoAnswer(-1));
+            result.Add(getShutdownInfoAnswer(-1));
+            result.Add(getKeepAliveAnswer(-1));
+            result.Add(getWireFormatAnswer(wire, -1));
+            result.Add(getNetBridgeTextMessageAnswer(-1));
+            result.Add(getAskedAnswer(-1));
+            result.Add(getSessionInfoAnswer(-1));
+            result.Add(getProducerInfoAnswer(-1));
+            result.Add(getConnectionInfoAnswer(-1));
+            result.Add(getConsumerInfoAnswer(-1));
             return result;
         }
         public static MessageDispatch getDispatcher(Message message)
@@ -163,3 +163,4 @@ namespace AcitveMQProtocol.ActiveMQConfiguration
         }
     }
 }
+

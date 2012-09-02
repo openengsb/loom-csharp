@@ -79,17 +79,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveMQConfiguration\ActiveMQConfiguration.cs" />
     <Compile Include="ComponentTests\ActiveMQTesting.cs" />
     <Compile Include="ComponentTests\ETMTCPTest.cs" />
     <Compile Include="ComponentTests\ExampleDomainConnector.cs" />
+    <Compile Include="ETMCoreTests\ETMListTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocoltests\ActiveMQProtocolTest.cs" />
     <Compile Include="Protocoltests\SoapProtocolTest.cs" />
     <Compile Include="Protocoltests\TcpProtocolTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

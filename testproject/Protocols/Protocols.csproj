@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ActiveMQ\ActiveMQProtocol.cs" />
     <Compile Include="InteractionMessage.cs" />
+    <Compile Include="PredefinedInteractionMessage\ActiveMQ\ActiveMQConfiguration.cs" />
     <Compile Include="IProtocol.cs" />
     <Compile Include="Soap\FaultElements\Detail.cs" />
     <Compile Include="Soap\FaultElements\FaultActor.cs" />
@@ -69,6 +70,7 @@
   <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -42,6 +42,7 @@
             <includeSource>ComponentTests\ExampleDomainConnector.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
             <includeSource>Protocoltests\ActiveMQProtocolTest.cs</includeSource>
+			<includeSource>ETMCoreTests\ETMListTest.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
@@ -112,13 +113,13 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Protocols</artifactId>
+      <artifactId>IETM</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>IETM</artifactId>
+      <artifactId>Protocols</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>

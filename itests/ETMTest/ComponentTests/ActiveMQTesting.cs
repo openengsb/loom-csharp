@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Net;
 using log4net;
 using ExampleDomain;
-using Apache.NMS.ActiveMQ.Commands;
-using Apache.NMS.ActiveMQ.OpenWire;
 using NUnit.Framework;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
-using AcitveMQProtocol.ActiveMQConfiguration;
 using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 using Org.Openengsb.Loom.CSharp.Bridge.ETM;
-using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
 using Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP;
+using Org.Openengsb.Loom.Csharp.Common.Bridge.Protocols.PredefinedInteractionMessage.ActiveMQ;
 
 namespace ETMTest
 {
@@ -75,7 +72,6 @@ namespace ETMTest
         private List<InteractionMessage> getETMConfiguration()
         {
             List<InteractionMessage> result = ActiveMQConfiguration.getConfiguration();
-
             //Answer for the create MethodCall
             result.Add(ActiveMQConfiguration.getSendToConsumerVoidMessage(2, getBrideVoidAnswer()));
             //Answer for the register MethodCall

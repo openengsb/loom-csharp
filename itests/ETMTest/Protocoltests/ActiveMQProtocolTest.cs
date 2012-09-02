@@ -6,7 +6,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Protocol.ActiveMQ;
 using NUnit.Framework;
 using Apache.NMS.ActiveMQ.Commands;
 using Apache.NMS.ActiveMQ.OpenWire;
-using AcitveMQProtocol.ActiveMQConfiguration;
+using Org.Openengsb.Loom.Csharp.Common.Bridge.Protocols.PredefinedInteractionMessage.ActiveMQ;
 
 namespace ETMTest.Protocoltests
 {

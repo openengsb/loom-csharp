@@ -11,7 +11,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
     /// This new implemenation of a list take into account the aready picked elements. Always the lowest
     /// chosen element will be returned, if the search criterias are the same
     /// </summary>
-    class ETMList : IList
+    public class ETMList : IList
     {
         #region Variables
         private IDictionary<int, List<CountedInteractionMessage>> interactionMessagesPerSocket = new ConcurrentDictionary<int, List<CountedInteractionMessage>>();
@@ -186,6 +186,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                     if (canidat != null)
                     {
                         convertedprotocol = receivedmessage;
+                        convertedprotocol.SocketNumber = SocketId;
                         return (InteractionMessage)canidat.Clone();
                     }
                 }

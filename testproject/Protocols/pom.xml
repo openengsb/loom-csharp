@@ -72,6 +72,7 @@
             <includeSource>Soap\SoapFault.cs</includeSource>
             <includeSource>Soap\SoapHeader.cs</includeSource>
             <includeSource>TCP\TCPProtocol.cs</includeSource>
+			<includeSource>PredefinedInteractionMessage\ActiveMQ\ActiveMQConfiguration.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
