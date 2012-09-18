@@ -2,20 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class AbstractRealDomainFactory<T> : IDomainFactory
     {
+        private static ILog logger = LogManager.GetLogger(typeof(AbstractRealDomainFactory<T>));
+
         #region Variables
         private Dictionary<String, IRegistration> proxies;
         protected String destination;
         protected T domainService;
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
+        #endregion
+        #region Propreties
+        public EExceptionHandling ExceptionHandling
+        {
+            get { return exceptionhandling; }
+            set { exceptionhandling = value; }
+        }
         #endregion
         #region Constructors
         public AbstractRealDomainFactory(string destination, T domainService)
         {
+            this.destination = destination;
+            this.domainService = domainService;
+            proxies = new Dictionary<String, IRegistration>();
+        }
+        public AbstractRealDomainFactory(string destination, T domainService, EExceptionHandling exceptionhandling)
+        {
+            this.exceptionhandling = exceptionhandling;
             this.destination = destination;
             this.domainService = domainService;
             proxies = new Dictionary<String, IRegistration>();
@@ -144,8 +162,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             IRegistration stoppable = null;
             if (proxies.TryGetValue(domainType, out stoppable))
             {
-                stoppable.UnRegisterConnector();
-                stoppable.Stop();
+                try
+                {
+                    stoppable.UnRegisterConnector();
+                    stoppable.Stop();
+                }
+                catch (Exception e)
+                {
+                    logger.Error("could not unregister. Maybe it is already unregistered " + stoppable);
+                    logger.Debug("ExceptionDetails", e);
+                }
                 proxies.Remove(domainType);
             }
         }

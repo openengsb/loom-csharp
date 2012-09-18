@@ -18,8 +18,8 @@ using System;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
-using System.Threading;
 using @event.example.domain.openengsb.org.xsd;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
 namespace ServiceTestConsole
 {
@@ -37,8 +37,10 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
             logger.Info("Start Example wit the domain " + domainName);
+
             ExampleDomainPortType localDomain = new ExampleDomainConnector();
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, EExceptionHandling.Retry);
+
 
             //Register the connecter on the OpenEngSB
             String serviceId = factory.CreateDomainService(domainName);

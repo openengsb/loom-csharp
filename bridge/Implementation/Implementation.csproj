@@ -42,7 +42,9 @@
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-4.5.9_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -57,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Common\AbstractRealDomainFactory.cs" />
     <Compile Include="Common\Domain.cs" />
+    <Compile Include="Common\EExceptionHandling.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ERegistration.cs" />
     <Compile Include="Common\Enumeration\ReturnType.cs" />

@@ -21,6 +21,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -36,21 +37,44 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service)
         {
-            try
-            {
-                String versionnbr = stringVersion.Replace(".", "");
-                Regex rgx = new Regex("-.*");
-                versionnbr = rgx.Replace(versionnbr, "");
-                int version = int.Parse(versionnbr);
+                int version=getVersionNumber(stringVersion);
                 if (version >= 300)
                     return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
                 if (version >= 240)
                     return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
                 return null;
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service,EExceptionHandling exceptionhandling)
+        {
+                int version = getVersionNumber(stringVersion);
+                if (version >= 300)
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandling);
+                if (version >= 240)
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandling);
+                return null;
+        }
+        /// <summary>
+        /// Parse th a string and filters the version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        private static int getVersionNumber(String version)
+        {
+            try
+            {
+                String versionnbr = version.Replace(".", "");
+                Regex rgx = new Regex("-.*");
+                versionnbr = rgx.Replace(versionnbr, "");
+                return int.Parse(versionnbr);
             }
             catch
             {
-                throw new BridgeException("Unable to receive the actually version from: " + stringVersion);
+                throw new BridgeException("Unable to receive the actually version from: " + version);
             }
         }
         /// <summary>
