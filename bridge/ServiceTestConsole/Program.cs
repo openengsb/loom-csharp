@@ -19,7 +19,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
 using System.Threading;
-using ExampleDomain;
+using @event.example.domain.openengsb.org.xsd;
 
 namespace ServiceTestConsole
 {
@@ -37,14 +37,15 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost.:6549";
             string domainName = "example";
             logger.Info("Start Example wit the domain " + domainName);
-            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
+            ExampleDomainPortType localDomain = new ExampleDomainConnector();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain);
 
             //Register the connecter on the OpenEngSB
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
 
-            IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
+
+            ExampleDomainEventsPortType remotedomain = factory.getEventhandler<ExampleDomainEventsPortType>(domainName);
             LogEvent lEvent = new LogEvent();
             lEvent.name = "Example";
             lEvent.level = "DEBUG";

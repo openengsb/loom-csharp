@@ -35,9 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomain">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomain-1.0.0-SNAPSHOT\ExampleDomain.dll</HintPath>
-    </Reference>
+    <Reference Include="ExampleDomain, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>

@@ -40,12 +40,7 @@
     <Reference Include="ETMTCP">
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ETMTCP-1.0.0-SNAPSHOT\ETMTCP.dll</HintPath>
     </Reference>
-    <Reference Include="ExampleDomain">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomain-1.0.0-SNAPSHOT\ExampleDomain.dll</HintPath>
-    </Reference>
-    <Reference Include="fastJSON">
-      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
-    </Reference>
+    <Reference Include="ExampleDomain, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="IETM">
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\IETM-1.0.0-SNAPSHOT\IETM.dll</HintPath>
     </Reference>
@@ -59,7 +54,7 @@
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-5.0_2\Newtonsoft.Json.dll</HintPath>
+      <HintPath>.references\org.openengsb.wrapped.csharp\Newtonsoft.Json-4.5.9_1-SNAPSHOT\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NUnit.Framework, Version=2.2.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

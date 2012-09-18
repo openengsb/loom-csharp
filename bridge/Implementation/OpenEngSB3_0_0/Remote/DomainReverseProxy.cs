@@ -76,7 +76,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void CreateRemoteProxy()
         {
-            if (!registrationprocess.Equals(ERegistration.REGISTERED)) return;
+            if (!registrationprocess.Equals(ERegistration.NONE)) return;
             logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
