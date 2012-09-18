@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using log4net;
-using ExampleDomain;
 using NUnit.Framework;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
@@ -13,6 +12,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interfaces;
 using Org.Openengsb.Loom.CSharp.Bridge.ETM;
 using Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP;
 using Org.Openengsb.Loom.Csharp.Common.Bridge.Protocols.PredefinedInteractionMessage.ActiveMQ;
+using @event.example.domain.openengsb.org.xsd;
 
 namespace ETMTest
 {
@@ -47,7 +47,6 @@ namespace ETMTest
             Assert.AreEqual(localDomain.name, "Test");
             Assert.AreEqual(localDomain.origin, "123");
             Assert.IsTrue(localDomain.processId == 123);
-            Assert.AreEqual(localDomain.processIdSpecified, true);
         }
         #region Configuration
         private void startBridge()
@@ -97,7 +96,6 @@ namespace ETMTest
             logevent.name = "Test";
             logevent.origin = "123";
             logevent.processId = 123;
-            logevent.processIdSpecified = true;
             logevent.message = "TestCase1";
             args.Add(logevent);
             dic.Add("serviceId", "0e25f8d8-174b-470a-bc18-65c84c3df01a");

@@ -27,6 +27,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using System.Runtime.Serialization;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -83,7 +84,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             Assembly ass = type.Assembly;
             type = ass.GetType(fieldname);
-            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
+            DataContractAttribute attribute = (DataContractAttribute)Attribute.GetCustomAttributes(type).First(element => element is DataContractAttribute);
             if (attribute != null)
             {
                 return reverseURL(attribute.Namespace);
