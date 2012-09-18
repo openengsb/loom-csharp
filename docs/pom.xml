@@ -61,11 +61,13 @@
                     <groupId>org.openengsb</groupId>
                     <artifactId>openengsb-manual-builder-resources</artifactId>
                     <outputDirectory>${project.build.directory}/manual-resources</outputDirectory>
+                    <version>1.0.0</version>
                   </artifactItem>
                   <artifactItem>
                     <groupId>org.openengsb</groupId>
                     <artifactId>openengsb-assembly-builder-resources</artifactId>
                     <outputDirectory>${project.build.directory}/assembly-resources</outputDirectory>
+                    <version>1.0.0</version>
                   </artifactItem>
                 </artifactItems>
                 <overWriteReleases>false</overWriteReleases>

@@ -17,6 +17,9 @@
 
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using log4net;
+using System;
+
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -24,6 +27,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     /// </summary>
     public class JmsIncomingPort : JmsPort, IIncomingPort
     {
+        protected static ILog logger = LogManager.GetLogger(typeof(JmsIncomingPort));
+
         #region variables
         IMessageConsumer consumer;
         #endregion
@@ -49,19 +54,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             ITextMessage message = null;
             try
             {
+                logger.Info("wait for new message");
                 message = consumer.Receive() as ITextMessage;
+                logger.Info("recieved new message. Processing...");
             }
-            catch
+            catch (Exception e)
             {
+                logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - {0} ({1}).", e.Message, e.GetType().Name);
                 if (!close)
                 {
+                    logger.Warn("trying to reconnect");
                     Configure();
-                    return Receive();
+                    consumer = session.CreateConsumer(this.destination);
+                    logger.Warn("configuration successful");
                 }
+                throw e;
             }
 
             if (message == null)
                 return null;
+            logger.DebugFormat("recieved message: {0}", message.Text);
             return message.Text;
         }
         /// <summary>
@@ -73,5 +85,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             consumer.Close();
         }
         #endregion
+
     }
 }

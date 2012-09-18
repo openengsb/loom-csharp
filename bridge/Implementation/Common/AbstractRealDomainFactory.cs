@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -167,10 +168,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     stoppable.UnRegisterConnector();
                     stoppable.Stop();
                 }
+                catch (BridgeException e)
+                {
+                    logger.Warn("could not unregister. Maybe it is already unregistered " + stoppable);
+                    logger.Info("ExceptionMessage: " + e.Message);
+                }
+                catch (OpenEngSBException e)
+                {
+                    logger.Warn("could not unregister. Maybe it is already unregistered " + stoppable);
+                    logger.Info("ExceptionMessage: " + e.Message);
+                }
                 catch (Exception e)
                 {
-                    logger.Error("could not unregister. Maybe it is already unregistered " + stoppable);
-                    logger.Debug("ExceptionDetails", e);
+                    logger.Error("Unexpacted exception while unregistering connector" + stoppable, e);
                 }
                 proxies.Remove(domainType);
             }
