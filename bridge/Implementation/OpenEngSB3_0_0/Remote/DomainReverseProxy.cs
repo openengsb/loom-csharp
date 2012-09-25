@@ -23,6 +23,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObject;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
@@ -184,13 +185,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             registrationprocess = ERegistration.REGISTERED;
             logger.Info("Register done");
         }
-        private void waitAndCheckAnswer(Destination destinationinfo, String id)
+        private MethodResultMessage waitAndCheckAnswer(Destination destinationinfo, String id)
         {
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), exceptionhandling);
             string reply = portIn.Receive();
             MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
             if (result.result.type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
+            return result;
         }
         /// <summary>
         /// Creates an Proxy on the bus.
@@ -272,6 +274,76 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                         throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
                 }
             }
+        }
+        public override XLinkTemplate ConnectToXLink(string ServiceId, string hostId, string toolName, ModelToViewsTuple[] modelsToViews)
+        {
+            //ID=RegisterId or ID=ServiceId? Same behaviour as register i.e bridge ofline no creation needed?
+            logger.Info("Create a Xlink connector");
+            IDictionary<string, string> metaData = new Dictionary<string, string>();
+            metaData.Add("serviceId", CREATION_SERVICE_ID);
+            registerId = serviceId;
+
+            IList<string> classes = new List<string>();
+            LocalType localType = new LocalType(typeof(String));
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add("org.openengsb.core.api.model.ModelDescription");
+
+            IList<object> args = new List<object>();
+            args.Add(ServiceId);
+            args.Add(hostId);
+            args.Add(toolName);
+            args.Add(modelsToViews);
+
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
+
+            Destination destinationinfo = new Destination(destination);
+            destinationinfo.Queue = CREATION_QUEUE;
+            String id = Guid.NewGuid().ToString();
+            BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            autinfo.data.Add("value", password);
+            MethodCallMessage methodCall = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
+            string request = marshaller.MarshallObject(methodCall);
+            portOut.Send(request, id);
+            MethodResultMessage result=waitAndCheckAnswer(destinationinfo, id);
+            registrationprocess = ERegistration.Xlink;
+            logger.Info("Create done");
+            return result.result.arg as XLinkTemplate;
+        }
+
+        public override void DisconnectFromXLink(string hostId)
+        {
+            //ID=RegisterId or ID=ServiceId?
+            logger.Info("Disconnect connector from xlink with the serviceId: " + serviceId);
+            IDictionary<string, string> metaData = new Dictionary<string, string>();
+            metaData.Add("serviceId", CREATION_SERVICE_ID);
+            LocalType localType = new LocalType(typeof(String));
+            IList<String> classes = new List<String>();
+            classes.Add(localType.RemoteTypeFullName);
+            classes.Add(localType.RemoteTypeFullName);
+            IList<object> args = new List<object>();
+            args.Add(registerId);
+            args.Add(hostId);
+
+            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
+
+            String id = Guid.NewGuid().ToString();
+            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
+            authentification.data.Add("value", password);
+            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id, true, "");
+
+            Destination destinationinfo = new Destination(destination);
+            destinationinfo.Queue = CREATION_QUEUE;
+
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
+            string request = marshaller.MarshallObject(callRequest);
+            portOut.Send(request, id);
+
+            waitAndCheckAnswer(destinationinfo, id);
+            registrationprocess = ERegistration.NONE;
+            logger.Info("Unregister done");
         }
         #endregion
         #region Private Methods

@@ -22,6 +22,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
@@ -184,6 +185,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 }
             }
         }
+        public override XLinkTemplate ConnectToXLink(string id, string hostId, string toolName, ModelToViewsTuple[] modelsToViews)
+        {
+            throw new NotImplementedException();
+        }
+        public override void DisconnectFromXLink(string id, string hostId)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
         #region Private Methods
         /// <summary>
@@ -245,5 +254,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             throw new MissingMethodException("Not implemented for this version of openEngSB");
         }
         #endregion
+
     }
 }

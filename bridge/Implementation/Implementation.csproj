@@ -58,6 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AbstractRealDomainFactory.cs" />
+    <Compile Include="Common\xlink\ModelToViewsTuple.cs" />
+    <Compile Include="Common\xlink\RemoteTool.cs" />
+    <Compile Include="Common\xlink\RemoteToolView.cs" />
+    <Compile Include="Common\xlink\XLinkTemplate.cs" />
     <Compile Include="Common\Domain.cs" />
     <Compile Include="Common\EExceptionHandling.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
@@ -66,6 +70,8 @@
     <Compile Include="Common\IRegistration.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
     <Compile Include="Common\RemoteObjects\OpenEngSBModelEntry.cs" />
+    <Compile Include="Common\xlink\ModelDescription.cs" />
+    <Compile Include="Common\xlink\XLinkTemplateKeyNames.cs" />
     <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />

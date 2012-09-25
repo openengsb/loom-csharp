@@ -26,6 +26,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -40,6 +41,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
         protected const string REGISTRATION_METHOD_NAME = "registerConnector";
         protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";
+        protected const string XLINK_METHOD_NAME = "connectToXLink";
         #endregion
         #region Propreties
         protected abstract string CREATION_METHOD_NAME { get; }
@@ -353,6 +355,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public abstract void Listen();
         public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
+        public abstract XLinkTemplate ConnectToXLink(string id, string hostId, string toolName, ModelToViewsTuple[] modelsToViews);
+        public abstract void DisconnectFromXLink(string id, string hostId);
         #endregion
+
+
+
     }
 }
