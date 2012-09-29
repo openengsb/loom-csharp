@@ -46,6 +46,12 @@
   <ItemGroup>
     <Compile Include="IDomainFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="xlink\ModelDescription.cs" />
+    <Compile Include="xlink\ModelToViewsTuple.cs" />
+    <Compile Include="xlink\RemoteTool.cs" />
+    <Compile Include="xlink\RemoteToolView.cs" />
+    <Compile Include="xlink\XLinkTemplate.cs" />
+    <Compile Include="xlink\XLinkTemplateKeyNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

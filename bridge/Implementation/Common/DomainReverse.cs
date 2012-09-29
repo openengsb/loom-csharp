@@ -356,7 +356,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
         public abstract XLinkTemplate ConnectToXLink(string id, string hostId, string toolName, ModelToViewsTuple[] modelsToViews);
-        public abstract void DisconnectFromXLink(string id, string hostId);
+        public abstract void DisconnectFromXLink(string hostId);
         #endregion
 
 

@@ -288,7 +288,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             classes.Add(localType.RemoteTypeFullName);
             classes.Add(localType.RemoteTypeFullName);
-            classes.Add("org.openengsb.core.api.model.ModelDescription");
+            localType = new LocalType(modelsToViews.GetType());
+            classes.Add(localType.RemoteTypeFullName+"[]");
 
             IList<object> args = new List<object>();
             args.Add(ServiceId);
@@ -296,7 +297,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             args.Add(toolName);
             args.Add(modelsToViews);
 
-            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
+            RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(XLINK_METHOD_NAME, args, metaData, classes, null);
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;

@@ -12,7 +12,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         void CreateRemoteProxy();
         void DeleteRemoteProxy();
         XLinkTemplate ConnectToXLink(String id, String hostId, String toolName, ModelToViewsTuple[] modelsToViews);
-        void DisconnectFromXLink(String id, String hostId);
+        void DisconnectFromXLink(String hostId);
         void RegisterConnector(String serviceId);
         void UnRegisterConnector();
         String ServiceID { get; }

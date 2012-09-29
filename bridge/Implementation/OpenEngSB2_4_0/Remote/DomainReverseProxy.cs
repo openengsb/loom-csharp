@@ -189,7 +189,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         {
             throw new NotImplementedException();
         }
-        public override void DisconnectFromXLink(string id, string hostId)
+        public override void DisconnectFromXLink(string hostId)
         {
             throw new NotImplementedException();
         }

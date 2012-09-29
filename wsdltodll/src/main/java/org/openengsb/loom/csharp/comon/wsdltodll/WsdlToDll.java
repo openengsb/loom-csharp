@@ -11,16 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-
-import sun.util.logging.resources.logging;
 
 /**
  * Goal which creates a DLL from a WSDL file.
@@ -66,7 +61,7 @@ public class WsdlToDll extends AbstractMojo {
 	 * 
 	 * @parameter default-Value=null expression="${wsdlExeFolderLocation}"
 	 */
-	private File wsdlExeFolderLocation;
+	private File svcutilExeFolderLocation;
 	/**
 	 * Location of the csc command.
 	 * 
@@ -74,13 +69,12 @@ public class WsdlToDll extends AbstractMojo {
 	 */
 	private File cscFolderLocation;
 	/**
-	 * Location of the wsdl file
+	 * Location of the svcutil file
 	 * 
 	 * @parameter
 	 * @required
 	 */
-	private List<String> wsdl_locations; // = new String[0];
-	// private String wsdl_location;
+	private List<String> svcutilLocations; 
 
 	/**
 	 * Namespace of the WSDL file. This should be the namespace in which a
@@ -94,17 +88,6 @@ public class WsdlToDll extends AbstractMojo {
 	private String list_type = "System.collections.Generic.List`1";
 	private List<String> cspath = new ArrayList<String>();
 
-	private List<String> handledClasses = new ArrayList<String>();
-
-	/*
-	 * private static final Pattern CLASS_START_PATTERN = Pattern.compile(
-	 * "/// <remarks/>"+ "\\[System.CodeDom.Compiler.GeneratedCodeAttribute*\n"+
-	 * "\\[System.SerializableAttribute*\n"+
-	 * "\\[System.Diagnostics.DebuggerStepThroughAttribute*\n"+
-	 * "\\[System.ComponentModel.DesignerCategoryAttribute*\n"+
-	 * "\\[System.Xml.Serialization.XmlTypeAttribute\\(Namespace*\\]\n"+
-	 * "*public partial class*\n",Pattern.MULTILINE);
-	 */
 	/**
 	 * Find and executes the commands wsdl.exe and csc.exe
 	 */
@@ -115,6 +98,67 @@ public class WsdlToDll extends AbstractMojo {
 		} else {
 			createDllFromWsdlUsingLinuxMode();
 		}
+	}
+
+	private List<String> enumerateLines(String filename) throws IOException {
+		String fileString = readFileToString(new File(filename));
+		String[] lines = fileString.split("\n");
+		List<String> result = new LinkedList<String>();
+		int openBrakets = 0;
+		int start = 0;
+		for (int i = 0; i < lines.length; i++) {
+			if (lines[i].contains("{")) {
+				if (openBrakets <= 0) {
+					start = i - 1;
+				}
+				openBrakets++;
+			}
+			if (lines[i].contains("}")) {
+				openBrakets--;
+				if (openBrakets <= 0) {
+					result.add(convertArrayAriaTOString(start, i, lines));
+				}
+			}
+		}
+		return result;
+	}
+
+	private String convertArrayAriaTOString(int start, int end, String[] lines) {
+		String result = "";
+		for (int i = start; i <= end; i++) {
+			result += lines[i] + "\n";
+		}
+		return result;
+	}
+
+	/**
+	 * Search for similarities content in two files
+	 * 
+	 * @param filename1
+	 * @param filename2
+	 * @throws IOException
+	 */
+	private void findSimularities(String filename1, String filename2)
+			throws IOException {
+		List<String> file1Block = enumerateLines(filename1);
+		String file2 = readFileToString(new File(filename2));
+		for (String string : file1Block) {
+			if (file2.contains(string)) {
+				String headerAttributes = file2.substring(0,
+						file2.indexOf(string));
+				headerAttributes = headerAttributes.substring(headerAttributes
+						.lastIndexOf("}"));
+				file2 = file2.replace(headerAttributes + string, "}");
+			}
+		}
+		writeToFile(filename2, file2);
+	}
+
+	private void writeToFile(String filename, String filecontent)
+			throws IOException {
+		FileWriter fileWriter = new FileWriter(new File(filename));
+		fileWriter.append(filecontent);
+		fileWriter.close();
 	}
 
 	private boolean isWindows() {
@@ -149,22 +193,23 @@ public class WsdlToDll extends AbstractMojo {
 	 * Windows mode for maven execution
 	 * 
 	 * @throws MojoExecutionException
+	 * @throws IOException
 	 */
 	private void createDllFromWsdlUsingWindowsMode()
 			throws MojoExecutionException {
-		wsdlCommand();
+		svcutilCommand();
 		cscCommand();
 	}
 
 	private String findWsdlCommand() throws MojoExecutionException {
-		if (wsdlExeFolderLocation != null) {
-			return wsdlExeFolderLocation.getAbsolutePath();
+		if (svcutilExeFolderLocation != null) {
+			return svcutilExeFolderLocation.getAbsolutePath();
 		}
 		for (File sdk : findAllInstalledSDKs(DEFAULT_WSDL_PATHS)) {
 			File bindir = new File(sdk, "bin");
 			File wsdlFile = new File(bindir, SVCUTIL_EXE);
 			if (wsdlFile.exists()) {
-				wsdlExeFolderLocation = wsdlFile;
+				svcutilExeFolderLocation = wsdlFile;
 				return wsdlFile.getAbsolutePath();
 			}
 		}
@@ -236,13 +281,15 @@ public class WsdlToDll extends AbstractMojo {
 	}
 
 	/**
-	 * Search for the wsdl command and execute it when it is found
+	 * Search for the svcutil command and execute it when it is found
+	 * 
+	 * @throws IOException
 	 */
-	private void wsdlCommand() throws MojoExecutionException {
+	private void svcutilCommand() throws MojoExecutionException {
 		String cmd = findWsdlCommand();
 		int i = 0;
 		SetCollectionType();
-		for (String location : wsdl_locations) {
+		for (String location : svcutilLocations) {
 			String outputFilename = new File(outputDirectory, namespace + (i++)
 					+ ".cs").getAbsolutePath();
 			String[] command = new String[] { cmd, list_type, location,
@@ -261,57 +308,23 @@ public class WsdlToDll extends AbstractMojo {
 						"Error, while executing command: "
 								+ Arrays.toString(command) + "\n", e);
 			}
-			try {
-				readClassesFromFile(outputFilename);
-			} catch (IOException e) {
-				throw new MojoExecutionException(
-						"unable to postprocess generated outputfile", e);
-			}
 			cspath.add(outputFilename);
 		}
-
-	}
-
-	private Collection<String> findAllClassDefs(String fileString) {
-		String[] parts = fileString.split("using");
-		Collection<String> result = new HashSet<String>();
-		for (String p : parts) {
-			/*
-			 * Matcher matcher = CLASS_START_PATTERN.matcher(p); if
-			 * (!matcher.find()) { continue; }
-			 */
-			// getLog().info(p);
-			// int index = matcher.start();
-			String classDefString = "using" + p;
-
-			result.add(classDefString);
+		try {
+			findSimularities(cspath.get(0), cspath.get(1));
+		} catch (IOException e) {
+			throw new MojoExecutionException(
+					"Unable to remove double classes from theoutputfile", e);
 		}
-		return result;
 	}
 
-	private String replaceDuplicateClasses(final String fileString) {
-		String result = fileString;
-		for (String classDefString : findAllClassDefs(fileString)) {
-			if (!handledClasses.contains(classDefString)) {
-				handledClasses.add(classDefString);
-			} else {
-				result = result.replace(classDefString, "");
-			}
-		}
-		return result;
-	}
-
-	private void readClassesFromFile(String outputFilename) throws IOException {
-		String fileString = readFileToString(new File(outputFilename));
-		String processed = replaceDuplicateClasses(fileString);
-		if (processed.equals(fileString)) {
-			return;
-		}
-		FileWriter fileWriter = new FileWriter(new File(outputFilename));
-		fileWriter.append(processed);
-		fileWriter.close();
-	}
-
+	/**
+	 * Reads a file and add the new lines
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	private static String readFileToString(File file) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		StringBuilder sb = new StringBuilder();
@@ -364,9 +377,7 @@ public class WsdlToDll extends AbstractMojo {
 		if (child.exitValue() > 0) {
 			throw new MojoExecutionException(input);
 		}
-		// Because the wsdl.exe can not be executed in a outputDirectory, the
-		// file has to be moved to the corresponding
-		// folder
+
 		if (last.contains("'") && last.contains(".cs")) {
 			String filepath = last.split("'")[1];
 			File file = new File(filepath);

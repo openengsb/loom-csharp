@@ -20,6 +20,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
 using @event.example.domain.openengsb.org.xsd;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
+using System.Collections.Generic;
 
 namespace ServiceTestConsole
 {
@@ -35,7 +37,7 @@ namespace ServiceTestConsole
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
             string destination = "tcp://localhost.:6549";
-            string domainName = "example";
+            string domainName = "sqlcode";
             logger.Info("Start Example wit the domain " + domainName);
 
             ExampleDomainPortType localDomain = new ExampleDomainConnector();
@@ -45,8 +47,7 @@ namespace ServiceTestConsole
             //Register the connecter on the OpenEngSB
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
-
-
+            factory.ConnectToXLink(serviceId, "localhost", domainName, initModelViewRelation());
             ExampleDomainEventsPortType remotedomain = factory.getEventhandler<ExampleDomainEventsPortType>(domainName);
             LogEvent lEvent = new LogEvent();
             lEvent.name = "Example";
@@ -59,5 +60,24 @@ namespace ServiceTestConsole
             factory.DeleteDomainService(domainName);
             factory.StopConnection(domainName);
         }
+        public static String viewId = "SQLView";
+        public static String viewName = "SQL Viewer";
+
+        private static ModelToViewsTuple[] initModelViewRelation()
+        {
+            ModelToViewsTuple[] modelsToViews
+                = new ModelToViewsTuple[1];
+            Dictionary<String, String> descriptions = new Dictionary<String, String>();
+            descriptions.Add("en", "This view opens the values in a SQLViewer.");
+            descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
+            List<RemoteToolView> views = new List<RemoteToolView>();
+            views.Add(new RemoteToolView(viewId, viewName, descriptions));
+            modelsToViews[0] =
+                    new ModelToViewsTuple(
+                            new ModelDescription("org.openengsb.domain.SQLCode.model.SQLCreate", "3.0.0.SNAPSHOT")
+                            , views);
+            return modelsToViews;
+        }
     }
 }
+    

@@ -5,6 +5,7 @@ using System.Text;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -185,6 +186,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 proxies.Remove(domainType);
             }
         }
+        public XLinkTemplate ConnectToXLink(string id, string hostId, string domainType, ModelToViewsTuple[] modelsToViews)
+        {
+            if (!proxies.ContainsKey(domainType))
+            {
+                DomainReverse<T> proxy = createInstance(id, domainType, false);
+                proxies.Add(domainType, proxy);
+                proxy.Start();
+            }
+            return proxies[domainType].ConnectToXLink(id, hostId, domainType, modelsToViews);
+        }
+
         #endregion
         #region Abstract Methods
         /// <summary>
@@ -215,5 +227,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>An eventHandler</returns>
         protected abstract A getSubEventhandler<A>(String domainName);
         #endregion
+
+
+
+        public void DisconnectFromXLink(string id, string hostId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
