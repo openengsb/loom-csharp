@@ -42,7 +42,7 @@
             <includeSource>ComponentTests\ExampleDomainConnector.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
             <includeSource>Protocoltests\ActiveMQProtocolTest.cs</includeSource>
-            <includeSource>ETMCoreTests\ETMListTest.cs</includeSource>
+			<includeSource>ETMCoreTests\ETMListTest.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
@@ -77,8 +77,26 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>fastJSON</artifactId>
+      <version>1.9.6_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>Newtonsoft.Json</artifactId>
+      <version>5.0_2</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>ExampleDomain</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
@@ -110,26 +128,6 @@
       <artifactId>ETMTCP</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Newtonsoft.Json</artifactId>
-      <version>5.0_9-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Newtonsoft.Json</artifactId>
-      <version>4.5.9_1-SNAPSHOT</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>ExampleDomain</groupId>
-      <artifactId>ExampleDomain</artifactId>
-      <version>0.0.0.0</version>
-      <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

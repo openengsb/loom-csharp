@@ -15,16 +15,15 @@
  * limitations under the License.
  ***/
 using System;
+using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using log4net;
-using @event.example.domain.openengsb.org.xsd;
-using model.example.domain.openengsb.org.xsd;
 namespace ServiceTestConsole
 {
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class ExampleDomainConnector : RegistrationFunctions, ExampleDomainPortType
+    class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
