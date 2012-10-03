@@ -88,7 +88,6 @@
         <groupId>org.openengsb.loom.csharp.common</groupId>
         <artifactId>wsdltodll-maven-plugin</artifactId>
         <configuration>
-          <collectionType>list</collectionType>
           <wsdl_locations>
           	<wsdl_location>${project.build.directory}/ExampleDomain.wsdl</wsdl_location>
           	<wsdl_location>${project.build.directory}/ExampleDomainEvents.wsdl</wsdl_location>

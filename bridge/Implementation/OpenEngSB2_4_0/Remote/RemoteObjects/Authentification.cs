@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for the Authentification

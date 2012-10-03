@@ -4,21 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
 {
     public class RemoteToolView
     {
-        [DataMember]
         /// <summary>
         /// Unique Id of the View 
         /// </summary>
         public String viewId { get; set; }
-        [DataMember]
         /// <summary>
         /// Human readable name of the view 
         /// </summary>
         public String name { get; set; }
-        [DataMember]
         /// <summary>
         /// Map with locale strings as key (such as "en" and "de") and an description of the
         /// view in the specified language. Implementation must make sure that a default 

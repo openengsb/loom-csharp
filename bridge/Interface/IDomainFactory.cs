@@ -15,9 +15,9 @@
  * limitations under the License.
  ***/
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public interface IDomainFactory
     {

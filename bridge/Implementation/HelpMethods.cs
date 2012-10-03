@@ -22,14 +22,13 @@ using System.Reflection;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Json;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
-using System.Runtime.Serialization;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public class HelpMethods
     {
@@ -96,8 +95,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
                 typename = fieldname.Substring(0, fieldname.IndexOf("[]"));
             }
             Assembly ass = type.Assembly;
+
             type = ass.GetType(typename);
-            DataContractAttribute attribute = (DataContractAttribute)Attribute.GetCustomAttributes(type).FirstOrDefault(element => element is DataContractAttribute);
+            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
                 return reverseURL(attribute.Namespace);

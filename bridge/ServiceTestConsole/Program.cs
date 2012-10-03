@@ -15,11 +15,12 @@
  * limitations under the License.
  ***/
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 using System.Collections.Generic;
+using ExampleDomain;
 
 namespace ServiceTestConsole
 {
@@ -33,34 +34,38 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-
-            string destination = "tcp://localhost.:6549";
+            Boolean xlink=false;
+            //if you are using xlink for the example, please use an other domain. Example domain is not linkable
             string domainName = "example";
-            logger.Info("Start Example wit the domain " + domainName);
+            string destination = "tcp://localhost.:6549";
 
-            ExampleDomainPortType localDomain = new ExampleDomainConnector();
+            logger.Info("Start Example wit the domain " + domainName);
+            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, EExceptionHandling.Retry);
 
-
-            //Register the connecter on the OpenEngSB
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
-            XLinkTemplate template = factory.ConnectToXLink(domainName, initModelViewRelation());
-            factory.DisconnectFromXLink(domainName);
-            ExampleDomainEventsPortType remotedomain = factory.getEventhandler<ExampleDomainEventsPortType>(domainName);
-            LogEvent lEvent = new LogEvent();
-            lEvent.name = "Example";
-            lEvent.level = "DEBUG";
-            lEvent.message = "remoteTestEventLog";
-            remotedomain.raiseEvent(lEvent);
+            if (xlink)
+            {
+                XLinkTemplate template = factory.ConnectToXLink(domainName, initModelViewRelation());
+                factory.DisconnectFromXLink(domainName);
+            }
+            else
+            {
+                IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
+                LogEvent lEvent = new LogEvent();
+                lEvent.name = "Example";
+                lEvent.level = "DEBUG";
+                lEvent.message = "remoteTestEventLog";
+                remotedomain.raiseEvent(lEvent);
+            }
             logger.Info("Press enter to close the Connection");
             Console.ReadKey();
             factory.UnRegisterConnector(domainName);
             factory.DeleteDomainService(domainName);
             factory.StopConnection(domainName);
         }
-        public static String viewId = "SQLView";
-        public static String viewName = "SQL Viewer";
+
 
         private static ModelToViewsTuple[] initModelViewRelation()
         {
@@ -70,7 +75,7 @@ namespace ServiceTestConsole
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
             List<RemoteToolView> views = new List<RemoteToolView>();
-            views.Add(new RemoteToolView(viewId, viewName, descriptions));
+            views.Add(new RemoteToolView("SQLView", "SQL Viewer", descriptions));
             modelsToViews[0] =
                     new ModelToViewsTuple(
                             new ModelDescription("org.openengsb.domain.SQLCode.model.SQLCreate", "3.0.0.SNAPSHOT")

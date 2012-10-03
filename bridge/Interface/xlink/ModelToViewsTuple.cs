@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
 {
-    [DataContractAttribute(Namespace="http://model.xlink.api.core.openengsb.org",Name="ModelToViewsTuple")]
+    [XmlType(Namespace = "http://model.xlink.api.core.openengsb.org")]
     public class ModelToViewsTuple
     {
-
-
         /// <summary>
         /// Identifier of an OpenEngSBModel
         /// </summary>

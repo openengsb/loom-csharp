@@ -21,39 +21,34 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
 {
 
     public class XLinkTemplate
     {
-        [DataMember]
         /// <summary>
         ///  URL to the Registry´s HTTP-Servlet without necessary GET-Parameters. 
         ///  Already contains the expirationDate of the Link as GET-Parameter. 
         ///  XLink-URLs expire after a certain amount of days.
         /// </summary>
         public String baseUrl { get; set; }
-        [DataMember]
         /// <summary>
         /// Map with the available viewId as key and the assigned modelclass as value.
         /// This Map defines which Model is to be used for which view.
         /// </summary>
         public IDictionary<String, ModelDescription> viewToModels { get; set; }
-        [DataMember]
         /// <summary>
         /// List of all other currently registered tools from the same host. 
         /// This list of registered tools can be used to support 
         /// 'local-switching' between local tools.
         /// </summary>
         public IList<RemoteTool> registeredTools { get; set; }
-        [DataMember]
         /// <summary>
         /// Key/value combination of the connectorId in HTTP GET paramater syntax.
         /// Must be concatenated to the baseUrl, when the generated XLink should 
         /// to be used for 'local-switching'.
         /// </summary>
         public String connectorId { get; set; }
-        [DataMember]
         /// <summary>
         /// Contains a set of Keynames, which are to be used for constructing valid XLinkURLs.
         /// </summary>

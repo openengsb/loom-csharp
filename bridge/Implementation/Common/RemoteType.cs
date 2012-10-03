@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     /// <summary>
     /// This class maps a local type to a bus side type.

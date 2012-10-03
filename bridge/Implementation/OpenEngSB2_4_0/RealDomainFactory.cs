@@ -16,11 +16,11 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
 {
     public class RealDomainFactory<T> : AbstractRealDomainFactory<T>
     {

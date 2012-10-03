@@ -16,11 +16,11 @@
  ***/
 
 using Apache.NMS;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using log4net;
 using System;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
     /// Receive the datas

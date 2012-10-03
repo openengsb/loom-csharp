@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public interface IRegistration
     {

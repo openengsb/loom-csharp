@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ***/
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {    
     public interface IMethodResult
     {       

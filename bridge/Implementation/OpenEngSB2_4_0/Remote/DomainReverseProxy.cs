@@ -16,15 +16,15 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the

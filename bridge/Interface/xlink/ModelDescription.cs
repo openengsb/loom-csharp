@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
 {
     public class ModelDescription
     {
-        [DataMember]
         public String modelClassName { get; set; }
-        [DataMember]
         public String versionString { get; set; }
         public ModelDescription() { }
         public ModelDescription(String modelClassName, String versionString)

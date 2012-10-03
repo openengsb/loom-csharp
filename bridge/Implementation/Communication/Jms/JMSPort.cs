@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Apache.NMS;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
     /// Abstract class to connect to a destination

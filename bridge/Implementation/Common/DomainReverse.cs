@@ -19,16 +19,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class DomainReverse<T> : IRegistration
     {

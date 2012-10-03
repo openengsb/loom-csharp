@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class AbstractRealDomainFactory<T> : IDomainFactory
     {

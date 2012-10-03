@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.Remote.RemoteObject
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObject
 {
     /// <summary>
     /// This class represents an Connector instance on the bus.

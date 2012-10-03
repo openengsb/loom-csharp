@@ -16,9 +16,9 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents a RPC with its parameters, return types etc.

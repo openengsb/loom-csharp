@@ -17,14 +17,14 @@
 using System;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class Domain<T> : RealProxy
     {

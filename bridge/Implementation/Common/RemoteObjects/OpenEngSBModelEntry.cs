@@ -16,7 +16,7 @@
  ***/
 using System;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {
     public class OpenEngSBModelEntry
     {

@@ -19,11 +19,11 @@ using System;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     /// <summary>
     /// Factory Provider
@@ -39,9 +39,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         {
                 int version=getVersionNumber(stringVersion);
                 if (version >= 300)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
                 if (version >= 240)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
                 return null;
         }
         /// <summary>
@@ -53,9 +53,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         {
                 int version = getVersionNumber(stringVersion);
                 if (version >= 300)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandling);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandling);
                 if (version >= 240)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandling);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandling);
                 return null;
         }
         /// <summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration
 {
     public enum ERegistration
     {
