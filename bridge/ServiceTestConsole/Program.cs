@@ -15,12 +15,10 @@
  * limitations under the License.
  ***/
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
-using @event.example.domain.openengsb.org.xsd;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
 using System.Collections.Generic;
 
 namespace ServiceTestConsole
@@ -37,7 +35,7 @@ namespace ServiceTestConsole
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
             string destination = "tcp://localhost.:6549";
-            string domainName = "sqlcode";
+            string domainName = "example";
             logger.Info("Start Example wit the domain " + domainName);
 
             ExampleDomainPortType localDomain = new ExampleDomainConnector();
@@ -47,7 +45,8 @@ namespace ServiceTestConsole
             //Register the connecter on the OpenEngSB
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
-            factory.ConnectToXLink(serviceId, "localhost", domainName, initModelViewRelation());
+            XLinkTemplate template = factory.ConnectToXLink(domainName, initModelViewRelation());
+            factory.DisconnectFromXLink(domainName);
             ExampleDomainEventsPortType remotedomain = factory.getEventhandler<ExampleDomainEventsPortType>(domainName);
             LogEvent lEvent = new LogEvent();
             lEvent.name = "Example";

@@ -15,7 +15,7 @@
  * limitations under the License.
  ***/
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using log4net;
 using @event.example.domain.openengsb.org.xsd;
 using model.example.domain.openengsb.org.xsd;

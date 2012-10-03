@@ -16,15 +16,15 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
@@ -185,11 +185,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 }
             }
         }
-        public override XLinkTemplate ConnectToXLink(string id, string hostId, string toolName, ModelToViewsTuple[] modelsToViews)
+        public override XLinkTemplate ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
         {
             throw new NotImplementedException();
         }
-        public override void DisconnectFromXLink(string hostId)
+        public override void DisconnectFromXLink()
         {
             throw new NotImplementedException();
         }

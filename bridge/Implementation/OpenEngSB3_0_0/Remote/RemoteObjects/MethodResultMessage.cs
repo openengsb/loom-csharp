@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     /// <summary>
     /// Container for MethodResultMessage

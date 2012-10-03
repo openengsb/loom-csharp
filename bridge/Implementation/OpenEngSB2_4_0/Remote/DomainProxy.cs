@@ -17,11 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects;
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote
 {
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.

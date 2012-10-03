@@ -16,7 +16,7 @@
  ***/
 using System;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication
 {
     /// <summary>
     /// This interfaces specifies the operations for a communication port.

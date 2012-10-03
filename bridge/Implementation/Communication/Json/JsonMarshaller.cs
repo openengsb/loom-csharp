@@ -17,9 +17,9 @@
 using System;
 
 using Newtonsoft.Json;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Json
 {
     /// <summary>
     /// This class converts any given object to an json-message.

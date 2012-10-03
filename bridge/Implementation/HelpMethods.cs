@@ -22,14 +22,14 @@ using System.Reflection;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
 using System.Runtime.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
     public class HelpMethods
     {
@@ -72,7 +72,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 result = searchInTheXMLType(fieldname, type);
             }
-            return result + "." + HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", "")).Replace("[]","");
+            String classname = HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            if (classname.Contains("[]"))
+            {
+                return "[L" + result + "." + classname.Replace("[]", "") + ";";
+            }
+            else
+            {
+                return result + "." + classname;
+            }
         }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute

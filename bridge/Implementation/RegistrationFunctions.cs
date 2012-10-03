@@ -16,10 +16,10 @@
  ***/
 
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
 using log4net;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
     public partial class RegistrationFunctions
     {

@@ -16,16 +16,16 @@
  ***/
 using System;
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObject;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Communication.Jms;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.Remote.RemoteObject;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.xlink;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB3_0_0.Remote
 {
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
@@ -77,7 +77,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void CreateRemoteProxy()
         {
-            if (!registrationprocess.Equals(ERegistration.NONE)) return;
             logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
@@ -275,13 +274,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                 }
             }
         }
-        public override XLinkTemplate ConnectToXLink(string ServiceId, string hostId, string toolName, ModelToViewsTuple[] modelsToViews)
+        /// <summary>
+        /// Connect a connector to xlink
+        /// </summary>
+        /// <param name="ServiceId"></param>
+        /// <param name="hostId"></param>
+        /// <param name="toolName"></param>
+        /// <param name="modelsToViews"></param>
+        /// <returns></returns>
+        public override XLinkTemplate ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
         {
             //ID=RegisterId or ID=ServiceId? Same behaviour as register i.e bridge ofline no creation needed?
             logger.Info("Create a Xlink connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            registerId = serviceId;
 
             IList<string> classes = new List<string>();
             LocalType localType = new LocalType(typeof(String));
@@ -289,11 +295,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             classes.Add(localType.RemoteTypeFullName);
             localType = new LocalType(modelsToViews.GetType());
-            classes.Add(localType.RemoteTypeFullName+"[]");
+            classes.Add(localType.RemoteTypeFullName);
 
             IList<object> args = new List<object>();
-            args.Add(ServiceId);
-            args.Add(hostId);
+            args.Add(registerId);
+            args.Add(getHost());
             args.Add(toolName);
             args.Add(modelsToViews);
 
@@ -308,15 +314,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionhandling);
             string request = marshaller.MarshallObject(methodCall);
             portOut.Send(request, id);
-            MethodResultMessage result=waitAndCheckAnswer(destinationinfo, id);
+            MethodResultMessage result = waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.Xlink;
             logger.Info("Create done");
-            return result.result.arg as XLinkTemplate;
+            return marshaller.UnmarshallObject<XLinkTemplate>(result.result.arg.ToString());
         }
-
-        public override void DisconnectFromXLink(string hostId)
+        /// <summary>
+        /// Disconnect the Connector from XLink
+        /// </summary>
+        public override void DisconnectFromXLink()
         {
-            //ID=RegisterId or ID=ServiceId?
             logger.Info("Disconnect connector from xlink with the serviceId: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
@@ -326,9 +333,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             IList<object> args = new List<object>();
             args.Add(registerId);
-            args.Add(hostId);
+            args.Add(getHost());
 
-            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
+            RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(REMOVE_XLINK_CONNECTOR, args, metaData, classes, null);
 
             String id = Guid.NewGuid().ToString();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
@@ -344,7 +351,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.NONE;
-            logger.Info("Unregister done");
+            logger.Info("XLink is disconnected");
         }
         #endregion
         #region Private Methods

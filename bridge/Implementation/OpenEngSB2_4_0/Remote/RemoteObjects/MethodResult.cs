@@ -15,11 +15,11 @@
  * limitations under the License.
  ***/
 using System.Collections.Generic;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.Enumeration;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.Common.RemoteObjects;
 
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.OpenEngSB2_4_0.Remote.RemoteObjects
 {
     /// <summary>
     /// This class represents the return value of an RPC.
