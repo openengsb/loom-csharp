@@ -21,7 +21,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink
 {
 
     public class XLinkTemplate

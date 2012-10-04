@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink
 {
     [XmlType(Namespace = "http://model.xlink.api.core.openengsb.org")]
     public class ModelToViewsTuple

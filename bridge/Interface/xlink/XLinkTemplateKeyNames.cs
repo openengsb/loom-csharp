@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink
 {
     public class XLinkTemplateKeyNames
     {

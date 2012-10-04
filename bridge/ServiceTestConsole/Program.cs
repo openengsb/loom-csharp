@@ -18,9 +18,10 @@ using System;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.xlink;
 using System.Collections.Generic;
 using ExampleDomain;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
 
 namespace ServiceTestConsole
 {
