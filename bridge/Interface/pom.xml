@@ -22,7 +22,7 @@
     <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
     <artifactId>loom-csharp-common-bridge-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-	<relativePath>..</relativePath>
+    <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
@@ -61,6 +61,12 @@
           <includeSources>
             <includeSource>IDomainFactory.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
+            <includeSoruce>xlink\ModelDescription.cs</includeSoruce>
+            <includeSoruce>xlink\ModelToViewsTuple.cs</includeSoruce>
+            <includeSoruce>xlink\RemoteTool.cs</includeSoruce>
+            <includeSoruce>xlink\RemoteToolView.cs</includeSoruce>
+            <includeSoruce>xlink\XLinkTemplate.cs</includeSoruce>
+            <includeSoruce>xlink\XLinkTemplateKeyNames.cs</includeSoruce>
           </includeSources>
         </configuration>
       </plugin>
