@@ -108,9 +108,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionhandling);
             string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request,id);
+            portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.CREATED;
+            portOut.Close();
             logger.Info("Create done");
         }
 
@@ -145,6 +146,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.NONE;
+            portOut.Close();
             logger.Info("Delete done");
         }
 
@@ -182,6 +184,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             portOut.Send(request,id);
             waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.REGISTERED;
+            portOut.Close();
             logger.Info("Register done");
         }
         private void waitAndCheckAnswer(Destination destinationinfo, String id)
@@ -189,6 +192,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), exceptionhandling);
             string reply = portIn.Receive();
             MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
+            portIn.Close();
             if (result.result.type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
         }
@@ -228,6 +232,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             {
                 registrationprocess = ERegistration.CREATED;
             }
+            portOut.Close();
             logger.Info("Unregister done");
         }
         /// <summary>
