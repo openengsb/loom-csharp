@@ -21,17 +21,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         #region Variables
         private static ILog logging = LogManager.GetLogger(typeof(ETMTCPImplementation));
         private IDictionary<int, Socket> openClients = new ConcurrentDictionary<int, Socket>();
+        private Semaphore semaphoreSocketAccept = new Semaphore(1, 1);
         private Socket serverSocket;
         /// <summary>
         /// Every message gets a position. This position is bind to the socket
         /// </summary>
         #endregion
         #region Constructors
-        public ETMTCPImplementation(List<InteractionMessage> workflow):base(logging, new ETMList(workflow))
+        public ETMTCPImplementation(List<InteractionMessage> workflow)
+            : base(logging, new ETMList(workflow))
         {
             ReceivedMessages = new Dictionary<int, Dictionary<int, IProtocol>>();
         }
-        #endregion        
+        #endregion
         #region Asychnore Socket handling methods
         /// <summary>
         /// Listen to all sockets, which could connect to this configurations
@@ -73,10 +75,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
                 logging.Debug(ex);
                 return;
             }
+            semaphoreSocketAccept.WaitOne();
             clientID = openClients.Count;
             logging.Info("New Client connected: " + clientID);
             receivedMessageposition.Add(clientID, 0);
             openClients.Add(clientID, client);
+            semaphoreSocketAccept.Release();
             StateObject state = new StateObject(client, clientID);
 
             client.BeginReceive(state.Buffer, 0, state.BufferSize, 0,
@@ -170,7 +174,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
             if (!client.Connected)
             {
                 client.Close();
-                openClients.Remove(clientObject.SocketID);
                 return true;
             }
             return false;
@@ -254,7 +257,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.ETM.TCP
         public override void Dispose()
         {
             foreach (Socket socket in openClients.Values)
+            {
                 socket.Close();
+            } 
             serverSocket.Close();
         }
         #endregion
