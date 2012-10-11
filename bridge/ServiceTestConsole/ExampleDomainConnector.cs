@@ -17,6 +17,7 @@
 using System;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+
 using log4net;
 namespace ServiceTestConsole
 {

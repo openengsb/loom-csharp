@@ -71,7 +71,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 result = searchInTheXMLType(fieldname, type);
             }
-            return result + "." + HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            String classname = HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            if (classname.Contains("[]"))
+            {
+                return "[L" + result + "." + classname.Replace("[]", "") + ";";
+            }
+            else
+            {
+                return result + "." + classname;
+            }
         }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
@@ -81,8 +89,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Packagename</returns>
         private static String searchInTheXMLType(String fieldname, Type type)
         {
+            String typename = fieldname;
+            if (typename.Contains("[]"))
+            {
+                typename = fieldname.Substring(0, fieldname.IndexOf("[]"));
+            }
             Assembly ass = type.Assembly;
-            type = ass.GetType(fieldname);
+
+            type = ass.GetType(typename);
             XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
             if (attribute != null)
             {

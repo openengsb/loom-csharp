@@ -15,6 +15,7 @@
  * limitations under the License.
  ***/
 using System;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
@@ -25,6 +26,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         void DeleteDomainService(String domainType);
         void RegisterConnector(String registrationid, String domainType);
         void UnRegisterConnector(String domainType);
+        XLinkTemplate ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews);
+        void DisconnectFromXLink(String domainType);
         void StopConnection(String domainType);
         String getDomainTypServiceId(String domainType);
         String getServiceId(String domainType);

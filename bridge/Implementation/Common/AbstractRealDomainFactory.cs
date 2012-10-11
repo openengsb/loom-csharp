@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
+
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -185,6 +188,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 proxies.Remove(domainType);
             }
         }
+        public XLinkTemplate ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews)
+        {
+            /*
+             * Has to be discussed if Xlink can be without register
+            if (!proxies.ContainsKey(domainType))
+            {
+                DomainReverse<T> proxy = createInstance( domainType, false);
+                proxies.Add(domainType, proxy);
+                proxy.Start();
+            }*/
+            return proxies[domainType].ConnectToXLink(domainType, modelsToViews);
+        }
+        public void DisconnectFromXLink(string domainType)
+        {
+            IRegistration stoppable = null;
+            if (proxies.TryGetValue(domainType, out stoppable))
+            {
+                stoppable.DisconnectFromXLink();
+            }
+        }
         #endregion
         #region Abstract Methods
         /// <summary>
@@ -215,5 +238,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>An eventHandler</returns>
         protected abstract A getSubEventhandler<A>(String domainName);
         #endregion
+
     }
 }
