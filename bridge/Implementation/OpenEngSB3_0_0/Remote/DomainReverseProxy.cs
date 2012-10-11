@@ -289,7 +289,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <returns></returns>
         public override XLinkTemplate ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
         {
-            //ID=RegisterId or ID=ServiceId? Same behaviour as register i.e bridge ofline no creation needed?
             logger.Info("Create a Xlink connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
@@ -355,7 +354,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             portOut.Send(request, id);
 
             waitAndCheckAnswer(destinationinfo, id);
-            registrationprocess = ERegistration.NONE;
+            registrationprocess = ERegistration.REGISTERED;
             logger.Info("XLink is disconnected");
         }
         #endregion
