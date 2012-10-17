@@ -42,7 +42,7 @@
             <includeSource>ComponentTests\ExampleDomainConnector.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
             <includeSource>Protocoltests\ActiveMQProtocolTest.cs</includeSource>
-			<includeSource>ETMCoreTests\ETMListTest.cs</includeSource>
+            <includeSource>ETMCoreTests\ETMListTest.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>
@@ -65,18 +65,6 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Apache.NMS</artifactId>
-      <version>1.5.0_2</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.0_3</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>fastJSON</artifactId>
       <version>1.9.6_2</version>
       <type>dotnet-library</type>
@@ -94,8 +82,20 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>Apache.NMS</artifactId>
+      <version>1.5.1_1-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.wrapped.csharp</groupId>
+      <artifactId>Apache.NMS.ActiveMQ</artifactId>
+      <version>1.5.6_1-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ExampleDomain</artifactId>
+      <artifactId>Implementation</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
@@ -106,8 +106,16 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
+      <groupId>ExampleDomain</groupId>
+      <artifactId>ExampleDomain</artifactId>
+      <version>0.0.0.0</version>
+      <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</systemPath>
+    </dependency>
+    <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>Implementation</artifactId>
+      <artifactId>ETMTCP</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
@@ -124,10 +132,12 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ETMTCP</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <groupId>ConnectorManagerInterfaces</groupId>
+      <artifactId>ConnectorManagerInterfaces</artifactId>
+      <version>0.0.0.0</version>
       <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>C:\Users\frenz\openEngsb\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</systemPath>
     </dependency>
   </dependencies>
 </project>
