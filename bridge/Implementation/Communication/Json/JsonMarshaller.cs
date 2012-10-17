@@ -15,8 +15,8 @@
  * limitations under the License.
  ***/
 using System;
-
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json

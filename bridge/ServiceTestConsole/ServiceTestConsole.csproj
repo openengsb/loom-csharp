@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ConnectorManagerInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="ExampleDomain">
       <HintPath>..\WsdlToDll\Domain\target\ExampleDomain.dll</HintPath>
     </Reference>

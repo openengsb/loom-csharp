@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeTest", "BridgeTest\BridgeTest.csproj", "{A9CC9C4D-00E2-483A-BFBE-E1AD5D7B09E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETMTest", "ETMTest\ETMTest.csproj", "{DFFD61A0-3ADE-480E-BA4D-DA2FD87A6554}"
@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Local.testsettings = Local.testsettings
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{A9780226-2E7B-49FF-ABFD-4B1419B76450}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -31,10 +29,6 @@ Global
 		{DFFD61A0-3ADE-480E-BA4D-DA2FD87A6554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFFD61A0-3ADE-480E-BA4D-DA2FD87A6554}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFFD61A0-3ADE-480E-BA4D-DA2FD87A6554}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9780226-2E7B-49FF-ABFD-4B1419B76450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9780226-2E7B-49FF-ABFD-4B1419B76450}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9780226-2E7B-49FF-ABFD-4B1419B76450}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9780226-2E7B-49FF-ABFD-4B1419B76450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

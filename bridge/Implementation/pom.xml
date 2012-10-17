@@ -44,8 +44,6 @@
             <includeSource>Common\Enumeration\ReturnType.cs</includeSource>
             <includeSource>Common\IRegistration.cs</includeSource>
             <includeSource>Common\RemoteObjects\IMethodResult.cs</includeSource>
-            <includeSource>Common\RemoteObjects\OpenEngSBModelEntry.cs</includeSource>
-            <includeSource>Common\RemoteObjects\OpenEngSBModelWrapper.cs</includeSource>
             <includeSource>HelpMethods.cs</includeSource>
             <includeSource>Common\DomainReverse.cs</includeSource>
             <includeSource>Common\RemoteObjects\IMethodCall.cs</includeSource>
@@ -133,6 +131,14 @@
       <artifactId>Apache.NMS</artifactId>
       <version>1.5.1_1-SNAPSHOT</version>
       <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>ConnectorManagerInterfaces</groupId>
+      <artifactId>ConnectorManagerInterfaces</artifactId>
+      <version>0.0.0.0</version>
+      <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>C:\Users\frenz\openEngsb\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using log4net;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
 
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common

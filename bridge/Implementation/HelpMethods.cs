@@ -27,6 +27,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using System.Collections;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -80,6 +81,64 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 return result + "." + classname;
             }
+        }
+        public static Object[] ConvertMap(IDictionary arg, Type type)
+        {
+            Array elements = Array.CreateInstance(type, arg.Count);
+            int i = 0;
+            foreach (Object tmpobj in arg.Keys)
+            {
+                Object tmpresult = Activator.CreateInstance(type, false);
+                type.GetProperty("key").SetValue(tmpresult, tmpobj,null);
+                type.GetProperty("value").SetValue(tmpresult, arg[tmpobj], null);
+                elements.SetValue(tmpresult, i++);
+            }
+            return (Object[])elements;
+        }
+        public static T[] ConvertMap<T>(IDictionary arg)
+        {
+            Array elements = Array.CreateInstance(typeof(T), arg.Count);
+            int i = 0;
+            foreach (Object tmpobj in arg.Keys)
+            {
+                Object tmpresult = Activator.CreateInstance(typeof(T), false);
+                typeof(T).GetProperty("key").SetValue(tmpresult, tmpobj, null);
+                typeof(T).GetProperty("value").SetValue(tmpresult, arg[tmpobj], null);
+                elements.SetValue(tmpresult, i++);
+            }
+            return (T[])elements;
+        }
+        public static IDictionary<T,V> ConvertMap<T,V>(Object obj)
+        {
+            Object result=ConvertMap(obj);
+            if (result.GetType() is IDictionary)
+            {
+                return null;
+            }
+            IDictionary tmpDict= ((IDictionary)result);
+            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
+            foreach (Object key in tmpDict.Keys)
+            {
+                tmpresult.Add((T)key, (V)tmpDict[key]);
+            }
+            return tmpresult;
+        }
+        public static Object ConvertMap(Object obj)
+        {
+            if (!(obj.GetType().IsArray) || !obj.GetType().Name.ToUpper().Contains("ENTRY"))
+            {
+                return obj;
+            }
+
+            Dictionary<Object, Object> result = new Dictionary<Object, Object>();
+            foreach (object keyValue in (Object[])obj)
+            {
+                Object key = keyValue.GetType().GetProperty("key").GetValue(keyValue, null);
+                Object value = keyValue.GetType().GetProperty("value").GetValue(keyValue, null);
+                result.Add(key, value);
+            }
+            
+            return result;
         }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
@@ -149,6 +208,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 i = i + 2;
             }
         }
+
         /// <summary>
         /// Add true objects for the Specified fields
         /// </summary>

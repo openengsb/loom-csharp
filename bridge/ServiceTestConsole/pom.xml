@@ -71,5 +71,13 @@
       <scope>system</scope>
       <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</systemPath>
     </dependency>
+    <dependency>
+      <groupId>ConnectorManagerInterfaces</groupId>
+      <artifactId>ConnectorManagerInterfaces</artifactId>
+      <version>0.0.0.0</version>
+      <type>dotnet-library</type>
+      <scope>system</scope>
+      <systemPath>C:\Users\frenz\openEngsb\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</systemPath>
+    </dependency>
   </dependencies>
 </project>

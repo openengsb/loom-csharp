@@ -21,6 +21,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using System.Xml.Serialization;
+using System.Collections;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
@@ -79,18 +81,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             metaData.Add("contextId", "foo");
             List<string> classes = new List<string>();
             foreach (object arg in msg.Args)
-            {
-                String namesp = arg.GetType().Namespace;
+            {             
                 LocalType type = new LocalType(arg.GetType());
                 classes.Add(type.RemoteTypeFullName);
             }
-            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
+            object[] Args = msg.Args;
+            for (int i = 0; i < Args.Length;i++ )
+            {
+                Args[i] = HelpMethods.ConvertMap(Args[i]);
+            }
+            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, Args, metaData, classes, null);
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             authentification.data.Add("value", password);
             MethodCallMessage message = MethodCallMessage.createInstance(username, authentification, call, id.ToString(), true, "");
             return message;
         }
         #endregion
-
     }
 }

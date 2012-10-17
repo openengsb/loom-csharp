@@ -26,7 +26,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
+using System.Collections;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -221,6 +221,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     obj = Enum.Parse(type, (string)arg);
                 }
+                else if (type.Name.ToUpper().Contains("ENTRY"))
+                {
+                    obj = HelpMethods.ConvertMap(marshaller.UnmarshallObject<IDictionary>(arg.ToString()), type);
+                }
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
@@ -231,25 +235,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             return args.ToArray();
         }
 
-
-        private Object ConvertType(OpenEngSBModelEntry entry, MethodInfo methodinfo)
-        {
-            String value = entry.value;
-            RemoteType remote = new RemoteType(entry.type, methodinfo.GetParameters());
-            Type type = findType(remote.LocalTypeFullName, methodinfo);
-            if (type.IsPrimitive || type.Equals(typeof(string)))
-            {
-                return Convert.ChangeType(value, type);
-            }
-            else if (type.IsEnum)
-            {
-                return Enum.Parse(type, value);
-            }
-            else
-            {
-                return marshaller.UnmarshallObject(value, type);
-            }
-        }
+        
         private Type findType(String typeString, MethodInfo methodInfo)
         {
             Assembly asm = typeof(T).GetType().Assembly;

@@ -15,7 +15,6 @@
  * limitations under the License.
  ***/
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {

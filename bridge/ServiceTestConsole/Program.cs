@@ -21,7 +21,6 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using System.Collections.Generic;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.xlink;
 
 namespace ServiceTestConsole
 {
@@ -35,9 +34,9 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-            Boolean xlink=false;
+            Boolean xlink=true;
             //if you are using xlink for the example, please use an other domain. Example domain is not linkable
-            string domainName = "example";
+            string domainName = "sqlcode";
             string destination = "tcp://localhost.:6549";
 
             logger.Info("Start Example wit the domain " + domainName);
@@ -75,12 +74,15 @@ namespace ServiceTestConsole
             Dictionary<String, String> descriptions = new Dictionary<String, String>();
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
-            List<RemoteToolView> views = new List<RemoteToolView>();
-            views.Add(new RemoteToolView("SQLView", "SQL Viewer", descriptions));
+
+            RemoteToolView[] views = new RemoteToolView[1];
+            views[0]=(new RemoteToolView(){name= "SQLView", viewId="SQL Viewer", descriptions=(entry4[])HelpMethods.ConvertMap(descriptions,typeof(entry4))});
             modelsToViews[0] =
-                    new ModelToViewsTuple(
-                            new ModelDescription("org.openengsb.domain.SQLCode.model.SQLCreate", "3.0.0.SNAPSHOT")
-                            , views);
+                    new ModelToViewsTuple()
+                    {
+                        description = new ModelDescription() { modelClassName = "org.openengsb.domain.SQLCode.model.SQLCreate", versionString = "3.0.0.SNAPSHOT" },
+                        views = views
+                    };
             return modelsToViews;
         }
     }
