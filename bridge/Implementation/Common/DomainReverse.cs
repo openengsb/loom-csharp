@@ -27,6 +27,7 @@ using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Collections;
+using ConnectorManager;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -350,7 +351,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public abstract void Listen();
         public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
-        public abstract XLinkTemplate ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews);
+        public abstract XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews);
         public abstract void DisconnectFromXLink();
         #endregion
     }

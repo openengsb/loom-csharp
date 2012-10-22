@@ -40,9 +40,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.6_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ConnectorManagerInterfaces, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</HintPath>
+    <Reference Include="ConnectorManager">
+      <HintPath>..\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
     <Reference Include="fastJSON">
       <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>

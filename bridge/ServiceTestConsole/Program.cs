@@ -21,6 +21,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using System.Collections.Generic;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using ConnectorManager;
 
 namespace ServiceTestConsole
 {
@@ -34,20 +35,18 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-            Boolean xlink=true;
+            Boolean xlink=false;
             //if you are using xlink for the example, please use an other domain. Example domain is not linkable
-            string domainName = "sqlcode";
+            string domainName = "example";
             string destination = "tcp://localhost.:6549";
-
             logger.Info("Start Example wit the domain " + domainName);
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, EExceptionHandling.Retry);
-
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
             if (xlink)
             {
-                XLinkTemplate template = factory.ConnectToXLink(domainName, initModelViewRelation());
+                XLinkUrlBlueprint template = factory.ConnectToXLink(domainName, initModelViewRelation());
                 factory.DisconnectFromXLink(domainName);
             }
             else
@@ -75,8 +74,8 @@ namespace ServiceTestConsole
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
 
-            RemoteToolView[] views = new RemoteToolView[1];
-            views[0]=(new RemoteToolView(){name= "SQLView", viewId="SQL Viewer", descriptions=(entry4[])HelpMethods.ConvertMap(descriptions,typeof(entry4))});
+            XLinkConnectorView[] views = new XLinkConnectorView[1];
+            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {

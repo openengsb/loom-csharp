@@ -27,6 +27,93 @@ namespace BridgeTest
     [TestFixture]
     public class TestHelpMethods
     {
+        public class entry1
+        {
+            public entry1() { }
+
+            public string key { get; set; }
+            public int value { get; set; }
+        }
+        [Test]
+        public void TestMapToEntr1()
+        {
+            Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
+            Test.Add("1", 11);
+            Test.Add("21", 111);
+            entry1[] result = (entry1[])HelpMethods.ConvertMap(Test, typeof(entry1));
+            foreach (entry1 e1 in result)
+            {
+                Assert.IsTrue(Test.ContainsKey(e1.key));
+                Assert.AreEqual(Test[e1.key], e1.value);
+            }
+        }
+        [Test]
+        public void Entri1toMap()
+        {
+            entry1[] Test = new entry1[] { 
+                new entry1() { key = "1", value = 11 },
+                new entry1() { key = "21", value = 21 } 
+            };
+            IDictionary<String, int> result = HelpMethods.ConvertMap<String, int>(Test);
+            foreach (entry1 e1 in Test)
+            {
+                Assert.IsTrue(result.ContainsKey(e1.key));
+                Assert.AreEqual(result[e1.key], e1.value);
+            }
+        }
+        [Test]
+        public void Entri1toMap_extended_Method()
+        {
+            entry1[] Test = new entry1[] { 
+                new entry1() { key = "1", value = 11 },
+                new entry1() { key = "21", value = 21 } 
+            };
+            IDictionary<String, int> result = Test.ConvertMap<String, int>();
+            foreach (entry1 e1 in Test)
+            {
+                Assert.IsTrue(result.ContainsKey(e1.key));
+                Assert.AreEqual(result[e1.key], e1.value);
+            }
+        }
+        [Test]
+        public void TestMapToEntr1_genericType()
+        {
+            Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
+            Test.Add("1", 11);
+            Test.Add("21", 111);
+            entry1[] result = HelpMethods.ConvertMap<entry1>(Test);
+            foreach (entry1 e1 in result)
+            {
+                Assert.IsTrue(Test.ContainsKey(e1.key));
+                Assert.AreEqual(Test[e1.key], e1.value);
+            }
+        }
+        [Test]
+        public void TestMapToEntr1_extendeMethod_with_typeParameter()
+        {
+            Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
+            Test.Add("1", 11);
+            Test.Add("21", 111);
+            entry1[] result = (entry1[])Test.ConvertMap(typeof(entry1));
+            foreach (entry1 e1 in result)
+            {
+                Assert.IsTrue(Test.ContainsKey(e1.key));
+                Assert.AreEqual(Test[e1.key], e1.value);
+            }
+        }
+        [Test]
+        public void TestMapToEntr1_extendeMethod_with_genericType()
+        {
+            Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
+            Test.Add("1", 11);
+            Test.Add("21", 111);
+            entry1[] result = Test.ConvertMap<entry1>();
+            foreach (entry1 e1 in result)
+            {
+                Assert.IsTrue(Test.ContainsKey(e1.key));
+                Assert.AreEqual(Test[e1.key], e1.value);
+            }
+        }
         [Test]
         public void TestreverseURL()
         {

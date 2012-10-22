@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConnectorManager;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
@@ -184,7 +185,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 proxies.Remove(domainType);
             }
         }
-        public XLinkTemplate ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews)
+        public XLinkUrlBlueprint ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews)
         {
             /*
              * Has to be discussed if Xlink can be without register

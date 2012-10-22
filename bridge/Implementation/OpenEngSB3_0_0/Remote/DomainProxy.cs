@@ -88,7 +88,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             object[] Args = msg.Args;
             for (int i = 0; i < Args.Length;i++ )
             {
-                Args[i] = HelpMethods.ConvertMap(Args[i]);
+                Args[i] = Args[i].ConvertMap();
             }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, Args, metaData, classes, null);
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
