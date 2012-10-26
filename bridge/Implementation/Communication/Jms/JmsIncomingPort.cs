@@ -81,8 +81,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         public new void Close()
         {
-            base.Close();
             consumer.Close();
+            base.Close();
         }
         #endregion
 

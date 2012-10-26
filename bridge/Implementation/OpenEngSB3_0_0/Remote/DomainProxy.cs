@@ -21,6 +21,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
+using System.Xml.Serialization;
+using System.Collections;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
@@ -79,8 +81,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             metaData.Add("contextId", "foo");
             List<string> classes = new List<string>();
             foreach (object arg in msg.Args)
-            {
-                String namesp = arg.GetType().Namespace;
+            {             
                 LocalType type = new LocalType(arg.GetType());
                 classes.Add(type.RemoteTypeFullName);
             }
@@ -91,6 +92,5 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             return message;
         }
         #endregion
-
     }
 }

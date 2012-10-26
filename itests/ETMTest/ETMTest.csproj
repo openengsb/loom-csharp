@@ -32,21 +32,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apache.NMS">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.0_2\Apache.NMS.dll</HintPath>
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS-1.5.1_1-SNAPSHOT\Apache.NMS.dll</HintPath>
     </Reference>
     <Reference Include="Apache.NMS.ActiveMQ">
-      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.0_3\Apache.NMS.ActiveMQ.dll</HintPath>
+      <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.6_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ETMTCP">
+    <Reference Include="ConnectorManager">
+      <HintPath>..\..\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
+    </Reference>
+    <Reference Include="ETMTCP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ETMTCP-1.0.0-SNAPSHOT\ETMTCP.dll</HintPath>
     </Reference>
     <Reference Include="ExampleDomain">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\ExampleDomain-1.0.0-SNAPSHOT\ExampleDomain.dll</HintPath>
+      <HintPath>..\..\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="fastJSON">
       <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
     </Reference>
-    <Reference Include="IETM">
+    <Reference Include="IETM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\IETM-1.0.0-SNAPSHOT\IETM.dll</HintPath>
     </Reference>
     <Reference Include="Implementation">
@@ -65,7 +70,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\NUnit\NUnit.Framework-2.2.8.0\NUnit.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Protocols">
+    <Reference Include="Protocols, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Protocols-1.0.0-SNAPSHOT\Protocols.dll</HintPath>
     </Reference>
     <Reference Include="System" />

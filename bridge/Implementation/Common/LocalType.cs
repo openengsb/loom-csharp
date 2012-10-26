@@ -43,6 +43,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 if (type.IsPrimitive){
                     return type.FullName;
                 }
+                if (type.Name.ToUpper().Contains("ENTRY"))
+                {
+                    return "java.util.Map";
+                }
                 return HelpMethods.createClassWithPackageName(type.FullName, type);
             }
         }
