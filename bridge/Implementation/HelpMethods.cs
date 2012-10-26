@@ -33,6 +33,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public static class HelpMethods
     {
+        public static IMarshaller marshaller = new JsonMarshaller();
         /// <summary>
         /// Takes a Namespace as input, reverse the elements and returns the package structure from java
         /// </summary>
@@ -89,17 +90,41 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="type">type to convert it into</param>
         /// <returns></returns>
         public static Object[] ConvertMap(this IDictionary arg, Type type)
-        {
-            Array elements = Array.CreateInstance(type, arg.Count);
-            int i = 0;
-            foreach (Object tmpobj in arg.Keys)
+        {            
+            Type elementType = type;
+            if (elementType.IsArray)
             {
-                Object tmpresult = Activator.CreateInstance(type, false);
-                type.GetProperty("key").SetValue(tmpresult, tmpobj,null);
-                type.GetProperty("value").SetValue(tmpresult, arg[tmpobj], null);
-                elements.SetValue(tmpresult, i++);
+                elementType = type.GetElementType();
+            }
+            Array elements = Array.CreateInstance(elementType, arg.Count);
+            
+            int i = 0;
+            foreach (Object key in arg.Keys)
+            {
+                Object instance = Activator.CreateInstance(elementType, false);
+                Object value = arg[key];
+                Type keyType = elementType.GetProperty("key").PropertyType;
+                Type valueType = elementType.GetProperty("value").PropertyType;
+                if (IsValueNotInCorrectType(key, keyType))
+                {
+                    instance = marshaller.UnmarshallObject(instance.ToString(), keyType);
+                }
+                elementType.GetProperty("key").SetValue(instance, key, null);
+                if (IsValueNotInCorrectType(value,valueType))
+                {
+                    value = marshaller.UnmarshallObject(value.ToString(), valueType);
+                }
+                elementType.GetProperty("value").SetValue(instance, value, null);
+                elements.SetValue(instance, i++);
             }
             return (Object[])elements;
+        }
+
+        private static bool IsValueNotInCorrectType(Object key, Type keyType)
+        {
+            Boolean a1=keyType.IsPrimitive || keyType.Equals(typeof(string));
+            Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
+            return !a1 && !a2;
         }
         /// <summary>
         /// Converts a Dictionary to a Map (entryX)

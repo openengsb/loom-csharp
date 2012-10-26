@@ -85,12 +85,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                 LocalType type = new LocalType(arg.GetType());
                 classes.Add(type.RemoteTypeFullName);
             }
-            object[] Args = msg.Args;
-            for (int i = 0; i < Args.Length;i++ )
-            {
-                Args[i] = Args[i].ConvertMap();
-            }
-            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, Args, metaData, classes, null);
+            RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             authentification.data.Add("value", password);
             MethodCallMessage message = MethodCallMessage.createInstance(username, authentification, call, id.ToString(), true, "");
