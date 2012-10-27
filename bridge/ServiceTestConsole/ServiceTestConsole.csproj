@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConnectorManager">
+    <Reference Include="ConnectorManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
     <Reference Include="ExampleDomain">

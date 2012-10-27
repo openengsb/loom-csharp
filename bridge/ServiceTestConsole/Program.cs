@@ -35,9 +35,9 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-            Boolean xlink=false;
+            Boolean xlink=true;
             //if you are using xlink for the example, please use an other domain. Example domain is not linkable
-            string domainName = "example";
+            string domainName = "sqlcode";
             string destination = "tcp://localhost.:6549";
             logger.Info("Start Example wit the domain " + domainName);
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();

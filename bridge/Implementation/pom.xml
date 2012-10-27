@@ -57,6 +57,7 @@
             <includeSource>DomainFactoryProvider.cs</includeSource>
             <includeSource>Common\AbstractRealDomainFactory.cs</includeSource>
             <includeSource>Communication\IIncomingPort.cs</includeSource>
+            <includeSource>Communication\Json\CustomJsonMarshaller.cs</includeSource>
             <includeSource>Communication\IMarshaller.cs</includeSource>
             <includeSource>Communication\IOutgoingPort.cs</includeSource>
             <includeSource>Communication\IPort.cs</includeSource>
@@ -133,12 +134,12 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>ConnectorManagerInterfaces</groupId>
-      <artifactId>ConnectorManagerInterfaces</artifactId>
+      <groupId>ConnectorManager</groupId>
+      <artifactId>ConnectorManager</artifactId>
       <version>0.0.0.0</version>
       <type>dotnet-library</type>
       <scope>system</scope>
-      <systemPath>C:\Users\frenz\openEngsb\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</systemPath>
+      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

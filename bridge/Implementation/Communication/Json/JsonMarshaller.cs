@@ -35,7 +35,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(jsonText);
+                return JsonConvert.DeserializeObject<T>(jsonText,new CustomJsonMarshaller());
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// <returns>Returns a Json Message</returns>
         public string MarshallObject(object obj)
         {
-            fastJSON.JSON json = fastJSON.JSON.Instance;
+/*            fastJSON.JSON json = fastJSON.JSON.Instance;
             json.IndentOutput = false;
             json.SerializeNullValues = true;
             json.ShowReadOnlyProperties = false;
@@ -58,8 +58,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             json.UseOptimizedDatasetSchema = false;
             json.UseSerializerExtension = false;
             json.UseUTCDateTime = false;
-            json.UsingGlobalTypes = false;
-            return json.ToJSON(obj);
+            json.UsingGlobalTypes = false;*/
+            return JsonConvert.SerializeObject(obj,new CustomJsonMarshaller());
         }
         /// <summary>
         /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects

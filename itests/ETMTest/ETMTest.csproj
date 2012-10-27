@@ -37,8 +37,8 @@
     <Reference Include="Apache.NMS.ActiveMQ">
       <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.6_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ConnectorManagerInterfaces">
-      <HintPath>..\..\..\xlink\openengsb-framework\components\api\target\generated\wsdl\ConnectorManagerInterfaces.dll</HintPath>
+    <Reference Include="ConnectorManager">
+      <HintPath>..\..\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
     <Reference Include="ETMTCP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

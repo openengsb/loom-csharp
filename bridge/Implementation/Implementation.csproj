@@ -40,7 +40,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.6_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ConnectorManager">
+    <Reference Include="ConnectorManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
     <Reference Include="fastJSON">
@@ -73,6 +74,7 @@
     <Compile Include="Common\Enumeration\ReturnType.cs" />
     <Compile Include="Common\IRegistration.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
+    <Compile Include="Communication\Json\CustomJsonMarshaller.cs" />
     <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />

@@ -222,10 +222,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     obj = Enum.Parse(type, (string)arg);
                 }
-                else if (type.Name.ToUpper().Contains("ENTRY"))
-                {
-                    obj = HelpMethods.ConvertMap(marshaller.UnmarshallObject<IDictionary>(arg.ToString()), type);
-                }
                 else
                 {
                     obj = marshaller.UnmarshallObject(arg.ToString(), type);
