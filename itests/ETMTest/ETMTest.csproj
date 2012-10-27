@@ -37,7 +37,8 @@
     <Reference Include="Apache.NMS.ActiveMQ">
       <HintPath>.references\org.openengsb.wrapped.csharp\Apache.NMS.ActiveMQ-1.5.6_1-SNAPSHOT\Apache.NMS.ActiveMQ.dll</HintPath>
     </Reference>
-    <Reference Include="ConnectorManager">
+    <Reference Include="ConnectorManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
     <Reference Include="ETMTCP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -54,10 +55,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\IETM-1.0.0-SNAPSHOT\IETM.dll</HintPath>
     </Reference>
-    <Reference Include="Implementation">
+    <Reference Include="Implementation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Implementation-1.0.0-SNAPSHOT\Implementation.dll</HintPath>
     </Reference>
-    <Reference Include="Interface">
+    <Reference Include="Interface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\Interface-1.0.0-SNAPSHOT\Interface.dll</HintPath>
     </Reference>
     <Reference Include="log4net">

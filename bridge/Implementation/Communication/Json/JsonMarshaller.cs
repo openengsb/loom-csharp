@@ -35,7 +35,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(jsonText,new CustomJsonMarshaller());
+                return JsonConvert.DeserializeObject<T>(jsonText,new CustomJsonUnMarshaller());
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         {
             try
             {
-                return JsonConvert.DeserializeObject(jsonText, objectType);
+                return JsonConvert.DeserializeObject(jsonText, objectType,new CustomJsonUnMarshaller());
             }
             catch (Exception ex)
             {

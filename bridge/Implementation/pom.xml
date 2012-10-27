@@ -57,7 +57,6 @@
             <includeSource>DomainFactoryProvider.cs</includeSource>
             <includeSource>Common\AbstractRealDomainFactory.cs</includeSource>
             <includeSource>Communication\IIncomingPort.cs</includeSource>
-            <includeSource>Communication\Json\CustomJsonMarshaller.cs</includeSource>
             <includeSource>Communication\IMarshaller.cs</includeSource>
             <includeSource>Communication\IOutgoingPort.cs</includeSource>
             <includeSource>Communication\IPort.cs</includeSource>
@@ -65,6 +64,9 @@
             <includeSource>Communication\Jms\JmsIncomingPort.cs</includeSource>
             <includeSource>Communication\Jms\JmsOutgoingPort.cs</includeSource>
             <includeSource>Communication\Jms\JMSPort.cs</includeSource>
+            <includeSource>Communication\Json\AbstractJsonMarshaller.cs</includeSource>
+            <includeSource>Communication\Json\CustomJsonMarshaller.cs</includeSource>
+            <includeSource>Communication\Json\CustomJsonUnMarshaller.cs</includeSource>
             <includeSource>Communication\Json\JsonMarshaller.cs</includeSource>
             <includeSource>Common\LocalType.cs</includeSource>
             <includeSource>OpenEngSB2_4_0\Remote\RemoteObjects\Authentification.cs</includeSource>

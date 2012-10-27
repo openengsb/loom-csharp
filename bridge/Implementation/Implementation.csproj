@@ -74,7 +74,9 @@
     <Compile Include="Common\Enumeration\ReturnType.cs" />
     <Compile Include="Common\IRegistration.cs" />
     <Compile Include="Common\RemoteObjects\IMethodResult.cs" />
+    <Compile Include="Communication\Json\AbstractJsonMarshaller.cs" />
     <Compile Include="Communication\Json\CustomJsonMarshaller.cs" />
+    <Compile Include="Communication\Json\CustomJsonUnMarshaller.cs" />
     <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />

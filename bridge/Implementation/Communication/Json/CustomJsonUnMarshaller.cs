@@ -15,23 +15,19 @@
  * limitations under the License.
  ***/
 using System;
-using System.Linq;
 using Newtonsoft.Json;
-using System.Xml.Serialization;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
-    public class CustomJsonMarshaller : AbstractJsonMarshaller
+    public class CustomJsonUnMarshaller : AbstractJsonMarshaller
     {
         public override bool CanConvert(Type objectType)
         {
-            Boolean isMap = isMapType(objectType);
-            Boolean hasXMLIgnore = objectType.GetProperties().Any(P => P.IsDefined(typeof(XmlIgnoreAttribute), false));
-            return isMap || hasXMLIgnore;
+            return isMapType(objectType);
         }
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new InvalidOperationException("This state should never be reached");
+            throw new InvalidOperationException("This state should never be reached");   
         }
     }
 }
