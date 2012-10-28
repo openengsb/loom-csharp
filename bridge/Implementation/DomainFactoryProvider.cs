@@ -20,8 +20,9 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {

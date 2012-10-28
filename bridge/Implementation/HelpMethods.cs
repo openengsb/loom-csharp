@@ -27,11 +27,13 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using System.Collections;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
-    public class HelpMethods
+    public static class HelpMethods
     {
+        public static IMarshaller marshaller = new JsonMarshaller();
         /// <summary>
         /// Takes a Namespace as input, reverse the elements and returns the package structure from java
         /// </summary>
@@ -71,7 +73,115 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 result = searchInTheXMLType(fieldname, type);
             }
-            return result + "." + HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            String classname = HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            if (classname.Contains("[]"))
+            {
+                return "[L" + result + "." + classname.Replace("[]", "") + ";";
+            }
+            else
+            {
+                return result + "." + classname;
+            }
+        }
+        /// <summary>
+        /// Converts a Dictionary to a Map (entryX)
+        /// </summary>
+        /// <param name="arg">IDcitionary</param>
+        /// <param name="type">type to convert it into</param>
+        /// <returns></returns>
+        public static Object[] ConvertMap(this IDictionary arg, Type type)
+        {            
+            Type elementType = type;
+            if (elementType.IsArray)
+            {
+                elementType = type.GetElementType();
+            }
+            Array elements = Array.CreateInstance(elementType, arg.Count);
+            
+            int i = 0;
+            foreach (Object key in arg.Keys)
+            {
+                Object instance = Activator.CreateInstance(elementType, false);
+                Object value = arg[key];
+                Type keyType = elementType.GetProperty("key").PropertyType;
+                Type valueType = elementType.GetProperty("value").PropertyType;
+                if (IsValueNotInCorrectType(key, keyType))
+                {
+                    instance = marshaller.UnmarshallObject(instance.ToString(), keyType);
+                }
+                elementType.GetProperty("key").SetValue(instance, key, null);
+                if (IsValueNotInCorrectType(value,valueType))
+                {
+                    value = marshaller.UnmarshallObject(value.ToString(), valueType);
+                }
+                elementType.GetProperty("value").SetValue(instance, value, null);
+                elements.SetValue(instance, i++);
+            }
+            return (Object[])elements;
+        }
+
+        private static bool IsValueNotInCorrectType(Object key, Type keyType)
+        {
+            Boolean a1=keyType.IsPrimitive || keyType.Equals(typeof(string));
+            Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
+            return !a1 && !a2;
+        }
+        /// <summary>
+        /// Converts a Dictionary to a Map (entryX)
+        /// </summary>
+        /// <typeparam name="T">Type to convert the Dictionary into</typeparam>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public static T[] ConvertMap<T>(this IDictionary arg)
+        {
+            Array elements = ConvertMap(arg, typeof(T));
+            return (T[])elements;
+        }
+        /// <summary>
+        /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
+        /// If the Object is not a Map then the parameter object is returned
+        /// </summary>
+        /// <typeparam name="T">Key type</typeparam>
+        /// <typeparam name="V">Value Type</typeparam>
+        /// <param name="obj">Map input</param>
+        /// <returns>IDictionary</returns>
+        public static IDictionary<T,V> ConvertMap<T,V>(this Object obj)
+        {
+            Object result=ConvertMap(obj);
+            if (result.GetType() is IDictionary)
+            {
+                return null;
+            }
+            IDictionary tmpDict= ((IDictionary)result);
+            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
+            foreach (Object key in tmpDict.Keys)
+            {
+                tmpresult.Add((T)key, (V)tmpDict[key]);
+            }
+            return tmpresult;
+        }
+        /// <summary>
+        /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
+        /// If the Object is not a Map then the parameter object is returned
+        /// </summary>
+        /// <param name="obj">Object to convert</param>
+        /// <returns>IDictionary or the object itselfe</returns>
+        public static Object ConvertMap(this Object obj)
+        {
+            if (!(obj.GetType().IsArray) || !obj.GetType().Name.ToUpper().Contains("ENTRY"))
+            {
+                return obj;
+            }
+
+            Dictionary<Object, Object> result = new Dictionary<Object, Object>();
+            foreach (object keyValue in (Object[])obj)
+            {
+                Object key = keyValue.GetType().GetProperty("key").GetValue(keyValue, null);
+                Object value = keyValue.GetType().GetProperty("value").GetValue(keyValue, null);
+                result.Add(key, value);
+            }
+            
+            return result;
         }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
@@ -81,8 +191,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Packagename</returns>
         private static String searchInTheXMLType(String fieldname, Type type)
         {
+            String typename = fieldname;
+            if (typename.Contains("[]"))
+            {
+                typename = fieldname.Substring(0, fieldname.IndexOf("[]"));
+            }
             Assembly ass = type.Assembly;
-            type = ass.GetType(fieldname);
+
+            type = ass.GetType(typename);
             XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
@@ -135,6 +251,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 i = i + 2;
             }
         }
+
         /// <summary>
         /// Add true objects for the Specified fields
         /// </summary>

@@ -26,6 +26,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using System.Collections;
+using ConnectorManager;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -36,10 +38,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected const string CREATION_SERVICE_ID = "connectorManager";
         protected const string CREATION_REGISTRATION = "proxyConnectorRegistry";
         protected const string CREATION_DELETE_METHOD_NAME = "delete";
+        protected const string REMOVE_XLINK_CONNECTOR = "disconnectFromXLink";
         protected const string CREATION_PORT = "jms-json";
         protected const string CREATION_CONNECTOR_TYPE = "external-connector-proxy";
         protected const string REGISTRATION_METHOD_NAME = "registerConnector";
         protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";
+        protected const string XLINK_METHOD_NAME = "connectToXLink";
         #endregion
         #region Propreties
         protected abstract string CREATION_METHOD_NAME { get; }
@@ -128,7 +132,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector,EExceptionHandling exceptionhandling)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector, EExceptionHandling exceptionhandling)
         {
             this.exceptionhandling = exceptionhandling;
             this.marshaller = new JsonMarshaller();
@@ -138,7 +142,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.domainService = localDomainService;
-            this.portIn = new JmsIncomingPort(destination,exceptionhandling);
+            this.portIn = new JmsIncomingPort(destination, exceptionhandling);
             this.username = "admin";
             this.password = "password";
             this.createService = createNewConnector;
@@ -152,14 +156,22 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector,EExceptionHandling exceptionhandling)
-            :this(localDomainService,host,serviceId,domainType,createNewConnector,exceptionhandling)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector, EExceptionHandling exceptionhandling)
+            : this(localDomainService, host, serviceId, domainType, createNewConnector, exceptionhandling)
         {
             this.username = username;
             this.password = password;
         }
         #endregion
         #region Protected Methods
+        /// <summary>
+        /// Returns the localhost. This has to be adapted to the changes in the xlink
+        /// </summary>
+        /// <returns></returns>
+        protected String getHost()
+        {
+            return "localhost";
+        }
         /// <summary>
         /// Unmarshalls the arguments of a MethodCall.
         /// </summary>
@@ -219,26 +231,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             HelpMethods.addTrueForSpecified(args, methodInfo);
             return args.ToArray();
         }
-      
 
-        private Object ConvertType(OpenEngSBModelEntry entry, MethodInfo methodinfo)
-        {
-            String value = entry.value;
-            RemoteType remote = new RemoteType(entry.type, methodinfo.GetParameters());
-            Type type = findType(remote.LocalTypeFullName, methodinfo);
-            if (type.IsPrimitive || type.Equals(typeof(string)))
-            {
-                return Convert.ChangeType(value, type);
-            }
-            else if (type.IsEnum)
-            {
-                return Enum.Parse(type, value);
-            }
-            else
-            {
-                return marshaller.UnmarshallObject(value, type);
-            }
-        }
+        
         private Type findType(String typeString, MethodInfo methodInfo)
         {
             Assembly asm = typeof(T).GetType().Assembly;
@@ -272,7 +266,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             }
             Object[] arguments = CreateMethodArguments(request, methInfo);
             Object result = methInfo.Invoke(DomainService, arguments);
-            
+
             logger.Info("Invokation done");
             return result;
         }
@@ -291,7 +285,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 if ((parameterResult.Count != methodCall.args.Count) &&
                     (HelpMethods.addTrueForSpecified(parameterResult, methodInfo) != methodCall.args.Count))
                     continue;
-               
+
                 if (!HelpMethods.TypesAreEqual(methodCall.classes, parameterResult.ToArray<ParameterInfo>()))
                     continue;
 
@@ -353,6 +347,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public abstract void Listen();
         public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
+        public abstract XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews);
+        public abstract void DisconnectFromXLink();
         #endregion
     }
 }
