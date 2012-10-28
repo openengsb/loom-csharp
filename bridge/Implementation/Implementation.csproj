@@ -44,9 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</HintPath>
     </Reference>
-    <Reference Include="fastJSON">
-      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>

@@ -50,15 +50,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// <returns>Returns a Json Message</returns>
         public string MarshallObject(object obj)
         {
-/*            fastJSON.JSON json = fastJSON.JSON.Instance;
-            json.IndentOutput = false;
-            json.SerializeNullValues = true;
-            json.ShowReadOnlyProperties = false;
-            json.UseFastGuid = false;
-            json.UseOptimizedDatasetSchema = false;
-            json.UseSerializerExtension = false;
-            json.UseUTCDateTime = false;
-            json.UsingGlobalTypes = false;*/
             return JsonConvert.SerializeObject(obj,new CustomJsonMarshaller());
         }
         /// <summary>

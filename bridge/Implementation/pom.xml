@@ -107,12 +107,6 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
-      <artifactId>fastJSON</artifactId>
-      <version>1.9.6_2</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
-      <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_2</version>
       <type>dotnet-library</type>

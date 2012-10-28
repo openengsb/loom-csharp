@@ -48,9 +48,6 @@
     <Reference Include="ExampleDomain">
       <HintPath>..\..\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</HintPath>
     </Reference>
-    <Reference Include="fastJSON">
-      <HintPath>.references\org.openengsb.wrapped.csharp\fastJSON-1.9.6_2\fastJSON.dll</HintPath>
-    </Reference>
     <Reference Include="IETM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.references\org.openengsb.loom.csharp.common.bridge\IETM-1.0.0-SNAPSHOT\IETM.dll</HintPath>
