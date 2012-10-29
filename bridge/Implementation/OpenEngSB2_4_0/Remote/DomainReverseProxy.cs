@@ -22,6 +22,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using ConnectorManager;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
@@ -87,7 +88,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             classes.Add("org.openengsb.core.api.model.ConnectorDescription");
 
             IList<object> args = new List<object>();
-            ConnectorDescription connectorDescription = new ConnectorDescription();
+            Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects.ConnectorDescription connectorDescription = new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects.ConnectorDescription();
             connectorDescription.attributes.Add("serviceId", serviceId);
             connectorDescription.attributes.Add("portId", CREATION_PORT);
             connectorDescription.attributes.Add("destination", destination);
@@ -184,6 +185,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 }
             }
         }
+        public override XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
+        {
+            throw new NotImplementedException();
+        }
+        public override void DisconnectFromXLink()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
         #region Private Methods
         /// <summary>
@@ -245,5 +254,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             throw new MissingMethodException("Not implemented for this version of openEngSB");
         }
         #endregion
+
     }
 }

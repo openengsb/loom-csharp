@@ -15,22 +15,23 @@
  * limitations under the License.
  ***/
 using System;
+using System.Linq;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
-    public class OpenEngSBModelEntry
+    public class CustomJsonMarshaller : AbstractJsonMarshaller
     {
-        public String key { get; set; }
-        public String value { get; set; }
-        public String type { get; set; }
-        public OpenEngSBModelEntry() { }
-        public static OpenEngSBModelEntry getInstance(String key, String value, String type)
+        public override bool CanConvert(Type objectType)
         {
-            OpenEngSBModelEntry result = new OpenEngSBModelEntry();
-            result.key = key;
-            result.value = value;
-            result.type = type;
-            return result;
+            Boolean isMap = isMapType(objectType);
+            Boolean hasXMLIgnore = objectType.GetProperties().Any(P => P.IsDefined(typeof(XmlIgnoreAttribute), false));
+            return isMap || hasXMLIgnore;
+        }
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new InvalidOperationException("This state should never be reached");
         }
     }
 }

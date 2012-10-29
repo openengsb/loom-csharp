@@ -15,23 +15,19 @@
  * limitations under the License.
  ***/
 using System;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
+namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
-    public class OpenEngSBModelWrapper
+    public class CustomJsonUnMarshaller : AbstractJsonMarshaller
     {
-        public String modelClass{get;set;}
-        public IList<OpenEngSBModelEntry> entries { get; set; }
-
-        public OpenEngSBModelWrapper() { }
-
-        public static OpenEngSBModelWrapper getInstance(String modelClass, IList<OpenEngSBModelEntry> entries)
+        public override bool CanConvert(Type objectType)
         {
-            OpenEngSBModelWrapper result = new OpenEngSBModelWrapper();
-            result.modelClass = modelClass;
-            result.entries = entries;
-            return result;
+            return isMapType(objectType);
+        }
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new InvalidOperationException("This state should never be reached");   
         }
     }
 }
