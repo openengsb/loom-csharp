@@ -39,6 +39,8 @@
           <includeSources>
             <includeSource>IDomainFactory.cs</includeSource>
             <includeSource>Properties\AssemblyInfo.cs</includeSource>
+			<includeSource>ExceptionHandling\ABridgeExceptionHandling.cs</includeSource>
+			<includeSource>ExceptionHandling\EExceptionHandling.cs</includeSource>
           </includeSources>
         </configuration>
       </plugin>

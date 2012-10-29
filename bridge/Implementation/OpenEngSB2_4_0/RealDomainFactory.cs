@@ -19,14 +19,15 @@ using System.Collections.Generic;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
 {
     public class RealDomainFactory<T> : AbstractRealDomainFactory<T>
     {
         #region Constructor
-        public RealDomainFactory(string destination, T domainService,EExceptionHandling exceptionhandling)
-            : base(destination, domainService, exceptionhandling)
+        public RealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler)
+            : base(destination, domainService, exceptionhandler)
         {
         }
         public RealDomainFactory(string destination, T domainService)
@@ -37,15 +38,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
         #region Abstact Method Implementation
         protected override A getSubEventhandler<A>(String domainType)
         {
-            return new DomainProxy<A>(destination, getDomainTypServiceId(domainType), domainType, exceptionhandling).GetTransparentProxy();
+            return new DomainProxy<A>(destination, getDomainTypServiceId(domainType), domainType, exceptionhandler).GetTransparentProxy();
         }
         protected override DomainReverse<T> createInstance(string serviceId, string domainType, bool createConstructor)
         {
-            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, exceptionhandling);
+            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, exceptionhandler);
         }
         protected override DomainReverse<T> createInstance(string serviceId, string domainType, bool createConstructor, string username, string password)
         {
-            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, exceptionhandling);
+            return new DomainReverseProxy<T>(domainService, destination, serviceId, domainType, username, password, exceptionhandler);
         }
         #endregion
     }

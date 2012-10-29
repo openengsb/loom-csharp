@@ -23,6 +23,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using System.Xml.Serialization;
 using System.Collections;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 {
@@ -33,13 +34,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     public class DomainProxy<T> : Domain<T>
     {
         #region Constructors
-        public DomainProxy(string host, string serviceId, String domainType, EExceptionHandling exceptionhandling)
-            : base(host, serviceId, domainType, exceptionhandling)
+        public DomainProxy(string host, string serviceId, String domainType, ABridgeExceptionHandling exceptionhandler)
+            : base(host, serviceId, domainType, exceptionhandler)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
-        public DomainProxy(string host, string serviceId, String domainType, String username, String password, EExceptionHandling exceptionhandling)
-            : base(host, serviceId, domainType, username, password, exceptionhandling)
+        public DomainProxy(string host, string serviceId, String domainType, String username, String password, ABridgeExceptionHandling exceptionhandler)
+            : base(host, serviceId, domainType, username, password, exceptionhandler)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
@@ -55,9 +56,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE), exceptionhandling);
+            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(host, HOST_QUEUE), exceptionhandler);
             portOut.Send(methodCallMsg, methodCallRequest.callId);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId), exceptionhandling);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(host, methodCallRequest.callId), exceptionhandler);
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.result, callMessage);

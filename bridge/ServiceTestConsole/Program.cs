@@ -50,7 +50,7 @@ namespace ServiceTestConsole
             string destination = "tcp://localhost.:6549";
             logger.Info("Start Example wit the domain " + domainName);
             IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, EExceptionHandling.Retry);
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, new BridgeExceptionHandler());
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
             if (xlink)
