@@ -50,8 +50,6 @@
       <artifactId>ConnectorManager</artifactId>
       <version>0.0.0.0</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</systemPath>
     </dependency>
   </dependencies>
 </project>
