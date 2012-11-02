@@ -93,6 +93,7 @@
           	<wsdl_location>${project.build.directory}/ExampleDomainEvents.wsdl</wsdl_location>
           </wsdl_locations>
           <namespace>ExampleDomain</namespace>
+          <targetVersion>${openengsb.version}</targetVersion>
         </configuration>
         <executions>
           <execution>

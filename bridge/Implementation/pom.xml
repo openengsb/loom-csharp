@@ -130,9 +130,9 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>ConnectorManager</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ConnectorManager</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
     </dependency>
   </dependencies>
