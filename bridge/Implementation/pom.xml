@@ -120,13 +120,13 @@
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS.ActiveMQ</artifactId>
-      <version>1.5.6_1-SNAPSHOT</version>
+      <version>1.5.6_1</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>Apache.NMS</artifactId>
-      <version>1.5.1_1-SNAPSHOT</version>
+      <version>1.5.1_1</version>
       <type>dotnet-library</type>
     </dependency>
     <dependency>
