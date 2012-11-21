@@ -64,20 +64,16 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>ExampleDomain</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ExampleDomain</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\Domain\target\ExampleDomain.dll</systemPath>
     </dependency>
     <dependency>
-      <groupId>ConnectorManager</groupId>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>ConnectorManager</artifactId>
-      <version>0.0.0.0</version>
+      <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
-      <scope>system</scope>
-      <systemPath>C:\Users\frenz\openEngsb\loom-csharp\bridge\WsdlToDll\ConnectorManager\target\ConnectorManager.dll</systemPath>
     </dependency>
   </dependencies>
 </project>

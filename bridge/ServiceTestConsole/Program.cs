@@ -84,7 +84,7 @@ namespace ServiceTestConsole
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
 
             XLinkConnectorView[] views = new XLinkConnectorView[1];
-            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
+            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = (string[])descriptions.ConvertMap() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {
