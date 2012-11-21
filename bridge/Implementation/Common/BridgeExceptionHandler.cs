@@ -10,11 +10,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     /// <summary>
     /// This is a basic ExceptionHandler and should illustrate the Handling
     /// </summary>
-    public class BridgeExceptionHandler : ABridgeExceptionHandling
+    public class RetryDefaultExceptionHandler : ABridgeExceptionHandling
     {
-        public BridgeExceptionHandler()
+        public RetryDefaultExceptionHandler()
         {
-            handling = EExceptionHandling.Retry;
         }
         /// <summary>
         /// Defines how the Bridge should be have. In this example, it checks if the mehtod should be exected again or
@@ -24,13 +23,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns></returns>
         public override bool HandleException(Exception exception)
         {
-            if (handling.Equals(EExceptionHandling.ForwardException))
-            {
-                throw exception;
-            }
             // Invokes the method that throws the exception again.
             Invoke();
-
             return false;
         }
     }

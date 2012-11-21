@@ -337,6 +337,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         {
             if (queueThread != null)
             {
+                exceptionHandler.stop = true;
                 isEnabled = false;
                 portIn.Close();
             }

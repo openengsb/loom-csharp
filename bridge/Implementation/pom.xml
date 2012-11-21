@@ -43,7 +43,7 @@
             <includeSource>Common\Enumeration\ERegistration.cs</includeSource>
             <includeSource>Common\Enumeration\ReturnType.cs</includeSource>
             <includeSource>Common\IRegistration.cs</includeSource>
-			<includeSource>Common\BridgeExceptionHandler.cs</includeSource>
+            <includeSource>Common\BridgeExceptionHandler.cs</includeSource>
             <includeSource>Common\RemoteObjects\IMethodResult.cs</includeSource>
             <includeSource>HelpMethods.cs</includeSource>
             <includeSource>Common\DomainReverse.cs</includeSource>

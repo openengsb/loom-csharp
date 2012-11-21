@@ -33,7 +33,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         private Dictionary<String, IRegistration> proxies;
         protected String destination;
         protected T domainService;
-        protected ABridgeExceptionHandling exceptionhandler = new BridgeExceptionHandler();
+        protected ABridgeExceptionHandling exceptionhandler = new RetryDefaultExceptionHandler();
         #endregion
         #region Constructors
         public AbstractRealDomainFactory(string destination, T domainService)
@@ -41,7 +41,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.destination = destination;
             this.domainService = domainService;
             proxies = new Dictionary<String, IRegistration>();
-            exceptionhandler = new BridgeExceptionHandler();
+            exceptionhandler = new RetryDefaultExceptionHandler();
         }
         public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler)
         {
