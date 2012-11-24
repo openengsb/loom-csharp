@@ -64,7 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AbstractRealDomainFactory.cs" />
-    <Compile Include="Common\BridgeExceptionHandler.cs" />
+    <Compile Include="Common\ForwardDefaultExceptionHandler.cs" />
+    <Compile Include="Common\RetryDefaultExceptionHandler.cs" />
     <Compile Include="Common\Domain.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ERegistration.cs" />
