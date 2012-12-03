@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
@@ -38,9 +39,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         protected ISession session;
         protected IDestination destination;
         private string string_destination;
-        private EExceptionHandling handling;
-        private int nbrretry;
-        private int maxretries=int.MaxValue;
+        private ABridgeExceptionHandling handling;
         protected Boolean close = false;
         #endregion
         #region Constructor
@@ -48,7 +47,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
-        protected JmsPort(string destination, EExceptionHandling handling)
+        protected JmsPort(string destination, ABridgeExceptionHandling handling)
         {
             this.connection = null;
             this.factory = null;
@@ -56,7 +55,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             this.destination = null;
             this.string_destination=destination;
             this.handling=handling;
-            this.nbrretry = 0;
             Configure();
         }
         #endregion
@@ -67,9 +65,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation</param>
         protected void Configure()
         {
-            if (close) return;
-            if (nbrretry++ >= maxretries)
-                handling = EExceptionHandling.ForwardException;
+            if (close)
+            {
+                return;
+            }
             
             try
             {
@@ -80,22 +79,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 session = connection.CreateSession();
                 connection.Start();
                 this.destination = session.GetDestination(dest.Queue);
-                nbrretry = 0;
             }
-            catch
+            catch(Exception ex)
             {
-                switch (handling)
-                {
-                    case EExceptionHandling.ForwardException:
-                        {
-                            throw;
-                        }
-                    case EExceptionHandling.Retry:
-                        {
-                            Configure();
-                            break;
-                        }
-                }
+                handling.Changed += Configure;
+                handling.HandleException(ex);
             }
         }
         #endregion
