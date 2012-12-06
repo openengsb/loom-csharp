@@ -21,7 +21,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using System.Collections.Generic;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using ConnectorManager;
+using OpenEngSBCore;
 
 namespace ServiceTestConsole
 {

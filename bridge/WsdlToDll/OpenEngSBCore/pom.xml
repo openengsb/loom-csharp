@@ -26,12 +26,12 @@
   </parent>
 
   <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-  <artifactId>ConnectorManager</artifactId>
+  <artifactId>OpenEngSBCore</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
 
-  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: ConnectorManager</name>
-  <description>Compile ConnectorManager wsdl to dll</description>
+  <name>OpenEngSB :: Loom :: CSharp :: Common :: Bridge :: Convert :: WSDL :: OpenEngSBCore</name>
+  <description>Compile OpenEngSBCore wsdl to dll</description>
 
   <licenses>
     <license>
@@ -71,6 +71,36 @@
                   <outputDirectory>${project.build.directory}</outputDirectory>
                   <destFileName>ConnectorManager.wsdl</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>org.openengsb.framework</groupId>
+                  <artifactId>org.openengsb.framework.api</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>ProxyConnectorRegistry</classifier>
+                  <type>wsdl</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>ProxyConnectorRegistry.wsdl</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.openengsb.framework</groupId>
+                  <artifactId>org.openengsb.framework.api</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>LinkingSupport</classifier>
+                  <type>wsdl</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>LinkingSupport.wsdl</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.openengsb.framework</groupId>
+                  <artifactId>org.openengsb.framework.api</artifactId>
+                  <version>3.0.0-SNAPSHOT</version>
+                  <classifier>EventSupport</classifier>
+                  <type>wsdl</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>EventSupport.wsdl</destFileName>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
@@ -82,8 +112,11 @@
         <configuration>
           <wsdl_locations>
             <wsdl_location>${project.build.directory}/ConnectorManager.wsdl</wsdl_location>
+            <wsdl_location>${project.build.directory}/ProxyConnectorRegistry.wsdl</wsdl_location>
+            <wsdl_location>${project.build.directory}/LinkingSupport.wsdl</wsdl_location>
+            <wsdl_location>${project.build.directory}/EventSupport.wsdl</wsdl_location>
           </wsdl_locations>
-          <namespace>ConnectorManager</namespace>
+          <namespace>OpenEngSBCore</namespace>
           <targetVersion>${project.version}</targetVersion>
         </configuration>
         <executions>
@@ -108,7 +141,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/ConnectorManager.dll</file>
+                  <file>target/OpenEngSBCore.dll</file>
                   <type>dll</type>
                 </artifact>
               </artifacts>

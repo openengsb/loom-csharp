@@ -15,7 +15,7 @@
  * limitations under the License.
  ***/
 using System;
-using ConnectorManager;
+using OpenEngSBCore;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
