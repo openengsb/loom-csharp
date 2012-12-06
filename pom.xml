@@ -42,7 +42,7 @@
     <module>bridge</module>
     <module>testproject</module>
     <!-- OPENENGSB-2890 -->
-    <module>itests</module>
+    <!--<module>itests</module>-->
     <module>docs</module>
     <module>assembly</module>
   </modules>
