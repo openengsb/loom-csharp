@@ -31,6 +31,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         void StopConnection(String domainType);
         String getDomainTypServiceId(String domainType);
         String getServiceId(String domainType);
-        Boolean Registered(String domainService);        
+        Boolean Registered(String domainService);
     }
 }

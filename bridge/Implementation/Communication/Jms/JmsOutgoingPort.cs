@@ -17,7 +17,6 @@
 using System;
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -33,7 +32,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling)
+        public JmsOutgoingPort(string destination, EExceptionHandling handling)
             : base(destination, handling)
         {
             producer = session.CreateProducer(this.destination);

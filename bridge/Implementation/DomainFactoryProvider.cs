@@ -23,7 +23,6 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -51,13 +50,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
         /// <returns>Factory</returns>
-        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler)
+        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service,EExceptionHandling exceptionhandling)
         {
                 int version = getVersionNumber(stringVersion);
                 if (version >= 300)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandler);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandling);
                 if (version >= 240)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandler);
+                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandling);
                 return null;
         }
         /// <summary>

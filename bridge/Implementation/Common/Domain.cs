@@ -23,7 +23,6 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -37,7 +36,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected static ILog logger = LogManager.GetLogger(typeof(T));
         #endregion
         #region Variables
-        protected ABridgeExceptionHandling exceptionhandler;
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
         /// <summary>
         /// Authenifaction class
         /// </summary>
@@ -67,7 +66,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected IMarshaller marshaller;
         #endregion
         #region Constructors
-        public Domain(string host, string serviceId, String domainType, ABridgeExceptionHandling exceptionhandler)
+        public Domain(string host, string serviceId, String domainType, EExceptionHandling exceptionhandling)
             : base(typeof(T))
         {
             this.serviceId = serviceId;
@@ -76,10 +75,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.marshaller = new JsonMarshaller();
             this.username = "admin";
             this.password = "password";
-            this.exceptionhandler = exceptionhandler;
+            this.exceptionhandling = exceptionhandling;
         }
-        public Domain(string host, string serviceId, String domainType, String username, String password, ABridgeExceptionHandling exceptionhandler)
-            : this(host,serviceId,domainType,exceptionhandler)
+        public Domain(string host, string serviceId, String domainType, String username, String password,EExceptionHandling exceptionhandling)
+            : this(host,serviceId,domainType,exceptionhandling)
         {
             this.username = username;
             this.password = password;

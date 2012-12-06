@@ -28,7 +28,6 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Collections;
 using ConnectorManager;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
@@ -52,8 +51,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public string ServiceID { get { return serviceId; } }
         #endregion
         #region Variables
-
-        public ABridgeExceptionHandling exceptionHandler;
         /// <summary>
         /// indicates in witch state the registration is
         /// </summary>
@@ -78,6 +75,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// Logger
         /// </summary>
         protected static ILog logger = LogManager.GetLogger(typeof(T));
+        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
         #endregion
         #region Propreties
         public T DomainService
@@ -134,9 +132,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="serviceId">ServiceId</param>
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector, EExceptionHandling exceptionhandling)
         {
-            this.exceptionHandler = exceptionhandler;
+            this.exceptionhandling = exceptionhandling;
             this.marshaller = new JsonMarshaller();
             this.isEnabled = true;
             this.destination = Destination.CreateDestinationString(host, serviceId);
@@ -144,7 +142,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.serviceId = serviceId;
             this.domainType = domainType;
             this.domainService = localDomainService;
-            this.portIn = new JmsIncomingPort(destination, exceptionhandler);
+            this.portIn = new JmsIncomingPort(destination, exceptionhandling);
             this.username = "admin";
             this.password = "password";
             this.createService = createNewConnector;
@@ -158,8 +156,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
-            : this(localDomainService, host, serviceId, domainType, createNewConnector, exceptionhandler)
+        public DomainReverse(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector, EExceptionHandling exceptionhandling)
+            : this(localDomainService, host, serviceId, domainType, createNewConnector, exceptionhandling)
         {
             this.username = username;
             this.password = password;
@@ -337,7 +335,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         {
             if (queueThread != null)
             {
-                exceptionHandler.stop = true;
                 isEnabled = false;
                 portIn.Close();
             }

@@ -64,9 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AbstractRealDomainFactory.cs" />
-    <Compile Include="Common\ForwardDefaultExceptionHandler.cs" />
-    <Compile Include="Common\RetryDefaultExceptionHandler.cs" />
     <Compile Include="Common\Domain.cs" />
+    <Compile Include="Common\EExceptionHandling.cs" />
     <Compile Include="Common\Enumeration\AliveState.cs" />
     <Compile Include="Common\Enumeration\ERegistration.cs" />
     <Compile Include="Common\Enumeration\ReturnType.cs" />
@@ -125,13 +124,13 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Interface\Interface.csproj">
-      <Project>{5ccd2925-bb25-496e-824f-3894a4fbf968}</Project>
+      <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

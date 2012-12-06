@@ -19,7 +19,6 @@ using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using log4net;
 using System;
-using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
@@ -38,8 +37,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler)
-            : base(destination,exceptionhandler)
+        public JmsIncomingPort(string destination, EExceptionHandling exceptionhandling)
+            : base(destination,exceptionhandling)
         {
             consumer = session.CreateConsumer(this.destination);
         }
