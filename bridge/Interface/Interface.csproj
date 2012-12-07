@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExceptionHandling\ABridgeExceptionHandling.cs" />
+    <Compile Include="ExceptionHandling\EExceptionHandling.cs" />
     <Compile Include="IDomainFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

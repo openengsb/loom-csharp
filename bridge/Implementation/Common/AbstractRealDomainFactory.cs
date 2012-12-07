@@ -20,6 +20,7 @@ using OpenEngSBCore;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
@@ -32,14 +33,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         private Dictionary<String, IRegistration> proxies;
         protected String destination;
         protected T domainService;
-        protected EExceptionHandling exceptionhandling = EExceptionHandling.ForwardException;
-        #endregion
-        #region Propreties
-        public EExceptionHandling ExceptionHandling
-        {
-            get { return exceptionhandling; }
-            set { exceptionhandling = value; }
-        }
+        protected ABridgeExceptionHandling exceptionhandler = new RetryDefaultExceptionHandler();
         #endregion
         #region Constructors
         public AbstractRealDomainFactory(string destination, T domainService)
@@ -47,10 +41,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.destination = destination;
             this.domainService = domainService;
             proxies = new Dictionary<String, IRegistration>();
+            exceptionhandler = new RetryDefaultExceptionHandler();
         }
-        public AbstractRealDomainFactory(string destination, T domainService, EExceptionHandling exceptionhandling)
+        public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler)
         {
-            this.exceptionhandling = exceptionhandling;
+            this.exceptionhandler = exceptionhandler;
             this.destination = destination;
             this.domainService = domainService;
             proxies = new Dictionary<String, IRegistration>();
