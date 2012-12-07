@@ -42,7 +42,7 @@
       <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
     </Reference>
     <Reference Include="OpenEngSBCore">
-      <HintPath>..\WsdlToDll\ConnectorManager\target\OpenEngSBCore.dll</HintPath>
+      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\OpenEngSBCore-1.0.0-SNAPSHOT\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

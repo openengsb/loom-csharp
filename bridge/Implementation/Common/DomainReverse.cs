@@ -27,7 +27,7 @@ using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Collections;
-using ConnectorManager;
+using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
