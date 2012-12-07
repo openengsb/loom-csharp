@@ -42,7 +42,7 @@
     <module>bridge</module>
     <module>testproject</module>
     <!-- OPENENGSB-2890 -->
-    <module>itests</module>
+    <!--<module>itests</module>-->
     <module>docs</module>
     <module>assembly</module>
   </modules>
@@ -61,6 +61,10 @@
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
 
+  <properties>
+    <openengsb.api.version>3.0.0-SNAPSHOT</openengsb.api.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <!-- WSDL Test References -->
@@ -70,6 +74,11 @@
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-plugin-api</artifactId>
         <version>2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openengsb.framework</groupId>
+        <artifactId>org.openengsb.framework.api</artifactId>
+        <version>${openengsb.api.version}</version>
       </dependency>
       <!-- Internal Dependencies -->
       <!-- DONT GENERALIZE THEM! OPENENGSB-2889 -->

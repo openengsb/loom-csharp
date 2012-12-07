@@ -25,7 +25,7 @@
     <url>https://github.com/openengsb/loom-csharp-common</url>
   </scm>
   <modules>
-    <module>WsdlToDll/ConnectorManager</module>
+    <module>WsdlToDll/OpenEngSBCore</module>
     <module>Interface</module>
     <module>WsdlToDll/Domain</module>
     <module>Implementation</module>

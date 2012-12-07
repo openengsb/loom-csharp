@@ -16,7 +16,7 @@
  ***/
 using System;
 using System.Collections.Generic;
-using ConnectorManager;
+using OpenEngSBCore;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
