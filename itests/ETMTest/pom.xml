@@ -58,12 +58,6 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>NUnit</groupId>
-      <artifactId>NUnit.Framework</artifactId>
-      <version>2.2.8.0</version>
-      <type>dotnet-library</type>
-    </dependency>
-    <dependency>
       <groupId>org.openengsb.wrapped.csharp</groupId>
       <artifactId>log4net</artifactId>
       <version>1.2.11_2</version>
@@ -119,6 +113,12 @@
     </dependency>
     <dependency>
       <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
+      <artifactId>ConnectorManager</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>dotnet-library</type>
+    </dependency>
+    <dependency>
+      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
       <artifactId>Implementation</artifactId>
       <version>1.0.0-SNAPSHOT</version>
       <type>dotnet-library</type>
@@ -130,9 +130,9 @@
       <type>dotnet-library</type>
     </dependency>
     <dependency>
-      <groupId>org.openengsb.loom.csharp.common.bridge</groupId>
-      <artifactId>ConnectorManager</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <groupId>NUnit</groupId>
+      <artifactId>NUnit.Framework</artifactId>
+      <version>2.2.8.0</version>
       <type>dotnet-library</type>
     </dependency>
   </dependencies>
