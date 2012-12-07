@@ -57,6 +57,7 @@
             <includeSource>OpenEngSB2_4_0\RealDomainFactory.cs</includeSource>
             <includeSource>DomainFactoryProvider.cs</includeSource>
             <includeSource>Common\AbstractRealDomainFactory.cs</includeSource>
+            <includeSource>Common\RetryDefaultExceptionHandler.cs</includeSource>
             <includeSource>Communication\IIncomingPort.cs</includeSource>
             <includeSource>Communication\IMarshaller.cs</includeSource>
             <includeSource>Communication\IOutgoingPort.cs</includeSource>
