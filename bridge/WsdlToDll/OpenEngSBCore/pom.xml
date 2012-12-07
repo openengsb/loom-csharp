@@ -64,7 +64,6 @@
                 <artifactItem>
                   <groupId>org.openengsb.framework</groupId>
                   <artifactId>org.openengsb.framework.api</artifactId>
-                  <version>3.0.0-SNAPSHOT</version>
                   <classifier>ConnectorManager</classifier>
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
@@ -74,7 +73,6 @@
                 <artifactItem>
                   <groupId>org.openengsb.framework</groupId>
                   <artifactId>org.openengsb.framework.api</artifactId>
-                  <version>3.0.0-SNAPSHOT</version>
                   <classifier>ProxyConnectorRegistry</classifier>
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
@@ -84,7 +82,6 @@
                 <artifactItem>
                   <groupId>org.openengsb.framework</groupId>
                   <artifactId>org.openengsb.framework.api</artifactId>
-                  <version>3.0.0-SNAPSHOT</version>
                   <classifier>LinkingSupport</classifier>
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
@@ -94,7 +91,6 @@
                 <artifactItem>
                   <groupId>org.openengsb.framework</groupId>
                   <artifactId>org.openengsb.framework.api</artifactId>
-                  <version>3.0.0-SNAPSHOT</version>
                   <classifier>EventSupport</classifier>
                   <type>wsdl</type>
                   <overWrite>false</overWrite>
