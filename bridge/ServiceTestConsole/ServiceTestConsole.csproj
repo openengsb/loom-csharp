@@ -14,6 +14,8 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -36,13 +38,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExampleDomain">
-      <HintPath>..\WsdlToDll\Domain\target\ExampleDomain.dll</HintPath>
+      <HintPath>..\packages\Org.Openengsb.Loom.CSharp.Bridge.ExampleDomain.1.0.0.0-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>.references\org.openengsb.wrapped.csharp\log4net-1.2.11_2\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="OpenEngSBCore">
-      <HintPath>.references\org.openengsb.loom.csharp.common.bridge\OpenEngSBCore-1.0.0-SNAPSHOT\OpenEngSBCore.dll</HintPath>
+      <HintPath>..\packages\OpenEngSBCore.1.0.0.0-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,19 +63,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Implementation\Implementation.csproj">
-      <Project>{CE47C6A2-2E5E-466F-B10C-B2B82DE3F7E1}</Project>
+      <Project>{ce47c6a2-2e5e-466f-b10c-b2b82de3f7e1}</Project>
       <Name>Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Interface\Interface.csproj">
-      <Project>{5CCD2925-BB25-496E-824F-3894A4FBF968}</Project>
+      <Project>{5ccd2925-bb25-496e-824f-3894a4fbf968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
