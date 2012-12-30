@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,19 +21,37 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import static java.nio.file.StandardCopyOption.*;
 
 /**
  * Goal which creates a DLL from a WSDL file.
- *
+ * 
  * @goal run
- *
+ * 
  * @phase process-sources
  */
 public class WsdlToDll extends AbstractMojo {
 
+    private static final String nugetCommand = "nuget";
+
     private static final String CSC_EXE = "csc.exe";
 
     private static final String WSDL_EXE = "wsdl.exe";
+
+    private static final String NUGET_FOLDER = "target/nuget/";
+    private static final String NUGET_LIB = NUGET_FOLDER + "lib";
+
+    /**
+     * Assembly.cs values
+     */
+    private static final String owner = "OpenEngSB";
+    private static final String author = "OpenEngSB";
+    private static final String projectUrl = null;
+    private static final String licenseUrl = null;
+    private static final String iconUrl = null;
+    private static final boolean requireLicenseAcceptance = false;
+    private static final String releaseNotes = "";
+    private static final String copyright = "OpenEngSB 2012";
 
     /**
      * List of default pathes where to search for the installation of the .net framework.
@@ -46,26 +66,26 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Location of the file.
-     *
+     * 
      * @parameter expression="${project.build.directory}"
      * @required
      */
     private File outputDirectory;
     /**
      * Location of the wsdl.exe command
-     *
+     * 
      * @parameter default-Value=null expression="${wsdlExeFolderLocation}"
      */
     private File wsdlExeFolderLocation;
     /**
      * Location of the csc command.
-     *
+     * 
      * @parameter default-Value=null expression="${cscFolderLocation}"
      */
     private File cscFolderLocation;
     /**
      * Location of the wsdl file
-     *
+     * 
      * @parameter
      * @required
      */
@@ -74,7 +94,7 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Namespace of the WSDL file. This should be the namespace in which a domain should be located.
-     *
+     * 
      * @parameter
      * @required
      */
@@ -82,8 +102,9 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Version that should be written to the resulting DLL
-     *
+     * 
      * @parameter
+     * @required
      */
     private String targetVersion;
 
@@ -118,7 +139,7 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Linux mode for maven execution
-     *
+     * 
      * @throws MojoExecutionException
      */
     private void createDllFromWsdlUsingLinuxMode()
@@ -137,13 +158,21 @@ public class WsdlToDll extends AbstractMojo {
 
     /**
      * Windows mode for maven execution
-     *
+     * 
      * @throws MojoExecutionException
      */
     private void createDllFromWsdlUsingWindowsMode()
         throws MojoExecutionException {
+        getLog().info("Execute WSDl to cs command");
         wsdlCommand();
+        getLog().info("Execute cs to dll command");
         cscCommand();
+        getLog().info("Copy the dlls to the nuget structure");
+        copyFilesToNuget();
+        getLog().info("Generate " + namespace + " .nuspec");
+        generateNugetPackedFile();
+        getLog().info("Pack .nuspec to a nuget package");
+        nugetPackCommand();
     }
 
     private String findWsdlCommand() throws MojoExecutionException {
@@ -315,6 +344,58 @@ public class WsdlToDll extends AbstractMojo {
         builder.directory(outputDirectory);
         builder.command(command);
         try {
+            createNugetStructure();
+            executeACommand(builder.start());
+        } catch (IOException e) {
+            throw new MojoExecutionException(
+                "Error, while executing command: "
+                        + Arrays.toString(command) + "\n", e);
+        } catch (InterruptedException e) {
+            throw new MojoExecutionException(
+                "Error, while executing command: "
+                        + Arrays.toString(command) + "\n", e);
+        }
+    }
+
+    /**
+     * Generate the nuget structe (for example a lib folder)
+     */
+    private void createNugetStructure() {
+        (new File(NUGET_LIB)).mkdirs();
+    }
+
+    private void copyFilesToNuget() throws MojoExecutionException {
+        File folder = outputDirectory;
+        for (File file : folder.listFiles()) {
+            if (file.getAbsoluteFile().toPath().toString().endsWith(".dll")) {
+                try {
+                    getLog().info("COPY FILE" + (new File(NUGET_LIB)).getAbsoluteFile().toPath());
+                    Files.copy(file.getAbsoluteFile().toPath(), (new File(NUGET_LIB + "//" + file.getName()))
+                        .getAbsoluteFile().toPath(),
+                        REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    throw new MojoExecutionException(ex.getMessage());
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Execute nuget command to pack the .nuspec
+     */
+    private void nugetPackCommand()
+        throws MojoExecutionException {
+
+        List<String> commandList = new LinkedList<String>();
+        commandList.add(0, nugetCommand);
+        commandList.add(1, "pack");
+        String[] command = commandList.toArray(new String[commandList.size()]);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.redirectErrorStream(true);
+        builder.directory(new File(NUGET_FOLDER));
+        builder.command(command);
+        try {
             executeACommand(builder.start());
         } catch (IOException e) {
             throw new MojoExecutionException(
@@ -332,13 +413,18 @@ public class WsdlToDll extends AbstractMojo {
         assemblyInfoBuilder.append("using System.Reflection;\n");
         assemblyInfoBuilder.append("[assembly: AssemblyTitle(\"").append(namespace).append("\")]\n");
         assemblyInfoBuilder.append("[assembly: AssemblyProduct(\"").append(namespace).append("\")]\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyCompany(\"").append(owner).append("\")]\n");
 
-        if (targetVersion != null) {
-            String truncatedVersion = targetVersion.replaceAll("-.*", "");
-            assemblyInfoBuilder.append("[assembly: AssemblyVersion(\"").append(truncatedVersion).append("\")]\n");
-            assemblyInfoBuilder.append("[assembly: AssemblyFileVersion(\"").append(truncatedVersion).append("\")]\n");
-            assemblyInfoBuilder.append("[assembly: AssemblyInformationalVersion(\"").append(targetVersion).append("\")]\n");
-        }
+        assemblyInfoBuilder.append("[assembly: AssemblyDescription(\"").append(namespace + "_domain_dll")
+            .append("\")]\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyCopyright(\"").append("Copyright @ " + owner).append("\")]\n");
+
+        String truncatedVersion = targetVersion.replaceAll("-.*", "");
+        assemblyInfoBuilder.append("[assembly: AssemblyVersion(\"").append(truncatedVersion).append("\")]\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyFileVersion(\"").append(truncatedVersion).append("\")]\n");
+        assemblyInfoBuilder.append("[assembly: AssemblyInformationalVersion(\"").append(targetVersion)
+            .append("\")]\n");
+
         File assemblyInfo = new File(outputDirectory, "AssemblyInfo.cs");
         FileWriter writer = null;
         try {
@@ -346,6 +432,55 @@ public class WsdlToDll extends AbstractMojo {
             writer.write(assemblyInfoBuilder.toString());
         } catch (IOException e) {
             throw new MojoExecutionException("unable to write generated AssemblyInfo.cs", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    // ignore that
+                }
+            }
+        }
+        cspath.add(assemblyInfo.getAbsolutePath());
+    }
+
+    private void generateNugetPackedFile() throws MojoExecutionException {
+        StringBuilder assemblyInfoBuilder = new StringBuilder();
+        assemblyInfoBuilder.append("<?xml version=\"1.0\"?>\n");
+        assemblyInfoBuilder.append("<package >\n");
+        assemblyInfoBuilder.append("  <metadata>\n");
+        assemblyInfoBuilder.append("    <id>" + namespace + "</id>\n");
+
+        assemblyInfoBuilder.append("    <version>" + targetVersion + "</version>\n");
+        assemblyInfoBuilder.append("    <authors>" + author + "</authors>\n");
+        assemblyInfoBuilder.append("    <owners>" + author + "</owners>\n");
+        if (licenseUrl != null) {
+            assemblyInfoBuilder.append("    <licenseUrl>" + licenseUrl + "</licenseUrl>\n");
+        }
+        if (projectUrl != null) {
+            assemblyInfoBuilder.append("    <projectUrl>" + projectUrl + "</projectUrl>\n");
+        }
+        if (iconUrl != null) {
+            assemblyInfoBuilder.append("    <iconUrl>" + iconUrl + "</iconUrl>\n");
+        }
+        assemblyInfoBuilder.append("    <requireLicenseAcceptance>" + requireLicenseAcceptance
+                + "</requireLicenseAcceptance>\n");
+        assemblyInfoBuilder.append("    <description>" + namespace + " dll" + "</description>\n");
+        assemblyInfoBuilder.append("    <releaseNotes>" + releaseNotes + "</releaseNotes>\n");
+        assemblyInfoBuilder.append("    <copyright>" + copyright + "</copyright>\n");
+        assemblyInfoBuilder.append("    <dependencies>\n");
+        assemblyInfoBuilder.append("        <dependency id=\"SampleDependency\" version=\"1.0\" />\n");
+        assemblyInfoBuilder.append("    </dependencies>\n");
+        assemblyInfoBuilder.append("  </metadata>\n");
+        assemblyInfoBuilder.append("</package >\n");
+
+        File assemblyInfo = new File(NUGET_FOLDER, namespace + ".nuspec");
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(assemblyInfo);
+            writer.write(assemblyInfoBuilder.toString());
+        } catch (IOException e) {
+            throw new MojoExecutionException("unable to write generated Nugetpacketfile.cs", e);
         } finally {
             if (writer != null) {
                 try {
