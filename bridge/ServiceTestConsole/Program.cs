@@ -46,10 +46,9 @@ namespace ServiceTestConsole
             {
                 domainName = "example";
             }
-
             string destination = "tcp://localhost.:6549";
             logger.Info("Start Example wit the domain " + domainName);
-            IExampleDomainSoap11Binding localDomain = new ExampleDomainConnector();
+            ExampleDomainConnector localDomain = new ExampleDomainConnector();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, new RetryDefaultExceptionHandler());
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
@@ -72,6 +71,7 @@ namespace ServiceTestConsole
             factory.UnRegisterConnector(domainName);
             factory.DeleteDomainService(domainName);
             factory.StopConnection(domainName);
+        
         }
 
 

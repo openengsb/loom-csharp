@@ -22,6 +22,7 @@ using System.Text;
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using Apache.NMS.ActiveMQ;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
@@ -39,7 +40,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         protected ISession session;
         protected IDestination destination;
         private string string_destination;
-        private ABridgeExceptionHandling handling;
+        protected ABridgeExceptionHandling handling;
         protected Boolean close = false;
         #endregion
         #region Constructor
@@ -69,7 +70,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             {
                 return;
             }
-            
+
             try
             {
                 Destination dest = new Destination(string_destination);
@@ -80,10 +81,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 connection.Start();
                 this.destination = session.GetDestination(dest.Queue);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                handling.Changed += Configure;
-                handling.HandleException(ex);
+                handling.Changed +=  delegate(Object[] asd)
+                {
+                    Configure();
+                    return null;
+                };
+               handling.HandleException(ex);
             }
         }
         #endregion
@@ -93,7 +98,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         protected void Close()
         {
+            session.Close();
+            session.Dispose();
+            connection.Stop();
             connection.Close();
+            connection.Dispose();
             connection = null;
             close = true;
         }

@@ -268,8 +268,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             catch (Exception e)
             {
-                exceptionHandler.Changed += Listen;
+                exceptionHandler.Changed += delegate(object[] obj)
+                {
+                    Listen();
+                    return null;
+                };
                 exceptionHandler.HandleException(e);
+            }
+            finally
+            {
+                portIn.Close();
             }
 
         }

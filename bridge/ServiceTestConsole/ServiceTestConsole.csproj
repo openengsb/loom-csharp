@@ -43,8 +43,12 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="OpenEngSBCore">
-      <HintPath>..\packages\OpenEngSBCore.1.0.0.0-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+    <Reference Include="OOSourceCodeDomain">
+      <HintPath>..\..\..\loom-csharp-dll\OOSourceCode\target\OOSourceCodeDomain.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenEngSBCore, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OpenEngSBCore.3.0.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OOSDomainConnector.cs" />
     <Compile Include="ExampleDomainConnector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

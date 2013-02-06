@@ -39,7 +39,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
         public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler)
-            : base(destination,exceptionhandler)
+            : base(destination, exceptionhandler)
         {
             consumer = session.CreateConsumer(this.destination);
         }
@@ -62,14 +62,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             catch (Exception e)
             {
                 logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - {0} ({1}).", e.Message, e.GetType().Name);
-                if (!close)
+                handling.Changed += delegate(object[] obj)
                 {
-                    logger.Warn("trying to reconnect");
-                    Configure();
-                    consumer = session.CreateConsumer(this.destination);
-                    logger.Warn("configuration successful");
-                }
-                throw e;
+                    return Receive();
+                };
+                return handling.HandleException(e).ToString();
             }
 
             if (message == null)
@@ -83,6 +80,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         public new void Close()
         {
             consumer.Close();
+            consumer.Dispose();
             base.Close();
         }
         #endregion
