@@ -7,7 +7,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
 {
-    public abstract class ABridgeExceptionHandling : ExceptionHandler
+    public abstract class ABridgeExceptionHandling
     {
         public Boolean stop
         {
@@ -18,19 +18,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
         {
             stop = false;
         }
-        public delegate void ThrowExceptionMethod();
+        public abstract Object HandleException(Exception ex,params object[] parameters);
+        public delegate Object ThrowExceptionMethod(params object[] obj);
         public event ThrowExceptionMethod Changed;
-        protected void Invoke()
+        protected Object Invoke(Object[] obj)
         {
             if (stop)
             {
-                return;
+                return null;
             }
             if (Changed == null)
             {
                 throw new InvalidOperationException("An exception occured without a mehtod call");
             }
-            Changed.Invoke();
+            return Changed.Invoke(obj);
         }
     }
 }

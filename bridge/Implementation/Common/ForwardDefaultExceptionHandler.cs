@@ -8,7 +8,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public class ForwardDefaultExceptionHandler : ABridgeExceptionHandling
     {
-        public override bool HandleException(Exception exception)
+
+        public override Object HandleException(Exception exception, params Object[] obj)
         {
             throw exception;
         }

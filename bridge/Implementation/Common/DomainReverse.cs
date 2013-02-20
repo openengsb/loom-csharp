@@ -335,13 +335,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// </summary>
         public void Stop()
         {
-            if (queueThread != null)
-            {
-                exceptionHandler.stop = true;
-                isEnabled = false;
-                portIn.Close();
-            }
+            exceptionHandler.stop = true;
+            isEnabled = false;
+            portIn.Close();
             logger.Info("Connection closed");
+            JmsPort.CloseAll();
         }
         #endregion
         #region Abstract Methods

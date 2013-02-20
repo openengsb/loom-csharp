@@ -20,12 +20,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// if the Exception should be forwarded.
         /// </summary>
         /// <param name="exception">The exception, which has been thrown</param>
+        /// <param name="obj">Parameters of the method</param>
         /// <returns></returns>
-        public override bool HandleException(Exception exception)
+        public override Object HandleException(Exception exception,params Object[] obj)
         {
             // Invokes the method that throws the exception again.
-            Invoke();
-            return false;
+            return Invoke(obj);
+            
         }
     }
 }

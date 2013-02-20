@@ -116,6 +116,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request);
             registrationprocess = ERegistration.REGISTERED;
+            portOut.Close();
         }
 
         /// <summary>
@@ -181,6 +182,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                     Destination dest = new Destination(destination);
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId), exceptionHandler);
                     portOut.Send(returnMsg);
+                    portOut.Close();
                     if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))
                         throw new OpenEngSBException("A problem with the invokation of a method happened", new BridgeException(methodReturnMessage.message.result.arg.ToString()));
                 }
