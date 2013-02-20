@@ -24,16 +24,36 @@ namespace ServiceTestConsole
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoap11Binding
+    public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoap11Binding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
         public OOSourceCodeDomainConnector() : base(logger) { }
 
-    
-public void updateClass(OOClass args0)
-{
- 	throw new NotImplementedException();
-}
-}
+
+        public void updateClass(OOClass args0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getInstanceId()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void onRegisteredToolsChanged(XLinkConnector[] args0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void openXLinks(object[] args0, string args1)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

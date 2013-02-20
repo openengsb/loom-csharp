@@ -28,28 +28,35 @@ namespace ServiceTestConsole
     class Program
     {
         /// <summary>
-        /// This version works with the OpenEngS 3.0.0-Snapshot Framwork
+        /// This version works with the OpenEngS 3.0.0-Snapshot Framework
         /// </summary>
         /// <param name="args">System Arguments</param>
         static void Main(string[] args)
         {
             log4net.Config.BasicConfigurator.Configure();
-            ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-            Boolean xlink = false;
+            ILog logger;
+            Boolean xlink = true;
+            ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
+            OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
+            IDomainFactory factory;
             string domainName;
+            string destination = "tcp://localhost.:6549";
             if (xlink)
             {
                 //if you are using xlink for the example, please use an other domain. Example domain is not linkable
-                domainName = "sqlcode";
+                domainName = "oosourcecode";
+                logger = LogManager.GetLogger(typeof(OOSourceCodeDomainConnector));
+                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
             }
             else
             {
                 domainName = "example";
+                logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
+                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, ooconnector, new RetryDefaultExceptionHandler());
             }
-            string destination = "tcp://localhost.:6549";
+
             logger.Info("Start Example wit the domain " + domainName);
-            ExampleDomainConnector localDomain = new ExampleDomainConnector();
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, localDomain, new RetryDefaultExceptionHandler());
+
             String serviceId = factory.CreateDomainService(domainName);
             factory.RegisterConnector(serviceId, domainName);
             if (xlink)
@@ -71,20 +78,18 @@ namespace ServiceTestConsole
             factory.UnRegisterConnector(domainName);
             factory.DeleteDomainService(domainName);
             factory.StopConnection(domainName);
-        
         }
 
 
         private static ModelToViewsTuple[] initModelViewRelation()
         {
-            ModelToViewsTuple[] modelsToViews
-                = new ModelToViewsTuple[1];
+            ModelToViewsTuple[] modelsToViews = new ModelToViewsTuple[1];
             Dictionary<String, String> descriptions = new Dictionary<String, String>();
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
 
             XLinkConnectorView[] views = new XLinkConnectorView[1];
-            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = (string[])descriptions.ConvertMap() });
+            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {
