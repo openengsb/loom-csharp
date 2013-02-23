@@ -61,8 +61,8 @@ namespace ServiceTestConsole
             factory.RegisterConnector(serviceId, domainName);
             if (xlink)
             {
-                XLinkUrlBlueprint template = factory.ConnectToXLink(domainName, initModelViewRelation());
-                factory.DisconnectFromXLink(domainName);
+                XLinkUrlBlueprint template = factory.ConnectToXLink(domainName, "localhost", initModelViewRelation());
+                factory.DisconnectFromXLink(domainName, "localhost");
             }
             else
             {

@@ -196,7 +196,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 proxies.Remove(domainType);
             }
         }
-        public XLinkUrlBlueprint ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews)
+        public XLinkUrlBlueprint ConnectToXLink(string domainType, String HostId, ModelToViewsTuple[] modelsToViews)
         {
             /*
              * Has to be discussed if Xlink can be without register
@@ -206,14 +206,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 proxies.Add(domainType, proxy);
                 proxy.Start();
             }*/
-            return proxies[domainType].ConnectToXLink(domainType, modelsToViews);
+            return proxies[domainType].ConnectToXLink(domainType, HostId, modelsToViews);
         }
-        public void DisconnectFromXLink(string domainType)
+        public void DisconnectFromXLink(string domainType, String HostId)
         {
             IRegistration stoppable = null;
             if (proxies.TryGetValue(domainType, out stoppable))
             {
-                stoppable.DisconnectFromXLink();
+                stoppable.DisconnectFromXLink(HostId);
             }
         }
         #endregion

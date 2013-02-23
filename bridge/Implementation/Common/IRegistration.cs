@@ -24,9 +24,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         Boolean Registered { get; }
         void CreateRemoteProxy();
         void DeleteRemoteProxy();
-        XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews);
-        void DisconnectFromXLink();
-        void RegisterConnector(String serviceId);
+        XLinkUrlBlueprint ConnectToXLink(string ToolName, String HostId, ModelToViewsTuple[] modelsToViews);
+        void DisconnectFromXLink(String HostId);
+        void RegisterConnector(String ServiceId);
         void UnRegisterConnector();
         String ServiceID { get; }
         void Stop();

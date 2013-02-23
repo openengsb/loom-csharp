@@ -26,11 +26,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         void DeleteDomainService(String domainType);
         void RegisterConnector(String registrationid, String domainType);
         void UnRegisterConnector(String domainType);
-        XLinkUrlBlueprint ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews);
-        void DisconnectFromXLink(String domainType);
+        XLinkUrlBlueprint ConnectToXLink(string domainType, String HostId, ModelToViewsTuple[] modelsToViews);
+        void DisconnectFromXLink(String domainType, String HostId);
         void StopConnection(String domainType);
         String getDomainTypServiceId(String domainType);
         String getServiceId(String domainType);
-        Boolean Registered(String domainService);        
+        Boolean Registered(String domainService);
     }
 }

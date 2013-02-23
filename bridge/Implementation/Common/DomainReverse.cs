@@ -165,15 +165,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.password = password;
         }
         #endregion
-        #region Protected Methods
-        /// <summary>
-        /// Returns the localhost. This has to be adapted to the changes in the xlink
-        /// </summary>
-        /// <returns></returns>
-        protected String getHost()
-        {
-            return "localhost";
-        }
+        #region Protected Method
         /// <summary>
         /// Unmarshalls the arguments of a MethodCall.
         /// </summary>
@@ -346,10 +338,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public abstract void CreateRemoteProxy();
         public abstract void DeleteRemoteProxy();
         public abstract void Listen();
+        public abstract XLinkUrlBlueprint ConnectToXLink(string ToolName, String HostId, ModelToViewsTuple[] modelsToViews);
         public abstract void RegisterConnector(String serviceId);
         public abstract void UnRegisterConnector();
-        public abstract XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews);
-        public abstract void DisconnectFromXLink();
+        public abstract void DisconnectFromXLink(String HostId);
         #endregion
     }
 }

@@ -52,9 +52,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         /// <param name="domainType">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
         public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, ABridgeExceptionHandling exceptionhandling)
-            : base(localDomainService, host, serviceId, domainType, false,exceptionhandling)
+            : base(localDomainService, host, serviceId, domainType, false, exceptionhandling)
         {
-            logger.Info("Connecting to OpenEngSB version 2.4");            
+            logger.Info("Connecting to OpenEngSB version 2.4");
         }
         /// <summary>
         /// Constructor with Autehntification
@@ -112,7 +112,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request);
             registrationprocess = ERegistration.REGISTERED;
@@ -188,11 +188,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 }
             }
         }
-        public override XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
+        public override XLinkUrlBlueprint ConnectToXLink(string ToolName, string HostId, ModelToViewsTuple[] modelsToViews)
         {
             throw new NotImplementedException();
         }
-        public override void DisconnectFromXLink()
+        public override void DisconnectFromXLink(String HostId)
         {
             throw new NotImplementedException();
         }
@@ -211,8 +211,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 returnValue = invokeMethod(request.message.methodCall);
             }
             catch (BridgeException ex)
-            {                
-              return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
+            {
+                return CreateMethodReturn(ReturnType.Exception, ex, request.message.callId);
             }
             MethodResultMessage returnMsg = null;
             if (returnValue == null)
@@ -257,6 +257,5 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             throw new MissingMethodException("Not implemented for this version of openEngSB");
         }
         #endregion
-
     }
 }

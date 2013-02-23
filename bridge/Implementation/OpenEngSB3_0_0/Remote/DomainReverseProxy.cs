@@ -286,7 +286,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="toolName"></param>
         /// <param name="modelsToViews"></param>
         /// <returns></returns>
-        public override XLinkUrlBlueprint ConnectToXLink(string toolName, ModelToViewsTuple[] modelsToViews)
+        public override XLinkUrlBlueprint ConnectToXLink(string ToolName, String HostId, ModelToViewsTuple[] modelsToViews)
         {
             logger.Info("Create a Xlink connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
@@ -302,8 +302,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             IList<object> args = new List<object>();
             args.Add(registerId);
-            args.Add(getHost());
-            args.Add(toolName);
+            args.Add(HostId);
+            args.Add(ToolName);
             args.Add(modelsToViews);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(XLINK_METHOD_NAME, args, metaData, classes, null);
@@ -326,7 +326,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <summary>
         /// Disconnect the Connector from XLink
         /// </summary>
-        public override void DisconnectFromXLink()
+        public override void DisconnectFromXLink(String HostId)
         {
             logger.Info("Disconnect connector from xlink with the serviceId: " + serviceId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
@@ -337,7 +337,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             IList<object> args = new List<object>();
             args.Add(registerId);
-            args.Add(getHost());
+            args.Add(HostId);
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(REMOVE_XLINK_CONNECTOR, args, metaData, classes, null);
 
