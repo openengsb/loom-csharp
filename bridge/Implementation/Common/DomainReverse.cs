@@ -50,6 +50,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected abstract string CREATION_METHOD_NAME { get; }
         protected abstract string AUTHENTIFICATION_CLASS { get; }
         public string ServiceID { get { return serviceId; } }
+        public String DomainType { get { return domainType; } }
         #endregion
         #region Variables
 

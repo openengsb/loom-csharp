@@ -29,6 +29,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         void RegisterConnector(String ServiceId);
         void UnRegisterConnector();
         String ServiceID { get; }
+        String DomainType { get; }
         void Stop();
     }
 }

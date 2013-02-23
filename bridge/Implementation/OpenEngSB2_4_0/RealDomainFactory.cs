@@ -36,9 +36,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
         }
         #endregion
         #region Abstact Method Implementation
-        protected override A getSubEventhandler<A>(String domainType)
+        protected override A getSubEventhandler<A>(String ConnectorId)
         {
-            return new DomainProxy<A>(destination, getDomainTypServiceId(domainType), domainType, exceptionhandler).GetTransparentProxy();
+            return new DomainProxy<A>(destination, GetDomainTypConnectorId(ConnectorId), GetDomainType(ConnectorId), exceptionhandler).GetTransparentProxy();
         }
         protected override DomainReverse<T> createInstance(string serviceId, string domainType, bool createConstructor)
         {
