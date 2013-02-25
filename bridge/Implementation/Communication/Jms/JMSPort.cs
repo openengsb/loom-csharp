@@ -22,6 +22,8 @@ using System.Text;
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using Apache.NMS.ActiveMQ;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
@@ -34,12 +36,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <summary>
         /// ActiveMQ NMS
         /// </summary>
-        protected IConnection connection;
+        private static IDictionary<String, IConnection> connections = new Dictionary<String, IConnection>();
         protected IConnectionFactory factory;
-        protected ISession session;
-        protected IDestination destination;
+        protected ISession session
+        {
+            get
+            {
+                return connections[string_destination].CreateSession();
+            }
+        }
+        protected IDestination destination
+        {
+            get
+            {
+                Destination dest = new Destination(string_destination);
+                return session.GetDestination(dest.Queue);
+            }
+        }
         private string string_destination;
-        private ABridgeExceptionHandling handling;
+        protected ABridgeExceptionHandling handling;
         protected Boolean close = false;
         #endregion
         #region Constructor
@@ -49,12 +64,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
         protected JmsPort(string destination, ABridgeExceptionHandling handling)
         {
-            this.connection = null;
             this.factory = null;
-            this.session = null;
-            this.destination = null;
-            this.string_destination=destination;
-            this.handling=handling;
+            this.string_destination = destination;
+            this.handling = handling;
             Configure();
         }
         #endregion
@@ -65,24 +77,37 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation</param>
         protected void Configure()
         {
-            if (close)
+            if (close || connections.ContainsKey(string_destination))
             {
                 return;
             }
-            
+
             try
             {
                 Destination dest = new Destination(string_destination);
                 Uri connectionUri = new Uri(dest.Host);
-                factory = new Apache.NMS.ActiveMQ.ConnectionFactory(connectionUri);
-                connection = factory.CreateConnection();
-                session = connection.CreateSession();
+                factory = new Apache.NMS.ActiveMQ.ConnectionFactory(dest.Host);
+                IConnection connection = factory.CreateConnection();
+                connection.ConnectionInterruptedListener += () =>
+                {
+                    throw new BridgeException("Connection has been interrupted");
+                };
+                connection.ExceptionListener += e =>
+                {
+                    throw new BridgeException("Conenction has thrown the exception", e);
+                };
+
                 connection.Start();
-                this.destination = session.GetDestination(dest.Queue);
+
+                connections.Add(string_destination, connection);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                handling.Changed += Configure;
+                handling.Changed += delegate(Object[] asd)
+                {
+                    Configure();
+                    return null;
+                };
                 handling.HandleException(ex);
             }
         }
@@ -93,9 +118,24 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         protected void Close()
         {
-            connection.Close();
-            connection = null;
+            if (connections.ContainsKey(string_destination))
+            {
+                connections[string_destination].Close();
+                connections[string_destination].Dispose();
+                connections.Remove(string_destination);
+            }
             close = true;
+        }
+        /// <summary>
+        /// Close the remaining connections
+        /// </summary>
+        public static void CloseAll()
+        {
+            foreach (IConnection connection in connections.Values)
+            {
+                connection.Close();
+                connection.Dispose();
+            }
         }
         #endregion
     }

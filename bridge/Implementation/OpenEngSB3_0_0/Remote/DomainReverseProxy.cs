@@ -261,6 +261,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                         Destination dest = new Destination(destination);
                         IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), exceptionHandler);
                         portOut.Send(returnMsg);
+                        portOut.Close();
                         if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
                             throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
                     }
@@ -268,7 +269,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             catch (Exception e)
             {
-                exceptionHandler.Changed += Listen;
+                exceptionHandler.Changed += delegate(object[] obj)
+                {
+                    Listen();
+                    return null;
+                };
                 exceptionHandler.HandleException(e);
             }
 
@@ -312,6 +317,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
             string request = marshaller.MarshallObject(methodCall);
             portOut.Send(request, id);
+            portOut.Close();
             MethodResultMessage result = waitAndCheckAnswer(destinationinfo, id);
             registrationprocess = ERegistration.Xlink;
             logger.Info("Create done");
@@ -346,8 +352,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
             string request = marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
-
             waitAndCheckAnswer(destinationinfo, id);
+            portOut.Close();
             registrationprocess = ERegistration.REGISTERED;
             logger.Info("XLink is disconnected");
         }

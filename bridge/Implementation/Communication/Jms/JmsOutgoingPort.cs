@@ -18,6 +18,7 @@ using System;
 using Apache.NMS;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Reflection;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
     /// <summary>
@@ -53,11 +54,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 ITextMessage message = session.CreateTextMessage(text);
                 producer.Send(message);
             }
-            catch{
-                Configure();
-                Send(text);
+            catch(Exception ex){
+                handling.Changed += (delegate (object[] obj){
+                    Send(obj[0].ToString());
+                    return null;
+                });
+                handling.HandleException(ex,text);
             }
         }
+
         /// <summary>
         /// Send a string over NMS and defines the replyTo field
         /// </summary>
@@ -71,13 +76,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 message.NMSReplyTo = session.GetQueue(queueName);
                 producer.Send(message);
             }
-            catch
+            catch(Exception ex)
             {
-                if (!close)
+                handling.Changed +=(delegate(object[] obj)
                 {
-                    Configure();
-                    Send(text, queueName);
-                }
+                    Send(obj[0].ToString(), obj[1].ToString());
+                    return null;
+                });
+                handling.HandleException(ex, text, queueName);
             }
         }
 
@@ -87,6 +93,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         public new void Close()
         {
             producer.Close();
+            producer.Dispose();
             base.Close();
         }
         #endregion
