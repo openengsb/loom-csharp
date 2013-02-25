@@ -34,6 +34,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// <typeparam name="T"></typeparam>
     public class DomainReverseProxy<T> : DomainReverse<T>
     {
+        #region Propreties
         protected override string CREATION_METHOD_NAME
         {
             get { return "createWithId"; }
@@ -42,33 +43,34 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             get { return "org.openengsb.connector.usernamepassword.Password"; }
         }
+        #endregion
         #region Constructor
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="localDomainService">LocalDomain</param>
         /// <param name="host">Host</param>
-        /// <param name="serviceId">ServiceId</param>
-        /// <param name="domainType">name of the remote Domain</param>
+        /// <param name="connectorId">ServiceId</param>
+        /// <param name="domainName">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
-            : base(localDomainService, host, serviceId, domainType, createNewConnector,exceptionhandler)
+        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+            : base(localDomainService, host, connectorId, domainName, createNewConnector, exceptionhandler)
         {
-            logger.Info("Connecting to OpenEngSB version 3.0");
+            Logger.Info("Connecting to OpenEngSB version 3.0");
         }
         /// <summary>
         /// Constructor with Autehntification
         /// </summary>
         /// <param name="localDomainService">LocalDomain</param>
         /// <param name="host">Host</param>
-        /// <param name="serviceId">ServiceId</param>
-        /// <param name="domainType">name of the remote Domain</param>
+        /// <param name="connectorId">ServiceId</param>
+        /// <param name="domainName">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string serviceId, string domainType, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
-            : base(localDomainService, host, serviceId, domainType, username, password, createNewConnector,exceptionhandler)
+        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+            : base(localDomainService, host, connectorId, domainName, username, password, createNewConnector, exceptionhandler)
         {
-            logger.Info("Connecting to OpenEngSB version 3.0");
+            Logger.Info("Connecting to OpenEngSB version 3.0");
         }
         #endregion
         #region Public Methods
@@ -77,10 +79,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void CreateRemoteProxy()
         {
-            logger.Info("Create a new connector");
+            Logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
-            registerId = serviceId;
+            RegisterId = ConnectorId;
 
             IList<string> classes = new List<string>();
             LocalType localType = new LocalType(typeof(String));
@@ -89,13 +91,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
 
             IList<object> args = new List<object>();
             Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects.ConnectorDescription connectorDescription = new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects.ConnectorDescription();
-            connectorDescription.attributes.Add("serviceId", serviceId);
+            connectorDescription.attributes.Add("serviceId", ConnectorId);
             connectorDescription.attributes.Add("portId", CREATION_PORT);
             connectorDescription.attributes.Add("destination", destination);
             connectorDescription.connectorType = CREATION_CONNECTOR_TYPE;
-            connectorDescription.domainType = domainType;
+            connectorDescription.domainType = DomainName;
 
-            args.Add(registerId);
+            args.Add(RegisterId);
             args.Add(connectorDescription);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(CREATION_METHOD_NAME, args, metaData, classes, null);
@@ -104,15 +106,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             destinationinfo.Queue = CREATION_QUEUE;
             String id = Guid.NewGuid().ToString();
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            autinfo.data.Add("value", password);
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionHandler);
-            string request = marshaller.MarshallObject(secureRequest);
+            autinfo.data.Add("value", Password);
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(secureRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
-            registrationprocess = ERegistration.CREATED;
+            Registrationprocess = ERegistration.CREATED;
             portOut.Close();
-            logger.Info("Create done");
+            Logger.Info("Create done");
         }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void DeleteRemoteProxy()
         {
-            logger.Info("Delete the connector with ID: " + serviceId);
+            Logger.Info("Delete the connector with ID: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
             LocalType localType = new LocalType(typeof(String));
@@ -128,37 +130,38 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
 
             IList<object> args = new List<object>();
-            args.Add(registerId);
+            args.Add(RegisterId);
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(CREATION_DELETE_METHOD_NAME, args, metaData, classes, null);
 
             String id = Guid.NewGuid().ToString();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            authentification.data.Add("value", password);
-            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id, true, "");
+            authentification.data.Add("value", Password);
+            MethodCallMessage callRequest = MethodCallMessage.createInstance(Username, authentification, deletionCall, id, true, "");
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
-            string request = marshaller.MarshallObject(callRequest);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
 
             waitAndCheckAnswer(destinationinfo, id);
-            registrationprocess = ERegistration.NONE;
+            Registrationprocess = ERegistration.NONE;
             portOut.Close();
-            logger.Info("Delete done");
+            Logger.Info("Delete done");
         }
 
         /// <summary>
-        /// Creates an Proxy on the bus.
+        /// Register a connector on the OpenEngSB
         /// </summary>
-        public override void RegisterConnector(String serviceId)
+        /// <param name="connectorId">ConnectorId</param>
+        public override void RegisterConnector(String connectorId)
         {
-            this.serviceId = serviceId;
-            logger.Info("Register the connector with ID: " + serviceId);
+            this.ConnectorId = connectorId;
+            Logger.Info("Register the connector with ID: " + connectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
-            String id= Guid.NewGuid().ToString();
+            String id = Guid.NewGuid().ToString();
             metaData.Add("serviceId", CREATION_REGISTRATION);
             LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
@@ -166,7 +169,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             classes.Add(localType.RemoteTypeFullName);
             IList<object> args = new List<object>();
-            args.Add(serviceId);
+            args.Add(connectorId);
             args.Add(CREATION_PORT);
             args.Add(destination);
 
@@ -176,24 +179,24 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             destinationinfo.Queue = CREATION_QUEUE;
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            autinfo.data.Add("value", password);
+            autinfo.data.Add("value", Password);
 
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall,id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination,exceptionHandler);
-            string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request,id);
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(secureRequest);
+            portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
-            registrationprocess = ERegistration.REGISTERED;
+            Registrationprocess = ERegistration.REGISTERED;
             portOut.Close();
-            logger.Info("Register done");
+            Logger.Info("Register done");
         }
         private MethodResultMessage waitAndCheckAnswer(Destination destinationinfo, String id)
         {
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), exceptionHandler);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), ExceptionHandler);
             string reply = portIn.Receive();
-            MethodResultMessage result = marshaller.UnmarshallObject<MethodResultMessage>(reply);
+            MethodResultMessage result = Marshaller.UnmarshallObject<MethodResultMessage>(reply);
             portIn.Close();
-            if (result.result.type == ReturnType.Exception)
+            if (result.result.Type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
             return result;
         }
@@ -202,11 +205,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// </summary>
         public override void UnRegisterConnector()
         {
-            if (!registrationprocess.Equals(ERegistration.REGISTERED))
+            if (!Registrationprocess.Equals(ERegistration.REGISTERED))
             {
                 return;
             }
-            logger.Info("Unregister the connector with ID: " + serviceId);
+            Logger.Info("Unregister the connector with ID: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_REGISTRATION);
             LocalType localType = new LocalType(typeof(String));
@@ -214,7 +217,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
 
             IList<object> args = new List<object>();
-            args.Add(serviceId);
+            args.Add(ConnectorId);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(UNREGISTRATION_METHOD_NAME, args, metaData, classes, null);
 
@@ -222,19 +225,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             destinationinfo.Queue = CREATION_QUEUE;
 
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            autinfo.data.Add("value", password);
-            String id=Guid.NewGuid().ToString();
-            MethodCallMessage secureRequest = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
-            string request = marshaller.MarshallObject(secureRequest);
-            portOut.Send(request,id);
+            autinfo.data.Add("value", Password);
+            String id = Guid.NewGuid().ToString();
+            MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(secureRequest);
+            portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
-            if (registrationprocess.Equals(ERegistration.REGISTERED))
+            if (Registrationprocess.Equals(ERegistration.REGISTERED))
             {
-                registrationprocess = ERegistration.CREATED;
+                Registrationprocess = ERegistration.CREATED;
             }
             portOut.Close();
-            logger.Info("Unregister done");
+            Logger.Info("Unregister done");
         }
         /// <summary>
         /// Blocks an waits for messages.
@@ -243,38 +246,38 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             try
             {
-                while (isEnabled)
+                while (IsEnabled)
                 {
                     String textMsg;
-                    textMsg = portIn.Receive();
+                    textMsg = PortIn.Receive();
 
                     if (textMsg == null)
                         continue;
-                    MethodCallMessage methodCallRequest = marshaller.UnmarshallObject<MethodCallMessage>(textMsg);
+                    MethodCallMessage methodCallRequest = Marshaller.UnmarshallObject<MethodCallMessage>(textMsg);
                     if (methodCallRequest.methodCall.args == null)
                         methodCallRequest.methodCall.args = new List<Object>();
                     MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                     if (methodCallRequest.answer)
                     {
-                        string returnMsg = marshaller.MarshallObject(methodReturnMessage);
+                        string returnMsg = Marshaller.MarshallObject(methodReturnMessage);
                         Destination dest = new Destination(destination);
-                        IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), exceptionHandler);
+                        IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), ExceptionHandler);
                         portOut.Send(returnMsg);
                         portOut.Close();
-                        if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
-                            throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
+                        if (methodReturnMessage.result.Type.Equals(ReturnType.Exception))
+                            throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.Arg.ToString()));
                     }
                 }
             }
             catch (Exception e)
             {
-                exceptionHandler.Changed += delegate(object[] obj)
+                ExceptionHandler.Changed += delegate(object[] obj)
                 {
                     Listen();
                     return null;
                 };
-                exceptionHandler.HandleException(e);
+                ExceptionHandler.HandleException(e);
             }
 
         }
@@ -286,9 +289,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         /// <param name="toolName"></param>
         /// <param name="modelsToViews"></param>
         /// <returns></returns>
-        public override XLinkUrlBlueprint ConnectToXLink(string ToolName, String HostId, ModelToViewsTuple[] modelsToViews)
+        public override XLinkUrlBlueprint ConnectToXLink(string toolName, String hostId, ModelToViewsTuple[] modelsToViews)
         {
-            logger.Info("Create a Xlink connector");
+            Logger.Info("Create a Xlink connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
 
@@ -301,9 +304,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
 
             IList<object> args = new List<object>();
-            args.Add(registerId);
-            args.Add(HostId);
-            args.Add(ToolName);
+            args.Add(RegisterId);
+            args.Add(hostId);
+            args.Add(toolName);
             args.Add(modelsToViews);
 
             RemoteMethodCall creationCall = RemoteMethodCall.CreateInstance(XLINK_METHOD_NAME, args, metaData, classes, null);
@@ -312,23 +315,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             destinationinfo.Queue = CREATION_QUEUE;
             String id = Guid.NewGuid().ToString();
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            autinfo.data.Add("value", password);
-            MethodCallMessage methodCall = MethodCallMessage.createInstance(username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
-            string request = marshaller.MarshallObject(methodCall);
+            autinfo.data.Add("value", Password);
+            MethodCallMessage methodCall = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(methodCall);
             portOut.Send(request, id);
             portOut.Close();
             MethodResultMessage result = waitAndCheckAnswer(destinationinfo, id);
-            registrationprocess = ERegistration.Xlink;
-            logger.Info("Create done");
-            return marshaller.UnmarshallObject<XLinkUrlBlueprint>(result.result.arg.ToString());
+            Registrationprocess = ERegistration.XLINK;
+            Logger.Info("Create done");
+            return Marshaller.UnmarshallObject<XLinkUrlBlueprint>(result.result.Arg.ToString());
         }
         /// <summary>
         /// Disconnect the Connector from XLink
         /// </summary>
-        public override void DisconnectFromXLink(String HostId)
+        public override void DisconnectFromXLink(String hostId)
         {
-            logger.Info("Disconnect connector from xlink with the serviceId: " + serviceId);
+            Logger.Info("Disconnect connector from xlink with the serviceId: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
             LocalType localType = new LocalType(typeof(String));
@@ -336,26 +339,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             classes.Add(localType.RemoteTypeFullName);
             classes.Add(localType.RemoteTypeFullName);
             IList<object> args = new List<object>();
-            args.Add(registerId);
-            args.Add(HostId);
+            args.Add(RegisterId);
+            args.Add(hostId);
 
             RemoteMethodCall deletionCall = RemoteMethodCall.CreateInstance(REMOVE_XLINK_CONNECTOR, args, metaData, classes, null);
 
             String id = Guid.NewGuid().ToString();
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            authentification.data.Add("value", password);
-            MethodCallMessage callRequest = MethodCallMessage.createInstance(username, authentification, deletionCall, id, true, "");
+            authentification.data.Add("value", Password);
+            MethodCallMessage callRequest = MethodCallMessage.createInstance(Username, authentification, deletionCall, id, true, "");
 
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, exceptionHandler);
-            string request = marshaller.MarshallObject(callRequest);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
             portOut.Close();
-            registrationprocess = ERegistration.REGISTERED;
-            logger.Info("XLink is disconnected");
+            Registrationprocess = ERegistration.REGISTERED;
+            Logger.Info("XLink is disconnected");
         }
         #endregion
         #region Private Methods
@@ -369,7 +372,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             object returnValue = null;
             try
             {
-                returnValue = invokeMethod(request.methodCall);
+                returnValue = InvokeMethod(request.methodCall);
             }
             catch (BridgeException bridgeEx)
             {
@@ -393,8 +396,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         private MethodResultMessage CreateMethodReturn(ReturnType type, object returnValue, string correlationId)
         {
             MethodResult methodResult = new MethodResult();
-            methodResult.type = type;
-            methodResult.arg = returnValue;
+            methodResult.Type = type;
+            methodResult.Arg = returnValue;
 
             if (returnValue == null)
                 methodResult.className = "null";

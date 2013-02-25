@@ -23,35 +23,35 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public partial class RegistrationFunctions
     {
-        private ILog logger;
+        private ILog Logger;
         
         public RegistrationFunctions(ILog logger)
         {
-            this.logger = logger;
+            this.Logger = logger;
         }
         /// <summary>
         /// Part of the registration process
         /// </summary>
         /// <param name="element">Message from the server</param>
-        public void setDomainId(String element)
+        public void SetDomainId(String element)
         {
-            logger.Info("setDomainId:" + element);
+            Logger.Info("setDomainId:" + element);
         }
         /// <summary>
         /// Part of the registration process
         /// </summary>
         /// <param name="element">Message from the server</param>
-        public void setConnectorId(String element)
+        public void SetConnectorId(String element)
         {
-            logger.Info("setConnectorId:" + element);
+            Logger.Info("setConnectorId:" + element);
         }
         /// <summary>
         /// Get invokes, when the OpenEngSB checks the connections
         /// </summary>
         /// <returns></returns>
-        public AliveState getAliveState()
+        public AliveState GetAliveState()
         {
-            logger.Info("GetAliveState called. Answering with ONLINE");
+            Logger.Info("GetAliveState called. Answering with ONLINE");
             return AliveState.ONLINE;
         }
 

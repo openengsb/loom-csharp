@@ -19,7 +19,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// <summary>
     /// Definiton, to receive a message
     /// </summary>
-    public interface IIncomingPort: IPort
+    public interface IIncomingPort : IPort
     {
         /// <summary>
         /// Used to receive messages from a desination

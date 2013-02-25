@@ -39,7 +39,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service)
         {
-                int version=getVersionNumber(stringVersion);
+                int version=GetVersionNumber(stringVersion);
                 if (version >= 300)
                     return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
                 if (version >= 240)
@@ -53,7 +53,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler)
         {
-                int version = getVersionNumber(stringVersion);
+                int version = GetVersionNumber(stringVersion);
                 if (version >= 300)
                     return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandler);
                 if (version >= 240)
@@ -65,7 +65,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="version"></param>
         /// <returns></returns>
-        private static int getVersionNumber(String version)
+        private static int GetVersionNumber(String version)
         {
             try
             {

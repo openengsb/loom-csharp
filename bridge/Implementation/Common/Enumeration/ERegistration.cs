@@ -23,6 +23,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration
 {
     public enum ERegistration
     {
-        REGISTERED, CREATED, Xlink, NONE
+        REGISTERED, CREATED, XLINK, NONE
     }
 }

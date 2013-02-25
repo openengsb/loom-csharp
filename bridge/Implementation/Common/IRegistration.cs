@@ -24,12 +24,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         Boolean Registered { get; }
         void CreateRemoteProxy();
         void DeleteRemoteProxy();
-        XLinkUrlBlueprint ConnectToXLink(string ToolName, String HostId, ModelToViewsTuple[] modelsToViews);
-        void DisconnectFromXLink(String HostId);
-        void RegisterConnector(String ServiceId);
+        XLinkUrlBlueprint ConnectToXLink(string toolName, String hostId, ModelToViewsTuple[] modelsToViews);
+        void DisconnectFromXLink(String hostId);
+        void RegisterConnector(String connectorId);
         void UnRegisterConnector();
-        String ServiceID { get; }
-        String DomainType { get; }
+        String ConnectorId { get; }
+        String DomainName { get; }
         void Stop();
     }
 }

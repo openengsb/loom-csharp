@@ -27,7 +27,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     public class JmsOutgoingPort : JmsPort, IOutgoingPort
     {
         #region Variables
-        IMessageProducer producer;
+        private IMessageProducer producer;
         #endregion
         #region Constructor
         /// <summary>
@@ -37,7 +37,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling)
             : base(destination, handling)
         {
-            producer = session.CreateProducer(this.destination);
+            producer = Session.CreateProducer(this.Destination);
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
         }
         #endregion
@@ -51,15 +51,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         {
             try
             {
-                ITextMessage message = session.CreateTextMessage(text);
+                ITextMessage message = Session.CreateTextMessage(text);
                 producer.Send(message);
             }
-            catch(Exception ex){
-                handling.Changed += (delegate (object[] obj){
+            catch (Exception ex)
+            {
+                Handling.Changed += (delegate(object[] obj)
+                {
                     Send(obj[0].ToString());
                     return null;
                 });
-                handling.HandleException(ex,text);
+                Handling.HandleException(ex, text);
             }
         }
 
@@ -72,18 +74,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         {
             try
             {
-                ITextMessage message = session.CreateTextMessage(text);
-                message.NMSReplyTo = session.GetQueue(queueName);
+                ITextMessage message = Session.CreateTextMessage(text);
+                message.NMSReplyTo = Session.GetQueue(queueName);
                 producer.Send(message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                handling.Changed +=(delegate(object[] obj)
+                Handling.Changed += (delegate(object[] obj)
                 {
                     Send(obj[0].ToString(), obj[1].ToString());
                     return null;
                 });
-                handling.HandleException(ex, text, queueName);
+                Handling.HandleException(ex, text, queueName);
             }
         }
 
