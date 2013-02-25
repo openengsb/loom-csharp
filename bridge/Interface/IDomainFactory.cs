@@ -21,16 +21,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
     public interface IDomainFactory
     {
-        A getEventhandler<A>(String domainType);
-        String CreateDomainService(String domainType);
-        void DeleteDomainService(String domainType);
-        void RegisterConnector(String registrationid, String domainType);
-        void UnRegisterConnector(String domainType);
-        XLinkUrlBlueprint ConnectToXLink(string domainType, ModelToViewsTuple[] modelsToViews);
-        void DisconnectFromXLink(String domainType);
-        void StopConnection(String domainType);
-        String getDomainTypServiceId(String domainType);
-        String getServiceId(String domainType);
-        Boolean Registered(String domainService);        
+        A GetEventhandler<A>(String connectorId);
+        String CreateDomainService(String domainName);
+        void DeleteDomainService(String connectorId);
+        void RegisterConnector(String connectorId, String domainName);
+        void UnRegisterConnector(String connectorId);
+        XLinkUrlBlueprint ConnectToXLink(String connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews);
+        void DisconnectFromXLink(String connectorId, String hostId);
+        void StopConnection(String connectorId);
+        String GetDomainTypConnectorId(String connectorId);
+        Boolean Registered(String domainService);
     }
 }

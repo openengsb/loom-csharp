@@ -37,25 +37,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// ActiveMQ NMS
         /// </summary>
         private static IDictionary<String, IConnection> connections = new Dictionary<String, IConnection>();
-        protected IConnectionFactory factory;
-        protected ISession session
+        protected IConnectionFactory Factory;
+        protected ISession Session
         {
             get
             {
-                return connections[string_destination].CreateSession();
+                return connections[stringDestination].CreateSession();
             }
         }
-        protected IDestination destination
+        protected IDestination Destination
         {
             get
             {
-                Destination dest = new Destination(string_destination);
-                return session.GetDestination(dest.Queue);
+                Destination dest = new Destination(stringDestination);
+                return Session.GetDestination(dest.Queue);
             }
         }
-        private string string_destination;
-        protected ABridgeExceptionHandling handling;
-        protected Boolean close = false;
+        private string stringDestination;
+        protected ABridgeExceptionHandling Handling;
+        protected Boolean Closed = false;
         #endregion
         #region Constructor
         /// <summary>
@@ -64,9 +64,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
         protected JmsPort(string destination, ABridgeExceptionHandling handling)
         {
-            this.factory = null;
-            this.string_destination = destination;
-            this.handling = handling;
+            this.Factory = null;
+            this.stringDestination = destination;
+            this.Handling = handling;
             Configure();
         }
         #endregion
@@ -77,17 +77,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation</param>
         protected void Configure()
         {
-            if (close || connections.ContainsKey(string_destination))
+            if (Closed || connections.ContainsKey(stringDestination))
             {
                 return;
             }
 
             try
             {
-                Destination dest = new Destination(string_destination);
+                Destination dest = new Destination(stringDestination);
                 Uri connectionUri = new Uri(dest.Host);
-                factory = new Apache.NMS.ActiveMQ.ConnectionFactory(dest.Host);
-                IConnection connection = factory.CreateConnection();
+                Factory = new Apache.NMS.ActiveMQ.ConnectionFactory(dest.Host);
+                IConnection connection = Factory.CreateConnection();
                 connection.ConnectionInterruptedListener += () =>
                 {
                     throw new BridgeException("Connection has been interrupted");
@@ -96,19 +96,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 {
                     throw new BridgeException("Conenction has thrown the exception", e);
                 };
-
                 connection.Start();
-
-                connections.Add(string_destination, connection);
+                connections.Add(stringDestination, connection);
             }
             catch (Exception ex)
             {
-                handling.Changed += delegate(Object[] asd)
+                //This allows it to invoke the method "Listen" again
+                //The exception handler (if configured) invokes Changed
+                //that will be forwarded to delegate (Object[] notUsed)
+                Handling.Changed += delegate(Object[] notUsed)
                 {
                     Configure();
                     return null;
                 };
-                handling.HandleException(ex);
+                Handling.HandleException(ex);
             }
         }
         #endregion
@@ -118,13 +119,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         protected void Close()
         {
-            if (connections.ContainsKey(string_destination))
+            if (connections.ContainsKey(stringDestination))
             {
-                connections[string_destination].Close();
-                connections[string_destination].Dispose();
-                connections.Remove(string_destination);
+                connections[stringDestination].Close();
+                connections[stringDestination].Dispose();
+                connections.Remove(stringDestination);
             }
-            close = true;
+            Closed = true;
         }
         /// <summary>
         /// Close the remaining connections

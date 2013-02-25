@@ -117,10 +117,10 @@ namespace BridgeTest
         [TestMethod]
         public void TestreverseURL()
         {
-            Assert.AreEqual(HelpMethods.reverseURL("http://example.domain.openengsb.org"), "org.openengsb.domain.example");
-            Assert.AreEqual(HelpMethods.reverseURL("http://example.domain.openengsb.org/"), "org.openengsb.domain.example");
-            Assert.AreEqual(HelpMethods.reverseURL("example.domain.openengsb.org"), "org.openengsb.domain.example");
-            Assert.AreEqual(HelpMethods.reverseURL("example.domain.openengsb.org/"), "org.openengsb.domain.example");
+            Assert.AreEqual(HelpMethods.ReverseURL("http://example.domain.openengsb.org"), "org.openengsb.domain.example");
+            Assert.AreEqual(HelpMethods.ReverseURL("http://example.domain.openengsb.org/"), "org.openengsb.domain.example");
+            Assert.AreEqual(HelpMethods.ReverseURL("example.domain.openengsb.org"), "org.openengsb.domain.example");
+            Assert.AreEqual(HelpMethods.ReverseURL("example.domain.openengsb.org/"), "org.openengsb.domain.example");
         }
         [TestMethod]
         public void TestaddTrueForSpecified1()
@@ -128,7 +128,7 @@ namespace BridgeTest
             IList<Object> elements = new List<Object>();
             elements.Add("test");
             TestClass testClass = new TestClass();
-            HelpMethods.addTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
+            HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals(true));
         }
@@ -139,7 +139,7 @@ namespace BridgeTest
             elements.Add("test");
             elements.Add("test1");
             TestClass testClass = new TestClass();
-            HelpMethods.addTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
+            HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals("test1"));
         }
@@ -150,7 +150,7 @@ namespace BridgeTest
             elements.Add("test");
             elements.Add("test1");
             TestClass testClass = new TestClass();
-            HelpMethods.addTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
+            HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals("test1"));
         }
@@ -160,7 +160,7 @@ namespace BridgeTest
             IList<Object> elements = new List<Object>();
             elements.Add("test");
             TestClass testClass = new TestClass();
-            HelpMethods.addTrueForSpecified(elements, testClass.GetType().GetMethod("hasOnlyOneField"));
+            HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasOnlyOneField"));
             Assert.IsTrue(elements.Count == 1);
             Assert.IsTrue(elements[0].Equals("test"));
         }
@@ -191,7 +191,7 @@ namespace BridgeTest
         [TestMethod]
         public void TestcreateClassWithPackageName()
         {
-            Assert.AreEqual(HelpMethods.createClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
+            Assert.AreEqual(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
         }
     }
     public class TestClass

@@ -22,6 +22,9 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
 {
+    /// <summary>
+    /// The names have to be in java coding style, else the OpenEngSB marshaler can not find the correct classes
+    /// </summary>
     public interface IMethodCall
     {
         #region Variables

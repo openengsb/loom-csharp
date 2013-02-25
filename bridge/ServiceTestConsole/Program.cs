@@ -57,16 +57,16 @@ namespace ServiceTestConsole
 
             logger.Info("Start Example wit the domain " + domainName);
 
-            String serviceId = factory.CreateDomainService(domainName);
-            factory.RegisterConnector(serviceId, domainName);
+            String ConnectorId = factory.CreateDomainService(domainName);
+            factory.RegisterConnector(ConnectorId, domainName);
             if (xlink)
             {
-                XLinkUrlBlueprint template = factory.ConnectToXLink(domainName, initModelViewRelation());
-                factory.DisconnectFromXLink(domainName);
+                XLinkUrlBlueprint template = factory.ConnectToXLink(ConnectorId, "localhost", domainName, initModelViewRelation());
+                factory.DisconnectFromXLink(ConnectorId, "localhost");
             }
             else
             {
-                IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(domainName);
+                IExampleDomainEventsSoap11Binding remotedomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(ConnectorId);
                 LogEvent lEvent = new LogEvent();
                 lEvent.name = "Example";
                 lEvent.level = "DEBUG";
@@ -75,9 +75,9 @@ namespace ServiceTestConsole
             }
             logger.Info("Press enter to close the Connection");
             Console.ReadKey();
-            factory.UnRegisterConnector(domainName);
-            factory.DeleteDomainService(domainName);
-            factory.StopConnection(domainName);
+            factory.UnRegisterConnector(ConnectorId);
+            factory.DeleteDomainService(ConnectorId);
+            factory.StopConnection(ConnectorId);
         }
 
 

@@ -26,9 +26,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public class RemoteType
     {
         #region Propreties
-        public string RemoteTypeFullName { get; set; }
-        public string Name { get; set; }
-        public string LocalTypeFullName { get; set; }
+        public String RemoteTypeFullName { get; set; }
+        public String Name { get; set; }
+        public String LocalTypeFullName { get; set; }
         #endregion
         #region Constructor
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
@@ -37,17 +37,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             if (RemoteTypeFullName.Contains("$"))
             {
                 Name = RemoteTypeFullName.Split('$').Last().Trim();
-                createFullName(Name, parameterInfos);
+                CreateFullName(Name, parameterInfos);
             }
             else
             {
-                createFullName(RemoteTypeFullName.Split('.').Last().Trim().Replace(";", ""), parameterInfos);
+                CreateFullName(RemoteTypeFullName.Split('.').Last().Trim().Replace(";", ""), parameterInfos);
                 Name = LocalTypeFullName.Split('.').Last().Trim();
             }
         }
         #endregion
         #region Private Methods
-        private void createFullName(String methodName,ParameterInfo[] parameterInfos)
+        private void CreateFullName(String methodName,ParameterInfo[] parameterInfos)
         {
             
             foreach (ParameterInfo par in parameterInfos)
@@ -63,12 +63,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 LocalTypeFullName = CheckPrimitivType(methodName.Split('.').Last().Trim());
             }
         }
+
         private String CheckPrimitivType(String mehtodName)
         {
-            if (mehtodName.ToUpper().Contains("INT")) return typeof(int).ToString();
-            if (mehtodName.ToUpper().Contains("STRING")) return typeof(string).ToString();
-            if (mehtodName.ToUpper().Contains("FLOAT")) return typeof(float).ToString();
-            if (mehtodName.ToUpper().Contains("DOUBLE")) return typeof(double).ToString();
+            if (mehtodName.ToUpper().Contains("INT"))
+            {
+                return typeof(int).ToString();
+            }
+            if (mehtodName.ToUpper().Contains("STRING"))
+            {
+                return typeof(string).ToString();
+            }
+            if (mehtodName.ToUpper().Contains("FLOAT"))
+            {
+                return typeof(float).ToString();
+            }
+            if (mehtodName.ToUpper().Contains("DOUBLE"))
+            {
+                return typeof(double).ToString();
+            }
             return mehtodName;
         }
         #endregion

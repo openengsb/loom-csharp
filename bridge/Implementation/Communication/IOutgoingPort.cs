@@ -22,18 +22,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// This interfaces specifies the operations for a communication port.
     /// The interface supports sending and receiving text messages over any arbitrary protocol.
     /// </summary>
-    public interface IOutgoingPort: IPort
+    public interface IOutgoingPort : IPort
     {
         /// <summary>
         /// Definition to send a message
         /// </summary>
-        /// <param name="Text">message to send</param>
-        void Send(string Text);
+        /// <param name="text">message to send</param>
+        void Send(string text);
         /// <summary>
         /// Definition to send a message and define ReplyTo
         /// </summary>
-        /// <param name="Text">message to send</param>
-        /// <param name="ReplyTo">ReplyTo parameter</param>
-        void Send(string Text, String ReplyTo);
+        /// <param name="text">message to send</param>
+        /// <param name="replyTo">ReplyTo parameter</param>
+        void Send(string text, String replyTo);
     }
 }

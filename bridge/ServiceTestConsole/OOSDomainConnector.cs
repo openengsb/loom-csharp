@@ -33,27 +33,29 @@ namespace ServiceTestConsole
 
         public void updateClass(OOClass args0)
         {
-            throw new NotImplementedException();
+            logger.Info("updateClasse method call");
         }
 
         public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
         {
-            throw new NotImplementedException();
+            @return = orgopenengsbcoreapiAliveState.ONLINE;
+            returnSpecified = true;
+            base.GetAliveState();
         }
 
         public string getInstanceId()
         {
-            throw new NotImplementedException();
+            return ".Net Bridge connector";
         }
 
         public void onRegisteredToolsChanged(XLinkConnector[] args0)
         {
-            throw new NotImplementedException();
+            logger.Info("onRegisteredToolsChanged method call");
         }
 
         public void openXLinks(object[] args0, string args1)
         {
-            throw new NotImplementedException();
+            logger.Info("openXLinks method call");
         }
     }
 }

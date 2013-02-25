@@ -23,6 +23,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public enum EExceptionHandling
     {
-        Retry,ForwardException
+        RETRY,FORWARDEXCEPTION
     }
 }
