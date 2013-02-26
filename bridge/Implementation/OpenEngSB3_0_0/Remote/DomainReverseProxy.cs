@@ -196,7 +196,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             string reply = portIn.Receive();
             MethodResultMessage result = Marshaller.UnmarshallObject<MethodResultMessage>(reply);
             portIn.Close();
-            if (result.result.Type == ReturnType.Exception)
+            if (result.result.type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
             return result;
         }
@@ -265,8 +265,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                         IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), ExceptionHandler);
                         portOut.Send(returnMsg);
                         portOut.Close();
-                        if (methodReturnMessage.result.Type.Equals(ReturnType.Exception))
-                            throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.Arg.ToString()));
+                        if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
+                            throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
                     }
                 }
             }
@@ -324,7 +324,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             MethodResultMessage result = waitAndCheckAnswer(destinationinfo, id);
             Registrationprocess = ERegistration.XLINK;
             Logger.Info("Create done");
-            return Marshaller.UnmarshallObject<XLinkUrlBlueprint>(result.result.Arg.ToString());
+            return Marshaller.UnmarshallObject<XLinkUrlBlueprint>(result.result.arg.ToString());
         }
         /// <summary>
         /// Disconnect the Connector from XLink
@@ -396,8 +396,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         private MethodResultMessage CreateMethodReturn(ReturnType type, object returnValue, string correlationId)
         {
             MethodResult methodResult = new MethodResult();
-            methodResult.Type = type;
-            methodResult.Arg = returnValue;
+            methodResult.type = type;
+            methodResult.arg = returnValue;
 
             if (returnValue == null)
                 methodResult.className = "null";

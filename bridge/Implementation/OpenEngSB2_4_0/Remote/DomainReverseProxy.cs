@@ -157,7 +157,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 
             MethodResultMessage result = Marshaller.UnmarshallObject<MethodResultMessage>(reply);
             Registrationprocess = ERegistration.NONE;
-            if (result.message.result.Type == ReturnType.Exception)
+            if (result.message.result.type == ReturnType.Exception)
                 throw new OpenEngSBException("Remote Exception while deleting service proxy", new BridgeException(result.message.result.className));
         }
 
@@ -185,8 +185,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                     IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId), ExceptionHandler);
                     portOut.Send(returnMsg);
                     portOut.Close();
-                    if (methodReturnMessage.message.result.Type.Equals(ReturnType.Exception))
-                        throw new OpenEngSBException("A problem with the invokation of a method happened", new BridgeException(methodReturnMessage.message.result.Arg.ToString()));
+                    if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))
+                        throw new OpenEngSBException("A problem with the invokation of a method happened", new BridgeException(methodReturnMessage.message.result.arg.ToString()));
                 }
             }
         }
@@ -234,8 +234,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         private MethodResultMessage CreateMethodReturn(ReturnType type, object returnValue, string correlationId)
         {
             MethodResult methodResult = new MethodResult();
-            methodResult.Type = type;
-            methodResult.Arg = returnValue;
+            methodResult.type = type;
+            methodResult.arg = returnValue;
             MethodResultMessage methodResultMessage = new MethodResultMessage();
             methodResultMessage.message = new MessageResult();
             methodResultMessage.message.callId = correlationId;
