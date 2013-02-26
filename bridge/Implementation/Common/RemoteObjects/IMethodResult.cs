@@ -23,10 +23,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
         /// <summary>
         /// Type of the return value.
         /// </summary>
-        ReturnType Type { get; set; }
+        ReturnType type { get; set; }
         /// <summary>
         /// Return value of the RPC.
         /// </summary>
-        object Arg { get; set; }
+        object arg { get; set; }
     }
 }

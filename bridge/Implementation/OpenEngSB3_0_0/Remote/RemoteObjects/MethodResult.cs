@@ -30,12 +30,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
         /// <summary>
         /// Type of the return value.
         /// </summary>
-        public ReturnType Type { get; set; }
+        public ReturnType type { get; set; }
 
         /// <summary>
         /// Return value of the RPC.
         /// </summary>
-        public object Arg { get; set; }
+        public object arg { get; set; }
 
         /// <summary>
         /// Metadata
@@ -59,8 +59,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
         public static MethodResult CreateInstance(ReturnType type, object arg, IDictionary<string, string> metaData, string className)
         {
             MethodResult result = new MethodResult();
-            result.Type = type;
-            result.Arg = arg;
+            result.type = type;
+            result.arg = arg;
             result.metaData = metaData;
             result.className = className;
             return result;

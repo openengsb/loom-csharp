@@ -101,13 +101,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected IMessage ToMessage(IMethodResult methodReturn, IMethodCallMessage callMessage)
         {
             Logger.Info("Convert method call to String method and send it to the OpenEngSB");
-            switch (methodReturn.Type)
+            switch (methodReturn.type)
             {
                 case ReturnType.Exception:
-                    return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.Arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
+                    return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
                 case ReturnType.Void:
                 case ReturnType.Object:
-                    return new ReturnMessage(methodReturn.Arg, null, 0, null, callMessage);
+                    return new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
                 default:
                     return null;
             }
