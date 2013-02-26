@@ -33,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenEngSBCore, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OpenEngSBCore.3.0.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+    <Reference Include="OpenEngSBCore">
+      <HintPath>..\packages\OpenEngSBCore.3.0.2-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

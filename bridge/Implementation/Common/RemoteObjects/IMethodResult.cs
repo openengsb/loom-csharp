@@ -17,9 +17,9 @@
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
-{    
+{
     public interface IMethodResult
-    {       
+    {
         /// <summary>
         /// Type of the return value.
         /// </summary>

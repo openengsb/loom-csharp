@@ -35,7 +35,7 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger;
-            Boolean xlink = true;
+            Boolean xlink = false;
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
             IDomainFactory factory;
@@ -66,7 +66,7 @@ namespace ServiceTestConsole
             }
             else
             {
-                IExampleDomainEventsSoap11Binding remotedomain = factory.getEventhandler<IExampleDomainEventsSoap11Binding>(ConnectorId);
+                IExampleDomainEventsSoap11Binding remotedomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(ConnectorId);
                 LogEvent lEvent = new LogEvent();
                 lEvent.name = "Example";
                 lEvent.level = "DEBUG";

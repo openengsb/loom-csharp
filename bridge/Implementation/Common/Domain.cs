@@ -34,10 +34,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// Name of the queue the server listens to for calls.
         /// </summary>
         protected const string HOST_QUEUE = "receive";
-        protected static ILog logger = LogManager.GetLogger(typeof(T));
+        protected static ILog Logger = LogManager.GetLogger(typeof(T));
         #endregion
         #region Variables
-        protected ABridgeExceptionHandling exceptionhandler;
+        protected ABridgeExceptionHandling Exceptionhandler;
         /// <summary>
         /// Authenifaction class
         /// </summary>
@@ -45,44 +45,44 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <summary>
         /// Username for the authentification
         /// </summary>
-        protected String username;
+        protected String Username;
         /// <summary>
         /// Password for the authentification
         /// </summary>
-        protected String password;
+        protected String Password;
         /// <summary>
         /// Id identifying the service instance on the bus.
         /// </summary>
-        protected String serviceId;
+        protected String ServiceId;
         /// <summary>
         /// Domain type
         /// </summary>
-        protected String domainType;
+        protected String DomainName;
 
         /// <summary>
         /// Host string of the server.
         /// </summary>
-        protected string host;
+        protected string Host;
 
-        protected IMarshaller marshaller;
+        protected IMarshaller Marshaller;
         #endregion
         #region Constructors
-        public Domain(string host, string serviceId, String domainType, ABridgeExceptionHandling exceptionhandler)
+        public Domain(string host, string serviceId, String domainName, ABridgeExceptionHandling exceptionhandler)
             : base(typeof(T))
         {
-            this.serviceId = serviceId;
-            this.domainType = domainType;
-            this.host = host;
-            this.marshaller = new JsonMarshaller();
-            this.username = "admin";
-            this.password = "password";
-            this.exceptionhandler = exceptionhandler;
+            this.ServiceId = serviceId;
+            this.DomainName = domainName;
+            this.Host = host;
+            this.Marshaller = new JsonMarshaller();
+            this.Username = "admin";
+            this.Password = "password";
+            this.Exceptionhandler = exceptionhandler;
         }
-        public Domain(string host, string serviceId, String domainType, String username, String password, ABridgeExceptionHandling exceptionhandler)
-            : this(host,serviceId,domainType,exceptionhandler)
+        public Domain(string host, string serviceId, String domainName, String username, String password, ABridgeExceptionHandling exceptionhandler)
+            : this(host,serviceId,domainName,exceptionhandler)
         {
-            this.username = username;
-            this.password = password;
+            this.Username = username;
+            this.Password = password;
         }
         #endregion
         #region Public Methods
@@ -100,7 +100,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>The result of the Message</returns>
         protected IMessage ToMessage(IMethodResult methodReturn, IMethodCallMessage callMessage)
         {
-            logger.Info("Convert method call to String method and send it to the OpenEngSB");
+            Logger.Info("Convert method call to String method and send it to the OpenEngSB");
             switch (methodReturn.type)
             {
                 case ReturnType.Exception:

@@ -39,7 +39,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="url">Namespace URL</param>
         /// <returns>Java Package structure</returns>
-        public static String reverseURL(String url)
+        public static String ReverseURL(String url)
         {
             String tmp = url.Replace("http://", "");
             if (tmp.Contains("/")) tmp = tmp.Substring(0, tmp.IndexOf("/"));
@@ -59,7 +59,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="fieldname">Method name or Parameter name</param>
         /// <returns>Packagename</returns>
-        public static String createClassWithPackageName(String fieldname, Type type)
+        public static String CreateClassWithPackageName(String fieldname, Type type)
         {
             String result = null;
             //axis plugin
@@ -67,13 +67,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             //Tests if it is a Mehtod or a Type
             if (method != null)
             {
-                result = searchSoapAttributes(method);
+                result = SearchSoapAttributes(method);
             }
             else
             {
-                result = searchInTheXMLType(fieldname, type);
+                result = SearchInTheXMLType(fieldname, type);
             }
-            String classname = HelpMethods.firstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
+            String classname = HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
             if (classname.Contains("[]"))
             {
                 return "[L" + result + "." + classname.Replace("[]", "") + ";";
@@ -189,7 +189,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="fieldname">Typename</param>
         /// <param name="type">IMplementation of the domain (dll)</param>
         /// <returns>Packagename</returns>
-        private static String searchInTheXMLType(String fieldname, Type type)
+        private static String SearchInTheXMLType(String fieldname, Type type)
         {
             String typename = fieldname;
             if (typename.Contains("[]"))
@@ -202,7 +202,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
-                return reverseURL(attribute.Namespace);
+                return ReverseURL(attribute.Namespace);
             }
             throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
@@ -211,12 +211,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="method">Method to check the SOAP attribute</param>
         /// <returns>Packagename</returns>
-        private static String searchSoapAttributes(MethodInfo method)
+        private static String SearchSoapAttributes(MethodInfo method)
         {
             SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).First(element => element is SoapDocumentMethodAttribute);
             if (attribute != null)
             {
-                return reverseURL(attribute.RequestNamespace);
+                return ReverseURL(attribute.RequestNamespace);
             }
             throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
@@ -225,7 +225,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="element">Element to edit</param>
         /// <returns>String with the first character upper</returns>
-        private static String firstLetterToUpper(String element)
+        private static String FirstLetterToUpper(String element)
         {
             if (element.Length <= 1) return element.ToUpper();
             String first = element.Substring(0, 1);
@@ -238,7 +238,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="args">List of parameters for a methodcall</param>
         /// <param name="m">Methodinfo</param>
-        public static void addTrueForSpecified(IList<object> args, MethodInfo m)
+        public static void AddTrueForSpecified(IList<object> args, MethodInfo m)
         {
             ParameterInfo[] paraminfo = m.GetParameters();
             if (paraminfo.Length <= args.Count && paraminfo.Length < 2 && args.Count <= 0) return;
@@ -257,7 +257,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="args">List of parameters for a methodcall</param>
         /// <param name="m">Methodinfo</param>
-        public static int addTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
+        public static int AddTrueForSpecified(List<ParameterInfo> parameterResult, MethodInfo m)
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;

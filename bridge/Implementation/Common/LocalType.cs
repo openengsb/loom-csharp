@@ -47,7 +47,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     return "java.util.Map";
                 }
-                return HelpMethods.createClassWithPackageName(type.FullName, type);
+                return HelpMethods.CreateClassWithPackageName(type.FullName, type);
             }
         }
         #endregion
