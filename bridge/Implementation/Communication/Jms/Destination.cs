@@ -23,6 +23,24 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     /// </summary>
     public class Destination
     {
+        #region Variables
+        public string Host { get; set; }
+        public string Queue { get; set; }
+        #endregion
+        #region Propreties
+        /// <summary>
+        /// Get the hole URL String
+        /// </summary>
+        public string FullDestination
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Queue))
+                    return Host;
+                return Host + "?" + Queue;
+            }
+        }
+        #endregion        
         #region Constructor
         /// <summary>
         /// Default constructor
@@ -39,24 +57,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             Queue = parts[1].Trim();
         }
         #endregion
-        #region Variables
-        public string Host { get; set; }
-        public string Queue { get; set; }
-        #endregion
-        #region Propreties
-        /// <summary>
-        /// Get the hole URL String
-        /// </summary>
-        public string FullDestination
-        {
-            get
-            {
-                if(string.IsNullOrEmpty(Queue))
-                    return Host;
-                return Host + "?" + Queue;
-            }
-        }
-        #endregion        
         #region Public static Methods
         /// <summary>
         /// Combines host and queue

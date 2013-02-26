@@ -17,16 +17,16 @@
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
-{    
+{
     public interface IMethodResult
-    {       
+    {
         /// <summary>
         /// Type of the return value.
         /// </summary>
-        ReturnType type { get; set; }
+        ReturnType Type { get; set; }
         /// <summary>
         /// Return value of the RPC.
         /// </summary>
-        object arg { get; set; }
+        object Arg { get; set; }
     }
 }

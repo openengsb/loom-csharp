@@ -18,7 +18,7 @@ using Apache.NMS;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
 {
-    class ReplyTo:IDestination
+    class ReplyTo : IDestination
     {
         private DestinationType desination;
         private bool isQueue;
@@ -34,7 +34,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         }
         public DestinationType DestinationType
         {
-            get {return this.desination;}
+            get { return this.desination; }
             set { this.desination = value; }
         }
 

@@ -28,10 +28,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     /// </summary>
     public class JmsIncomingPort : JmsPort, IIncomingPort
     {
-        protected static ILog logger = LogManager.GetLogger(typeof(JmsIncomingPort));
-
         #region variables
-        IMessageConsumer consumer;
+        protected static ILog Logger = LogManager.GetLogger(typeof(JmsIncomingPort));
+        private IMessageConsumer consumer;
         #endregion
         #region Constructor
         /// <summary>
@@ -41,7 +40,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler)
             : base(destination, exceptionhandler)
         {
-            consumer = session.CreateConsumer(this.destination);
+            consumer = Session.CreateConsumer(this.Destination);
         }
         #endregion
         #region Public Methods
@@ -55,23 +54,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             ITextMessage message = null;
             try
             {
-                logger.Info("wait for new message");
+                Logger.Info("wait for new message");
                 message = consumer.Receive() as ITextMessage;
-                logger.Info("recieved new message. Processing...");
+                Logger.Info("recieved new message. Processing...");
             }
             catch (Exception e)
             {
-                logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - {0} ({1}).", e.Message, e.GetType().Name);
-                handling.Changed += delegate(object[] obj)
+                Logger.WarnFormat("Exception caught in receivethread. Maybe OpenEngSB terminated - {0} ({1}).", e.Message, e.GetType().Name);
+                Handling.Changed += delegate(object[] obj)
                 {
                     return Receive();
                 };
-                return handling.HandleException(e).ToString();
+                return Handling.HandleException(e).ToString();
             }
 
             if (message == null)
                 return null;
-            logger.DebugFormat("recieved message: {0}", message.Text);
+            Logger.DebugFormat("recieved message: {0}", message.Text);
             return message.Text;
         }
         /// <summary>
