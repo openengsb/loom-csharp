@@ -28,12 +28,65 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Collections;
+using System.Reflection.Emit;
+using System.Threading;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public static class HelpMethods
     {
         public static IMarshaller marshaller = new JsonMarshaller();
+        /// <summary>
+        /// Implemnents the OpenEngSBModel type to a sepcified type
+        /// </summary>
+        /// <param name="extendType">Type to extend</param>
+        /// <returns>Type:OpenEngSBModel</returns>
+        public static Type ImplementTypeDynamicly(Type extendType)
+        {
+            AssemblyName assemblyName = new AssemblyName("DataBuilderAssembly");
+            AssemblyBuilder assemBuilder = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            ModuleBuilder moduleBuilder = assemBuilder.DefineDynamicModule("DataBuilderModule");
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(extendType.Name + "OpenEngSBModel", TypeAttributes.Class, extendType);
+            typeBuilder.AddInterfaceImplementation(typeof(OpenEngSBModel));
+            typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
+            BuildProperty(typeBuilder);
+            Type type = typeBuilder.CreateType();
+            return type;
+        }
+        /// <summary>
+        /// Generate the set and get
+        /// </summary>
+        /// <param name="typeBuilder"></param>
+        private static void BuildProperty(TypeBuilder typeBuilder)
+        {
+            foreach (PropertyInfo method in typeof(OpenEngSBModel).GetProperties())
+            {
+                Type type = method.GetGetMethod().ReturnType;
+                if (type.Name.Equals(typeof(void)))
+                {
+                    continue;
+                }
+                String name = method.Name;
+                FieldBuilder field = typeBuilder.DefineField(name, type, FieldAttributes.Private);
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, null);
+                MethodAttributes getSetAttr = MethodAttributes.Public |
+                        MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                MethodBuilder getter = typeBuilder.DefineMethod("get_" + name, getSetAttr, type, Type.EmptyTypes);
+                ILGenerator getIL = getter.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, field);
+                getIL.Emit(OpCodes.Ret);
+                MethodBuilder setter = typeBuilder.DefineMethod("set_" + name, getSetAttr, null, new Type[] { type });
+                ILGenerator setIL = setter.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, field);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getter);
+                propertyBuilder.SetSetMethod(setter);
+            }
+        }
         /// <summary>
         /// Takes a Namespace as input, reverse the elements and returns the package structure from java
         /// </summary>
@@ -90,14 +143,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="type">type to convert it into</param>
         /// <returns></returns>
         public static Object[] ConvertMap(this IDictionary arg, Type type)
-        {            
+        {
             Type elementType = type;
             if (elementType.IsArray)
             {
                 elementType = type.GetElementType();
             }
             Array elements = Array.CreateInstance(elementType, arg.Count);
-            
+
             int i = 0;
             foreach (Object key in arg.Keys)
             {
@@ -110,7 +163,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                     instance = marshaller.UnmarshallObject(instance.ToString(), keyType);
                 }
                 elementType.GetProperty("key").SetValue(instance, key, null);
-                if (IsValueNotInCorrectType(value,valueType))
+                if (IsValueNotInCorrectType(value, valueType))
                 {
                     value = marshaller.UnmarshallObject(value.ToString(), valueType);
                 }
@@ -122,7 +175,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
         private static bool IsValueNotInCorrectType(Object key, Type keyType)
         {
-            Boolean a1=keyType.IsPrimitive || keyType.Equals(typeof(string));
+            Boolean a1 = keyType.IsPrimitive || keyType.Equals(typeof(string));
             Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
             return !a1 && !a2;
         }
@@ -145,14 +198,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <typeparam name="V">Value Type</typeparam>
         /// <param name="obj">Map input</param>
         /// <returns>IDictionary</returns>
-        public static IDictionary<T,V> ConvertMap<T,V>(this Object obj)
+        public static IDictionary<T, V> ConvertMap<T, V>(this Object obj)
         {
-            Object result=ConvertMap(obj);
+            Object result = ConvertMap(obj);
             if (result.GetType() is IDictionary)
             {
                 return null;
             }
-            IDictionary tmpDict= ((IDictionary)result);
+            IDictionary tmpDict = ((IDictionary)result);
             IDictionary<T, V> tmpresult = new Dictionary<T, V>();
             foreach (Object key in tmpDict.Keys)
             {
@@ -180,7 +233,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 Object value = keyValue.GetType().GetProperty("value").GetValue(keyValue, null);
                 result.Add(key, value);
             }
-            
+
             return result;
         }
         /// <summary>

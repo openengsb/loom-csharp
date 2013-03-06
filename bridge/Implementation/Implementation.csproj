@@ -49,7 +49,7 @@
     </Reference>
     <Reference Include="OpenEngSBCore, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OpenEngSBCore.3.0.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+      <HintPath>..\packages\OpenEngSBCore.3.0.3.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -82,6 +82,7 @@
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />
     <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\BinaryData.cs" />
+    <Compile Include="OpenEngSB3_0_0\Remote\OpenEngSBModel.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageBase.cs" />
     <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Communication\Jms\ReplyTo.cs" />

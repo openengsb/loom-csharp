@@ -49,7 +49,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         #region Propreties
         protected abstract string CREATION_METHOD_NAME { get; }
         protected abstract string AUTHENTIFICATION_CLASS { get; }
-        public string ConnectorId { get { return connectorId; }
+        public string ConnectorId
+        {
+            get { return connectorId; }
             set { connectorId = value; }
         }
         public String DomainName { get { return domainName; } }
@@ -191,7 +193,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 }
                 Type type = asm.GetType(remoteType.LocalTypeFullName);
                 if (type == null)
+                {
                     type = Type.GetType(remoteType.LocalTypeFullName);
+                }
                 if (type == null)
                 {
                     foreach (ParameterInfo param in methodInfo.GetParameters())
@@ -205,7 +209,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 
                 if (type == null)
                     throw new BridgeException("no corresponding local type found");
-
+                if (type.IsArray)
+                {
+                    Type tmptype = HelpMethods.ImplementTypeDynamicly(type.GetElementType());
+                    type = Array.CreateInstance(tmptype, 0).GetType();
+                }
+                else
+                {
+                    type = HelpMethods.ImplementTypeDynamicly(type);
+                }
                 object obj = null;
                 if (type.IsInstanceOfType(arg))
                 {
@@ -229,7 +241,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             return args.ToArray();
         }
 
-        
+
         private Type findType(String typeString, MethodInfo methodInfo)
         {
             Assembly asm = typeof(T).GetType().Assembly;
