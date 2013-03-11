@@ -21,18 +21,112 @@ using System.Web.Services.Protocols;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using System.Reflection;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
+using OpenEngSBCore;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 
 namespace BridgeTest
 {
     [TestClass]
     public class TestHelpMethods
     {
-        public class entry1
+        public class Entry1
         {
-            public entry1() { }
+            public Entry1() { }
 
             public string key { get; set; }
             public int value { get; set; }
+        }
+        public class Entry2WithoutConstructor
+        {
+            public string key { get; set; }
+            public int value { get; set; }
+        }
+        [TestMethod]
+        public void TestMarshallingWithOpenEngSBModel()
+        {
+            IMarshaller marshaller = new JsonMarshaller();
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
+            Assert.IsTrue(typeof(Type).IsInstanceOfType(typeof(OpenEngSBModel)));
+            Object entryObject = Activator.CreateInstance(type);
+            Assert.IsTrue(entryObject is Entry1);
+            Entry1 entry = (Entry1)entryObject;
+            entry.key = "test";
+            entry.value = 1;
+
+            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
+            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            osbEntry.key = "key";
+            osbEntry.type = "type";
+            osbEntry.value = "value";
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+
+            String objString = marshaller.MarshallObject(entry);
+
+            Assert.IsTrue(objString.ToUpper().Contains("OPENENGSBMODELTAIL"));
+
+            OpenEngSBModel objUnmarshalled = (OpenEngSBModel)marshaller.UnmarshallObject(objString, type);
+            Entry1 entryUnmarshalled = (Entry1)objUnmarshalled;
+
+            Assert.AreEqual(elements.Count, objUnmarshalled.openEngSBModelTail.Count);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].key, osbEntry.key);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].type, osbEntry.type);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].value, osbEntry.value);
+            Assert.AreEqual(entryUnmarshalled.key, entry.key);
+            Assert.AreEqual(entryUnmarshalled.value, entry.value);
+
+        }
+
+        [TestMethod]
+        public void TestAddType()
+        {
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
+            Assert.IsTrue(typeof(Type).IsInstanceOfType(typeof(OpenEngSBModel)));
+            Object entryObject = Activator.CreateInstance(type);
+            Assert.IsTrue(entryObject is Entry1);
+            Entry1 entry = (Entry1)entryObject;
+            entry.key = "test";
+            entry.value = 1;
+
+            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
+            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            osbEntry.key = "key";
+            osbEntry.type = "type";
+            osbEntry.value = "value";
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
+            Assert.AreEqual(elements[0].key, osbEntry.key);
+            Assert.AreEqual(elements[0].type, osbEntry.type);
+            Assert.AreEqual(elements[0].value, osbEntry.value);
+        }
+        [TestMethod]
+        public void TestAddTypeWithoutConstructor()
+        {
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry2WithoutConstructor));
+            Assert.IsTrue(typeof(Type).IsInstanceOfType(typeof(OpenEngSBModel)));
+            Object entryObject = Activator.CreateInstance(type);
+            Assert.IsTrue(entryObject is Entry2WithoutConstructor);
+            Entry2WithoutConstructor entry = (Entry2WithoutConstructor)entryObject;
+            entry.key = "test";
+            entry.value = 1;
+            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
+            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            osbEntry.key = "key";
+            osbEntry.type = "type";
+            osbEntry.value = "value";
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
+            Assert.AreEqual(elements[0].key, osbEntry.key);
+            Assert.AreEqual(elements[0].type, osbEntry.type);
+            Assert.AreEqual(elements[0].value, osbEntry.value);
         }
         [TestMethod]
         public void TestMapToEntr1()
@@ -40,8 +134,8 @@ namespace BridgeTest
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            entry1[] result = (entry1[])HelpMethods.ConvertMap(Test, typeof(entry1));
-            foreach (entry1 e1 in result)
+            Entry1[] result = (Entry1[])HelpMethods.ConvertMap(Test, typeof(Entry1));
+            foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
                 Assert.AreEqual(Test[e1.key], e1.value);
@@ -50,12 +144,12 @@ namespace BridgeTest
         [TestMethod]
         public void Entri1toMap()
         {
-            entry1[] Test = new entry1[] { 
-                new entry1() { key = "1", value = 11 },
-                new entry1() { key = "21", value = 21 } 
+            Entry1[] Test = new Entry1[] { 
+                new Entry1() { key = "1", value = 11 },
+                new Entry1() { key = "21", value = 21 } 
             };
             IDictionary<String, int> result = HelpMethods.ConvertMap<String, int>(Test);
-            foreach (entry1 e1 in Test)
+            foreach (Entry1 e1 in Test)
             {
                 Assert.IsTrue(result.ContainsKey(e1.key));
                 Assert.AreEqual(result[e1.key], e1.value);
@@ -64,12 +158,12 @@ namespace BridgeTest
         [TestMethod]
         public void Entri1toMap_extended_Method()
         {
-            entry1[] Test = new entry1[] { 
-                new entry1() { key = "1", value = 11 },
-                new entry1() { key = "21", value = 21 } 
+            Entry1[] Test = new Entry1[] { 
+                new Entry1() { key = "1", value = 11 },
+                new Entry1() { key = "21", value = 21 } 
             };
             IDictionary<String, int> result = Test.ConvertMap<String, int>();
-            foreach (entry1 e1 in Test)
+            foreach (Entry1 e1 in Test)
             {
                 Assert.IsTrue(result.ContainsKey(e1.key));
                 Assert.AreEqual(result[e1.key], e1.value);
@@ -81,8 +175,8 @@ namespace BridgeTest
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            entry1[] result = HelpMethods.ConvertMap<entry1>(Test);
-            foreach (entry1 e1 in result)
+            Entry1[] result = HelpMethods.ConvertMap<Entry1>(Test);
+            foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
                 Assert.AreEqual(Test[e1.key], e1.value);
@@ -94,8 +188,8 @@ namespace BridgeTest
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            entry1[] result = (entry1[])Test.ConvertMap(typeof(entry1));
-            foreach (entry1 e1 in result)
+            Entry1[] result = (Entry1[])Test.ConvertMap(typeof(Entry1));
+            foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
                 Assert.AreEqual(Test[e1.key], e1.value);
@@ -107,8 +201,8 @@ namespace BridgeTest
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            entry1[] result = Test.ConvertMap<entry1>();
-            foreach (entry1 e1 in result)
+            Entry1[] result = Test.ConvertMap<Entry1>();
+            foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
                 Assert.AreEqual(Test[e1.key], e1.value);

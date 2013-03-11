@@ -29,7 +29,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
        
         protected static bool isMapType(Type objectType)
         {
-            return objectType.Name.ToUpper().Contains("ENTRY");
+            return objectType.Name.ToUpper().StartsWith("ENTRY");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
