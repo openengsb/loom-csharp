@@ -24,6 +24,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Reflection;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
 using OpenEngSBCore;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 
 namespace BridgeTest
 {
@@ -43,6 +45,43 @@ namespace BridgeTest
             public int value { get; set; }
         }
         [TestMethod]
+        public void TestMarshallingWithOpenEngSBModel()
+        {
+            IMarshaller marshaller = new JsonMarshaller();
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
+            Assert.IsTrue(typeof(Type).IsInstanceOfType(typeof(OpenEngSBModel)));
+            Object entryObject = Activator.CreateInstance(type);
+            Assert.IsTrue(entryObject is Entry1);
+            Entry1 entry = (Entry1)entryObject;
+            entry.key = "test";
+            entry.value = 1;
+
+            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
+            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            osbEntry.key = "key";
+            osbEntry.type = "type";
+            osbEntry.value = "value";
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+
+            String objString = marshaller.MarshallObject(entry);
+
+            Assert.IsTrue(objString.ToUpper().Contains("OPENENGSBMODELTAIL"));
+
+            OpenEngSBModel objUnmarshalled = (OpenEngSBModel)marshaller.UnmarshallObject(objString, type);
+            Entry1 entryUnmarshalled = (Entry1)objUnmarshalled;
+
+            Assert.AreEqual(elements.Count, objUnmarshalled.openEngSBModelTail.Count);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].key, osbEntry.key);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].type, osbEntry.type);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].value, osbEntry.value);
+            Assert.AreEqual(entryUnmarshalled.key, entry.key);
+            Assert.AreEqual(entryUnmarshalled.value, entry.value);
+
+        }
+
+        [TestMethod]
         public void TestAddType()
         {
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
@@ -54,14 +93,14 @@ namespace BridgeTest
             entry.value = 1;
 
             OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
-            OpenEngSBModelEntry[] elements = new OpenEngSBModelEntry[1];
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
             OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
             osbEntry.key = "key";
             osbEntry.type = "type";
             osbEntry.value = "value";
-            elements[0] = osbEntry;
-            entryOpenEngSB.OpenEngSBModelTail = elements;
-            Assert.AreEqual(elements, entryOpenEngSB.OpenEngSBModelTail);
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
             Assert.AreEqual(elements[0].key, osbEntry.key);
             Assert.AreEqual(elements[0].type, osbEntry.type);
             Assert.AreEqual(elements[0].value, osbEntry.value);
@@ -77,14 +116,14 @@ namespace BridgeTest
             entry.key = "test";
             entry.value = 1;
             OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
-            OpenEngSBModelEntry[] elements = new OpenEngSBModelEntry[1];
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
             OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
             osbEntry.key = "key";
             osbEntry.type = "type";
             osbEntry.value = "value";
-            elements[0] = osbEntry;
-            entryOpenEngSB.OpenEngSBModelTail = elements;
-            Assert.AreEqual(elements, entryOpenEngSB.OpenEngSBModelTail);
+            elements.Add(osbEntry);
+            entryOpenEngSB.openEngSBModelTail = elements;
+            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
             Assert.AreEqual(elements[0].key, osbEntry.key);
             Assert.AreEqual(elements[0].type, osbEntry.type);
             Assert.AreEqual(elements[0].value, osbEntry.value);

@@ -47,7 +47,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             AssemblyName assemblyName = new AssemblyName("DataBuilderAssembly");
             AssemblyBuilder assemBuilder = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemBuilder.DefineDynamicModule("DataBuilderModule");
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(extendType.Name + "OpenEngSBModel", TypeAttributes.Class, extendType);
+            TypeBuilder typeBuilder = moduleBuilder.DefineType("OpenEngSBModel" + extendType.Name, TypeAttributes.Class, extendType);
             typeBuilder.AddInterfaceImplementation(typeof(OpenEngSBModel));
             typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
             BuildProperty(typeBuilder);
