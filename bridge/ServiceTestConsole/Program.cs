@@ -87,7 +87,6 @@ namespace ServiceTestConsole
             Dictionary<String, String> descriptions = new Dictionary<String, String>();
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
-
             XLinkConnectorView[] views = new XLinkConnectorView[1];
             views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
             modelsToViews[0] =
