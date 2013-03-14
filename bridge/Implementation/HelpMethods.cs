@@ -44,6 +44,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Type:OpenEngSBModel</returns>
         public static Type ImplementTypeDynamicly(Type extendType)
         {
+            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive)
+            {
+                return extendType;
+            }
             AssemblyName assemblyName = new AssemblyName("DataBuilderAssembly");
             AssemblyBuilder assemBuilder = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemBuilder.DefineDynamicModule("DataBuilderModule");
@@ -156,13 +160,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 Object instance = Activator.CreateInstance(elementType, false);
                 Object value = arg[key];
+                Object keyobject = key;
                 Type keyType = elementType.GetProperty("key").PropertyType;
                 Type valueType = elementType.GetProperty("value").PropertyType;
+
                 if (IsValueNotInCorrectType(key, keyType))
                 {
-                    instance = marshaller.UnmarshallObject(instance.ToString(), keyType);
+                    keyobject = marshaller.UnmarshallObject(key.ToString(), keyType);
                 }
-                elementType.GetProperty("key").SetValue(instance, key, null);
+                elementType.GetProperty("key").SetValue(instance, keyobject, null);
                 if (IsValueNotInCorrectType(value, valueType))
                 {
                     value = marshaller.UnmarshallObject(value.ToString(), valueType);
@@ -175,9 +181,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
         private static bool IsValueNotInCorrectType(Object key, Type keyType)
         {
-            Boolean a1 = keyType.IsPrimitive || keyType.Equals(typeof(string));
+            Boolean a1 = keyType.Name.Equals(key.GetType().Name);
             Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
-            return !a1 && !a2;
+            return !(a1 || a2);
         }
         /// <summary>
         /// Converts a Dictionary to a Map (entryX)
@@ -201,17 +207,22 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static IDictionary<T, V> ConvertMap<T, V>(this Object obj)
         {
             Object result = ConvertMap(obj);
-            if (result.GetType() is IDictionary)
+            String test = result.GetType().Name;
+            try
             {
-                return null;
+                IDictionary tmpDict = ((IDictionary)result);
+
+                IDictionary<T, V> tmpresult = new Dictionary<T, V>();
+                foreach (Object key in tmpDict.Keys)
+                {
+                    tmpresult.Add((T)key, (V)tmpDict[key]);
+                }
+                return tmpresult;
             }
-            IDictionary tmpDict = ((IDictionary)result);
-            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
-            foreach (Object key in tmpDict.Keys)
+            catch
             {
-                tmpresult.Add((T)key, (V)tmpDict[key]);
+                throw new BridgeException("Unable to Convert the Object to a Dictionary");
             }
-            return tmpresult;
         }
         /// <summary>
         /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
@@ -220,7 +231,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="obj">Object to convert</param>
         /// <returns>IDictionary or the object itselfe</returns>
         public static Object ConvertMap(this Object obj)
-        {
+        {            
             if (!(obj.GetType().IsArray) || !obj.GetType().Name.ToUpper().Contains("ENTRY"))
             {
                 return obj;
@@ -252,12 +263,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Assembly ass = type.Assembly;
 
             type = ass.GetType(typename);
-            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
+            if (type == null)
+            {
+                throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            }
+            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).FirstOrDefault(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
                 return ReverseURL(attribute.Namespace);
             }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
         /// <summary>
         /// Searches for Packagenames in the SOAP attributes
@@ -266,12 +281,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Packagename</returns>
         private static String SearchSoapAttributes(MethodInfo method)
         {
-            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).First(element => element is SoapDocumentMethodAttribute);
+            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).FirstOrDefault(element => element is SoapDocumentMethodAttribute);
             if (attribute != null)
             {
                 return ReverseURL(attribute.RequestNamespace);
             }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
         /// <summary>
         /// Makes the first character to a upper character
@@ -280,7 +295,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>String with the first character upper</returns>
         private static String FirstLetterToUpper(String element)
         {
-            if (element.Length <= 1) return element.ToUpper();
+            if (element.Length <= 1)
+            {
+                return element.ToUpper();
+            }
             String first = element.Substring(0, 1);
             first = first.ToUpper();
             String tmp = element.Substring(1);
@@ -294,7 +312,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static void AddTrueForSpecified(IList<object> args, MethodInfo m)
         {
             ParameterInfo[] paraminfo = m.GetParameters();
-            if (paraminfo.Length <= args.Count && paraminfo.Length < 2 && args.Count <= 0) return;
             int i = 0;
             while (i + 1 < paraminfo.Length)
             {
@@ -337,10 +354,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
         {
             if (typeStrings.Count != parameterInfos.Length)
+            {
                 throw new BridgeException("The method has not the same amount of parameters");
+            }
             for (int i = 0; i < parameterInfos.Length; ++i)
             {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos)) return false;
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -353,9 +375,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>If to types are equal</returns>
         private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
-            if (localType.Equals(typeof(object))) return true;
+            if (localType.Equals(typeof(object)))
+            {
+                return true;
+            }
             RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
-            if (localType.Name.ToLower().Contains("nullable")) return (localType.FullName.Contains(remote_typ.Name));
+            if (localType.Name.ToLower().Contains("nullable"))
+            {
+                return (localType.FullName.Contains(remote_typ.Name));
+            }
             return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
 
