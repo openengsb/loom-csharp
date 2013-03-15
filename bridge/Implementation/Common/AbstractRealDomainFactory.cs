@@ -33,15 +33,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         private Dictionary<String, IRegistration> Proxies;
         protected String Destination;
         protected T DomainService;
+        protected String username;
+        protected String password;
+        private Boolean defaultUsernameAndPassword = true;
         protected ABridgeExceptionHandling Exceptionhandler = new RetryDefaultExceptionHandler();
         #endregion
         #region Constructors
+        public AbstractRealDomainFactory(string destination, T domainService, String username, String password)
+            : this(destination, domainService)
+        {
+            this.username = username;
+            this.password = password;
+            defaultUsernameAndPassword = false;
+        }
         public AbstractRealDomainFactory(string destination, T domainService)
         {
             this.Destination = destination;
             this.DomainService = domainService;
             Proxies = new Dictionary<String, IRegistration>();
             Exceptionhandler = new RetryDefaultExceptionHandler();
+            defaultUsernameAndPassword = true;
         }
         public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler)
         {
@@ -49,6 +60,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.Destination = destination;
             this.DomainService = domainService;
             Proxies = new Dictionary<String, IRegistration>();
+            defaultUsernameAndPassword = true;
+        }
+        public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : this(destination, domainService, exceptionhandler)
+        {
+            this.username = username;
+            this.password = password;
+            defaultUsernameAndPassword = false;
         }
         #endregion
         #region Public Methods
@@ -73,31 +92,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public String CreateDomainService(String domainName)
         {
             String connectorId = Guid.NewGuid().ToString();
-            DomainReverse<T> proxy = CreateInstance(connectorId, domainName, true);
+
+            DomainReverse<T> proxy;
+            if (defaultUsernameAndPassword)
+            {
+                proxy = CreateInstance(connectorId, domainName, true);
+            }
+            else
+            {
+                proxy = CreateInstance(connectorId, domainName, true, username, password);
+            }
             Proxies.Add(connectorId, proxy);
             proxy.Start();
             return connectorId;
         }
-        /// <summary>
-        /// Creates, registers and starts a reverse proxy.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="destination"></param>
-        /// <param name="domainService"></param>
-        /// <param name="ConnectorId"></param>
-        /// <param name="domainName">local domain</param>
-        /// <param name="domainName">remote domain</param>
-        /// <param name="username">Username for the authentification</param>
-        /// <param name="password">Password for the authentification</param>
-        /// <returns>ConnectorId</returns>
-        public String CreateDomainService(String domainName, String username, String password)
-        {
-            String connectorId = Guid.NewGuid().ToString();
-            DomainReverse<T> proxy = CreateInstance(connectorId, domainName, true, username, password);
-            Proxies.Add(domainName, proxy);
-            proxy.Start();
-            return connectorId;
-        }
+
         /// <summary>
         /// Deletes and stops the reverse proxy.
         /// </summary>
@@ -116,7 +125,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns></returns>
         public String GetDomainTypConnectorId(String connectorId)
         {
-            return GetDomainType(connectorId) + "+external-connector-proxy+" + GetConnectorId(connectorId);
+            String domainType = GetDomainType(connectorId);
+            if (String.IsNullOrEmpty(domainType))
+            {
+                throw new BridgeException("There is no connector with the connectorId " + connectorId); 
+            }
+            return domainType + "+external-connector-proxy+" + connectorId;
         }
         /// <summary>
         /// Returns the DomainType of a connector
@@ -130,24 +144,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 return connector.DomainName;
             }
-            return null;            
-        }
-        /// <summary>
-        /// return only the GUID of the service
-        /// </summary>
-        /// <returns>GUID from the service</returns>
-        public String GetConnectorId(String connectorId)
-        {
-            IRegistration stoppable = null;
-            if (Proxies.TryGetValue(connectorId, out stoppable))
-            {
-                return stoppable.ConnectorId;
-            }
             return null;
         }
+
         public A GetEventhandler<A>(String connectorId)
         {
-            return GetSubEventhandler<A>(connectorId);
+            if (defaultUsernameAndPassword)
+            {
+                return GetSubEventhandler<A>(connectorId);
+            }
+            else
+            {
+                return GetSubEventhandler<A>(connectorId, username, password);
+            }
         }
         /// <summary>
         /// Registers the connector again
@@ -157,13 +166,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="destination">URL to the OpenEngSB</param>
         /// <param name="domainService">Local implementation</param>
         /// <param name="domainName">Domain name</param>
-        public void RegisterConnector(String connectorId, String domainName)
+        public String RegisterConnector(String connectorId, String domainName)
         {
-            if (!Proxies.ContainsKey(connectorId))
+            String uuid = connectorId;
+            if (String.IsNullOrEmpty(uuid) || !Proxies.ContainsKey(connectorId))
             {
-                CreateDomainService(domainName);
+                uuid = CreateDomainService(domainName);
             }
-            Proxies[connectorId].RegisterConnector(connectorId);
+            Proxies[uuid].RegisterConnector(uuid);
+            return uuid;
         }
         /// <summary>
         /// Unregisters a connector
@@ -186,39 +197,29 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             IRegistration stoppable = null;
             if (Proxies.TryGetValue(connectorId, out stoppable))
             {
-                try
-                {
-                    stoppable.UnRegisterConnector();
-                    stoppable.Stop();
-                }
-                catch (BridgeException e)
-                {
-                    logger.Warn("could not unregister. Maybe it is already unregistered " + stoppable);
-                    logger.Info("ExceptionMessage: " + e.Message);
-                }
-                catch (OpenEngSBException e)
-                {
-                    logger.Warn("could not unregister. Maybe it is already unregistered " + stoppable);
-                    logger.Info("ExceptionMessage: " + e.Message);
-                }
-                catch (Exception e)
-                {
-                    logger.Error("Unexpacted exception while unregistering connector" + stoppable, e);
-                }
+                stoppable.UnRegisterConnector();
+                stoppable.Stop();
                 Proxies.Remove(connectorId);
             }
         }
         public XLinkUrlBlueprint ConnectToXLink(string connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews)
         {
-            /*
-             * Has to be discussed if Xlink can be without register
-            if (!proxies.ContainsKey(domainType))
+            IRegistration connector = null;
+            if (Proxies.TryGetValue(connectorId, out connector))
             {
-                DomainReverse<T> proxy = createInstance( domainType, false);
-                proxies.Add(domainType, proxy);
-                proxy.Start();
-            }*/
-            return Proxies[connectorId].ConnectToXLink(domainName, hostId, modelsToViews);
+                if (connector.Registered)
+                {
+                    return connector.ConnectToXLink(domainName, hostId, modelsToViews);
+                }
+                else
+                {
+                    throw new BridgeException("The connecotr with id " + connector.ConnectorId + " is not registered");
+                }
+            }
+            else
+            {
+                throw new BridgeException("The connecotr with id " + connectorId + " has no instance (Invokde createDomainService)");
+            }
         }
         public void DisconnectFromXLink(string connectorId, String hostId)
         {
@@ -227,6 +228,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 stoppable.DisconnectFromXLink(hostId);
             }
+        }
+        public void StopAllConnections()
+        {
+            Exceptionhandler.Stop = true;
+            foreach (IRegistration stoppable in Proxies.Values)
+            {
+                stoppable.Stop();
+            }
+            Proxies.Clear();
         }
         #endregion
         #region Abstract Methods
@@ -257,7 +267,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainType">DomainName</param>
         /// <returns>An eventHandler</returns>
         protected abstract A GetSubEventhandler<A>(String connectorId);
+        /// <summary>
+        /// Returns the eventhandler for the correct OpenEngSB version
+        /// </summary>
+        /// <typeparam name="A">Type of the Eventhandler</typeparam>
+        /// <param name="connectorId">ConnectorId</param>
+        /// <param name="username">Username</param>
+        /// <param name="password">Password</param>
+        /// <returns>An eventHandler</returns>
+        protected abstract A GetSubEventhandler<A>(String connectorId, String username, String password);
         #endregion
-
     }
 }
