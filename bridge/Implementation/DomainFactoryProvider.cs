@@ -39,12 +39,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service)
         {
-                int version=GetVersionNumber(stringVersion);
-                if (version >= 300)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
-                if (version >= 240)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
-                return null;
+            int version = GetVersionNumber(stringVersion);
+            if (version >= 300)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service);
+            }
+            if (version >= 240)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service);
+            }
+            return null;
         }
         /// <summary>
         /// Retrieve a factory, depending on the openEngSB version
@@ -53,12 +57,52 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler)
         {
-                int version = GetVersionNumber(stringVersion);
-                if (version >= 300)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service,exceptionhandler);
-                if (version >= 240)
-                    return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service,exceptionhandler);
-                return null;
+            int version = GetVersionNumber(stringVersion);
+            if (version >= 300)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service, exceptionhandler);
+            }
+            if (version >= 240)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service, exceptionhandler);
+            }
+            return null;
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service, String username, String password)
+        {
+            int version = GetVersionNumber(stringVersion);
+            if (version >= 300)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service, username, password);
+            }
+            if (version >= 240)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service, username, password);
+            }
+            return null;
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(String stringVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler, String username, String password)
+        {
+            int version = GetVersionNumber(stringVersion);
+            if (version >= 300)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<T>(destination, service, exceptionhandler, username, password);
+            }
+            if (version >= 240)
+            {
+                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<T>(destination, service, exceptionhandler, username, password);
+            }
+            return null;
         }
         /// <summary>
         /// Parse th a string and filters the version

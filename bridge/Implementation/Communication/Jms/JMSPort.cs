@@ -36,13 +36,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <summary>
         /// ActiveMQ NMS
         /// </summary>
-        private static IDictionary<String, IConnection> connections = new Dictionary<String, IConnection>();
+        private static IDictionary<String, IDictionary<String, IConnection>> connections = new Dictionary<String, IDictionary<String, IConnection>>();
         protected IConnectionFactory Factory;
+        protected String ConnectorId;
         protected ISession Session
         {
             get
             {
-                return connections[stringDestination].CreateSession();
+                return connections[ConnectorId][stringDestination].CreateSession();
             }
         }
         protected IDestination Destination
@@ -62,8 +63,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">Destionation to connect with OpenEngSB</param>
-        protected JmsPort(string destination, ABridgeExceptionHandling handling)
+        protected JmsPort(string destination, ABridgeExceptionHandling handling, String connectorId)
         {
+            this.ConnectorId = connectorId;
             this.Factory = null;
             this.stringDestination = destination;
             this.Handling = handling;
@@ -77,7 +79,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation</param>
         protected void Configure()
         {
-            if (Closed || connections.ContainsKey(stringDestination))
+            if (Closed || (connections.ContainsKey(ConnectorId) && connections[ConnectorId].ContainsKey(stringDestination)))
             {
                 return;
             }
@@ -88,16 +90,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 Uri connectionUri = new Uri(dest.Host);
                 Factory = new Apache.NMS.ActiveMQ.ConnectionFactory(dest.Host);
                 IConnection connection = Factory.CreateConnection();
-                connection.ConnectionInterruptedListener += () =>
-                {
-                    throw new BridgeException("Connection has been interrupted");
-                };
-                connection.ExceptionListener += e =>
-                {
-                    throw new BridgeException("Conenction has thrown the exception", e);
-                };
                 connection.Start();
-                connections.Add(stringDestination, connection);
+                if (connections.ContainsKey(ConnectorId))
+                {
+                    connections[ConnectorId].Add(stringDestination, connection);
+                }
+                else
+                {
+                    IDictionary<String, IConnection> tmp = new Dictionary<String, IConnection>();
+                    tmp.Add(stringDestination, connection);
+                    connections.Add(ConnectorId, tmp);
+                }
             }
             catch (Exception ex)
             {
@@ -119,24 +122,25 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// </summary>
         protected void Close()
         {
-            if (connections.ContainsKey(stringDestination))
+            if (connections[ConnectorId].ContainsKey(stringDestination))
             {
-                connections[stringDestination].Close();
-                connections[stringDestination].Dispose();
-                connections.Remove(stringDestination);
+                connections[ConnectorId][stringDestination].Close();
+                connections[ConnectorId][stringDestination].Dispose();
+                connections[ConnectorId].Remove(stringDestination);
             }
             Closed = true;
         }
         /// <summary>
         /// Close the remaining connections
         /// </summary>
-        public static void CloseAll()
+        public static void CloseAll(String connectorId)
         {
-            foreach (IConnection connection in connections.Values)
+            foreach (IConnection connection in connections[connectorId].Values)
             {
                 connection.Close();
                 connection.Dispose();
             }
+            connections[connectorId].Clear();
         }
         #endregion
     }

@@ -41,7 +41,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     return "org.openengsb.core.api.AliveState";
                 }
                 if (type.IsPrimitive){
-                    return type.FullName;
+                    String name = type.Name;
+                    if (type.Name.ToUpper().StartsWith("INT"))
+                    {
+                        name = "Integer";
+                    }
+                    if (name.ToUpper().StartsWith("SINGLE"))
+                    {
+                        name = "Float";
+                    }
+                    return "java.lang."+HelpMethods.FirstLetterToUpper(name);
                 }
                 if (type.Name.ToUpper().Contains("ENTRY"))
                 {

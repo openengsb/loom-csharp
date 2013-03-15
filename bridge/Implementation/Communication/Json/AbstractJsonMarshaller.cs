@@ -38,7 +38,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             {
 
                 IDictionary list = new Dictionary<Object, Object>();
-                serializer.Populate(reader, list);
+                try
+                {
+                    serializer.Populate(reader, list);
+                }
+                catch (JsonSerializationException jsonex)
+                {
+                    if (!jsonex.Message.ToUpper().Contains("NULL"))
+                    {
+                        throw jsonex;
+                    }
+                
+                }
                 return list.ConvertMap(objectType);
             }
 

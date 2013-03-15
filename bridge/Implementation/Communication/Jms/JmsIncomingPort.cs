@@ -37,8 +37,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler)
-            : base(destination, exceptionhandler)
+        public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler, String connectorId)
+            : base(destination, exceptionhandler, connectorId)
         {
             consumer = Session.CreateConsumer(this.Destination);
         }

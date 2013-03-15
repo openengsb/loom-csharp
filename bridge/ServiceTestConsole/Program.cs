@@ -35,7 +35,7 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger;
-            Boolean xlink = true;
+            Boolean xlink = false;
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
             IDomainFactory factory;
@@ -52,7 +52,7 @@ namespace ServiceTestConsole
             {
                 domainName = "example";
                 logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, ooconnector, new RetryDefaultExceptionHandler());
+                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, ooconnector, new ForwardDefaultExceptionHandler());
             }
 
             logger.Info("Start Example wit the domain " + domainName);

@@ -21,7 +21,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
         {
             Stop = false;
         }
-        public abstract Object HandleException(Exception exception,params object[] parameters);
+        public abstract Object HandleException(Exception exception, params object[] parameters);
         public delegate Object ThrowExceptionMethod(params object[] obj);
         public event ThrowExceptionMethod Changed;
         /// <summary>
@@ -33,7 +33,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
         {
             if (Stop)
             {
-                return null;
+                throw new InvalidOperationException("The Exceptionhandler has been stopped manually");
             }
             if (Changed == null)
             {

@@ -136,20 +136,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// </summary>
         /// <param name="localDomainService">LocalDomain</param>
         /// <param name="host">Host</param>
-        /// <param name="serviceId">ServiceId</param>
+        /// <param name="connectorId">ServiceId</param>
         /// <param name="domainName">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+        public DomainReverse(T localDomainService, string host, string connectorId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
         {
             this.ExceptionHandler = exceptionhandler;
             this.Marshaller = new JsonMarshaller();
             this.IsEnabled = true;
-            this.destination = Destination.CreateDestinationString(host, serviceId);
+            this.destination = Destination.CreateDestinationString(host, connectorId);
             this.QueueThread = null;
-            this.connectorId = serviceId;
+            this.connectorId = connectorId;
             this.domainName = domainName;
             this.domainService = localDomainService;
-            this.PortIn = new JmsIncomingPort(destination, exceptionhandler);
+            this.PortIn = new JmsIncomingPort(destination, exceptionhandler, connectorId);
             this.Username = "admin";
             this.Password = "password";
             this.CreateService = createNewConnector;
@@ -208,7 +208,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 }
 
                 if (type == null)
+                {
                     throw new BridgeException("no corresponding local type found");
+                }
                 if (type.IsArray)
                 {
                     Type tmptype = HelpMethods.ImplementTypeDynamicly(type.GetElementType());
@@ -218,6 +220,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     type = HelpMethods.ImplementTypeDynamicly(type);
                 }
+
                 object obj = null;
                 if (type.IsInstanceOfType(arg))
                 {
@@ -317,9 +320,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// An exception will be thrown, if the method has already been called.
         /// </summary>
         public void Start()
+        
         {
             if (QueueThread != null)
+            {
                 throw new ApplicationException("QueueThread already started!");
+            }
             Logger.Info("Start open the Queue Thread to listen for messages from OpenEngSB.");
             IsEnabled = true;
             if (CreateService)
@@ -346,7 +352,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             IsEnabled = false;
             PortIn.Close();
             Logger.Info("Connection closed");
-            JmsPort.CloseAll();
+            JmsPort.CloseAll(connectorId);
         }
         #endregion
         #region Abstract Methods

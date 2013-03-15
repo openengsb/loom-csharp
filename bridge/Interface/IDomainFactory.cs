@@ -24,12 +24,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
         A GetEventhandler<A>(String connectorId);
         String CreateDomainService(String domainName);
         void DeleteDomainService(String connectorId);
-        void RegisterConnector(String connectorId, String domainName);
+        String RegisterConnector(String connectorId, String domainName);
         void UnRegisterConnector(String connectorId);
         XLinkUrlBlueprint ConnectToXLink(String connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews);
         void DisconnectFromXLink(String connectorId, String hostId);
         void StopConnection(String connectorId);
         String GetDomainTypConnectorId(String connectorId);
-        Boolean Registered(String domainService);
+        Boolean Registered(String connectorId);
+        void StopAllConnections();
     }
 }

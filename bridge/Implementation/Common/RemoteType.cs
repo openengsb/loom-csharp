@@ -1,4 +1,5 @@
-﻿/***
+﻿using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+/***
  * Licensed to the Austrian Association for Software Tool Integration (AASTI)
  * under one or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information regarding copyright
@@ -47,20 +48,26 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
         #endregion
         #region Private Methods
-        private void CreateFullName(String methodName,ParameterInfo[] parameterInfos)
+        private void CreateFullName(String methodName, ParameterInfo[] parameterInfos)
         {
-            
-            foreach (ParameterInfo par in parameterInfos)
+            if (parameterInfos != null)
             {
-                if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
+                foreach (ParameterInfo par in parameterInfos)
                 {
-                    LocalTypeFullName = par.ParameterType.FullName;
+                    if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
+                    {
+                        LocalTypeFullName = par.ParameterType.FullName;
+                        break;
+                    }
                 }
             }
-
             if (String.IsNullOrEmpty(LocalTypeFullName))
             {
                 LocalTypeFullName = CheckPrimitivType(methodName.Split('.').Last().Trim());
+            }
+            if (String.IsNullOrEmpty(LocalTypeFullName))
+            {
+                throw new BridgeException("The type from the OpenEngSB could not be converted");
             }
         }
 
@@ -82,7 +89,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 return typeof(double).ToString();
             }
-            return mehtodName;
+            return null;
         }
         #endregion
     }

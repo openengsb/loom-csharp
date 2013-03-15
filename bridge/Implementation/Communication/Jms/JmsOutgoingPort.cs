@@ -34,8 +34,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling)
-            : base(destination, handling)
+        public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling, String connectorId)
+            : base(destination, handling, connectorId)
         {
             producer = Session.CreateProducer(this.Destination);
             producer.DeliveryMode = MsgDeliveryMode.Persistent;

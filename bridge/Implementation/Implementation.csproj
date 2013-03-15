@@ -77,6 +77,7 @@
     <Compile Include="Communication\Json\AbstractJsonMarshaller.cs" />
     <Compile Include="Communication\Json\CustomJsonMarshaller.cs" />
     <Compile Include="Communication\Json\CustomJsonUnMarshaller.cs" />
+    <Compile Include="ExtendMethods.cs" />
     <Compile Include="Exceptions\BridgeException.cs" />
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="OpenEngSB3_0_0\Remote\OpenEngSBModel.cs" />
     <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageBase.cs" />
     <Compile Include="RegistrationFunctions.cs" />
-    <Compile Include="Communication\Jms\ReplyTo.cs" />
     <Compile Include="Exceptions\OpenEngSBException.cs" />
     <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />

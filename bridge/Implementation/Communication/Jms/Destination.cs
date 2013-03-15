@@ -36,7 +36,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             get
             {
                 if (string.IsNullOrEmpty(Queue))
+                {
                     return Host;
+                }
                 return Host + "?" + Queue;
             }
         }

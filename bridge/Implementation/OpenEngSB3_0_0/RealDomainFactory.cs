@@ -37,11 +37,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0
             : base(destination, domainService)
         {
         }
+        public RealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : base(destination, domainService, exceptionhandler, username, password)
+        {
+        }
+        public RealDomainFactory(string destination, T domainService, String username, String password)
+            : base(destination, domainService, username, password)
+        {
+        }
         #endregion
         #region Abstact Method Implementation
         protected override A GetSubEventhandler<A>(String connectorId)
         {
-            return new DomainProxy<A>(Destination, GetDomainTypConnectorId(connectorId), GetDomainType(connectorId), Exceptionhandler).GetTransparentProxy();
+            return new DomainProxy<A>(Destination, connectorId, GetDomainType(connectorId), Exceptionhandler).GetTransparentProxy();
+        }
+        protected override A GetSubEventhandler<A>(String connectorId, String username, String password)
+        {
+            return new DomainProxy<A>(Destination, connectorId, GetDomainType(connectorId), Exceptionhandler, username, password).GetTransparentProxy();
         }
         protected override DomainReverse<T> CreateInstance(string serviceId, string domainName, bool createConnector)
         {

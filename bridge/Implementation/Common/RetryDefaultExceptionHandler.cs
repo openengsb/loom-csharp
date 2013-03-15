@@ -25,8 +25,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public override Object HandleException(Exception exception,params Object[] obj)
         {
             // Invokes the method that throws the exception, again.
-            return Invoke(obj);
-            
+            return Invoke(obj);            
         }
     }
 }

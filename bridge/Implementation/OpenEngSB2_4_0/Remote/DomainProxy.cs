@@ -36,8 +36,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
         }
-        public DomainProxy(string host, string connectorId, String domainName, String username, String password, ABridgeExceptionHandling exceptionhandler)
-            : base(host, connectorId, domainName, username, password, exceptionhandler)
+        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : base(host, connectorId, domainName, exceptionhandler, username, password)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
         }
@@ -53,9 +53,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             MethodCallRequest methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = Marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(Host, HOST_QUEUE),Exceptionhandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(Host, HOST_QUEUE), Exceptionhandler, ConnectorId);
             portOut.Send(methodCallMsg);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(Host, methodCallRequest.message.callId),Exceptionhandler);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(Host, methodCallRequest.message.callId), Exceptionhandler, ConnectorId);
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = Marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.message.result, callMessage);

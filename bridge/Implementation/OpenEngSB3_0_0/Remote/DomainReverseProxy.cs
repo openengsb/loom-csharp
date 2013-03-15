@@ -108,7 +108,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", Password);
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(secureRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -142,7 +142,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
 
@@ -182,7 +182,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             autinfo.data.Add("value", Password);
 
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(secureRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -192,12 +192,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         }
         private MethodResultMessage waitAndCheckAnswer(Destination destinationinfo, String id)
         {
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), ExceptionHandler);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), ExceptionHandler, ConnectorId);
             string reply = portIn.Receive();
             MethodResultMessage result = Marshaller.UnmarshallObject<MethodResultMessage>(reply);
             portIn.Close();
             if (result.result.type == ReturnType.Exception)
+            {
                 throw new OpenEngSBException("Remote Exception while Registering service proxy", new Exception(result.result.className));
+            }
             return result;
         }
         /// <summary>
@@ -228,7 +230,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             autinfo.data.Add("value", Password);
             String id = Guid.NewGuid().ToString();
             MethodCallMessage secureRequest = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(secureRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
@@ -262,7 +264,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                     {
                         string returnMsg = Marshaller.MarshallObject(methodReturnMessage);
                         Destination dest = new Destination(destination);
-                        IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), ExceptionHandler);
+                        IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.callId), ExceptionHandler, ConnectorId);
                         portOut.Send(returnMsg);
                         portOut.Close();
                         if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
@@ -272,14 +274,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             catch (Exception e)
             {
-                ExceptionHandler.Changed += delegate(object[] obj)
+                if (IsEnabled)
                 {
-                    Listen();
-                    return null;
-                };
-                ExceptionHandler.HandleException(e);
+                    ExceptionHandler.Changed += delegate(object[] obj)
+                    {
+                        Listen();
+                        return null;
+                    };
+                    ExceptionHandler.HandleException(e);
+                }
             }
-
         }
         /// <summary>
         /// Connect a connector to xlink
@@ -317,7 +321,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             BeanDescription autinfo = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
             autinfo.data.Add("value", Password);
             MethodCallMessage methodCall = MethodCallMessage.createInstance(Username, autinfo, creationCall, id, true, "");
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(methodCall);
             portOut.Send(request, id);
             portOut.Close();
@@ -352,7 +356,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request, id);
             waitAndCheckAnswer(destinationinfo, id);
