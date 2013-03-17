@@ -34,27 +34,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (isMapType(objectType))
+            IDictionary list = new Dictionary<Object, Object>();
+            try
             {
-
-                IDictionary list = new Dictionary<Object, Object>();
-                try
-                {
-                    serializer.Populate(reader, list);
-                }
-                catch (JsonSerializationException jsonex)
-                {
-                    if (!jsonex.Message.ToUpper().Contains("NULL"))
-                    {
-                        throw jsonex;
-                    }
-                
-                }
-                return list.ConvertMap(objectType);
+                serializer.Populate(reader, list);
             }
+            catch (JsonSerializationException jsonex)
+            {
+                if (!jsonex.Message.ToUpper().Contains("NULL"))
+                {
+                    throw jsonex;
+                }
 
-            serializer.Populate(reader, existingValue);
-            return existingValue;
+            }
+            return list.ConvertMap(objectType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

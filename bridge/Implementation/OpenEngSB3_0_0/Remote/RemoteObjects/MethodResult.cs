@@ -23,9 +23,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     /// <summary>
     /// This class represents the return value of an RPC.
     /// </summary>
-    public class MethodResult:IMethodResult
+    public class MethodResult : IMethodResult
     {
-        #region Variables        
+        #region Variables
 
         /// <summary>
         /// Type of the return value.
@@ -65,6 +65,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             result.className = className;
             return result;
         }
-        #endregion        
+        #endregion
     }
 }

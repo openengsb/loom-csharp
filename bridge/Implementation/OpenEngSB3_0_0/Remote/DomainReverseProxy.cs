@@ -254,10 +254,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                     textMsg = PortIn.Receive();
 
                     if (textMsg == null)
+                    {
                         continue;
+                    }
                     MethodCallMessage methodCallRequest = Marshaller.UnmarshallObject<MethodCallMessage>(textMsg);
                     if (methodCallRequest.methodCall.args == null)
+                    {
                         methodCallRequest.methodCall.args = new List<Object>();
+                    }
                     MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
 
                     if (methodCallRequest.answer)
@@ -268,7 +272,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                         portOut.Send(returnMsg);
                         portOut.Close();
                         if (methodReturnMessage.result.type.Equals(ReturnType.Exception))
+                        {
                             throw new BridgeException("A exception occurs, while the message has been created", new BridgeException(methodReturnMessage.result.arg.ToString()));
+                        }
                     }
                 }
             }
@@ -384,9 +390,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             MethodResultMessage returnMsg = null;
             if (returnValue == null)
+            {
                 returnMsg = CreateMethodReturn(ReturnType.Void, null, request.callId);
+            }
             else
+            {
                 returnMsg = CreateMethodReturn(ReturnType.Object, returnValue, request.callId);
+            }
             return returnMsg;
         }
 
@@ -404,13 +414,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             methodResult.arg = returnValue;
 
             if (returnValue == null)
+            {
                 methodResult.className = "null";
+            }
             else
             {
                 if (!type.Equals(ReturnType.Exception))
+                {
                     methodResult.className = new LocalType(returnValue.GetType()).RemoteTypeFullName;
+                }
                 else
+                {
                     methodResult.className = returnValue.GetType().ToString();
+                }
             }
             methodResult.metaData = new Dictionary<string, string>();
             return MethodResultMessage.CreateInstance(methodResult, correlationId);

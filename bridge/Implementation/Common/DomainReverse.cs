@@ -311,21 +311,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>List of strings</returns>
         #endregion
         #region Public Methods
-        public DomainReverse(T domainService)
-        {
-            this.domainService = domainService;
-        }
+
         /// <summary>
         /// Starts a thread which waits for messages.
         /// An exception will be thrown, if the method has already been called.
         /// </summary>
         public void Start()
-        
         {
-            if (QueueThread != null)
-            {
-                throw new ApplicationException("QueueThread already started!");
-            }
             Logger.Info("Start open the Queue Thread to listen for messages from OpenEngSB.");
             IsEnabled = true;
             if (CreateService)

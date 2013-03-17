@@ -53,8 +53,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             string[] parts = destination.Split('?');
 
             if (parts.Length != 2)
+            {
                 throw new ApplicationException("JMSPort Destination string invalid!");
-
+            }
             Host = parts[0].Trim();
             Queue = parts[1].Trim();
         }

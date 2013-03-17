@@ -56,7 +56,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         }
         private string stringDestination;
         protected ABridgeExceptionHandling Handling;
-        protected Boolean Closed = false;
         #endregion
         #region Constructor
         /// <summary>
@@ -79,7 +78,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         /// <param name="destination">Destionation</param>
         protected void Configure()
         {
-            if (Closed || (connections.ContainsKey(ConnectorId) && connections[ConnectorId].ContainsKey(stringDestination)))
+            if ((connections.ContainsKey(ConnectorId) && connections[ConnectorId].ContainsKey(stringDestination)))
             {
                 return;
             }
@@ -128,7 +127,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 connections[ConnectorId][stringDestination].Dispose();
                 connections[ConnectorId].Remove(stringDestination);
             }
-            Closed = true;
         }
         /// <summary>
         /// Close the remaining connections

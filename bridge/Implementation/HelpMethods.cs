@@ -67,28 +67,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             foreach (PropertyInfo method in typeof(OpenEngSBModel).GetProperties())
             {
                 Type type = method.GetGetMethod().ReturnType;
-                if (type.Name.Equals(typeof(void)))
+                if (!type.Name.Equals(typeof(void)))
                 {
-                    continue;
+                    String name = method.Name;
+                    FieldBuilder field = typeBuilder.DefineField(name, type, FieldAttributes.Private);
+                    PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, null);
+                    MethodAttributes getSetAttr = MethodAttributes.Public |
+                            MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                    MethodBuilder getter = typeBuilder.DefineMethod("get_" + name, getSetAttr, type, Type.EmptyTypes);
+                    ILGenerator getIL = getter.GetILGenerator();
+                    getIL.Emit(OpCodes.Ldarg_0);
+                    getIL.Emit(OpCodes.Ldfld, field);
+                    getIL.Emit(OpCodes.Ret);
+                    MethodBuilder setter = typeBuilder.DefineMethod("set_" + name, getSetAttr, null, new Type[] { type });
+                    ILGenerator setIL = setter.GetILGenerator();
+                    setIL.Emit(OpCodes.Ldarg_0);
+                    setIL.Emit(OpCodes.Ldarg_1);
+                    setIL.Emit(OpCodes.Stfld, field);
+                    setIL.Emit(OpCodes.Ret);
+                    propertyBuilder.SetGetMethod(getter);
+                    propertyBuilder.SetSetMethod(setter);
                 }
-                String name = method.Name;
-                FieldBuilder field = typeBuilder.DefineField(name, type, FieldAttributes.Private);
-                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, null);
-                MethodAttributes getSetAttr = MethodAttributes.Public |
-                        MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-                MethodBuilder getter = typeBuilder.DefineMethod("get_" + name, getSetAttr, type, Type.EmptyTypes);
-                ILGenerator getIL = getter.GetILGenerator();
-                getIL.Emit(OpCodes.Ldarg_0);
-                getIL.Emit(OpCodes.Ldfld, field);
-                getIL.Emit(OpCodes.Ret);
-                MethodBuilder setter = typeBuilder.DefineMethod("set_" + name, getSetAttr, null, new Type[] { type });
-                ILGenerator setIL = setter.GetILGenerator();
-                setIL.Emit(OpCodes.Ldarg_0);
-                setIL.Emit(OpCodes.Ldarg_1);
-                setIL.Emit(OpCodes.Stfld, field);
-                setIL.Emit(OpCodes.Ret);
-                propertyBuilder.SetGetMethod(getter);
-                propertyBuilder.SetSetMethod(setter);
             }
         }
         /// <summary>
@@ -228,7 +227,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             while (i + 1 < parameters.Length)
             {
                 String paramName = parameters[i].Name + "Specified";
-                if ((parameters[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(parameters[i + 1].Name))
+                Boolean isBoolean = parameters[i + 1].ParameterType.Equals(typeof(System.Boolean));
+                Boolean isParameterTheSame = paramName.Equals(parameters[i + 1].Name);
+                if (isBoolean && isParameterTheSame)
                 {
                     parameterResult.Remove(parameters[i + 1]);
                     parameterLength++;
