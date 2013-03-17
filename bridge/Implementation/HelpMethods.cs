@@ -44,7 +44,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Type:OpenEngSBModel</returns>
         public static Type ImplementTypeDynamicly(Type extendType)
         {
-            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive)
+            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive|| extendType.Name.ToUpper().Equals("STRING"))
             {
                 return extendType;
             }

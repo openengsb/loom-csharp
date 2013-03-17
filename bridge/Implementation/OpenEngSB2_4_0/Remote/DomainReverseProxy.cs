@@ -24,9 +24,12 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.Remo
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
     /// client side for the bus.

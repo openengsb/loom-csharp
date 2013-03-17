@@ -22,8 +22,11 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Diagnostics.CodeAnalysis;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
     /// </summary>

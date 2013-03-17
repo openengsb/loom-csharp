@@ -20,9 +20,12 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     public class RealDomainFactory<T> : AbstractRealDomainFactory<T>
     {
         #region Constructor

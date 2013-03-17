@@ -35,7 +35,7 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger;
-            Boolean xlink = false;
+            Boolean xlink = true;
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
             IDomainFactory factory;

@@ -23,13 +23,16 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace BridgeTest
+using System.Diagnostics.CodeAnalysis;
+namespace BridgeTests
 {
     [TestClass]
-    public class CommunicationClassTests
+    [ExcludeFromCodeCoverageAttribute()]
+    public class TestCommunicationClass
     {
+
         [TestMethod]
-        public void DestinationTestNoException()
+        public void TestDestinationNoException()
         {
             String host = "http://test.at";
             String queue = "TestCase1";
@@ -39,19 +42,15 @@ namespace BridgeTest
             Assert.AreEqual(host + "?" + queue, destination.FullDestination);
         }
         [TestMethod]
-        public void DestinationTestException()
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestDestinationException()
         {
             String host = "http://test.at";
             String queue = "TestCase1";
-            try
-            {
-                Destination destination = new Destination(host + "!" + queue);
-                Assert.Fail();
-            }
-            catch (ApplicationException) { }
+            Destination destination = new Destination(host + "!" + queue);
         }
         [TestMethod]
-        public void MarshallAndUnMarshallNoExceptionTest()
+        public void TestMarshallAndUnMarshallNoException()
         {
             IMarshaller marshaller = new JsonMarshaller();
             BeanDescription bean = BeanDescription.createInstance("classname");
@@ -68,21 +67,29 @@ namespace BridgeTest
             Assert.IsTrue(result.Contains("\"callId\":\"123\""));
         }
         [TestMethod]
-        public void UnMarshallExceptionTest()
+        public void TestUnMarshallException()
         {
             IMarshaller marshaller = new JsonMarshaller();
+            Boolean exception = false;
             try
             {
                 marshaller.UnmarshallObject<RemoteMethodCall>("EXCEPTION");
-                Assert.Fail();
             }
-            catch (BridgeException) { }
+            catch (BridgeException)
+            {
+                exception = true;
+            }
+            Assert.IsTrue(exception);
+            exception = false;
             try
             {
                 marshaller.UnmarshallObject("EXCEPTION", typeof(RemoteMethodCall));
-                Assert.Fail();
             }
-            catch (BridgeException) { }
+            catch (BridgeException)
+            {
+                exception = true;
+            }
+            Assert.IsTrue(exception);
         }
     }
 }
