@@ -91,19 +91,37 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>ConnectorId</returns>
         public String CreateDomainService(String domainName)
         {
-            String connectorId = Guid.NewGuid().ToString();
+            return CreateDomainServiceOrReregisterExisting(Guid.NewGuid().ToString(),domainName,true);
+        }
 
+        /// <summary>
+        /// Create or register a connector (depending on createNew (true=Create; false=Register)
+        /// </summary>
+        /// <param name="domainName">Domain Name</param>
+        /// <param name="createNew">Create new connector</param>
+        /// <returns>uuid</returns>
+        private string CreateDomainServiceOrReregisterExisting(String connectorId, String domainName, Boolean createNew)
+        {
             DomainReverse<T> proxy;
             if (defaultUsernameAndPassword)
             {
-                proxy = CreateInstance(connectorId, domainName, true);
+                proxy = CreateInstance(connectorId, domainName, createNew);
             }
             else
             {
-                proxy = CreateInstance(connectorId, domainName, true, username, password);
+                proxy = CreateInstance(connectorId, domainName, createNew, username, password);
             }
             Proxies.Add(connectorId, proxy);
-            proxy.Start();
+            try
+            {
+                proxy.Start();
+            }
+            catch (OpenEngSBException ex)
+            {
+                proxy.Stop();
+                Proxies.Remove(connectorId);
+                throw ex;
+            }
             return connectorId;
         }
 
@@ -169,11 +187,32 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public String RegisterConnector(String connectorId, String domainName)
         {
             String uuid = connectorId;
-            if (String.IsNullOrEmpty(uuid) || !Proxies.ContainsKey(connectorId))
+            if (!String.IsNullOrEmpty(uuid) && !Proxies.ContainsKey(uuid))
+            {
+                try
+                {
+                    uuid = CreateDomainServiceOrReregisterExisting(connectorId, domainName, false);
+                    return uuid;
+                }
+                catch (OpenEngSBException)
+                {
+                    uuid = CheckIfConnectorExistAndCreateConenctorIfNot(domainName, uuid);
+                }
+            }
+            else
+            {
+                uuid = CheckIfConnectorExistAndCreateConenctorIfNot(domainName, uuid);
+            }
+            Proxies[uuid].RegisterConnector(uuid);
+            return uuid;
+        }
+
+        private string CheckIfConnectorExistAndCreateConenctorIfNot(String domainName, String uuid)
+        {
+            if (String.IsNullOrEmpty(uuid) || !Proxies.ContainsKey(uuid))
             {
                 uuid = CreateDomainService(domainName);
             }
-            Proxies[uuid].RegisterConnector(uuid);
             return uuid;
         }
         /// <summary>
