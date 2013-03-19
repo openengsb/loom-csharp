@@ -130,13 +130,46 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service)
         {
+            return GetDomainFactoryInstance(getVersionFromURI(urlVersion), destination, service);
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service, String username, String password)
+        {
+            return GetDomainFactoryInstance(getVersionFromURI(urlVersion), destination, service, username, password);
+        }
+        private static string getVersionFromURI(Uri urlVersion)
+        {
             Uri uri = urlVersion;
             if (!uri.ToString().Contains("system/framework.version.info"))
+            {
                 uri = new Uri(uri.ToString() + "system/framework.version.info");
+            }
             WebClient myWebClient = new WebClient();
             Byte[] myDataBuffer = myWebClient.DownloadData(uri);
             String stringVersion = Encoding.ASCII.GetString(myDataBuffer);
-            return GetDomainFactoryInstance(stringVersion, destination, service);
+            return stringVersion;
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service, ABridgeExceptionHandling exceptionHandler)
+        {
+            return GetDomainFactoryInstance(getVersionFromURI(urlVersion), destination, service, exceptionHandler);
+        }
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler, String username, String password)
+        {
+            return GetDomainFactoryInstance(getVersionFromURI(urlVersion), destination, service, exceptionhandler, username, password);
         }
     }
 }
