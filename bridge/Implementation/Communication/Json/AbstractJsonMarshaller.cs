@@ -27,10 +27,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
     public abstract class AbstractJsonMarshaller : JsonConverter{
        
-        protected static bool isMapType(Type objectType)
+        /// <summary>
+        /// Checks if Type is Map (Dictaionary
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected static bool IsMapType(Type objectType)
         {
             return objectType.Name.ToUpper().StartsWith("ENTRY");
         }
+
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
@@ -52,7 +58,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (isMapType(value.GetType()))
+            if (IsMapType(value.GetType()))
             {
                 Object tmp = value.ConvertMap();
                 serializer.Serialize(writer, tmp);

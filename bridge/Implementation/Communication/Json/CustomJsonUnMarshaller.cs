@@ -23,7 +23,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return isMapType(objectType);
+            return IsMapType(objectType);
         }
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

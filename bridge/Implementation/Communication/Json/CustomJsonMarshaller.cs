@@ -25,7 +25,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            Boolean isMap = isMapType(objectType);
+            Boolean isMap = IsMapType(objectType);
             Boolean hasXMLIgnore = objectType.GetProperties().Any(P => P.IsDefined(typeof(XmlIgnoreAttribute), false));
             return isMap || hasXMLIgnore;
         }
