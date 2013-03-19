@@ -178,7 +178,7 @@ namespace BridgeTests
         [TestCleanup]
         public void CleanUp()
         {
-            factory.StopConnection(uuid);
+            factory.StopAllConnections();
         }
     }
 }

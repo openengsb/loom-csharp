@@ -28,6 +28,26 @@ namespace BridgeTests
             public string key { get; set; }
             public int value { get; set; }
         }
+        /// <summary>
+        /// Sell simulate the OpenEngSB generated file or the .Net Bridge
+        /// </summary>
+        public class ListElement
+        {
+            public ListElement() { }
+
+            public List<String> stringelements { get; set; }
+            public int[] intelements { get; set; }
+        }
+        /// <summary>
+        /// Sell simulate the OpenEngSB generated file or the .Net Bridge
+        /// </summary>
+        public class ArrayElement
+        {
+            public ArrayElement() { }
+
+            public String[] stringelements { get; set; }
+            public List<int> intelements { get; set; }
+        }
         public class TestClass
         {
             public TestClass() { }
@@ -64,6 +84,34 @@ namespace BridgeTests
             String msg = marshaller.MarshallObject(entry1);
             //Entr1[]!=TestClass
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonUnMarshaller());
+        }
+        [TestMethod]
+        public void TestConvertListToArray()
+        {
+            ListElement element = new ListElement();
+            element.stringelements = new List<string>() { "Test", "Test1" };
+            element.intelements = new int[] { 1, 2, 3 };
+            String marshalledResult = marshaller.MarshallObject(element);
+            ArrayElement result = marshaller.UnmarshallObject<ArrayElement>(marshalledResult);
+            foreach (String stringelement in result.stringelements)
+            {
+                Assert.IsNotNull(element.stringelements.Find(e => stringelement.Equals(e)));
+            }
+        }
+
+        [TestMethod]
+        public void TestConvertArrayToList()
+        {
+            ArrayElement element = new ArrayElement();
+            element.stringelements = new String[] { "Test", "Test1" };
+            element.intelements = new List<int>() { 1, 2, 3 };
+            String marshalledResult = marshaller.MarshallObject(element);
+            ListElement result = marshaller.UnmarshallObject<ListElement>(marshalledResult);
+            Assert.AreEqual<int>(element.stringelements.Length, result.stringelements.Count);
+            foreach (String stringelement in element.stringelements)
+            {
+                Assert.IsNotNull(result.stringelements.Find(e => stringelement.Equals(e)));
+            }
         }
     }
 }
