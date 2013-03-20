@@ -223,7 +223,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;
-            int parameterLength = 0;
+            int parameterLength = parameterResult.Count;
             while (i + 1 < parameters.Length)
             {
                 String paramName = parameters[i].Name + "Specified";
@@ -232,7 +232,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 if (isBoolean && isParameterTheSame)
                 {
                     parameterResult.Remove(parameters[i + 1]);
-                    parameterLength++;
+                    parameterLength--;
                 }
                 i = i + 2;
             }
