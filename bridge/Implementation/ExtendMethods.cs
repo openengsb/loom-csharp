@@ -31,6 +31,7 @@ using System.Collections;
 using System.Reflection.Emit;
 using System.Threading;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
+using OpenEngSBCore;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -80,6 +81,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             String tmp = marshaller.MarshallObject(obj);
             return marshaller.UnmarshallObject<T>(tmp);
         }
+        public static object ConvertOSBType(this Object obj, Type type)
+        {
+            String tmp = marshaller.MarshallObject(obj);
+            return marshaller.UnmarshallObject(tmp, type);
+        }
         /// <summary>
         /// Checks if to type have the same type
         /// </summary>
@@ -115,21 +121,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             Object result = ConvertMap(obj);
             String test = result.GetType().Name;
-            try
-            {
-                IDictionary tmpDict = ((IDictionary)result);
+            IDictionary tmpDict = ((IDictionary)result);
 
-                IDictionary<T, V> tmpresult = new Dictionary<T, V>();
-                foreach (Object key in tmpDict.Keys)
-                {
-                    tmpresult.Add((T)key, (V)tmpDict[key]);
-                }
-                return tmpresult;
-            }
-            catch
+            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
+            foreach (Object key in tmpDict.Keys)
             {
-                throw new BridgeException("Unable to Convert the Object to a Dictionary");
+                tmpresult.Add((T)key, (V)tmpDict[key]);
             }
+            return tmpresult;
         }
         /// <summary>
         /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
@@ -138,14 +137,22 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="obj">Object to convert</param>
         /// <returns>IDictionary or the object itselfe</returns>
         public static Object ConvertMap(this Object obj)
-        {            
-            if (!(obj.GetType().IsArray) || !obj.GetType().Name.ToUpper().Contains("ENTRY"))
+        {
+            Object array=obj;
+            if (!(obj.GetType().IsArray))
             {
-                return obj;
+                if (!obj.GetType().Name.ToUpper().Contains("ENTRY"))
+                {
+                    throw new ArgumentOutOfRangeException("The object with type: "+obj.GetType().Name+" could ist not valid. It has to start with ENTRY");
+                }
+                else
+                {
+                    array = new Object[] { obj };
+                }
             }
 
             Dictionary<Object, Object> result = new Dictionary<Object, Object>();
-            foreach (object keyValue in (Object[])obj)
+            foreach (object keyValue in (Object[])array)
             {
                 Object key = keyValue.GetType().GetProperty("key").GetValue(keyValue, null);
                 Object value = keyValue.GetType().GetProperty("value").GetValue(keyValue, null);
@@ -154,6 +161,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
             return result;
         }
-   
+        public static T AddOpenEngSBModel<T>(this T element, List<OpenEngSBModelEntry> models)
+        {
+            Type TOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(element.GetType());
+            OpenEngSBModel tmpElement = element.ConvertOSBType(TOpenEngSBModel) as OpenEngSBModel;
+            tmpElement.openEngSBModelTail = models;
+            return (T)tmpElement;
+        }
     }
 }
