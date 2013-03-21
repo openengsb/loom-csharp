@@ -98,6 +98,29 @@ namespace BridgeTests
             Assert.AreEqual(entryUnmarshalled.value, entry.value);
 
         }
+        [TestMethod]
+        public void TestAddOpenEngSBToType()
+        {
+            Entry1 testentry = new Entry1();
+            testentry.key = "Test";
+            testentry.value = 2;
+
+            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
+            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            osbEntry.key = "key";
+            osbEntry.type = "type";
+            osbEntry.value = "value";
+            elements.Add(osbEntry);
+            testentry=testentry.AddOpenEngSBModel<Entry1>(elements);
+            OpenEngSBModel objUnmarshalled = testentry as OpenEngSBModel;
+            Assert.AreEqual(elements.Count, objUnmarshalled.openEngSBModelTail.Count);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].key, osbEntry.key);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].type, osbEntry.type);
+            Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].value, osbEntry.value);
+            Assert.AreEqual(((Entry1)objUnmarshalled).key, testentry.key);
+            Assert.AreEqual(((Entry1)objUnmarshalled).value, testentry.value);
+
+        }
 
         [TestMethod]
         public void TestAddType()
@@ -246,7 +269,7 @@ namespace BridgeTests
             Assert.IsTrue(tmpresult[0].value[0].key.Equals("Test"));
         }
         [TestMethod]
-        [ExpectedException(typeof(BridgeException))]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestIDictionaryConvertTo()
         {
             String test = "Error";
@@ -279,17 +302,11 @@ namespace BridgeTests
             }
         }
         [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestConvertMapWithWrongParameters()
         {
             String noDictionary = "Empty";
             Object result = noDictionary.ConvertMap();
-            Assert.IsTrue(result is String);
-            Assert.IsTrue(((String)result).Equals("Empty"));
-            string[] noDictionaryArray = new string[] { "Empty" };
-
-            Object arrayResult = noDictionaryArray.ConvertMap();
-            Assert.IsTrue(arrayResult is String[]);
-            Assert.IsTrue(((String[])arrayResult)[0].Equals("Empty"));
         }
         [TestMethod]
         public void TestMapToEntr1_extendeMethod_with_genericType()
