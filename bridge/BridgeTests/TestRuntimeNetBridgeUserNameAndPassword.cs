@@ -19,12 +19,13 @@ namespace BridgeTests
         private const String Password = "password";
         private const String destination = "tcp://localhost.:6549";
         private const String nullString = null;
+        private const String version = "3.0.0";
 
         [TestInitialize]
         public void InitialiseFactory()
         {
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
-            factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
+            factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
         }
 
         [TestMethod]
@@ -90,7 +91,7 @@ namespace BridgeTests
         [TestCleanup]
         public void CleanUp()
         {
-            factory.StopConnection(uuid);
+            factory.StopAllConnections();
         }
     }
 }

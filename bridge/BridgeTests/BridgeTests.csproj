@@ -75,6 +75,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestRuntimeNetBridgeWrongUsernameAndPassword.cs" />
     <Compile Include="TestJsonMarsahller.cs" />
     <Compile Include="TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="TestJmsPort.cs" />
