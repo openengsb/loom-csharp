@@ -61,7 +61,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 Object keyobject = key;
                 Type keyType = elementType.GetProperty("key").PropertyType;
                 Type valueType = elementType.GetProperty("value").PropertyType;
-
+                //This can happen if the key is not a primitiv type. It can be that the type is in json and have to be converted
                 if (IsValueNotInCorrectType(key, keyType))
                 {
                     keyobject = marshaller.UnmarshallObject(key.ToString(), keyType);
@@ -79,13 +79,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <summary>
         /// Converts between two types
         /// </summary>
-        /// <typeparam name="T">Resulting type</typeparam>
+        /// <typeparam name="ReturnType">Resulting type</typeparam>
         /// <param name="obj">object that will be converted</param>
         /// <returns>Returns the new Object with Type T</returns>
-        public static T ConvertOSBType<T>(this Object obj)
+        public static ReturnType ConvertOSBType<ReturnType>(this Object obj)
         {
             String tmp = marshaller.MarshallObject(obj);
-            return marshaller.UnmarshallObject<T>(tmp);
+            return marshaller.UnmarshallObject<ReturnType>(tmp);
         }
         /// <summary>
         /// Converts between two types
@@ -106,39 +106,44 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns></returns>
         private static bool IsValueNotInCorrectType(Object key, Type keyType)
         {
-            Boolean a1 = keyType.Name.Equals(key.GetType().Name);
-            Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
-            return !(a1 || a2);
+            Boolean typeNamesAreTheSame = keyType.Name.Equals(key.GetType().Name);
+            Boolean typeAreTheSame = keyType.IsInstanceOfType(key.GetType().DeclaringType);
+            return falseIfBothValuesAreFalse(typeNamesAreTheSame, typeAreTheSame);
+        }
+
+        private static bool falseIfBothValuesAreFalse(Boolean typeNamesAreTheSame, Boolean typeAreTheSame)
+        {
+            return !(typeNamesAreTheSame || typeAreTheSame);
         }
         /// <summary>
         /// Converts a Dictionary to a Map (entryX)
         /// </summary>
-        /// <typeparam name="T">Type to convert the Dictionary into</typeparam>
+        /// <typeparam name="ReturnTyp">Type to convert the Dictionary into</typeparam>
         /// <param name="arg"></param>
         /// <returns></returns>
-        public static T[] ConvertMap<T>(this IDictionary arg)
+        public static ReturnTyp[] ConvertMap<ReturnTyp>(this IDictionary arg)
         {
-            Array elements = ConvertMap(arg, typeof(T));
-            return (T[])elements;
+            Array elements = ConvertMap(arg, typeof(ReturnTyp));
+            return (ReturnTyp[])elements;
         }
         /// <summary>
         /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
         /// If the Object is not a Map then the parameter object is returned
         /// </summary>
-        /// <typeparam name="T">Key type</typeparam>
-        /// <typeparam name="V">Value Type</typeparam>
+        /// <typeparam name="KeyTyp">Key type</typeparam>
+        /// <typeparam name="ValueTyp">Value Type</typeparam>
         /// <param name="obj">Map input</param>
         /// <returns>IDictionary</returns>
-        public static IDictionary<T, V> ConvertMap<T, V>(this Object obj)
+        public static IDictionary<KeyTyp, ValueTyp> ConvertMap<KeyTyp, ValueTyp>(this Object obj)
         {
             Object result = ConvertMap(obj);
             String test = result.GetType().Name;
             IDictionary tmpDict = ((IDictionary)result);
 
-            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
+            IDictionary<KeyTyp, ValueTyp> tmpresult = new Dictionary<KeyTyp, ValueTyp>();
             foreach (Object key in tmpDict.Keys)
             {
-                tmpresult.Add((T)key, (V)tmpDict[key]);
+                tmpresult.Add((KeyTyp)key, (ValueTyp)tmpDict[key]);
             }
             return tmpresult;
         }
@@ -176,16 +181,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <summary>
         /// Add a OpenEngSBModel to an Object
         /// </summary>
-        /// <typeparam name="T">The Type that gets exptendet with the OpenEngSBModel Interface</typeparam>
+        /// <typeparam name="ReturnTyp">The Type that gets exptendet with the OpenEngSBModel Interface</typeparam>
         /// <param name="element">The object, which gets extended</param>
         /// <param name="models">The OpenEngSBEntries</param>
         /// <returns>The object with the OpenEngSBModel</returns>
-        public static T AddOpenEngSBModel<T>(this T element, List<OpenEngSBModelEntry> models)
+        public static ReturnTyp AddOpenEngSBModel<ReturnTyp>(this ReturnTyp element, List<OpenEngSBModelEntry> models)
         {
             Type TOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(element.GetType());
             OpenEngSBModel tmpElement = element.ConvertOSBType(TOpenEngSBModel) as OpenEngSBModel;
             tmpElement.openEngSBModelTail = models;
-            return (T)tmpElement;
+            return (ReturnTyp)tmpElement;
         }
     }
 }

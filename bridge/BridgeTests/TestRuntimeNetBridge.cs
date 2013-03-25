@@ -94,7 +94,7 @@ namespace BridgeTests
             }
             catch (BridgeException ex)
             {
-                Assert.AreEqual<String>("The connecotr with id " + uuid + " has no instance (Invoke createDomainService)", ex.Message);
+                Assert.AreEqual<String>("The connecotr with id " + uuid + " has no instance", ex.Message);
             }
         }
         [TestMethod]
@@ -107,7 +107,7 @@ namespace BridgeTests
             }
             catch (BridgeException ex)
             {
-                Assert.AreEqual<String>(ex.Message, "The connecotr with id " + uuid + " is not registered");
+                Assert.AreEqual<String>(ex.Message, "The connecotr with id " + uuid + " has no instance");
             }
 
         }

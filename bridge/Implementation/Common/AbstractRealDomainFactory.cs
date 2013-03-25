@@ -25,28 +25,28 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
-    public abstract class AbstractRealDomainFactory<T> : IDomainFactory
+    public abstract class AbstractRealDomainFactory<DomainImplementationType> : IDomainFactory
     {
-        private static ILog logger = LogManager.GetLogger(typeof(AbstractRealDomainFactory<T>));
+        private static ILog logger = LogManager.GetLogger(typeof(AbstractRealDomainFactory<DomainImplementationType>));
 
         #region Variables
         private Dictionary<String, IRegistration> Proxies;
         protected String Destination;
-        protected T DomainService;
+        protected DomainImplementationType DomainService;
         protected String username;
         protected String password;
         private Boolean defaultUsernameAndPassword = true;
         protected ABridgeExceptionHandling Exceptionhandler = new RetryDefaultExceptionHandler();
         #endregion
         #region Constructors
-        public AbstractRealDomainFactory(string destination, T domainService, String username, String password)
+        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, String username, String password)
             : this(destination, domainService)
         {
             this.username = username;
             this.password = password;
             defaultUsernameAndPassword = false;
         }
-        public AbstractRealDomainFactory(string destination, T domainService)
+        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService)
         {
             this.Destination = destination;
             this.DomainService = domainService;
@@ -54,7 +54,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Exceptionhandler = new RetryDefaultExceptionHandler();
             defaultUsernameAndPassword = true;
         }
-        public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler)
+        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler)
         {
             this.Exceptionhandler = exceptionhandler;
             this.Destination = destination;
@@ -62,7 +62,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Proxies = new Dictionary<String, IRegistration>();
             defaultUsernameAndPassword = true;
         }
-        public AbstractRealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
+        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
             : this(destination, domainService, exceptionhandler)
         {
             this.username = username;
@@ -102,7 +102,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>uuid</returns>
         private string CreateDomainServiceOrReregisterExisting(String connectorId, String domainName, Boolean createNew)
         {
-            DomainReverse<T> proxy;
+            DomainReverse<DomainImplementationType> proxy;
             if (defaultUsernameAndPassword)
             {
                 proxy = CreateInstance(connectorId, domainName, createNew);
@@ -250,16 +250,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     return connector.ConnectToXLink(domainName, hostId, modelsToViews);
                 }
-                else
-                {
-                    throw new BridgeException("The connecotr with id " + connector.ConnectorId + " is not registered");
-                }
             }
-            else
-            {
-                throw new BridgeException("The connecotr with id " + connectorId + " has no instance (Invoke createDomainService)");
-            }
+            throw new BridgeException("The connecotr with id " + connectorId + " has no instance");
         }
+
         public void DisconnectFromXLink(string connectorId, String hostId)
         {
             IRegistration stoppable = null;
@@ -268,6 +262,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 stoppable.DisconnectFromXLink(hostId);
             }
         }
+        
         public void StopAllConnections()
         {
             Exceptionhandler.Stop = true;
@@ -288,7 +283,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>        
-        protected abstract DomainReverse<T> CreateInstance(String connectorId, String domainName, Boolean createConstructor);
+        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor);
         /// <summary>
         /// Returns the DomainReverse object correct OpenEngSB version 
         /// </summary>
@@ -298,23 +293,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>        
-        protected abstract DomainReverse<T> CreateInstance(String connectorId, String domainName, Boolean createConstructor, String username, String password);
+        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor, String username, String password);
         /// <summary>
         /// Returns the eventhandler for the correct OpenEngSB version
         /// </summary>
-        /// <typeparam name="A">Type of the Eventhandler</typeparam>
+        /// <typeparam name="InterfaceTyp">Type of the Eventhandler</typeparam>
         /// <param name="domainType">DomainName</param>
         /// <returns>An eventHandler</returns>
-        protected abstract A GetSubEventhandler<A>(String connectorId);
+        protected abstract InterfaceTyp GetSubEventhandler<InterfaceTyp>(String connectorId);
         /// <summary>
         /// Returns the eventhandler for the correct OpenEngSB version
         /// </summary>
-        /// <typeparam name="A">Type of the Eventhandler</typeparam>
+        /// <typeparam name="InterfaceTyp">Type of the Eventhandler</typeparam>
         /// <param name="connectorId">ConnectorId</param>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <returns>An eventHandler</returns>
-        protected abstract A GetSubEventhandler<A>(String connectorId, String username, String password);
+        protected abstract InterfaceTyp GetSubEventhandler<InterfaceTyp>(String connectorId, String username, String password);
         #endregion
     }
 }

@@ -47,13 +47,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             }
             catch (JsonSerializationException jsonex)
             {
-                if (!jsonex.Message.ToUpper().Contains("NULL"))
+                if (!testIfNullValueProducesTheException(jsonex))
                 {
                     throw jsonex;
                 }
-
             }
             return list.ConvertMap(objectType);
+        }
+
+        private static Boolean testIfNullValueProducesTheException(JsonSerializationException jsonex)
+        {
+            return jsonex.Message.ToUpper().Contains("NULL");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

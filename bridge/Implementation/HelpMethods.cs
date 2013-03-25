@@ -147,6 +147,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Packagename</returns>
         private static String SearchInXMLType(String fieldname, Type type)
         {
+            String exceptionMessage = "Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found";
             String typename = fieldname;
             if (typename.Contains("[]"))
             {
@@ -157,14 +158,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             type = ass.GetType(typename);
             if (type == null)
             {
-                throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+                throw new BridgeException(exceptionMessage);
             }
             XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).FirstOrDefault(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
                 return ReverseURL(attribute.Namespace);
             }
-            throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            throw new BridgeException(exceptionMessage);
         }
         /// <summary>
         /// Searches for Packagenames in the SOAP attributes

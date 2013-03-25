@@ -40,7 +40,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 {
                     return "org.openengsb.core.api.AliveState";
                 }
-                if (type.IsPrimitive){
+                if (type.IsPrimitive)
+                {
                     String name = type.Name;
                     if (type.Name.ToUpper().StartsWith("INT"))
                     {
@@ -50,7 +51,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     {
                         name = "Float";
                     }
-                    return "java.lang."+HelpMethods.FirstLetterToUpper(name);
+                    return "java.lang." + HelpMethods.FirstLetterToUpper(name);
                 }
                 if (type.Name.ToUpper().Contains("ENTRY"))
                 {
