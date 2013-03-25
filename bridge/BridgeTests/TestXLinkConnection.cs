@@ -28,16 +28,22 @@ namespace BridgeTests
         public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
         {
             uuid = factory.RegisterConnector(null, domainName);
+
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             XLinkUrlBlueprint template = factory.ConnectToXLink(uuid, "localhost", domainName, initModelViewRelation());
             factory.DisconnectFromXLink(uuid, "localhost");
             factory.UnRegisterConnector(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
+            
             factory.DeleteDomainService(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
         }
+
         private ModelToViewsTuple[] initModelViewRelation()
         {
             ModelToViewsTuple[] modelsToViews = new ModelToViewsTuple[1];
@@ -54,6 +60,7 @@ namespace BridgeTests
                     };
             return modelsToViews;
         }
+        
         [TestCleanup]
         public void CleanUp()
         {

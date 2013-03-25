@@ -21,6 +21,7 @@ namespace BridgeTests
         {
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new RetryDefaultExceptionHandler());
+
             String uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
             factory.StopConnection(uuid);

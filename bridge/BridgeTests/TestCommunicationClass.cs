@@ -32,7 +32,7 @@ namespace BridgeTests
     {
         private const String host = "http://test.at";
         private const String queue = "TestCase1";
-        private const IMarshaller marshaller = new JsonMarshaller();
+        private IMarshaller marshaller = new JsonMarshaller();
         [TestMethod]
         public void TestDestinationNoException()
         {

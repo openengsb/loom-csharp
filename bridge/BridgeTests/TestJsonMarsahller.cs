@@ -70,7 +70,9 @@ namespace BridgeTests
             entry1[0] = new Entry1();
             entry1[0].key = "key";
             entry1[0].value = 1;
+
             String msg = marshaller.MarshallObject(entry1);
+
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonMarshaller());
         }
         [TestMethod]
@@ -81,8 +83,10 @@ namespace BridgeTests
             entry1[0] = new TestClass();
             entry1[0].key = "key";
             entry1[0].value = 1;
+
             String msg = marshaller.MarshallObject(entry1);
             //Entr1[]!=TestClass
+
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonUnMarshaller());
         }
         [TestMethod]
@@ -93,6 +97,7 @@ namespace BridgeTests
             element.intelements = new int[] { 1, 2, 3 };
             String marshalledResult = marshaller.MarshallObject(element);
             ArrayElement result = marshaller.UnmarshallObject<ArrayElement>(marshalledResult);
+
             foreach (String stringelement in result.stringelements)
             {
                 Assert.IsNotNull(element.stringelements.Find(e => stringelement.Equals(e)));
@@ -105,8 +110,10 @@ namespace BridgeTests
             ArrayElement element = new ArrayElement();
             element.stringelements = new String[] { "Test", "Test1" };
             element.intelements = new List<int>() { 1, 2, 3 };
+
             String marshalledResult = marshaller.MarshallObject(element);
             ListElement result = marshaller.UnmarshallObject<ListElement>(marshalledResult);
+
             Assert.AreEqual<int>(element.stringelements.Length, result.stringelements.Count);
             foreach (String stringelement in element.stringelements)
             {

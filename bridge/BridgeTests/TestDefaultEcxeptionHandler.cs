@@ -19,6 +19,7 @@ namespace BridgeTests
         private const Exception nullException = null;
         private const Object nullObject = null;
         private ABridgeExceptionHandling exceptionhandler;
+
         [TestInitialize]
         public void Initialise()
         {
@@ -35,6 +36,7 @@ namespace BridgeTests
         public void TestAbstractExceptionHandlerWithStop()
         {
             exceptionhandler.Stop = true;
+
             exceptionhandler.HandleException(nullException, nullObject);
         }
         [TestMethod]
@@ -44,6 +46,7 @@ namespace BridgeTests
             {
                 return true;
             };
+
             Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException(), nullObject));
             Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException("Test"), nullObject));
             Assert.IsTrue((bool)exceptionhandler.HandleException(new BridgeException(), nullObject));

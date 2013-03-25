@@ -15,9 +15,10 @@ namespace BridgeTests
         public void TestRegisterFunktionInvocation()
         {
             ExampleDomainConnector connector = new ExampleDomainConnector();
-            Assert.IsTrue(connector is RegistrationFunctions);
             connector.SetDomainId("TestCase");
             connector.SetConnectorId("TastConenctorId");
+            
+            Assert.IsTrue(connector is RegistrationFunctions);
             Assert.AreEqual<AliveState>(AliveState.ONLINE, connector.GetAliveState());
         }
     }

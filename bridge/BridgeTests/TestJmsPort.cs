@@ -32,14 +32,17 @@ namespace BridgeTests
         public void TestJmsIncomingPortExceptionHandler()
         {
             string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+
             IIncomingPort inPort = new JmsIncomingPort(destination, new TestCustomExceptionHandler(), connectorId);
             inPort.Close();
+
             Assert.AreEqual<String>(inPort.Receive(), "TestCase");
         }
         [TestMethod]
         public void TestJmsOutgoingPortExceptionHandler()
         {
             string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+
             IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error");
@@ -49,6 +52,7 @@ namespace BridgeTests
         {
             Guid tmpGuid = Guid.NewGuid();
             string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+            
             IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error", "NotExist");

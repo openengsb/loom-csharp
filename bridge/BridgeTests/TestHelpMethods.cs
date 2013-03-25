@@ -68,8 +68,10 @@ namespace BridgeTests
             IMarshaller marshaller = new JsonMarshaller();
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
             Object entryObject = Activator.CreateInstance(type);
+
             Assert.IsTrue(entryObject is Entry1);
             Assert.IsTrue(entryObject is OpenEngSBModel);
+
             Entry1 entry = (Entry1)entryObject;
             entry.key = "test";
             entry.value = 1;
@@ -111,8 +113,9 @@ namespace BridgeTests
             osbEntry.type = "type";
             osbEntry.value = "value";
             elements.Add(osbEntry);
-            testentry=testentry.AddOpenEngSBModel<Entry1>(elements);
+            testentry = testentry.AddOpenEngSBModel<Entry1>(elements);
             OpenEngSBModel objUnmarshalled = testentry as OpenEngSBModel;
+
             Assert.AreEqual(elements.Count, objUnmarshalled.openEngSBModelTail.Count);
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].key, osbEntry.key);
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].type, osbEntry.type);
@@ -141,6 +144,7 @@ namespace BridgeTests
             osbEntry.value = "value";
             elements.Add(osbEntry);
             entryOpenEngSB.openEngSBModelTail = elements;
+
             Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
             Assert.AreEqual(elements[0].key, osbEntry.key);
             Assert.AreEqual(elements[0].type, osbEntry.type);
@@ -150,7 +154,9 @@ namespace BridgeTests
         public void TestAddTypeOfTypeObject()
         {
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Object));
+            
             Object entryObject = Activator.CreateInstance(type);
+
             Assert.IsFalse(entryObject is OpenEngSBModel);
         }
         [TestMethod]
@@ -158,8 +164,10 @@ namespace BridgeTests
         {
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry2WithoutConstructor));
             Object entryObject = Activator.CreateInstance(type);
+            
             Assert.IsTrue(entryObject is Entry2WithoutConstructor);
             Assert.IsTrue(entryObject is OpenEngSBModel);
+
             Entry2WithoutConstructor entry = (Entry2WithoutConstructor)entryObject;
             entry.key = "test";
             entry.value = 1;
@@ -171,6 +179,7 @@ namespace BridgeTests
             osbEntry.value = "value";
             elements.Add(osbEntry);
             entryOpenEngSB.openEngSBModelTail = elements;
+
             Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
             Assert.AreEqual(elements[0].key, osbEntry.key);
             Assert.AreEqual(elements[0].type, osbEntry.type);
@@ -231,6 +240,7 @@ namespace BridgeTests
             oosxlink.name = "TestCase";
             oosxlink.viewId = "TestViewId";
             OpenEngSBCore.XLinkConnectorView openEngSBCOre = oosxlink.ConvertOSBType<OpenEngSBCore.XLinkConnectorView>();
+
             Assert.AreEqual<String>(oosxlink.name, openEngSBCOre.name);
             Assert.AreEqual<String>(oosxlink.viewId, openEngSBCOre.viewId);
         }
@@ -246,6 +256,7 @@ namespace BridgeTests
             entry[0].value = "value";
             oosxlink.descriptions = entry;
             OpenEngSBCore.XLinkConnectorView openEngSBCOre = oosxlink.ConvertOSBType<OpenEngSBCore.XLinkConnectorView>();
+
             Assert.AreEqual<String>(oosxlink.name, openEngSBCOre.name);
             Assert.AreEqual<String>(oosxlink.viewId, openEngSBCOre.viewId);
             Assert.AreEqual<String>(oosxlink.descriptions[0].key, entry[0].key);
@@ -265,6 +276,7 @@ namespace BridgeTests
             result.Add(new JsonMarshaller().MarshallObject(entry), new JsonMarshaller().MarshallObject(entry));
 
             EntryWithAllEntryParameter[] tmpresult = (EntryWithAllEntryParameter[])result.ConvertMap(typeof(EntryWithAllEntryParameter[]));
+
             Assert.IsTrue(tmpresult[0].key[0].key.Equals("Test"));
             Assert.IsTrue(tmpresult[0].value[0].key.Equals("Test"));
         }
@@ -336,6 +348,7 @@ namespace BridgeTests
             elements.Add("test");
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
+
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals(true));
         }
@@ -350,6 +363,7 @@ namespace BridgeTests
                 elements.Add(pi);
             }
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
+
             Assert.IsTrue(elements.Count == 1);
             Assert.IsTrue(elements[0] is object);
         }
@@ -374,6 +388,7 @@ namespace BridgeTests
             elements.Add("test1");
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
+
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals("test1"));
         }
@@ -385,6 +400,7 @@ namespace BridgeTests
             elements.Add("test1");
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
+
             Assert.IsTrue(elements.Count == 2);
             Assert.IsTrue(elements[1].Equals("test1"));
         }
@@ -395,6 +411,7 @@ namespace BridgeTests
             elements.Add("test");
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasOnlyOneField"));
+
             Assert.IsTrue(elements.Count == 1);
             Assert.IsTrue(elements[0].Equals("test"));
         }
@@ -405,6 +422,7 @@ namespace BridgeTests
             parameters.Add("String");
             parameters.Add("Boolean");
             TestClass testClass = new TestClass();
+
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
         [TestMethod]
@@ -414,6 +432,7 @@ namespace BridgeTests
             IList<string> parameters = new List<String>();
             parameters.Add("String");
             TestClass testClass = new TestClass();
+
             HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters());
         }
         [TestMethod]
@@ -423,6 +442,7 @@ namespace BridgeTests
             parameters.Add("Integer");
             parameters.Add("Bo olean");
             TestClass testClass = new TestClass();
+
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
         [TestMethod]
@@ -432,6 +452,7 @@ namespace BridgeTests
             parameters.Add("Integer");
             parameters.Add("Boolean");
             TestClass testClass = new TestClass();
+
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
         [TestMethod]
@@ -441,6 +462,7 @@ namespace BridgeTests
             parameters.Add("Integer");
             parameters.Add("int");
             TestClass testClass = new TestClass();
+
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
         [TestMethod]

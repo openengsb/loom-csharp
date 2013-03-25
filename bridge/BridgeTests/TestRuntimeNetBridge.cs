@@ -17,27 +17,31 @@ namespace BridgeTests
         private const string destination = "tcp://localhost.:6549";
         private const String domainName = "example";
         private String uuid;
+        
         [TestInitialize]
         public void InitialiseFactory()
-        {
-            
-            ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
+        {            
+            ExampleDomainConnector exampleDomain = new ExampleDomainConnector();         
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
         }
         [TestMethod]
         public void TestCreateDeleteConnector()
         {
             uuid = factory.CreateDomainService(domainName);
+
             Assert.IsFalse(factory.Registered(uuid));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+
             factory.DeleteDomainService(uuid);
         }
         [TestMethod]
         public void TestCreateDeleteConnectorWithUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
+            
             Assert.IsFalse(factory.Registered(uuid));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             factory.DeleteDomainService(uuid);
         }
         [TestMethod]
@@ -45,12 +49,17 @@ namespace BridgeTests
         {
             uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
+            
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             factory.UnRegisterConnector(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
+            
             factory.DeleteDomainService(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
         }
         [TestMethod]
@@ -58,9 +67,11 @@ namespace BridgeTests
         {
             uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
+            
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             try
             {
                 //Exampledomain does not support xlink => should throw OpenEngSBException
@@ -70,8 +81,11 @@ namespace BridgeTests
             {
             }
             factory.UnRegisterConnector(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
+            
             factory.DeleteDomainService(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
         }
         [TestMethod]
@@ -103,23 +117,32 @@ namespace BridgeTests
         public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
         {
             uuid = factory.RegisterConnector(null, domainName);
+            
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             factory.UnRegisterConnector(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
+            
             factory.DeleteDomainService(uuid);
+            
             Assert.IsFalse(factory.Registered(uuid));
         }
         [TestMethod]
         public void TestCreateRegisterEventHandlerInvokeUnregisterDelete()
         {
             uuid = factory.RegisterConnector(null, domainName);
+            
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+            
             IExampleDomainEventsSoap11Binding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(uuid);
+            
             Assert.IsNotNull(exampleDomain);
+            
             LogEvent logEvent = new LogEvent();
             logEvent.level = "1";
             logEvent.message = "TestCase";
@@ -145,14 +168,21 @@ namespace BridgeTests
             {
                 uuid = factory.CreateDomainService(domainName);
                 uuids[i] = uuid;
+            
                 Assert.IsFalse(factory.Registered(uuid));
+                
                 factory.RegisterConnector(uuid, domainName);
+                
                 Assert.IsTrue(factory.Registered(uuid));
                 Assert.IsFalse(factory.Registered("WRONG ID"));
                 Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
+                
                 factory.UnRegisterConnector(uuid);
+                
                 Assert.IsFalse(factory.Registered(uuid));
+                
                 factory.DeleteDomainService(uuid);
+                
                 Assert.IsFalse(factory.Registered(uuid));
             }
             factory.StopAllConnections();

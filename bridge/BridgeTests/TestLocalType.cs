@@ -18,45 +18,51 @@ namespace BridgeTests
         public void TestString()
         {
             LocalType lt = new LocalType(typeof(String));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.String");
         }
         [TestMethod]
         public void TestInt()
         {
             LocalType lt = new LocalType(typeof(int));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Integer");
         }
         [TestMethod]
         public void TestDouble()
         {
             LocalType lt = new LocalType(typeof(Double));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Double");
         }
         [TestMethod]
         public void TestFloat()
         {
             LocalType lt = new LocalType(typeof(float));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Float");
         }
         [TestMethod]
         public void TestAliveState()
         {
             LocalType lt = new LocalType(typeof(AliveState));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.openengsb.core.api.AliveState");
         }
         [TestMethod]
         public void TestEntryToMap()
         {
             LocalType lt = new LocalType(typeof(entry1));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.util.Map");
         }
         [TestMethod]
         public void TestMethodNamePackage()
         {
             LocalType lt = new LocalType(typeof(TestClassLocalType));
+
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.test.domain.example.TestClassLocalType");
         }
-
     }
 }
 namespace LocalTypeTestClass

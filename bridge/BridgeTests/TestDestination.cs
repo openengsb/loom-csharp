@@ -14,7 +14,8 @@ namespace BridgeTests
         [TestMethod]
         public void TestDestinationWithoutQueue()
         {
-            Destination destination = new Destination(url+"?");
+            Destination destination = new Destination(url + "?");
+
             Assert.AreEqual<String>(destination.Host, url);
             Assert.IsTrue(String.IsNullOrEmpty(destination.Queue));
             Assert.AreEqual<String>(destination.FullDestination, url);
@@ -23,8 +24,9 @@ namespace BridgeTests
         public void TestDestinationWithHostAndQueueSet()
         {
             String parameter = "Test";
-            String urlParameter = url + "?"+parameter;
+            String urlParameter = url + "?" + parameter;
             Destination destination = new Destination(urlParameter);
+
             Assert.AreEqual<String>(destination.Host, url);
             Assert.AreEqual<String>(destination.Queue, parameter);
             Assert.AreEqual<String>(destination.FullDestination, urlParameter);
@@ -33,7 +35,7 @@ namespace BridgeTests
         [ExpectedException(typeof(ApplicationException))]
         public void TestInvalidAdresse1()
         {
-            Destination destination = new Destination(url+"?Test?Test");
+            Destination destination = new Destination(url + "?Test?Test");
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
