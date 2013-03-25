@@ -257,7 +257,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             }
             else
             {
-                throw new BridgeException("The connecotr with id " + connectorId + " has no instance (Invokde createDomainService)");
+                throw new BridgeException("The connecotr with id " + connectorId + " has no instance (Invoke createDomainService)");
             }
         }
         public void DisconnectFromXLink(string connectorId, String hostId)

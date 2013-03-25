@@ -76,7 +76,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="TestJsonMarsahller.cs" />
-    <Compile Include="TestCloseAndRegisterConnector.cs" />
     <Compile Include="TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="TestJmsPort.cs" />
     <Compile Include="TestDefaultEcxeptionHandler.cs" />

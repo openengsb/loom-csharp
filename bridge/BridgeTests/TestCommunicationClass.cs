@@ -33,14 +33,15 @@ namespace BridgeTests
         private const String host = "http://test.at";
         private const String queue = "TestCase1";
         private IMarshaller marshaller = new JsonMarshaller();
+
         [TestMethod]
         public void TestDestinationNoException()
         {
             Destination destination = new Destination(host + "?" + queue);
 
-            Assert.AreEqual(host, destination.Host);
-            Assert.AreEqual(queue, destination.Queue);
-            Assert.AreEqual(host + "?" + queue, destination.FullDestination);
+            Assert.AreEqual<String>(host, destination.Host);
+            Assert.AreEqual<String>(queue, destination.Queue);
+            Assert.AreEqual<String>(host + "?" + queue, destination.FullDestination);
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
@@ -66,29 +67,16 @@ namespace BridgeTests
             Assert.IsTrue(result.Contains("\"callId\":\"123\""));
         }
         [TestMethod]
-        public void TestUnMarshallException()
+        [ExpectedException(typeof(BridgeException))]
+        public void TestGenericUnMarshallExceptionWithInvalidInput()
         {
-            IMarshaller marshaller = new JsonMarshaller();
-            Boolean exception = false;
-            try
-            {
-                marshaller.UnmarshallObject<RemoteMethodCall>("EXCEPTION");
-            }
-            catch (BridgeException)
-            {
-                exception = true;
-            }
-            Assert.IsTrue(exception);
-            exception = false;
-            try
-            {
-                marshaller.UnmarshallObject("EXCEPTION", typeof(RemoteMethodCall));
-            }
-            catch (BridgeException)
-            {
-                exception = true;
-            }
-            Assert.IsTrue(exception);
+            marshaller.UnmarshallObject<RemoteMethodCall>("EXCEPTION");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(BridgeException))]
+        public void TestUnMarshallExceptionWithInvalidInput()
+        {
+            marshaller.UnmarshallObject("EXCEPTION", typeof(RemoteMethodCall));
         }
     }
 }

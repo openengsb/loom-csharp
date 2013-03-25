@@ -40,8 +40,7 @@ namespace BridgeTests
         public void TestFactoryInvalidOpenEngSBVersion()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString);
-            
-            Assert.IsNull(factory);
+
             factory = DomainFactoryProvider.GetDomainFactoryInstance<String>("Test", nullString, nullString);
         }
         [TestMethod]
@@ -50,7 +49,6 @@ namespace BridgeTests
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, nullExceptionHandler);
             
-            Assert.IsNull(factory);
             factory = DomainFactoryProvider.GetDomainFactoryInstance<String>("Test", nullString, nullString, nullExceptionHandler);
         }
         [TestMethod]
@@ -88,7 +86,6 @@ namespace BridgeTests
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, username, password);
             
-            Assert.IsNull(factory);
             factory = DomainFactoryProvider.GetDomainFactoryInstance<String>("Test", nullString, nullString, username, password);
         }
         [TestMethod]
@@ -97,7 +94,6 @@ namespace BridgeTests
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, nullExceptionHandler, username, password);
             
-            Assert.IsNull(factory);
             factory = DomainFactoryProvider.GetDomainFactoryInstance<String>("Test", nullString, nullString, nullExceptionHandler, username, password);
         }
         [TestMethod]

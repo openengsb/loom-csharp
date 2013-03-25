@@ -191,7 +191,9 @@ namespace BridgeTests
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
+            
             Entry1[] result = (Entry1[])ExtendMethods.ConvertMap(Test, typeof(Entry1));
+            
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -205,7 +207,9 @@ namespace BridgeTests
                 new Entry1() { key = "1", value = 11 },
                 new Entry1() { key = "21", value = 21 } 
             };
+            
             IDictionary<String, int> result = ExtendMethods.ConvertMap<String, int>(Test);
+            
             foreach (Entry1 e1 in Test)
             {
                 Assert.IsTrue(result.ContainsKey(e1.key));
@@ -293,7 +297,9 @@ namespace BridgeTests
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
+            
             Entry1[] result = ExtendMethods.ConvertMap<Entry1>(Test);
+            
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -306,7 +312,9 @@ namespace BridgeTests
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
+
             Entry1[] result = (Entry1[])Test.ConvertMap(typeof(Entry1));
+            
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -330,7 +338,7 @@ namespace BridgeTests
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
-                Assert.AreEqual(Test[e1.key], e1.value);
+                Assert.AreEqual<Object>(Test[e1.key], e1.value);
             }
         }
         [TestMethod]
@@ -349,8 +357,9 @@ namespace BridgeTests
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
 
-            Assert.IsTrue(elements.Count == 2);
-            Assert.IsTrue(elements[1].Equals(true));
+
+            Assert.AreEqual<int>(elements.Count, 2);
+            Assert.AreEqual<Boolean>((bool)elements[1], true);
         }
         [TestMethod]
         public void TestAddTrueForSpecifiedWithParameterInfo1()
@@ -364,7 +373,7 @@ namespace BridgeTests
             }
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
 
-            Assert.IsTrue(elements.Count == 1);
+            Assert.AreEqual<int>(elements.Count ,1);
             Assert.IsTrue(elements[0] is object);
         }
         [TestMethod]
@@ -377,8 +386,9 @@ namespace BridgeTests
             {
                 elements.Add(pi);
             }
+
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
-            Assert.IsTrue(elements.Count == 2);
+            Assert.AreEqual<int>(elements.Count , 2);
         }
         [TestMethod]
         public void TestAddTrueForSpecified2()
@@ -389,8 +399,8 @@ namespace BridgeTests
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
 
-            Assert.IsTrue(elements.Count == 2);
-            Assert.IsTrue(elements[1].Equals("test1"));
+            Assert.AreEqual<int>(elements.Count, 2);
+            Assert.AreEqual<String>(elements[1].ToString(),"test1");
         }
         [TestMethod]
         public void TestAddTrueForSpecified3()
@@ -401,8 +411,8 @@ namespace BridgeTests
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
 
-            Assert.IsTrue(elements.Count == 2);
-            Assert.IsTrue(elements[1].Equals("test1"));
+            Assert.AreEqual<int>(elements.Count, 2);
+            Assert.AreEqual<String>(elements[1].ToString(),"test1");
         }
         [TestMethod]
         public void TestAddTrueForSpecified4()
@@ -412,8 +422,8 @@ namespace BridgeTests
             TestClass testClass = new TestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasOnlyOneField"));
 
-            Assert.IsTrue(elements.Count == 1);
-            Assert.IsTrue(elements[0].Equals("test"));
+            Assert.AreEqual<int>(elements.Count, 1);
+            Assert.AreEqual<String>(elements[0].ToString(), "test");
         }
         [TestMethod]
         public void TestTypesAreEqual1()
@@ -468,7 +478,7 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateClassWithPackageName()
         {
-            Assert.AreEqual(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
+            Assert.AreEqual<String>(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]

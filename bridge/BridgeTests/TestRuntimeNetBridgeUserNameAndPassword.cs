@@ -18,6 +18,7 @@ namespace BridgeTests
         private const String Username = "admin";
         private const String Password = "password";
         private const String destination = "tcp://localhost.:6549";
+        private const String nullString = null;
 
         [TestInitialize]
         public void InitialiseFactory()
@@ -84,7 +85,7 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateRegisterEventHandlerUnregisterDelete()
         {
-            uuid = factory.RegisterConnector(null, domainName);
+            uuid = factory.RegisterConnector(nullString, domainName);
 
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
