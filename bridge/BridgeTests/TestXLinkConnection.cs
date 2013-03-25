@@ -18,12 +18,14 @@ namespace BridgeTests
         private String uuid;
         private const String domainName = "oosourcecode";
         private const String destination = "tcp://localhost.:6549";
+
         [TestInitialize]
         public void InitialiseFactory()
         {
             IOOSourceCodeDomainSoap11Binding exampleDomain = new OOSourceCodeDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
         }
+
         [TestMethod]
         public void TestCreateRegisterConnecttoxlinkDisconnectfromXlinkUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly()
         {
@@ -32,15 +34,15 @@ namespace BridgeTests
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
-            
+
             XLinkUrlBlueprint template = factory.ConnectToXLink(uuid, "localhost", domainName, initModelViewRelation());
             factory.DisconnectFromXLink(uuid, "localhost");
             factory.UnRegisterConnector(uuid);
-            
+
             Assert.IsFalse(factory.Registered(uuid));
-            
+
             factory.DeleteDomainService(uuid);
-            
+
             Assert.IsFalse(factory.Registered(uuid));
         }
 
@@ -60,7 +62,7 @@ namespace BridgeTests
                     };
             return modelsToViews;
         }
-        
+
         [TestCleanup]
         public void CleanUp()
         {

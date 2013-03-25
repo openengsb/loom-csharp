@@ -37,7 +37,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public static class ExtendMethods
     {
-        public static IMarshaller marshaller = new JsonMarshaller();
+        private static IMarshaller marshaller = new JsonMarshaller();
+
         /// <summary>
         /// Converts a Dictionary to a Map (entryX)
         /// </summary>
@@ -76,6 +77,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             return (Object[])elements;
         }
+
         /// <summary>
         /// Converts between two types
         /// </summary>
@@ -87,6 +89,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             String tmp = marshaller.MarshallObject(obj);
             return marshaller.UnmarshallObject<ReturnType>(tmp);
         }
+
         /// <summary>
         /// Converts between two types
         /// </summary>
@@ -98,6 +101,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             String tmp = marshaller.MarshallObject(obj);
             return marshaller.UnmarshallObject(tmp, type);
         }
+
         /// <summary>
         /// Checks if to type have the same type
         /// </summary>
@@ -115,6 +119,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             return !(typeNamesAreTheSame || typeAreTheSame);
         }
+
         /// <summary>
         /// Converts a Dictionary to a Map (entryX)
         /// </summary>
@@ -126,6 +131,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Array elements = ConvertMap(arg, typeof(ReturnTyp));
             return (ReturnTyp[])elements;
         }
+
         /// <summary>
         /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
         /// If the Object is not a Map then the parameter object is returned
@@ -147,6 +153,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             return tmpresult;
         }
+
         /// <summary>
         /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
         /// If the Object is not a Map then the parameter object is returned
@@ -155,12 +162,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>IDictionary or the object itselfe</returns>
         public static Object ConvertMap(this Object obj)
         {
-            Object array=obj;
+            Object array = obj;
             if (!(obj.GetType().IsArray))
             {
                 if (!obj.GetType().Name.ToUpper().Contains("ENTRY"))
                 {
-                    throw new ArgumentOutOfRangeException("The object with type: "+obj.GetType().Name+" could ist not valid. It has to start with ENTRY");
+                    throw new ArgumentOutOfRangeException("The object with type: " + obj.GetType().Name + " could ist not valid. It has to start with ENTRY");
                 }
                 else
                 {
@@ -178,6 +185,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
             return result;
         }
+
         /// <summary>
         /// Add a OpenEngSBModel to an Object
         /// </summary>

@@ -24,6 +24,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(String).FullName);
         }
+
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaIntTypeWhenAskingTheLocalType()
         {
@@ -32,6 +33,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(int).FullName);
         }
+
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaDoubleTypeWhenAskingTheLocalType()
         {
@@ -40,6 +42,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(Double).FullName);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaFloatTypeWhenAskingTheLocalType()
         {
@@ -48,6 +51,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(float).FullName);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaStringTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
@@ -56,6 +60,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(String).FullName);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaIntTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
@@ -64,6 +69,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(int).FullName);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaDoubleTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
@@ -72,6 +78,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(Double).FullName);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaFloatTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
@@ -80,6 +87,7 @@ namespace BridgeTests
             
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(float).FullName);
         }
+        
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestIfRemoteTypeReturnstheExceptionIfTheInputIsInvalid()
@@ -87,6 +95,7 @@ namespace BridgeTests
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("WONG", pr);
         }
+        
         [TestMethod]
         public void TestIfRemoteTypeReturnstheCorrectJavaStringTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresentAndTheInputContainsADollar()
         {
@@ -96,6 +105,7 @@ namespace BridgeTests
         }
     }
 }
+
 namespace RemoteTypeTestClass
 {
     [XmlTypeAttribute(Namespace = "http://example.domain.test.org")]

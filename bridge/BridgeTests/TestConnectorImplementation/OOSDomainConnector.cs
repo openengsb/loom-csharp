@@ -32,7 +32,6 @@ namespace BridgeTests.TestConnectorImplementation
 
         public OOSourceCodeDomainConnector() : base(logger) { }
 
-
         public void updateClass(OOClass args0)
         {
             logger.Info("updateClasse method call");

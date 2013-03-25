@@ -26,11 +26,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class BeanDescription
     {
         #region Variables
+
         public String className { get; set; }
         public IDictionary<String, String> data { get; set; }
         public IDictionary<String, byte[]> binaryData { get; set; }
+
         #endregion
         #region Public static Methods
+
         /// <summary>
         /// Creates a new instance of the Authentification
         /// </summary>
@@ -44,6 +47,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             instance.binaryData = new Dictionary<String, byte[]>();
             return instance;
         }
+
         #endregion
     }
 }

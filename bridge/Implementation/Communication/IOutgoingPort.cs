@@ -24,11 +24,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// </summary>
     public interface IOutgoingPort : IPort
     {
+
         /// <summary>
         /// Definition to send a message
         /// </summary>
         /// <param name="text">message to send</param>
         void Send(string text);
+
         /// <summary>
         /// Definition to send a message and define ReplyTo
         /// </summary>

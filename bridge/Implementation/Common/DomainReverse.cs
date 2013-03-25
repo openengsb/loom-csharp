@@ -32,7 +32,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
-    public abstract class DomainReverse<T> : IRegistration
+    public abstract class DomainReverse<domainServiceType> : IRegistration
     {
         #region Const.
         protected const string CREATION_QUEUE = "receive";
@@ -46,23 +46,29 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected const string UNREGISTRATION_METHOD_NAME = "unregisterConnector";
         protected const string XLINK_METHOD_NAME = "connectToXLink";
         #endregion
+
         #region Propreties
         protected abstract string CREATION_METHOD_NAME { get; }
         protected abstract string AUTHENTIFICATION_CLASS { get; }
+
         public string ConnectorId
         {
             get { return connectorId; }
             set { connectorId = value; }
         }
+
         public String DomainName { get { return domainName; } }
+
         #endregion
         #region Variables
 
         public ABridgeExceptionHandling ExceptionHandler;
+
         /// <summary>
         /// indicates in witch state the registration is
         /// </summary>
         protected ERegistration Registrationprocess = ERegistration.NONE;
+
         /// <summary>
         ///Descrips if the Registration has been done.
         /// </summary>
@@ -70,6 +76,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         {
             get { return Registrationprocess.Equals(ERegistration.REGISTERED); }
         }
+
         /// <summary>
         /// Defines if the connector should create a new connector or if it should register a existing one
         /// </summary>
@@ -78,27 +85,33 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <summary>
         /// domain-instance to act as reverse-proxy for
         /// </summary>
-        private T domainService;
+        private domainServiceType domainService;
+
         /// <summary>
         /// Logger
         /// </summary>
-        protected static ILog Logger = LogManager.GetLogger(typeof(T));
+        protected static ILog Logger = LogManager.GetLogger(typeof(domainServiceType));
+
         #endregion
         #region Propreties
-        public T DomainService
+
+        public domainServiceType DomainService
         {
             get { return domainService; }
         }
         #endregion
         #region Variabels
+
         /// <summary>
         /// Username for the authentification
         /// </summary>
         protected String Username;
+
         /// <summary>
         /// Username for the password
         /// </summary>
         protected String Password;
+
         // Thread listening for messages
         protected Thread QueueThread;
 
@@ -121,16 +134,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// flag indicating if the listening thread should run
         /// </summary>
         protected Boolean IsEnabled;
+
         /// <summary>
         /// The used marshaller
         /// </summary>
         protected IMarshaller Marshaller;
+
         /// <summary>
         /// The id, which has been used to register the connector
         /// </summary>
         protected Object RegisterId;
+
         #endregion
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -139,7 +156,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="connectorId">ServiceId</param>
         /// <param name="domainName">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverse(T localDomainService, string host, string connectorId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+        public DomainReverse(domainServiceType localDomainService, string host, string connectorId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
         {
             this.ExceptionHandler = exceptionhandler;
             this.Marshaller = new JsonMarshaller();
@@ -154,6 +171,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.Password = "password";
             this.CreateService = createNewConnector;
         }
+
         /// <summary>
         /// Constructor with Autehntification
         /// </summary>
@@ -163,14 +181,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="domainName">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverse(T localDomainService, string host, string serviceId, string domainName, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+        public DomainReverse(domainServiceType localDomainService, string host, string serviceId, string domainName, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
             : this(localDomainService, host, serviceId, domainName, createNewConnector, exceptionhandler)
         {
             this.Username = username;
             this.Password = password;
         }
+
         #endregion
+
         #region Protected Method
+
         /// <summary>
         /// Unmarshalls the arguments of a MethodCall.
         /// </summary>
@@ -179,7 +200,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected object[] CreateMethodArguments(IMethodCall methodCall, MethodInfo methodInfo)
         {
             IList<object> args = new List<object>();
-            Assembly asm = typeof(T).GetType().Assembly;
+            Assembly asm = typeof(domainServiceType).GetType().Assembly;
             for (int i = 0; i < methodCall.args.Count; ++i)
             {
                 Object arg = methodCall.args[i];
@@ -244,10 +265,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             return args.ToArray();
         }
 
-
         private Type findType(String typeString, MethodInfo methodInfo)
         {
-            Assembly asm = typeof(T).GetType().Assembly;
+            Assembly asm = typeof(domainServiceType).GetType().Assembly;
             Type type = asm.GetType(typeString);
             if (type == null)
                 type = Type.GetType(typeString);
@@ -262,6 +282,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             }
             return type;
         }
+
         /// <summary>
         /// Invokes a method
         /// </summary>
@@ -282,6 +303,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Logger.Info("Invokation done");
             return result;
         }
+
         /// <summary>
         /// Tries to find the method that should be called.
         /// </summary>
@@ -305,6 +327,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             }
             return null;
         }
+
         /// <summary>
         /// Converts a OpenEngsWrapper array to a String array
         /// </summary>
@@ -335,6 +358,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 
             QueueThread.Start();
         }
+
         /// <summary>
         /// Stops the queue listening for messages and deletes the proxy on the bus.
         /// </summary>
@@ -346,8 +370,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Logger.Info("Connection closed");
             JmsPort.CloseAll(connectorId);
         }
+
         #endregion
+
         #region Abstract Methods
+
         public abstract void CreateRemoteProxy();
         public abstract void DeleteRemoteProxy();
         public abstract void Listen();

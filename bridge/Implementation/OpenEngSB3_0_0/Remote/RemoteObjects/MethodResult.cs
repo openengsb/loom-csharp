@@ -25,6 +25,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     /// </summary>
     public class MethodResult : IMethodResult
     {
+
         #region Variables
 
         /// <summary>
@@ -46,8 +47,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
         /// Fully qualified class name of the return value.
         /// </summary>
         public string className { get; set; }
+
         #endregion
+
         #region Public static Methods
+
         /// <summary>
         /// Creates an instance
         /// </summary>
@@ -65,6 +69,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             result.className = className;
             return result;
         }
+
         #endregion
     }
 }

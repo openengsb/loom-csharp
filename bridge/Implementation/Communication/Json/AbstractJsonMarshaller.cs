@@ -25,8 +25,9 @@ using Newtonsoft.Json;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
-    public abstract class AbstractJsonMarshaller : JsonConverter{
-       
+    public abstract class AbstractJsonMarshaller : JsonConverter
+    {
+
         /// <summary>
         /// Checks if Type is Map (Dictaionary
         /// </summary>
@@ -36,7 +37,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         {
             return objectType.Name.ToUpper().StartsWith("ENTRY");
         }
-
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
@@ -88,4 +88,3 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         }
     }
 }
-

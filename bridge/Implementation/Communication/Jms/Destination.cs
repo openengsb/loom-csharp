@@ -27,7 +27,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         public string Host { get; set; }
         public string Queue { get; set; }
         #endregion
+
         #region Propreties
+
         /// <summary>
         /// Get the hole URL String
         /// </summary>
@@ -42,8 +44,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 return Host + "?" + Queue;
             }
         }
-        #endregion        
+
+        #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -59,8 +64,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             Host = parts[0].Trim();
             Queue = parts[1].Trim();
         }
+
         #endregion
+
         #region Public static Methods
+
         /// <summary>
         /// Combines host and queue
         /// </summary>
@@ -71,6 +79,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
         {
             return host + "?" + queue;
         }
+
         #endregion
     }
 }

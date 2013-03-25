@@ -8,6 +8,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public class ForwardDefaultExceptionHandler : ABridgeExceptionHandling
     {
+
         /// <summary>
         /// Directly forwards the exception to user user of the .Net Bridge
         /// </summary>

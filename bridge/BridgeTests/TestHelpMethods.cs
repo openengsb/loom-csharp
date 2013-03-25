@@ -96,8 +96,8 @@ namespace BridgeTests
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].value, osbEntry.value);
             Assert.AreEqual(entryUnmarshalled.key, entry.key);
             Assert.AreEqual(entryUnmarshalled.value, entry.value);
-
         }
+
         [TestMethod]
         public void TestExtendMethodThatAddsOpenEngSBModel()
         {
@@ -120,7 +120,6 @@ namespace BridgeTests
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].value, osbEntry.value);
             Assert.AreEqual(((Entry1)objUnmarshalled).key, testentry.key);
             Assert.AreEqual(((Entry1)objUnmarshalled).value, testentry.value);
-
         }
 
         [TestMethod]
@@ -132,6 +131,7 @@ namespace BridgeTests
 
             Assert.IsFalse(entryObject is OpenEngSBModel);
         }
+
         [TestMethod]
         ///Map = EntryX[]
         public void TestConvertingDictionaryToMap()
@@ -148,6 +148,7 @@ namespace BridgeTests
                 Assert.AreEqual(Test[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         ///Map = EntryX[]
         public void TestConvertingMapToDictionary()
@@ -165,6 +166,7 @@ namespace BridgeTests
                 Assert.AreEqual(result[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         public void TestConvertingMapToDictionaryWithExtendedMethod()
         {
@@ -179,6 +181,7 @@ namespace BridgeTests
                 Assert.AreEqual(result[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         public void TestConvertIDictionaryToMap()
         {
@@ -186,6 +189,7 @@ namespace BridgeTests
             result.Add("Test", 123);
             Entry1[] arrays = (Entry1[])result.ConvertMap(typeof(Entry1[]));
         }
+
         [TestMethod]
         ///Convert between OOSourceCodeDomain.XLinkConnectorView and OpenEngSBCore.XLinkConnectorView
         public void TestConvertXLinkConnectorViewTypesFromDiffrentDlls()
@@ -198,6 +202,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(oosxlink.name, openEngSBCOre.name);
             Assert.AreEqual<String>(oosxlink.viewId, openEngSBCOre.viewId);
         }
+
         [TestMethod]
         public void TestConvertXLinkConnectorViewTypesFromDiffrentDllsAndAllValuesSet()
         {
@@ -216,6 +221,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(oosxlink.descriptions[0].key, entry[0].key);
             Assert.AreEqual<String>(oosxlink.descriptions[0].value, entry[0].value);
         }
+
         [TestMethod]
         public void TestConvertDictionaryToEntry1WithParameterTypeWrong()
         {
@@ -234,6 +240,7 @@ namespace BridgeTests
             Assert.IsTrue(tmpresult[0].key[0].key.Equals("Test"));
             Assert.IsTrue(tmpresult[0].value[0].key.Equals("Test"));
         }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestInvalidConvertMapWhereMapIsAStringAndNotAnEntryX()
@@ -241,6 +248,7 @@ namespace BridgeTests
             String test = "Error";
             test.ConvertMap<String, String>();
         }
+
         [TestMethod]
         public void TestConvertingDictionaryToEntry1WhereOneElementIsSet()
         {
@@ -256,6 +264,7 @@ namespace BridgeTests
                 Assert.AreEqual(Test[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         public void TestConvertingWithExtendedMethodDictionaryToEntry1WhereTheReturnTypeIsIndicatedAsType()
         {
@@ -271,6 +280,7 @@ namespace BridgeTests
                 Assert.AreEqual(Test[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestConvertMapWithWrongStringObject()
@@ -278,6 +288,7 @@ namespace BridgeTests
             String noDictionary = "Empty";
             Object result = noDictionary.ConvertMap();
         }
+
         [TestMethod]
         public void TestConvertingWithExtendedMethodDictionaryToEntry1()
         {
@@ -291,6 +302,7 @@ namespace BridgeTests
                 Assert.AreEqual<Object>(Test[e1.key], e1.value);
             }
         }
+
         [TestMethod]
         public void TestIfUrlsAreCorrectlyReverted()
         {
@@ -299,6 +311,7 @@ namespace BridgeTests
             Assert.AreEqual(HelpMethods.ReverseURL("example.domain.openengsb.org"), "org.openengsb.domain.example");
             Assert.AreEqual(HelpMethods.ReverseURL("example.domain.openengsb.org/"), "org.openengsb.domain.example");
         }
+
         [TestMethod]
         ///A specified field is a field that is created from wsdl.exe to indicated if a primitiv type like boolean is set or not
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereSpecifiedIsDfinedAsParameters()
@@ -312,6 +325,7 @@ namespace BridgeTests
             Assert.AreEqual<int>(elements.Count, 2);
             Assert.AreEqual<Boolean>((bool)elements[1], true);
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParameters()
         {
@@ -324,6 +338,7 @@ namespace BridgeTests
             Assert.AreEqual<int>(elements.Count, 1);
             Assert.IsTrue(elements[0] is object);
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParametersWhereNoSpecifiedIsDefined()
         {
@@ -334,6 +349,7 @@ namespace BridgeTests
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
             Assert.AreEqual<int>(elements.Count, 2);
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereStringSpecifiedIsDfinedAsParameters()
         {
@@ -346,6 +362,7 @@ namespace BridgeTests
             Assert.AreEqual<int>(elements.Count, 2);
             Assert.AreEqual<String>(elements[1].ToString(), "test1");
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereNoSpecifiedIsDfinedAsParameters()
         {
@@ -358,6 +375,7 @@ namespace BridgeTests
             Assert.AreEqual<int>(elements.Count, 2);
             Assert.AreEqual<String>(elements[1].ToString(), "test1");
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodHasOnlyOneParameterAsParameters()
         {
@@ -369,6 +387,7 @@ namespace BridgeTests
             Assert.AreEqual<int>(elements.Count, 1);
             Assert.AreEqual<String>(elements[0].ToString(), "test");
         }
+
         [TestMethod]
         public void TestTypesAreEqual1()
         {
@@ -379,6 +398,7 @@ namespace BridgeTests
 
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
+
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestTypesAreEqual2()
@@ -389,6 +409,7 @@ namespace BridgeTests
 
             HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters());
         }
+
         [TestMethod]
         public void TestTypesAreNotEqual()
         {
@@ -399,6 +420,7 @@ namespace BridgeTests
 
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodParamertsAndTheListAreTheSame()
         {
@@ -409,6 +431,7 @@ namespace BridgeTests
 
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
+
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodParamertsAndTheListAreNotTheSame()
         {
@@ -419,34 +442,40 @@ namespace BridgeTests
 
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
+
         [TestMethod]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotation()
         {
             Assert.AreEqual<String>(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
         }
+
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhichHasNoAnnotation()
         {
             HelpMethods.CreateClassWithPackageName("hasNoSpecified", typeof(TestClass));
         }
+
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhereTheMethodDoesNotExist()
         {
             HelpMethods.CreateClassWithPackageName("DoesNotExist", typeof(TestClass));
         }
+
         [TestMethod]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayType()
         {
             Assert.AreEqual(HelpMethods.CreateClassWithPackageName("OpenEngSBCore.ModelToViewsTuple[]", typeof(OpenEngSBCore.ModelToViewsTuple[])), "[Lorg.openengsb.core.api.xlink.model.ModelToViewsTuple;");
         }
+
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayTypeWhereTheBridgeTestClassIsNotInTheAssembly()
         {
             HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(BridgeTests.TestClass[]));
         }
+
         [TestMethod]
         public void TestFirstLetterToUpperWorksCorrectly()
         {
@@ -455,6 +484,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(HelpMethods.FirstLetterToUpper(""), "");
         }
     }
+
     [ExcludeFromCodeCoverageAttribute()]
     public class TestClass
     {

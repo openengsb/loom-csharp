@@ -17,8 +17,9 @@
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.RemoteObjects
 {
     public abstract class MessageBase
-    {       
+    {
         public long timestamp { get; set; }
-        public string callId { get; set; }       
+
+        public string callId { get; set; }
     }
 }

@@ -34,17 +34,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// <typeparam name="T"></typeparam>
     public class DomainReverseProxy<T> : DomainReverse<T>
     {
+
         #region Propreties
+
         protected override string CREATION_METHOD_NAME
         {
             get { return "createWithId"; }
         }
+
         protected override string AUTHENTIFICATION_CLASS
         {
             get { return "org.openengsb.connector.usernamepassword.Password"; }
         }
+
         #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -58,6 +64,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             Logger.Info("Connecting to OpenEngSB version 3.0");
         }
+
         /// <summary>
         /// Constructor with Autehntification
         /// </summary>
@@ -72,8 +79,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
         {
             Logger.Info("Connecting to OpenEngSB version 3.0");
         }
+
         #endregion
+
         #region Public Methods
+
         /// <summary>
         /// Creates an Proxy on the bus.
         /// </summary>
@@ -190,6 +200,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             portOut.Close();
             Logger.Info("Register done");
         }
+
         private MethodResultMessage waitAndCheckAnswer(Destination destinationinfo, String id)
         {
             IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, id), ExceptionHandler, ConnectorId);
@@ -202,6 +213,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             }
             return result;
         }
+
         /// <summary>
         /// Creates an Proxy on the bus.
         /// </summary>
@@ -241,6 +253,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             portOut.Close();
             Logger.Info("Unregister done");
         }
+
         /// <summary>
         /// Blocks an waits for messages.
         /// </summary>
@@ -291,6 +304,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
                 }
             }
         }
+
         /// <summary>
         /// Connect a connector to xlink
         /// </summary>
@@ -336,6 +350,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             Logger.Info("Create done");
             return Marshaller.UnmarshallObject<XLinkUrlBlueprint>(result.result.arg.ToString());
         }
+
         /// <summary>
         /// Disconnect the Connector from XLink
         /// </summary>
@@ -370,8 +385,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             Registrationprocess = ERegistration.REGISTERED;
             Logger.Info("XLink is disconnected");
         }
+
         #endregion
+
         #region Private Methods
+
         /// <summary>
         /// Calls a method according to MethodCall.
         /// </summary>
@@ -431,6 +449,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             methodResult.metaData = new Dictionary<string, string>();
             return MethodResultMessage.CreateInstance(methodResult, correlationId);
         }
+
         #endregion
     }
 }

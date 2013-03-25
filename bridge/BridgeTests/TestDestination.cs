@@ -23,6 +23,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(queue, destination.Queue);
             Assert.AreEqual<String>(host + "?" + queue, destination.FullDestination);
         }
+
         [TestMethod]
         public void TestDestinationTypeWhereNoQueueIsIndicated()
         {
@@ -32,18 +33,21 @@ namespace BridgeTests
             Assert.IsTrue(String.IsNullOrEmpty(destination.Queue));
             Assert.AreEqual<String>(destination.FullDestination, url);
         }
+
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void TestInvalidSignBetweenUrlAndParameter()
         {
             Destination destination = new Destination(host + "!" + queue);
         }
+
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void TestDestinationWhitInvalidParametInTheUrl()
         {
             Destination destination = new Destination(url + "?Test?Test");
         }
+
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void TestDestinationTypeWhereNoQuestionMarkIsIndicated()

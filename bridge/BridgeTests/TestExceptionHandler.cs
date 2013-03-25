@@ -17,6 +17,7 @@ namespace BridgeTests
         private const String domainName = "example";
         private const String version = "3.0.0";
         private const String nullString = null;
+
         [TestMethod]
         [ExpectedException(typeof(UriFormatException))]
         public void TestForwardExceptionHandlerForwardsTheException()
@@ -24,6 +25,7 @@ namespace BridgeTests
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, nullString, new ExampleDomainConnector(), new ForwardDefaultExceptionHandler());
             factory.CreateDomainService(domainName);
         }
+
         [Ignore]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestRetryExceptionHandlerRetiesTheMethod()

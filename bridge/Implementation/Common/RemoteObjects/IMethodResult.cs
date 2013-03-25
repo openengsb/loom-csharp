@@ -24,6 +24,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
         /// Type of the return value.
         /// </summary>
         ReturnType type { get; set; }
+
         /// <summary>
         /// Return value of the RPC.
         /// </summary>

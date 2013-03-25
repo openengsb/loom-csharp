@@ -26,6 +26,7 @@ namespace BridgeTests
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
         }
+
         [TestMethod]
         public void TestCreateDeleteConnectorAndNoRegistrationWorksCorrectlyWithUsernameAndPassword()
         {
@@ -36,6 +37,7 @@ namespace BridgeTests
 
             factory.DeleteDomainService(uuid);
         }
+
         [TestMethod]
         public void TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectlyUsernameAndPassword()
         {
@@ -46,6 +48,7 @@ namespace BridgeTests
 
             factory.DeleteDomainService(uuid);
         }
+
         [TestMethod]
         public void TestCreateRegisterUnregisterDeleteConnectorWorksCorrectlyWithUsernameAndPassword()
         {
@@ -72,6 +75,7 @@ namespace BridgeTests
             factory.UnRegisterConnector(uuid);
             factory.DeleteDomainService(uuid);
         }
+
         [TestMethod]
         public void TestCreateRegisterEventHandlerUnregisterDeleteWorksCorrectlyWithUsernameAndPassword()
         {
@@ -82,6 +86,7 @@ namespace BridgeTests
             factory.UnRegisterConnector(uuid);
             factory.DeleteDomainService(uuid);
         }
+
         [TestCleanup]
         public void CleanUp()
         {

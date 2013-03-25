@@ -29,7 +29,8 @@ namespace BridgeTests.TestConnectorImplementation
     public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
     {
 
-        public ExampleDomainConnector():base(LogManager.GetLogger(typeof(ExampleDomainConnector))){ }
+        public ExampleDomainConnector() : base(LogManager.GetLogger(typeof(ExampleDomainConnector))) { }
+
         public string doSomethingWithLogEvent(LogEvent args0)
         {
             return "DEBUG";
@@ -46,7 +47,6 @@ namespace BridgeTests.TestConnectorImplementation
             m.result = "RESULT";
             return m;
         }
-
 
         public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
         {

@@ -26,9 +26,11 @@ namespace ServiceTestConsole
     /// </summary>
     public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
     {
+
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
         public ExampleDomainConnector() : base(logger) { }
+
         public string doSomethingWithLogEvent(LogEvent args0)
         {
             logger.Info("run doSomethingWithEnum with " + args0);
@@ -48,7 +50,6 @@ namespace ServiceTestConsole
             m.result = "RESULT";
             return m;
         }
-
 
         public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
         {

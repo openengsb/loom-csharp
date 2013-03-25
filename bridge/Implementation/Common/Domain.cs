@@ -27,7 +27,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
-    public abstract class Domain<T> : RealProxy
+    public abstract class Domain<TransparentProxyType> : RealProxy
     {
         #region Const.
         /// <summary>
@@ -35,25 +35,32 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// </summary>
         protected const string HOST_QUEUE = "receive";
         protected static ILog Logger;
+
         #endregion
         #region Variables
+
         protected ABridgeExceptionHandling Exceptionhandler;
+
         /// <summary>
         /// Authenifaction class
         /// </summary>
         protected string AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
+
         /// <summary>
         /// Username for the authentification
         /// </summary>
         protected String Username;
+
         /// <summary>
         /// Password for the authentification
         /// </summary>
         protected String Password;
+
         /// <summary>
         /// Id identifying the service instance on the bus.
         /// </summary>
         protected String ConnectorId;
+
         /// <summary>
         /// Domain type
         /// </summary>
@@ -65,10 +72,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected string Host;
 
         protected IMarshaller Marshaller;
+
         #endregion
         #region Constructors
+
         public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
-            : base(typeof(T))
+            : base(typeof(TransparentProxyType))
         {
             this.ConnectorId = connectorId;
             this.DomainName = domainName;
@@ -77,22 +86,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.Username = "admin";
             this.Password = "password";
             this.Exceptionhandler = exceptionhandler;
-            Logger = LogManager.GetLogger(typeof(T));
+            Logger = LogManager.GetLogger(typeof(TransparentProxyType));
         }
+
         public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
             : this(host, connectorId, domainName, exceptionhandler)
         {
             this.Username = username;
             this.Password = password;
         }
+
         #endregion
         #region Public Methods
-        public new T GetTransparentProxy()
+
+        public new TransparentProxyType GetTransparentProxy()
         {
-            return (T)base.GetTransparentProxy();
+            return (TransparentProxyType)base.GetTransparentProxy();
         }
+
         #endregion
         #region Protected Methods
+
         /// <summary>
         /// Builds an IMessage using MethodReturn.
         /// </summary>
@@ -119,6 +133,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     }
             }
         }
+
         #endregion
     }
 }

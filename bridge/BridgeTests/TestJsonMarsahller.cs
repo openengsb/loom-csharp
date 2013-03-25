@@ -28,6 +28,7 @@ namespace BridgeTests
             public string key { get; set; }
             public int value { get; set; }
         }
+
         /// <summary>
         /// Sell simulate the OpenEngSB generated file or the .Net Bridge
         /// </summary>
@@ -38,6 +39,7 @@ namespace BridgeTests
             public List<String> stringelements { get; set; }
             public int[] intelements { get; set; }
         }
+
         /// <summary>
         /// Sell simulate the OpenEngSB generated file or the .Net Bridge
         /// </summary>
@@ -48,6 +50,7 @@ namespace BridgeTests
             public String[] stringelements { get; set; }
             public List<int> intelements { get; set; }
         }
+
         public class TestClass
         {
             public TestClass() { }
@@ -56,12 +59,14 @@ namespace BridgeTests
             public int value { get; set; }
             public Entry1[] elements { get; set; }
         }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestInvalidSerialisationWithTheCustomJsonUnMarshallerAsCusomMarshaller()
         {
             JsonConvert.SerializeObject(new Entry1(), new CustomJsonUnMarshaller());
         }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestInvalidDeserialisationWithTheCustomJsonMarshallerAsCusomMarshaller()
@@ -75,6 +80,7 @@ namespace BridgeTests
 
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonMarshaller());
         }
+
         [TestMethod]
         [ExpectedException(typeof(JsonSerializationException))]
         ///This method fails because of Entr1[]!=TestClass
@@ -90,6 +96,7 @@ namespace BridgeTests
 
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonUnMarshaller());
         }
+
         [TestMethod]
         public void TestIfMarshallerConvertsBetweenTheSameTypeStructureOnlyArrayInsteadOfLists()
         {

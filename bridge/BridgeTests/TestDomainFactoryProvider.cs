@@ -28,6 +28,7 @@ namespace BridgeTests
 
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector240OpenEngSBVersion()
         {
@@ -35,13 +36,15 @@ namespace BridgeTests
 
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameter()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString);
-            
+
             Assert.IsNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndExceptionHandlerAsParameter()
         {
@@ -49,18 +52,20 @@ namespace BridgeTests
 
             Assert.IsNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector300OpenEngSBVersionWithExceptionHandlerParameter()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version300, nullString, nullString, nullExceptionHandler);
-            
+
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector240OpenEngSBVersionWithExceptionHandlerParameter()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version240, nullString, nullString, nullExceptionHandler);
-            
+
             Assert.IsNotNull(factory);
         }
 
@@ -68,16 +73,18 @@ namespace BridgeTests
         public void TestFactoryReturnsConnector300OpenEngSBVersionWithUsernameAndPassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version300, nullString, nullString, username, password);
-            
+
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector240OpenEngSBVersionWithUsernameAndPassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version240, nullString, nullString, username, password);
-            
+
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndUsernamPassword()
         {
@@ -85,6 +92,7 @@ namespace BridgeTests
 
             Assert.IsNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndExceptionHandlerUsernamPassword()
         {
@@ -92,18 +100,20 @@ namespace BridgeTests
 
             Assert.IsNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector300OpenEngSBVersionWithUsernamePassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version300, nullString, nullString, nullExceptionHandler, username, password);
-            
+
             Assert.IsNotNull(factory);
         }
+
         [TestMethod]
         public void TestFactoryReturnsConnector240OpenEngSBVersionWithUsernamePassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(version240, nullString, nullString, nullExceptionHandler, username, password);
-            
+
             Assert.IsNotNull(factory);
         }
     }

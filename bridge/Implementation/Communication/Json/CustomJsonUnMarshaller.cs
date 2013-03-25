@@ -21,13 +21,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
     public class CustomJsonUnMarshaller : AbstractJsonMarshaller
     {
+
         public override bool CanConvert(Type objectType)
         {
             return IsMapType(objectType);
         }
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new InvalidOperationException("This state should never be reached");   
+            throw new InvalidOperationException("This state should never be reached");
         }
     }
 }

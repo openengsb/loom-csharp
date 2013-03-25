@@ -28,10 +28,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.RemoteObjects
     public interface IMethodCall
     {
         #region Variables
+        
         /// <summary>
         /// Fully qualified class names of the arguments.
         /// </summary>
         IList<string> classes { get; set; }
+ 
         /// <summary>
         /// Name of the method to be called.
         /// </summary>

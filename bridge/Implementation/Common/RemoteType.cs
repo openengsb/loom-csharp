@@ -27,14 +27,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public class RemoteType
     {
         #region Propreties
+
         public String RemoteTypeFullName { get; set; }
+
         public String Name { get; set; }
+
         public String LocalTypeFullName { get; set; }
+
         #endregion
+
         #region Constructor
+
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
-            RemoteTypeFullName = typeString;            
+            RemoteTypeFullName = typeString;
             if (RemoteTypeFullName.Contains("$"))
             {
                 Name = RemoteTypeFullName.Split('$').Last().Trim();
@@ -46,8 +52,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 Name = LocalTypeFullName.Split('.').Last().Trim();
             }
         }
+
         #endregion
+
         #region Private Methods
+
         private void CreateFullName(String methodName, ParameterInfo[] parameterInfos)
         {
             if (parameterInfos != null)
@@ -91,6 +100,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             }
             return null;
         }
+
         #endregion
     }
 }

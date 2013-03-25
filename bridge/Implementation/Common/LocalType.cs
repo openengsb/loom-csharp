@@ -25,9 +25,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public class LocalType
     {
         #region Variables
+
         private Type type;
+
         #endregion
+
         #region Propreties
+
         public string RemoteTypeFullName
         {
             get
@@ -60,12 +64,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 return HelpMethods.CreateClassWithPackageName(type.FullName, type);
             }
         }
+
         #endregion
+
         #region Constructor
+
         public LocalType(Type type)
         {
             this.type = type;
         }
+
         #endregion
     }
 }

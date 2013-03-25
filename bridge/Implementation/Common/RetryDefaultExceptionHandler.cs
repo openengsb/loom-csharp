@@ -12,9 +12,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     /// </summary>
     public class RetryDefaultExceptionHandler : ABridgeExceptionHandling
     {
-        public RetryDefaultExceptionHandler()
-        {
-        }
+        public RetryDefaultExceptionHandler() { }
+
         /// <summary>
         /// Defines how the Bridge should be have. In this example, it checks if the mehtod should be exected again or
         /// if the Exception should be forwarded.
@@ -22,10 +21,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="exception">The exception, which has been thrown</param>
         /// <param name="obj">Parameters of the method</param>
         /// <returns></returns>
-        public override Object HandleException(Exception exception,params Object[] obj)
+        public override Object HandleException(Exception exception, params Object[] obj)
         {
             // Invokes the method that throws the exception, again.
-            return Invoke(obj);            
+            return Invoke(obj);
         }
     }
 }

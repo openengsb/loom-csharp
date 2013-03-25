@@ -12,7 +12,11 @@ namespace BridgeTests.TestExceptionHandlers
     [ExcludeFromCodeCoverageAttribute()]
     public class TestCustomExceptionHandler : ABridgeExceptionHandling
     {
+        /// <summary>
+        /// Used for to know the test execution (test cases)
+        /// </summary>
         public static int executions = 0;
+
         /// <summary>
         /// Directly forwards the exception to user user of the .Net Bridge
         /// </summary>

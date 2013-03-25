@@ -21,6 +21,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.String");
         }
+
         [TestMethod]
         public void TestIfRemoteIntIsInJavaValid()
         {
@@ -28,6 +29,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Integer");
         }
+
         [TestMethod]
         public void TestIfRemoteDoubleIsInJavaValid()
         {
@@ -35,6 +37,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Double");
         }
+
         [TestMethod]
         public void TestIfRemoteFloatIsInJavaValid()
         {
@@ -42,6 +45,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Float");
         }
+
         [TestMethod]
         public void TestIfRemoteAliveStatIsInJavaValid()
         {
@@ -49,6 +53,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.openengsb.core.api.AliveState");
         }
+
         [TestMethod]
         public void TestIfRemoteDictionaryIsInJavaValid()
         {
@@ -56,6 +61,7 @@ namespace BridgeTests
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.util.Map");
         }
+
         [TestMethod]
         public void TestIfRemoteFromAnnotiationInAMethodIsInJavaValid()
         {
@@ -65,6 +71,7 @@ namespace BridgeTests
         }
     }
 }
+
 namespace LocalTypeTestClass
 {
     [XmlTypeAttribute(Namespace = "http://example.domain.test.org")]

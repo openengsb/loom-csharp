@@ -21,6 +21,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// </summary>
     public interface IPort
     {
+
         //Close the corresponding Port
         void Close();
     }

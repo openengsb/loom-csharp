@@ -25,12 +25,14 @@ namespace BridgeTests
         {
             exceptionhandler = new RetryDefaultExceptionHandler();
         }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestAbstractExceptionHandlerWithInvalidParametersThatAreAllNull()
         {
             exceptionhandler.HandleException(nullException, nullObject);
         }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestAbstractExceptionHandlerWithInvalidParametersThatAreAllNullWithStopVariableTrue()
@@ -39,6 +41,7 @@ namespace BridgeTests
 
             exceptionhandler.HandleException(nullException, nullObject);
         }
+
         [TestMethod]
         ///The Method that will be invoked is indicated in Changed
         public void TestAbstractExceptionHandlerWithValidParametersWhereTheMethodEventReturnsTrue()

@@ -80,7 +80,6 @@ namespace ServiceTestConsole
             factory.StopConnection(ConnectorId);
         }
 
-
         private static ModelToViewsTuple[] initModelViewRelation()
         {
             ModelToViewsTuple[] modelsToViews = new ModelToViewsTuple[1];

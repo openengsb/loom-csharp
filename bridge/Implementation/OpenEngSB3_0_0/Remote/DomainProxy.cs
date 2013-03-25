@@ -30,22 +30,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
     /// </summary>
-    /// <typeparam name="T">Type to proxy.</typeparam>
-    public class DomainProxy<T> : Domain<T>
+    /// <typeparam name="ProxyTyp">Typ to proxy.</typeparam>
+    public class DomainProxy<ProxyTyp> : Domain<ProxyTyp>
     {
         #region Constructors
+
         public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
             : base(host, connectorId, domainName, exceptionhandler)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
+
         public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
             : base(host, connectorId, domainName, exceptionhandler, username, password)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
+
         #endregion
+
         #region Public Methods
+
         /// <summary>
         /// Will be invoked when a call to the proxy has been made.
         /// </summary>
@@ -63,8 +68,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             MethodResultMessage methodReturn = Marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.result, callMessage);
         }
+
         #endregion
+
         #region Private methods
+
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.
         /// </summary>
@@ -99,6 +107,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             MethodCallMessage message = MethodCallMessage.createInstance(Username, authentification, call, id.ToString(), true, "");
             return message;
         }
+
         #endregion
     }
 }

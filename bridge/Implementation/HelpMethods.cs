@@ -36,7 +36,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public static class HelpMethods
     {
-        public static IMarshaller marshaller = new JsonMarshaller();
+
         /// <summary>
         /// Implemnents the OpenEngSBModel type to a sepcified type
         /// </summary>
@@ -44,7 +44,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Type:OpenEngSBModel</returns>
         public static Type ImplementTypeDynamicly(Type extendType)
         {
-            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive|| extendType.Name.ToUpper().Equals("STRING"))
+            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive || extendType.Name.ToUpper().Equals("STRING"))
             {
                 return extendType;
             }
@@ -58,6 +58,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Type type = typeBuilder.CreateType();
             return type;
         }
+
         /// <summary>
         /// Generate the set and get
         /// </summary>
@@ -90,6 +91,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 }
             }
         }
+
         /// <summary>
         /// Takes a Namespace as input, reverse the elements and returns the package structure from java
         /// </summary>
@@ -139,6 +141,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 return result + "." + classname;
             }
         }
+
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
         /// </summary>
@@ -167,6 +170,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             throw new BridgeException(exceptionMessage);
         }
+
         /// <summary>
         /// Searches for Packagenames in the SOAP attributes
         /// </summary>
@@ -181,6 +185,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
+
         /// <summary>
         /// Makes the first character to a upper character
         /// </summary>
@@ -197,6 +202,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             String tmp = element.Substring(1);
             return first + tmp;
         }
+
         /// <summary>
         /// Add true objects for the Specified fields
         /// </summary>
@@ -281,6 +287,5 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
-
     }
 }

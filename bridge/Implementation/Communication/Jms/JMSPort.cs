@@ -33,12 +33,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     public abstract class JmsPort
     {
         #region Variables
+
         /// <summary>
         /// ActiveMQ NMS
         /// </summary>
         private static IDictionary<String, IDictionary<String, IConnection>> connections = new Dictionary<String, IDictionary<String, IConnection>>();
+
         protected IConnectionFactory Factory;
+
         protected String ConnectorId;
+
         protected ISession Session
         {
             get
@@ -46,6 +50,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 return connections[ConnectorId][stringDestination].CreateSession();
             }
         }
+
         protected IDestination Destination
         {
             get
@@ -54,10 +59,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 return Session.GetDestination(dest.Queue);
             }
         }
+
         private string stringDestination;
+
         protected ABridgeExceptionHandling Handling;
+
         #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -70,8 +80,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             this.Handling = handling;
             Configure();
         }
+
         #endregion
+
         #region Private Methods
+
         /// <summary>
         /// Configurate the Connection
         /// </summary>
@@ -114,8 +127,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 Handling.HandleException(ex);
             }
         }
+
         #endregion
+
         #region Protected Methods
+
         /// <summary>
         /// Close the connection
         /// </summary>
@@ -128,6 +144,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
                 connections[ConnectorId].Remove(stringDestination);
             }
         }
+
         /// <summary>
         /// Close the remaining connections
         /// </summary>
@@ -140,6 +157,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             }
             connections[connectorId].Clear();
         }
+
         #endregion
     }
 }
