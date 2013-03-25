@@ -25,7 +25,7 @@ namespace BridgeTests
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
         }
         [TestMethod]
-        public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
+        public void TestCreateRegisterConnecttoxlinkDisconnectfromXlinkUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly()
         {
             uuid = factory.RegisterConnector(null, domainName);
 

@@ -27,7 +27,7 @@ namespace BridgeTests
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
         }
         [TestMethod]
-        public void TestCreateDeleteConnector()
+        public void TestCreateDeleteConnectorAndNoRegistrationWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
 
@@ -37,7 +37,7 @@ namespace BridgeTests
             factory.DeleteDomainService(uuid);
         }
         [TestMethod]
-        public void TestCreateDeleteConnectorWithUsernameAndPassword()
+        public void TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectlyUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
 
@@ -47,7 +47,7 @@ namespace BridgeTests
             factory.DeleteDomainService(uuid);
         }
         [TestMethod]
-        public void TestCreateRegisterUnregisterDeleteConnector()
+        public void TestCreateRegisterUnregisterDeleteConnectorWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
@@ -66,42 +66,21 @@ namespace BridgeTests
         }
 
         [TestMethod]
-        public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
+        public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.RegisterConnector(null, domainName);
-
-            Assert.IsTrue(factory.Registered(uuid));
-            Assert.IsFalse(factory.Registered("WRONG ID"));
-            Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
-
             factory.UnRegisterConnector(uuid);
-
-            Assert.IsFalse(factory.Registered(uuid));
-
             factory.DeleteDomainService(uuid);
-
-            Assert.IsFalse(factory.Registered(uuid));
         }
         [TestMethod]
-        public void TestCreateRegisterEventHandlerUnregisterDelete()
+        public void TestCreateRegisterEventHandlerUnregisterDeleteWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.RegisterConnector(nullString, domainName);
 
-            Assert.IsTrue(factory.Registered(uuid));
-            Assert.IsFalse(factory.Registered("WRONG ID"));
-            Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
-
             IExampleDomainEventsSoap11Binding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(uuid);
 
-            Assert.IsNotNull(exampleDomain);
-
             factory.UnRegisterConnector(uuid);
-
-            Assert.IsFalse(factory.Registered(uuid));
-
             factory.DeleteDomainService(uuid);
-
-            Assert.IsFalse(factory.Registered(uuid));
         }
         [TestCleanup]
         public void CleanUp()

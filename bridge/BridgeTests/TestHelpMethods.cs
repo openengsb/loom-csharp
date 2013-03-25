@@ -35,6 +35,7 @@ namespace BridgeTests
     [TestClass]
     public class TestHelpMethods
     {
+        private IMarshaller marshaller;
         public class Entry1
         {
             public Entry1() { }
@@ -57,41 +58,38 @@ namespace BridgeTests
             public Entry1[] value { get; set; }
         }
 
-        public class Entry2WithoutConstructor
+        [TestInitialize]
+        public void Initialize()
         {
-            public string key { get; set; }
-            public int value { get; set; }
+            marshaller = new JsonMarshaller();
         }
+
         [TestMethod]
-        public void TestMarshallingWithOpenEngSBModel()
+        public void TestExtendingTypeAtRunrimeAndAddOpenEngSBModelEntries()
         {
-            IMarshaller marshaller = new JsonMarshaller();
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
             Object entryObject = Activator.CreateInstance(type);
-
-            Assert.IsTrue(entryObject is Entry1);
-            Assert.IsTrue(entryObject is OpenEngSBModel);
-
             Entry1 entry = (Entry1)entryObject;
             entry.key = "test";
             entry.value = 1;
-
-            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
             List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
             OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
             osbEntry.key = "key";
             osbEntry.type = "type";
             osbEntry.value = "value";
             elements.Add(osbEntry);
+
+
+            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
             entryOpenEngSB.openEngSBModelTail = elements;
 
             String objString = marshaller.MarshallObject(entry);
-
-            Assert.IsTrue(objString.ToUpper().Contains("OPENENGSBMODELTAIL"));
-
             OpenEngSBModel objUnmarshalled = (OpenEngSBModel)marshaller.UnmarshallObject(objString, type);
             Entry1 entryUnmarshalled = (Entry1)objUnmarshalled;
 
+            Assert.IsTrue(objString.ToUpper().Contains("OPENENGSBMODELTAIL"));
+            Assert.IsTrue(entryObject is Entry1);
+            Assert.IsTrue(entryObject is OpenEngSBModel);
             Assert.AreEqual(elements.Count, objUnmarshalled.openEngSBModelTail.Count);
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].key, osbEntry.key);
             Assert.AreEqual(objUnmarshalled.openEngSBModelTail[0].type, osbEntry.type);
@@ -101,7 +99,7 @@ namespace BridgeTests
 
         }
         [TestMethod]
-        public void TestAddOpenEngSBToType()
+        public void TestExtendMethodThatAddsOpenEngSBModel()
         {
             Entry1 testentry = new Entry1();
             testentry.key = "Test";
@@ -126,74 +124,24 @@ namespace BridgeTests
         }
 
         [TestMethod]
-        public void TestAddType()
-        {
-            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
-            Object entryObject = Activator.CreateInstance(type);
-            Assert.IsTrue(entryObject is OpenEngSBModel);
-            Assert.IsTrue(entryObject is Entry1);
-            Entry1 entry = (Entry1)entryObject;
-            entry.key = "test";
-            entry.value = 1;
-
-            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
-            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
-            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
-            osbEntry.key = "key";
-            osbEntry.type = "type";
-            osbEntry.value = "value";
-            elements.Add(osbEntry);
-            entryOpenEngSB.openEngSBModelTail = elements;
-
-            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
-            Assert.AreEqual(elements[0].key, osbEntry.key);
-            Assert.AreEqual(elements[0].type, osbEntry.type);
-            Assert.AreEqual(elements[0].value, osbEntry.value);
-        }
-        [TestMethod]
-        public void TestAddTypeOfTypeObject()
+        public void TestImplementOpenEngSBModelAtRuntimeIsCorrect()
         {
             Type type = HelpMethods.ImplementTypeDynamicly(typeof(Object));
-            
+
             Object entryObject = Activator.CreateInstance(type);
 
             Assert.IsFalse(entryObject is OpenEngSBModel);
         }
         [TestMethod]
-        public void TestAddTypeWithoutConstructor()
-        {
-            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry2WithoutConstructor));
-            Object entryObject = Activator.CreateInstance(type);
-            
-            Assert.IsTrue(entryObject is Entry2WithoutConstructor);
-            Assert.IsTrue(entryObject is OpenEngSBModel);
-
-            Entry2WithoutConstructor entry = (Entry2WithoutConstructor)entryObject;
-            entry.key = "test";
-            entry.value = 1;
-            OpenEngSBModel entryOpenEngSB = (OpenEngSBModel)entry;
-            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
-            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
-            osbEntry.key = "key";
-            osbEntry.type = "type";
-            osbEntry.value = "value";
-            elements.Add(osbEntry);
-            entryOpenEngSB.openEngSBModelTail = elements;
-
-            Assert.AreEqual(elements, entryOpenEngSB.openEngSBModelTail);
-            Assert.AreEqual(elements[0].key, osbEntry.key);
-            Assert.AreEqual(elements[0].type, osbEntry.type);
-            Assert.AreEqual(elements[0].value, osbEntry.value);
-        }
-        [TestMethod]
-        public void TestMapToEntr1()
+        ///Map = EntryX[]
+        public void TestConvertingDictionaryToMap()
         {
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            
+
             Entry1[] result = (Entry1[])ExtendMethods.ConvertMap(Test, typeof(Entry1));
-            
+
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -201,15 +149,16 @@ namespace BridgeTests
             }
         }
         [TestMethod]
-        public void TestEntri1toMap()
+        ///Map = EntryX[]
+        public void TestConvertingMapToDictionary()
         {
             Entry1[] Test = new Entry1[] { 
                 new Entry1() { key = "1", value = 11 },
                 new Entry1() { key = "21", value = 21 } 
             };
-            
+
             IDictionary<String, int> result = ExtendMethods.ConvertMap<String, int>(Test);
-            
+
             foreach (Entry1 e1 in Test)
             {
                 Assert.IsTrue(result.ContainsKey(e1.key));
@@ -217,7 +166,7 @@ namespace BridgeTests
             }
         }
         [TestMethod]
-        public void TestEntri1toMap_extended_Method()
+        public void TestConvertingMapToDictionaryWithExtendedMethod()
         {
             Entry1[] Test = new Entry1[] { 
                 new Entry1() { key = "1", value = 11 },
@@ -231,13 +180,14 @@ namespace BridgeTests
             }
         }
         [TestMethod]
-        public void TestConvertDictionaryToEntry1()
+        public void TestConvertIDictionaryToMap()
         {
             IDictionary result = new Dictionary<String, int>();
             result.Add("Test", 123);
             Entry1[] arrays = (Entry1[])result.ConvertMap(typeof(Entry1[]));
         }
         [TestMethod]
+        ///Convert between OOSourceCodeDomain.XLinkConnectorView and OpenEngSBCore.XLinkConnectorView
         public void TestConvertXLinkConnectorViewTypesFromDiffrentDlls()
         {
             OOSourceCodeDomain.XLinkConnectorView oosxlink = new OOSourceCodeDomain.XLinkConnectorView();
@@ -269,7 +219,7 @@ namespace BridgeTests
         [TestMethod]
         public void TestConvertDictionaryToEntry1WithParameterTypeWrong()
         {
-            //TODO
+            //Todo: OPENENGSB-3574 - Change ConvertMap so that It supports all types not only arrays
             IDictionary result = new Dictionary<String, String>();
             Entry1[] entry = new Entry1[] { new Entry1() { key = "Test", value = 123 } };
             result.Add("123", new JsonMarshaller().MarshallObject(entry));
@@ -286,20 +236,20 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestIDictionaryConvertTo()
+        public void TestInvalidConvertMapWhereMapIsAStringAndNotAnEntryX()
         {
             String test = "Error";
             test.ConvertMap<String, String>();
         }
         [TestMethod]
-        public void TestMapToEntr1_genericType()
+        public void TestConvertingDictionaryToEntry1WhereOneElementIsSet()
         {
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
-            
+
             Entry1[] result = ExtendMethods.ConvertMap<Entry1>(Test);
-            
+
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -307,14 +257,14 @@ namespace BridgeTests
             }
         }
         [TestMethod]
-        public void TestMapToEntr1_extendeMethod_with_typeParameter()
+        public void TestConvertingWithExtendedMethodDictionaryToEntry1WhereTheReturnTypeIsIndicatedAsType()
         {
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
             Test.Add("21", 111);
 
             Entry1[] result = (Entry1[])Test.ConvertMap(typeof(Entry1));
-            
+
             foreach (Entry1 e1 in result)
             {
                 Assert.IsTrue(Test.ContainsKey(e1.key));
@@ -323,13 +273,13 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestConvertMapWithWrongParameters()
+        public void TestConvertMapWithWrongStringObject()
         {
             String noDictionary = "Empty";
             Object result = noDictionary.ConvertMap();
         }
         [TestMethod]
-        public void TestMapToEntr1_extendeMethod_with_genericType()
+        public void TestConvertingWithExtendedMethodDictionaryToEntry1()
         {
             Dictionary<Object, Object> Test = new Dictionary<Object, Object>();
             Test.Add("1", 11);
@@ -342,7 +292,7 @@ namespace BridgeTests
             }
         }
         [TestMethod]
-        public void TestReverseURL()
+        public void TestIfUrlsAreCorrectlyReverted()
         {
             Assert.AreEqual(HelpMethods.ReverseURL("http://example.domain.openengsb.org"), "org.openengsb.domain.example");
             Assert.AreEqual(HelpMethods.ReverseURL("http://example.domain.openengsb.org/"), "org.openengsb.domain.example");
@@ -350,7 +300,8 @@ namespace BridgeTests
             Assert.AreEqual(HelpMethods.ReverseURL("example.domain.openengsb.org/"), "org.openengsb.domain.example");
         }
         [TestMethod]
-        public void TestAddTrueForSpecified1()
+        ///A specified field is a field that is created from wsdl.exe to indicated if a primitiv type like boolean is set or not
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereSpecifiedIsDfinedAsParameters()
         {
             IList<Object> elements = new List<Object>();
             elements.Add("test");
@@ -362,36 +313,29 @@ namespace BridgeTests
             Assert.AreEqual<Boolean>((bool)elements[1], true);
         }
         [TestMethod]
-        public void TestAddTrueForSpecifiedWithParameterInfo1()
+        public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParameters()
         {
-            List<ParameterInfo> elements = new List<ParameterInfo>();
             TestClass testClass = new TestClass();
             ParameterInfo[] tmp = testClass.GetType().GetMethod("hasSpecified").GetParameters();
-            foreach (ParameterInfo pi in tmp)
-            {
-                elements.Add(pi);
-            }
+            List<ParameterInfo> elements = new List<ParameterInfo>(tmp);
+
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
 
-            Assert.AreEqual<int>(elements.Count ,1);
+            Assert.AreEqual<int>(elements.Count, 1);
             Assert.IsTrue(elements[0] is object);
         }
         [TestMethod]
-        public void TestAddTrueForSpecifiedWithParameterInfoNotBoolean()
+        public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParametersWhereNoSpecifiedIsDefined()
         {
-            List<ParameterInfo> elements = new List<ParameterInfo>();
             TestClass testClass = new TestClass();
             ParameterInfo[] tmp = testClass.GetType().GetMethod("hasNoSpecified").GetParameters();
-            foreach (ParameterInfo pi in tmp)
-            {
-                elements.Add(pi);
-            }
+            List<ParameterInfo> elements = new List<ParameterInfo>(tmp);
 
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
-            Assert.AreEqual<int>(elements.Count , 2);
+            Assert.AreEqual<int>(elements.Count, 2);
         }
         [TestMethod]
-        public void TestAddTrueForSpecified2()
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereStringSpecifiedIsDfinedAsParameters()
         {
             IList<Object> elements = new List<Object>();
             elements.Add("test");
@@ -400,10 +344,10 @@ namespace BridgeTests
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
 
             Assert.AreEqual<int>(elements.Count, 2);
-            Assert.AreEqual<String>(elements[1].ToString(),"test1");
+            Assert.AreEqual<String>(elements[1].ToString(), "test1");
         }
         [TestMethod]
-        public void TestAddTrueForSpecified3()
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereNoSpecifiedIsDfinedAsParameters()
         {
             IList<Object> elements = new List<Object>();
             elements.Add("test");
@@ -412,10 +356,10 @@ namespace BridgeTests
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
 
             Assert.AreEqual<int>(elements.Count, 2);
-            Assert.AreEqual<String>(elements[1].ToString(),"test1");
+            Assert.AreEqual<String>(elements[1].ToString(), "test1");
         }
         [TestMethod]
-        public void TestAddTrueForSpecified4()
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodHasOnlyOneParameterAsParameters()
         {
             IList<Object> elements = new List<Object>();
             elements.Add("test");
@@ -456,7 +400,7 @@ namespace BridgeTests
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
         [TestMethod]
-        public void TestTypesAreEqualWithMethodParameterAsObjactTypeAndNullable()
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodParamertsAndTheListAreTheSame()
         {
             IList<string> parameters = new List<String>();
             parameters.Add("Integer");
@@ -466,7 +410,7 @@ namespace BridgeTests
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
         [TestMethod]
-        public void TestTypesAreNotEqualWithMethodParameterAsObjactTypeAndNullable()
+        public void TestAddTrueForSpecifiedFieldsWithAnObjectListWhereTheMethodParamertsAndTheListAreNotTheSame()
         {
             IList<string> parameters = new List<String>();
             parameters.Add("Integer");
@@ -476,41 +420,40 @@ namespace BridgeTests
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
         [TestMethod]
-        public void TestCreateClassWithPackageName()
+        public void TestGettingThePackagenameAndTheClassNameFromTheAnnotation()
         {
             Assert.AreEqual<String>(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
-        public void TestCreateClassWithPackageNameDoesNotExist()
+        public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhichHasNoAnnotation()
         {
             HelpMethods.CreateClassWithPackageName("hasNoSpecified", typeof(TestClass));
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
-        public void TestCreateClassWithPackageNameWithException()
+        public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhereTheMethodDoesNotExist()
         {
             HelpMethods.CreateClassWithPackageName("DoesNotExist", typeof(TestClass));
         }
         [TestMethod]
-        public void TestCreateClassArrayWithPackageName()
+        public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayType()
         {
             Assert.AreEqual(HelpMethods.CreateClassWithPackageName("OpenEngSBCore.ModelToViewsTuple[]", typeof(OpenEngSBCore.ModelToViewsTuple[])), "[Lorg.openengsb.core.api.xlink.model.ModelToViewsTuple;");
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
-        public void TestCreateClassArrayWithPackageNameException()
+        public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayTypeWhereTheBridgeTestClassIsNotInTheAssembly()
         {
             HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(BridgeTests.TestClass[]));
         }
         [TestMethod]
-        public void TestFirstLetterToUpper()
+        public void TestFirstLetterToUpperWorksCorrectly()
         {
             Assert.AreEqual<String>(HelpMethods.FirstLetterToUpper("test"), "Test");
             Assert.AreEqual<String>(HelpMethods.FirstLetterToUpper("t"), "T");
             Assert.AreEqual<String>(HelpMethods.FirstLetterToUpper(""), "");
         }
-
     }
     [ExcludeFromCodeCoverageAttribute()]
     public class TestClass

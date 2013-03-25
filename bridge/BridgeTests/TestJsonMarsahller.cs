@@ -58,13 +58,13 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestInvalidSerialisation()
+        public void TestInvalidSerialisationWithTheCustomJsonUnMarshallerAsCusomMarshaller()
         {
             JsonConvert.SerializeObject(new Entry1(), new CustomJsonUnMarshaller());
         }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestInvalidUnserialisation()
+        public void TestInvalidDeserialisationWithTheCustomJsonMarshallerAsCusomMarshaller()
         {
             Entry1[] entry1 = new Entry1[1];
             entry1[0] = new Entry1();
@@ -77,7 +77,8 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(JsonSerializationException))]
-        public void TestInvalidUnserialisationArray()
+        ///This method fails because of Entr1[]!=TestClass
+        public void TestInvalidUnserialisationOfAnArrayByIndicatingTheWrongGenericTyp()
         {
             TestClass[] entry1 = new TestClass[1];
             entry1[0] = new TestClass();
@@ -90,7 +91,7 @@ namespace BridgeTests
             JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonUnMarshaller());
         }
         [TestMethod]
-        public void TestConvertListToArray()
+        public void TestIfMarshallerConvertsBetweenTheSameTypeStructureOnlyArrayInsteadOfLists()
         {
             ListElement element = new ListElement();
             element.stringelements = new List<string>() { "Test", "Test1" };
@@ -105,7 +106,7 @@ namespace BridgeTests
         }
 
         [TestMethod]
-        public void TestConvertArrayToList()
+        public void TestIfMarshallerConvertsBetweenTheSameTypeStructureOnlyListInsteadOfArray()
         {
             ArrayElement element = new ArrayElement();
             element.stringelements = new String[] { "Test", "Test1" };

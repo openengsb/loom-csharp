@@ -17,7 +17,7 @@ namespace BridgeTests
     public class TestRemoteRype
     {
         [TestMethod]
-        public void TestString()
+        public void TestIfRemoteTypeReturnstheCorrectJavaStringTypeWhenAskingTheLocalType()
         {
             ParameterInfo[] pr = typeof(RemoteTypeTestClass.TestClassLocalType).GetMethod("hasStringSpecified").GetParameters();
             RemoteType lt = new RemoteType("java.lang.String", pr);
@@ -25,7 +25,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(String).FullName);
         }
         [TestMethod]
-        public void TestInt()
+        public void TestIfRemoteTypeReturnstheCorrectJavaIntTypeWhenAskingTheLocalType()
         {
             ParameterInfo[] pr = typeof(RemoteTypeTestClass.TestClassLocalType).GetMethod("hasIntSpecified").GetParameters();
             RemoteType lt = new RemoteType("java.lang.Integer", pr);
@@ -33,7 +33,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(int).FullName);
         }
         [TestMethod]
-        public void TestDouble()
+        public void TestIfRemoteTypeReturnstheCorrectJavaDoubleTypeWhenAskingTheLocalType()
         {
             ParameterInfo[] pr = typeof(RemoteTypeTestClass.TestClassLocalType).GetMethod("hasDoubleSpecified").GetParameters();
             RemoteType lt = new RemoteType("java.lang.Double", pr);
@@ -41,7 +41,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(Double).FullName);
         }
         [TestMethod]
-        public void TestFloat()
+        public void TestIfRemoteTypeReturnstheCorrectJavaFloatTypeWhenAskingTheLocalType()
         {
             ParameterInfo[] pr = typeof(RemoteTypeTestClass.TestClassLocalType).GetMethod("hasFloatSpecified").GetParameters();
             RemoteType lt = new RemoteType("java.lang.Float", pr);
@@ -49,7 +49,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(float).FullName);
         }
         [TestMethod]
-        public void TestStringWithParameterInfoNull()
+        public void TestIfRemoteTypeReturnstheCorrectJavaStringTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("java.lang.String", pr);
@@ -57,7 +57,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(String).FullName);
         }
         [TestMethod]
-        public void TestIntWithParameterInfoNull()
+        public void TestIfRemoteTypeReturnstheCorrectJavaIntTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("java.lang.IntegerExtend", pr);
@@ -65,7 +65,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(int).FullName);
         }
         [TestMethod]
-        public void TestDoubleWithParameterInfoNull()
+        public void TestIfRemoteTypeReturnstheCorrectJavaDoubleTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("java.lang.DoubleExtend", pr);
@@ -73,7 +73,7 @@ namespace BridgeTests
             Assert.AreEqual<String>(lt.LocalTypeFullName, typeof(Double).FullName);
         }
         [TestMethod]
-        public void TestFloatWithParameterInfoNull()
+        public void TestIfRemoteTypeReturnstheCorrectJavaFloatTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresent()
         {
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("java.lang.FloatExtend", pr);
@@ -82,13 +82,13 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
-        public void TestUnknowType()
+        public void TestIfRemoteTypeReturnstheExceptionIfTheInputIsInvalid()
         {
             ParameterInfo[] pr = null;
             RemoteType lt = new RemoteType("WONG", pr);
         }
         [TestMethod]
-        public void TestDollarFormat()
+        public void TestIfRemoteTypeReturnstheCorrectJavaStringTypeWhenAskingTheLocalTypeAndNoParameterInfoArePresentAndTheInputContainsADollar()
         {
             RemoteType lt = new RemoteType("org.openengsb$String", null);
             

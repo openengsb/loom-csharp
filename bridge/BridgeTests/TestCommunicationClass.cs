@@ -30,41 +30,45 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestCommunicationClass
     {
-        private const String host = "http://test.at";
-        private const String queue = "TestCase1";
         private IMarshaller marshaller = new JsonMarshaller();
-
         [TestMethod]
-        public void TestDestinationNoException()
+        public void TestUnmarshallingWithGeneralTypeAndByIndicatingTypeAsParameterAreTheSame()
         {
-            Destination destination = new Destination(host + "?" + queue);
-
-            Assert.AreEqual<String>(host, destination.Host);
-            Assert.AreEqual<String>(queue, destination.Queue);
-            Assert.AreEqual<String>(host + "?" + queue, destination.FullDestination);
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void TestDestinationException()
-        {
-            Destination destination = new Destination(host + "!" + queue);
-        }
-        [TestMethod]
-        public void TestMarshallAndUnMarshallNoException()
-        {
-            BeanDescription bean = BeanDescription.createInstance("classname");
-            RemoteMethodCall remoteMC = RemoteMethodCall.CreateInstance("methodName", new List<Object>() { "Test1" }, new Dictionary<String, String>(), new List<String>() { "Classes" }, new List<String> { "Real" });
-            MethodCallMessage message = MethodCallMessage.createInstance("principal", bean, remoteMC, "123", false, "TestCase");
-            String result = marshaller.MarshallObject(message);
+            String result = getJsonExampleString();
             MethodCallMessage unmarshalledResult = (MethodCallMessage)marshaller.UnmarshallObject(result, typeof(MethodCallMessage));
             MethodCallMessage unmarshalledResultType = marshaller.UnmarshallObject<MethodCallMessage>(result);
 
-            Assert.AreNotEqual(unmarshalledResult, unmarshalledResultType);
+            Assert.AreEqual<Boolean>(unmarshalledResult.answer,unmarshalledResultType.answer);
+            Assert.AreEqual<String>(unmarshalledResult.callId, unmarshalledResultType.callId);
+            Assert.AreEqual<String>(unmarshalledResult.destination, unmarshalledResultType.destination);
+            Assert.AreEqual(unmarshalledResult.methodCall.args.Count, unmarshalledResultType.methodCall.args.Count);
+            Assert.AreEqual(unmarshalledResult.methodCall.classes.Count, unmarshalledResultType.methodCall.classes.Count);
+            Assert.AreEqual(unmarshalledResult.methodCall.metaData.Count, unmarshalledResultType.methodCall.metaData.Count);
+            Assert.AreEqual(unmarshalledResult.methodCall.methodName, unmarshalledResultType.methodCall.methodName);
+            Assert.AreEqual(unmarshalledResult.methodCall.realClassImplementation.Count,
+                unmarshalledResultType.methodCall.realClassImplementation.Count);
+            Assert.AreEqual(unmarshalledResult.credentials.binaryData.Count, unmarshalledResultType.credentials.binaryData.Count);
+            Assert.AreEqual(unmarshalledResult.credentials.className, unmarshalledResultType.credentials.className);
+            Assert.AreEqual(unmarshalledResult.credentials.data.Count, unmarshalledResultType.credentials.data.Count);
+            Assert.AreEqual<String>(unmarshalledResult.principal, unmarshalledResultType.principal);
+            Assert.AreEqual<long>(unmarshalledResult.timestamp, unmarshalledResultType.timestamp);
+        }
+        [TestMethod]
+        public void TestMarshallerCreatesCorrectOutput()
+        {
+            String result=getJsonExampleString();
             Assert.IsTrue(result.Contains("[\"Real\"]"));
             Assert.IsTrue(result.Contains("[\"Classes\"]"));
             Assert.IsTrue(result.Contains("methodName"));
             Assert.IsTrue(result.Contains("TestCase"));
             Assert.IsTrue(result.Contains("\"callId\":\"123\""));
+        }
+        private string getJsonExampleString()
+        {
+            BeanDescription bean = BeanDescription.createInstance("classname");
+            RemoteMethodCall remoteMC = RemoteMethodCall.CreateInstance("methodName", new List<Object>() { "Test1" }, new Dictionary<String, String>(), new List<String>() { "Classes" }, new List<String> { "Real" });
+            MethodCallMessage message = MethodCallMessage.createInstance("principal", bean, remoteMC, "123", false, "TestCase");
+            return marshaller.MarshallObject(message);
         }
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]

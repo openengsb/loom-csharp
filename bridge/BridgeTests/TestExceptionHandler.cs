@@ -19,14 +19,14 @@ namespace BridgeTests
         private const String nullString = null;
         [TestMethod]
         [ExpectedException(typeof(UriFormatException))]
-        public void TestForwardExceptionHandler()
+        public void TestForwardExceptionHandlerForwardsTheException()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, nullString, new ExampleDomainConnector(), new ForwardDefaultExceptionHandler());
             factory.CreateDomainService(domainName);
         }
         [Ignore]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestRetryExceptionHandler()
+        public void TestRetryExceptionHandlerRetiesTheMethod()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, "FooBar", new ExampleDomainConnector(), new RetryDefaultExceptionHandler());
             //Visual Studio unit tests does not work, when a threads are used.

@@ -27,20 +27,21 @@ namespace BridgeTests
         }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestAbstractExceptionHandler()
+        public void TestAbstractExceptionHandlerWithInvalidParametersThatAreAllNull()
         {
             exceptionhandler.HandleException(nullException, nullObject);
         }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestAbstractExceptionHandlerWithStop()
+        public void TestAbstractExceptionHandlerWithInvalidParametersThatAreAllNullWithStopVariableTrue()
         {
             exceptionhandler.Stop = true;
 
             exceptionhandler.HandleException(nullException, nullObject);
         }
         [TestMethod]
-        public void TestAbstractExceptionHandlerWithInvokeMethod()
+        ///The Method that will be invoked is indicated in Changed
+        public void TestAbstractExceptionHandlerWithValidParametersWhereTheMethodEventReturnsTrue()
         {
             exceptionhandler.Changed += delegate(object[] obj)
             {

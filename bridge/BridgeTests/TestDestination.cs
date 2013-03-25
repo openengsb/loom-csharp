@@ -11,8 +11,20 @@ namespace BridgeTests
     public class TestDestination
     {
         private const String url = "localhost:8888";
+        private const String host = "http://test.at";
+        private const String queue = "TestCase1";
+
         [TestMethod]
-        public void TestDestinationWithoutQueue()
+        public void TestDestinationTypeHostAndQueueAreRecognizedCorrectly()
+        {
+            Destination destination = new Destination(host + "?" + queue);
+
+            Assert.AreEqual<String>(host, destination.Host);
+            Assert.AreEqual<String>(queue, destination.Queue);
+            Assert.AreEqual<String>(host + "?" + queue, destination.FullDestination);
+        }
+        [TestMethod]
+        public void TestDestinationTypeWhereNoQueueIsIndicated()
         {
             Destination destination = new Destination(url + "?");
 
@@ -21,25 +33,20 @@ namespace BridgeTests
             Assert.AreEqual<String>(destination.FullDestination, url);
         }
         [TestMethod]
-        public void TestDestinationWithHostAndQueueSet()
+        [ExpectedException(typeof(ApplicationException))]
+        public void TestInvalidSignBetweenUrlAndParameter()
         {
-            String parameter = "Test";
-            String urlParameter = url + "?" + parameter;
-            Destination destination = new Destination(urlParameter);
-
-            Assert.AreEqual<String>(destination.Host, url);
-            Assert.AreEqual<String>(destination.Queue, parameter);
-            Assert.AreEqual<String>(destination.FullDestination, urlParameter);
+            Destination destination = new Destination(host + "!" + queue);
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void TestInvalidAdresse1()
+        public void TestDestinationWhitInvalidParametInTheUrl()
         {
             Destination destination = new Destination(url + "?Test?Test");
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void TestInvalidAdresse2()
+        public void TestDestinationTypeWhereNoQuestionMarkIsIndicated()
         {
             Destination destination = new Destination(url);
         }

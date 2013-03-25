@@ -12,7 +12,7 @@ namespace BridgeTests
     public class TestCloseAndRegisterConnector
     {
         [TestMethod]
-        public void TestRegisterFunktionInvocation()
+        public void TestIfTheDefaultValuesInRegisterFuntionIsCorrect()
         {
             ExampleDomainConnector connector = new ExampleDomainConnector();
             connector.SetDomainId("TestCase");

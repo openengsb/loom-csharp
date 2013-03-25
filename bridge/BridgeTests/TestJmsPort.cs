@@ -29,7 +29,7 @@ namespace BridgeTests
             tmpGuid = Guid.NewGuid();
         }
         [TestMethod]
-        public void TestJmsIncomingPortExceptionHandler()
+        public void TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithIcomingPort()
         {
             string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
 
@@ -39,13 +39,15 @@ namespace BridgeTests
             Assert.AreEqual<String>(inPort.Receive(), "TestCase");
         }
         [TestMethod]
-        public void TestJmsOutgoingPortExceptionHandler()
+        public void TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithOutgoingPort()
         {
             string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
 
             IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error");
+
+            Assert.AreEqual<int>(TestCustomExceptionHandler.executions, 2);
         }
         [TestMethod]
         public void TestJmsOutgoingPortWithQueueNameExceptionHandler()
@@ -56,10 +58,12 @@ namespace BridgeTests
             IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error", "NotExist");
+
+            Assert.AreEqual<int>(TestCustomExceptionHandler.executions, 2);
         }
         [TestMethod]
         [ExpectedException(typeof(KeyNotFoundException))]
-        public void TestJmsPortWithWrongUrl()
+        public void TestJmsPortWithWrongUrlParameter()
         {
             string destination = "Wrong?" + tmpGuid.ToString();
             //The exceptHandler returns null and so the is connector is not stored.
