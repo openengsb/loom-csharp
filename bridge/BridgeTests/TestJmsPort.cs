@@ -18,27 +18,29 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestJmsPort
     {
+        private const String tcpUrlOpenEngSB = "tcp://localhost.:6549?";
+        private Guid tmpGuid;
+        private const String connectorId = "TestCase";
 
         [TestInitialize]
         public void Initialise()
         {
             TestCustomExceptionHandler.executions = 0;
+            tmpGuid = Guid.NewGuid();
         }
         [TestMethod]
         public void TestJmsIncomingPortExceptionHandler()
         {
-            Guid tmpGuid = Guid.NewGuid();
-            string destination = "tcp://localhost.:6549?" + tmpGuid.ToString();
-            IIncomingPort inPort = new JmsIncomingPort(destination, new TestCustomExceptionHandler(), "TestCase");
+            string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+            IIncomingPort inPort = new JmsIncomingPort(destination, new TestCustomExceptionHandler(), connectorId);
             inPort.Close();
             Assert.AreEqual<String>(inPort.Receive(), "TestCase");
         }
         [TestMethod]
         public void TestJmsOutgoingPortExceptionHandler()
         {
-            Guid tmpGuid = Guid.NewGuid();
-            string destination = "tcp://localhost.:6549?" + tmpGuid.ToString();
-            IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), "TestCase");
+            string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+            IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error");
         }
@@ -46,8 +48,8 @@ namespace BridgeTests
         public void TestJmsOutgoingPortWithQueueNameExceptionHandler()
         {
             Guid tmpGuid = Guid.NewGuid();
-            string destination = "tcp://localhost.:6549?" + tmpGuid.ToString();
-            IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), "TestCase");
+            string destination = tcpUrlOpenEngSB + tmpGuid.ToString();
+            IOutgoingPort outPort = new JmsOutgoingPort(destination, new TestCustomExceptionHandler(), connectorId);
             outPort.Close();
             outPort.Send("Error", "NotExist");
         }
@@ -55,10 +57,9 @@ namespace BridgeTests
         [ExpectedException(typeof(KeyNotFoundException))]
         public void TestJmsPortWithWrongUrl()
         {
-            Guid tmpGuid = Guid.NewGuid();
             string destination = "Wrong?" + tmpGuid.ToString();
             //The exceptHandler returns null and so the is connector is not stored.
-            JmsPort outPort = new JmsIncomingPort(destination, new TestCustomExceptionHandler(), "TestCase");
+            JmsPort outPort = new JmsIncomingPort(destination, new TestCustomExceptionHandler(), connectorId);
         }
     }
 }

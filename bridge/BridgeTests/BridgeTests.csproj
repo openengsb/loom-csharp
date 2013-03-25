@@ -37,8 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomain">
-      <HintPath>..\..\..\loom-csharp-dll\ExampleDomain\target\ExampleDomain.dll</HintPath>
+    <Reference Include="ExampleDomain, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ExampleDomain.3.0.1.0-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

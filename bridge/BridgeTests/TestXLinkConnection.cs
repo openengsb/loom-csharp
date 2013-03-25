@@ -14,21 +14,19 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestXLinkConnection
     {
-        IDomainFactory factory;
-        String domainName;
-        String uuid;
-
+        private IDomainFactory factory;
+        private String uuid;
+        private const String domainName = "oosourcecode";
+        private const String destination = "tcp://localhost.:6549";
         [TestInitialize]
         public void InitialiseFactory()
         {
-            string destination = "tcp://localhost.:6549";
             IOOSourceCodeDomainSoap11Binding exampleDomain = new OOSourceCodeDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
         }
         [TestMethod]
         public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
         {
-            domainName = "oosourcecode";
             uuid = factory.RegisterConnector(null, domainName);
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));

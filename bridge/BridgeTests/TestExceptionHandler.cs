@@ -14,21 +14,24 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestExceptionHandler
     {
+        private const String domainName = "example";
+        private const String version = "3.0.0";
+        private const String nullString = null;
         [TestMethod]
         [ExpectedException(typeof(UriFormatException))]
         public void TestForwardExceptionHandler()
         {
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", null, new ExampleDomainConnector(), new ForwardDefaultExceptionHandler());
-            factory.CreateDomainService("example");
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, nullString, new ExampleDomainConnector(), new ForwardDefaultExceptionHandler());
+            factory.CreateDomainService(domainName);
         }
         [Ignore]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestRetryExceptionHandler()
         {
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", "ASD", new ExampleDomainConnector(), new RetryDefaultExceptionHandler());
-            //VIsual Studio unit tests does not work, when a threads are used.
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, "FooBar", new ExampleDomainConnector(), new RetryDefaultExceptionHandler());
+            //Visual Studio unit tests does not work, when a threads are used.
             factory.StopAllConnections();
-            factory.CreateDomainService("example");
+            factory.CreateDomainService(domainName);
         }
     }
 }

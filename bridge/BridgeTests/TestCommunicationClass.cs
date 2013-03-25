@@ -30,13 +30,14 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestCommunicationClass
     {
-
+        private const String host = "http://test.at";
+        private const String queue = "TestCase1";
+        private const IMarshaller marshaller = new JsonMarshaller();
         [TestMethod]
         public void TestDestinationNoException()
         {
-            String host = "http://test.at";
-            String queue = "TestCase1";
             Destination destination = new Destination(host + "?" + queue);
+
             Assert.AreEqual(host, destination.Host);
             Assert.AreEqual(queue, destination.Queue);
             Assert.AreEqual(host + "?" + queue, destination.FullDestination);
@@ -45,20 +46,18 @@ namespace BridgeTests
         [ExpectedException(typeof(ApplicationException))]
         public void TestDestinationException()
         {
-            String host = "http://test.at";
-            String queue = "TestCase1";
             Destination destination = new Destination(host + "!" + queue);
         }
         [TestMethod]
         public void TestMarshallAndUnMarshallNoException()
         {
-            IMarshaller marshaller = new JsonMarshaller();
             BeanDescription bean = BeanDescription.createInstance("classname");
             RemoteMethodCall remoteMC = RemoteMethodCall.CreateInstance("methodName", new List<Object>() { "Test1" }, new Dictionary<String, String>(), new List<String>() { "Classes" }, new List<String> { "Real" });
             MethodCallMessage message = MethodCallMessage.createInstance("principal", bean, remoteMC, "123", false, "TestCase");
             String result = marshaller.MarshallObject(message);
             MethodCallMessage unmarshalledResult = (MethodCallMessage)marshaller.UnmarshallObject(result, typeof(MethodCallMessage));
             MethodCallMessage unmarshalledResultType = marshaller.UnmarshallObject<MethodCallMessage>(result);
+
             Assert.AreNotEqual(unmarshalledResult, unmarshalledResultType);
             Assert.IsTrue(result.Contains("[\"Real\"]"));
             Assert.IsTrue(result.Contains("[\"Classes\"]"));

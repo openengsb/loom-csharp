@@ -76,11 +76,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             return (Object[])elements;
         }
+        /// <summary>
+        /// Converts between two types
+        /// </summary>
+        /// <typeparam name="T">Resulting type</typeparam>
+        /// <param name="obj">object that will be converted</param>
+        /// <returns>Returns the new Object with Type T</returns>
         public static T ConvertOSBType<T>(this Object obj)
         {
             String tmp = marshaller.MarshallObject(obj);
             return marshaller.UnmarshallObject<T>(tmp);
         }
+        /// <summary>
+        /// Converts between two types
+        /// </summary>
+        /// <param name="obj">object that will be converted</param>
+        /// <param name="type">Resulting type</param>
+        /// <returns>Returns the new Object with Type T</returns>
         public static object ConvertOSBType(this Object obj, Type type)
         {
             String tmp = marshaller.MarshallObject(obj);
@@ -161,6 +173,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
             return result;
         }
+        /// <summary>
+        /// Add a OpenEngSBModel to an Object
+        /// </summary>
+        /// <typeparam name="T">The Type that gets exptendet with the OpenEngSBModel Interface</typeparam>
+        /// <param name="element">The object, which gets extended</param>
+        /// <param name="models">The OpenEngSBEntries</param>
+        /// <returns>The object with the OpenEngSBModel</returns>
         public static T AddOpenEngSBModel<T>(this T element, List<OpenEngSBModelEntry> models)
         {
             Type TOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(element.GetType());

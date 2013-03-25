@@ -59,5 +59,10 @@ namespace ServiceTestConsole
         {
             throw new NotImplementedException();
         }
+
+        public string doReturnMethod(string args0)
+        {
+            return args0;
+        }
     }
 }

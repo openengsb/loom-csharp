@@ -16,32 +16,37 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestDefaultEcxeptionHandler
     {
+        private const Exception nullException = null;
+        private const Object nullObject = null;
+        private ABridgeExceptionHandling exceptionhandler;
+        [TestInitialize]
+        public void Initialise()
+        {
+            exceptionhandler = new RetryDefaultExceptionHandler();
+        }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestAbstractExceptionHandler()
         {
-            ABridgeExceptionHandling exceptionhandler = new RetryDefaultExceptionHandler();
-            exceptionhandler.HandleException(null, null);
+            exceptionhandler.HandleException(nullException, nullObject);
         }
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestAbstractExceptionHandlerWithStop()
         {
-            ABridgeExceptionHandling exceptionhandler = new RetryDefaultExceptionHandler();
             exceptionhandler.Stop = true;
-            exceptionhandler.HandleException(null, null);
+            exceptionhandler.HandleException(nullException, nullObject);
         }
         [TestMethod]
         public void TestAbstractExceptionHandlerWithInvokeMethod()
         {
-            ABridgeExceptionHandling exceptionhandler = new RetryDefaultExceptionHandler();
             exceptionhandler.Changed += delegate(object[] obj)
             {
                 return true;
             };
-            Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException(), null));
-            Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException("Test"), null));
-            Assert.IsTrue((bool)exceptionhandler.HandleException(new BridgeException(), null));
+            Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException(), nullObject));
+            Assert.IsTrue((bool)exceptionhandler.HandleException(new OpenEngSBException("Test"), nullObject));
+            Assert.IsTrue((bool)exceptionhandler.HandleException(new BridgeException(), nullObject));
         }
     }
 }

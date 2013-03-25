@@ -35,7 +35,7 @@ namespace ServiceTestConsole
         {
             log4net.Config.BasicConfigurator.Configure();
             ILog logger;
-            Boolean xlink = true;
+            Boolean xlink = false;
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
             IDomainFactory factory;
@@ -46,13 +46,13 @@ namespace ServiceTestConsole
                 //if you are using xlink for the example, please use an other domain. Example domain is not linkable
                 domainName = "oosourcecode";
                 logger = LogManager.GetLogger(typeof(OOSourceCodeDomainConnector));
-                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
+                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, ooconnector, new RetryDefaultExceptionHandler());
             }
             else
             {
                 domainName = "example";
                 logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
-                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, ooconnector, new ForwardDefaultExceptionHandler());
+                factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
             }
 
             logger.Info("Start Example wit the domain " + domainName);

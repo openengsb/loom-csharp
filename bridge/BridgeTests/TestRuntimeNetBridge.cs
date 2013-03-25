@@ -13,20 +13,20 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestRuntimeNetBridge
     {
-        IDomainFactory factory;
-        String domainName;
-        String uuid;
+        private IDomainFactory factory;
+        private const string destination = "tcp://localhost.:6549";
+        private const String domainName = "example";
+        private String uuid;
         [TestInitialize]
         public void InitialiseFactory()
         {
-            string destination = "tcp://localhost.:6549";
+            
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
         }
         [TestMethod]
         public void TestCreateDeleteConnector()
         {
-            domainName = "example";
             uuid = factory.CreateDomainService(domainName);
             Assert.IsFalse(factory.Registered(uuid));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
@@ -35,7 +35,6 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateDeleteConnectorWithUsernameAndPassword()
         {
-            domainName = "example";
             uuid = factory.CreateDomainService(domainName);
             Assert.IsFalse(factory.Registered(uuid));
             Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(domainName + "+external-connector-proxy+" + uuid));
@@ -44,7 +43,6 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateRegisterUnregisterDeleteConnector()
         {
-            domainName = "example";
             uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
             Assert.IsTrue(factory.Registered(uuid));
@@ -58,7 +56,6 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateRegisterConnectXlinkDisconnectXlinkUnregisterDeleteConnector()
         {
-            domainName = "example";
             uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
             Assert.IsTrue(factory.Registered(uuid));
@@ -105,7 +102,6 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnector()
         {
-            domainName = "example";
             uuid = factory.RegisterConnector(null, domainName);
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
@@ -118,7 +114,6 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateRegisterEventHandlerInvokeUnregisterDelete()
         {
-            domainName = "example";
             uuid = factory.RegisterConnector(null, domainName);
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
@@ -145,11 +140,9 @@ namespace BridgeTests
         [TestMethod]
         public void TestCreateMoreConnectorAndStopAll()
         {
-            domainName = "example";
             String[] uuids = new String[10];
             for (int i = 0; i < uuids.Length; i++)
             {
-
                 uuid = factory.CreateDomainService(domainName);
                 uuids[i] = uuid;
                 Assert.IsFalse(factory.Registered(uuid));

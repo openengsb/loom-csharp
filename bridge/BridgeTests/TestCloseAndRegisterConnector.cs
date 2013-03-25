@@ -13,13 +13,14 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestRegisterConnectorWithHasBeenCreated
     {
+        private const String destination = "tcp://localhost.:6549";
+        private const String domainName = "example";
+        private const String version = "3.0.0";
         [TestMethod]
         public void TestCreateRegisterCloseRegister()
         {
-            string destination = "tcp://localhost.:6549";
-            String domainName = "example";
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new RetryDefaultExceptionHandler());
             String uuid = factory.CreateDomainService(domainName);
             factory.RegisterConnector(uuid, domainName);
             factory.StopConnection(uuid);
@@ -29,14 +30,11 @@ namespace BridgeTests
         [TestMethod]
         public void TestRegisterClose()
         {
-            string destination = "tcp://localhost.:6549";
-            String domainName = "example";
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
-            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new RetryDefaultExceptionHandler());
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new RetryDefaultExceptionHandler());
             String uuid = factory.RegisterConnector(Guid.NewGuid().ToString(), domainName);
             factory.StopConnection(uuid);
             factory.RegisterConnector(uuid, domainName);
         }
-
     }
 }

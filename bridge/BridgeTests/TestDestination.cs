@@ -10,33 +10,36 @@ namespace BridgeTests
     [ExcludeFromCodeCoverageAttribute()]
     public class TestDestination
     {
+        private const String url = "localhost:8888";
         [TestMethod]
         public void TestDestinationWithoutQueue()
         {
-            Destination destination = new Destination("localhost:8888?");
-            Assert.AreEqual<String>(destination.Host, "localhost:8888");
+            Destination destination = new Destination(url+"?");
+            Assert.AreEqual<String>(destination.Host, url);
             Assert.IsTrue(String.IsNullOrEmpty(destination.Queue));
-            Assert.AreEqual<String>(destination.FullDestination, "localhost:8888");
+            Assert.AreEqual<String>(destination.FullDestination, url);
         }
         [TestMethod]
         public void TestDestinationWithHostAndQueueSet()
         {
-            Destination destination = new Destination("localhost:8888?Test");
-            Assert.AreEqual<String>(destination.Host, "localhost:8888");
-            Assert.AreEqual<String>(destination.Queue, "Test");
-            Assert.AreEqual<String>(destination.FullDestination, "localhost:8888?Test");
+            String parameter = "Test";
+            String urlParameter = url + "?"+parameter;
+            Destination destination = new Destination(urlParameter);
+            Assert.AreEqual<String>(destination.Host, url);
+            Assert.AreEqual<String>(destination.Queue, parameter);
+            Assert.AreEqual<String>(destination.FullDestination, urlParameter);
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void TestInvalidAdresse1()
         {
-            Destination destination = new Destination("localhost:8888?Test?Test");
+            Destination destination = new Destination(url+"?Test?Test");
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void TestInvalidAdresse2()
         {
-            Destination destination = new Destination("localhost:8888");
+            Destination destination = new Destination(url);
         }
     }
 }
