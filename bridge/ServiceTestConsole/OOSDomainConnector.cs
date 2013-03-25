@@ -26,10 +26,10 @@ namespace ServiceTestConsole
     /// </summary>
     public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoap11Binding
     {
+
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
         public OOSourceCodeDomainConnector() : base(logger) { }
-
 
         public void updateClass(OOClass args0)
         {

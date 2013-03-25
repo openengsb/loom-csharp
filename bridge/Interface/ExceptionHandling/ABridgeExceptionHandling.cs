@@ -9,6 +9,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
 {
     public abstract class ABridgeExceptionHandling
     {
+        #region Propreties
+
         /// <summary>
         /// When the stop method has been invoked. The ExceptionHandler should stop.
         /// </summary>
@@ -17,13 +19,29 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
             get;
             set;
         }
+
         public ABridgeExceptionHandling()
         {
             Stop = false;
         }
-        public abstract Object HandleException(Exception exception,params object[] parameters);
+
+        #endregion
+
+        #region Abstract Methods
+
+        public abstract Object HandleException(Exception exception, params object[] parameters);
+
+        #endregion
+
+        #region Event And Delegat types
         public delegate Object ThrowExceptionMethod(params object[] obj);
+
         public event ThrowExceptionMethod Changed;
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Invokes the method, that triggered the exception again
         /// </summary>
@@ -33,7 +51,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
         {
             if (Stop)
             {
-                return null;
+                throw new InvalidOperationException("The Exceptionhandler has been stopped manually");
             }
             if (Changed == null)
             {
@@ -41,5 +59,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling
             }
             return Changed.Invoke(obj);
         }
+
+        #endregion
     }
 }

@@ -25,30 +25,44 @@ using Newtonsoft.Json;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
-    public abstract class AbstractJsonMarshaller : JsonConverter{
-       
-        protected static bool isMapType(Type objectType)
+    public abstract class AbstractJsonMarshaller : JsonConverter
+    {
+
+        /// <summary>
+        /// Checks if Type is Map (Dictaionary
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected static bool IsMapType(Type objectType)
         {
             return objectType.Name.ToUpper().StartsWith("ENTRY");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (isMapType(objectType))
+            IDictionary list = new Dictionary<Object, Object>();
+            try
             {
-
-                IDictionary list = new Dictionary<Object, Object>();
                 serializer.Populate(reader, list);
-                return list.ConvertMap(objectType);
             }
+            catch (JsonSerializationException jsonex)
+            {
+                if (!testIfNullValueProducesTheException(jsonex))
+                {
+                    throw jsonex;
+                }
+            }
+            return list.ConvertMap(objectType);
+        }
 
-            serializer.Populate(reader, existingValue);
-            return existingValue;
+        private static Boolean testIfNullValueProducesTheException(JsonSerializationException jsonex)
+        {
+            return jsonex.Message.ToUpper().Contains("NULL");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (isMapType(value.GetType()))
+            if (IsMapType(value.GetType()))
             {
                 Object tmp = value.ConvertMap();
                 serializer.Serialize(writer, tmp);
@@ -74,4 +88,3 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         }
     }
 }
-

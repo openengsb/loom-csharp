@@ -27,11 +27,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions
         /// Default constructor
         /// </summary>
         public OpenEngSBException() { }
+
         /// <summary>
         /// Consructor
         /// </summary>
         /// <param name="message">Exception message</param>
         public OpenEngSBException(string message) : base(message) { }
+
         /// <summary>
         /// Constructor
         /// </summary>

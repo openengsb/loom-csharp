@@ -23,12 +23,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public partial class RegistrationFunctions
     {
+
         private ILog Logger;
-        
+
+        public RegistrationFunctions()
+        {
+            this.Logger = LogManager.GetLogger(typeof(RegistrationFunctions));
+        }
+
         public RegistrationFunctions(ILog logger)
         {
             this.Logger = logger;
         }
+
         /// <summary>
         /// Part of the registration process
         /// </summary>
@@ -37,6 +44,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             Logger.Info("setDomainId:" + element);
         }
+
         /// <summary>
         /// Part of the registration process
         /// </summary>
@@ -45,6 +53,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             Logger.Info("setConnectorId:" + element);
         }
+
         /// <summary>
         /// Get invokes, when the OpenEngSB checks the connections
         /// </summary>
@@ -54,8 +63,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Logger.Info("GetAliveState called. Answering with ONLINE");
             return AliveState.ONLINE;
         }
-
-    
     }
 }
 

@@ -26,34 +26,28 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class BeanDescription
     {
         #region Variables
+
         public String className { get; set; }
         public IDictionary<String, String> data { get; set; }
-        public IDictionary<String, byte[]> binaryData { get; set; } 
+        public IDictionary<String, byte[]> binaryData { get; set; }
+
         #endregion
         #region Public static Methods
+
         /// <summary>
         /// Creates a new instance of the Authentification
         /// </summary>
         /// <param name="className">ClassName</param>
-        /// <param name="data">Data</param>
-        /// <param name="binaryData">Binary Data</param>
         /// <returns>A new instance of Authentification</returns>
-        public static BeanDescription createInstance(String className,  IDictionary<String,String> data,IDictionary<String,byte[]> binaryData)
-        {
-            BeanDescription instance = new BeanDescription();
-            instance.className = className;
-            instance.data = data;
-            instance.binaryData = binaryData;
-            return instance;
-        }
         public static BeanDescription createInstance(String className)
         {
             BeanDescription instance = new BeanDescription();
             instance.className = className;
-            instance.data = new Dictionary<String,String>();
-            instance.binaryData = new Dictionary<String,byte[]>();
+            instance.data = new Dictionary<String, String>();
+            instance.binaryData = new Dictionary<String, byte[]>();
             return instance;
-        }       
+        }
+
         #endregion
     }
 }

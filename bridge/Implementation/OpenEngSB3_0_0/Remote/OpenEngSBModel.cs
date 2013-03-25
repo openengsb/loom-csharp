@@ -11,6 +11,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// </summary>
     public interface OpenEngSBModel
     {
+
         List<OpenEngSBModelEntry> openEngSBModelTail { get; set; }
+    
     }
 }

@@ -1,4 +1,5 @@
-﻿/***
+﻿using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+/***
  * Licensed to the Austrian Association for Software Tool Integration (AASTI)
  * under one or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information regarding copyright
@@ -26,14 +27,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public class RemoteType
     {
         #region Propreties
+
         public String RemoteTypeFullName { get; set; }
+
         public String Name { get; set; }
+
         public String LocalTypeFullName { get; set; }
+
         #endregion
+
         #region Constructor
+
         public RemoteType(string typeString, ParameterInfo[] parameterInfos)
         {
-            RemoteTypeFullName = typeString;            
+            RemoteTypeFullName = typeString;
             if (RemoteTypeFullName.Contains("$"))
             {
                 Name = RemoteTypeFullName.Split('$').Last().Trim();
@@ -45,22 +52,31 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                 Name = LocalTypeFullName.Split('.').Last().Trim();
             }
         }
+
         #endregion
+
         #region Private Methods
-        private void CreateFullName(String methodName,ParameterInfo[] parameterInfos)
+
+        private void CreateFullName(String methodName, ParameterInfo[] parameterInfos)
         {
-            
-            foreach (ParameterInfo par in parameterInfos)
+            if (parameterInfos != null)
             {
-                if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
+                foreach (ParameterInfo par in parameterInfos)
                 {
-                    LocalTypeFullName = par.ParameterType.FullName;
+                    if (par.ParameterType.FullName.ToUpper().Contains(methodName.ToUpper()))
+                    {
+                        LocalTypeFullName = par.ParameterType.FullName;
+                        break;
+                    }
                 }
             }
-
             if (String.IsNullOrEmpty(LocalTypeFullName))
             {
                 LocalTypeFullName = CheckPrimitivType(methodName.Split('.').Last().Trim());
+            }
+            if (String.IsNullOrEmpty(LocalTypeFullName))
+            {
+                throw new BridgeException("The type from the OpenEngSB could not be converted");
             }
         }
 
@@ -82,8 +98,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 return typeof(double).ToString();
             }
-            return mehtodName;
+            return null;
         }
+
         #endregion
     }
 }

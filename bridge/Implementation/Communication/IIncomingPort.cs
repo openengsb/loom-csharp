@@ -21,6 +21,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// </summary>
     public interface IIncomingPort : IPort
     {
+
         /// <summary>
         /// Used to receive messages from a desination
         /// </summary>

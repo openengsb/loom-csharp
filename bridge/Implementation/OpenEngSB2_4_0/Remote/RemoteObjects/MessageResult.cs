@@ -16,8 +16,11 @@
  ***/
 
 
+using System.Diagnostics.CodeAnalysis;
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.RemoteObjects
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     /// <summary>
     /// Container for MessageResult
     /// </summary>

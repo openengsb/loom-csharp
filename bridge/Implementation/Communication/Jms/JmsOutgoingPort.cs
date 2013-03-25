@@ -27,21 +27,28 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     public class JmsOutgoingPort : JmsPort, IOutgoingPort
     {
         #region Variables
+
         private IMessageProducer producer;
+
         #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling)
-            : base(destination, handling)
+        public JmsOutgoingPort(string destination, ABridgeExceptionHandling handling, String connectorId)
+            : base(destination, handling, connectorId)
         {
             producer = Session.CreateProducer(this.Destination);
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
         }
+
         #endregion
+
         #region Public Methods
+
         /// <summary>
         /// Send a string over NMS.
         /// </summary>

@@ -23,15 +23,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions
     /// </summary>
     public class BridgeException : Exception
     {
+
         /// <summary>
         /// Default constructor
         /// </summary>
         public BridgeException() { }
+
         /// <summary>
         /// Consructor
         /// </summary>
         /// <param name="message">Exception message</param>
         public BridgeException(string message) : base(message) { }
+
         /// <summary>
         /// Constructor
         /// </summary>

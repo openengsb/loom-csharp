@@ -29,20 +29,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
     public class JmsIncomingPort : JmsPort, IIncomingPort
     {
         #region variables
+
         protected static ILog Logger = LogManager.GetLogger(typeof(JmsIncomingPort));
+
         private IMessageConsumer consumer;
+
         #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="destination">URL to OpenEngSB</param>
-        public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler)
-            : base(destination, exceptionhandler)
+        public JmsIncomingPort(string destination, ABridgeExceptionHandling exceptionhandler, String connectorId)
+            : base(destination, exceptionhandler, connectorId)
         {
             consumer = Session.CreateConsumer(this.Destination);
         }
+
         #endregion
+
         #region Public Methods
         /// <summary>
         /// Waits for a message on the preconfigured queue.
@@ -73,6 +80,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             Logger.DebugFormat("recieved message: {0}", message.Text);
             return message.Text;
         }
+
         /// <summary>
         /// Close the Connection
         /// </summary>
@@ -82,7 +90,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms
             consumer.Dispose();
             base.Close();
         }
-        #endregion
 
+        #endregion
     }
 }

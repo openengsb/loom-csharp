@@ -31,6 +31,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
         /// Fully qualified class names of the arguments.
         /// </summary>
         public IList<string> classes { get; set; }
+
         /// <summary>
         /// Name of the method to be called.
         /// </summary>
@@ -45,12 +46,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
         /// Metadata
         /// </summary>
         public IDictionary<string, string> metaData { get; set; }
+
         /// <summary>
         /// Include the packagestruktur on the java side
         /// </summary>
         public IList<string> realClassImplementation { get; set; }
+
         #endregion
+
         #region Public static Methods
+
         public static RemoteMethodCall CreateInstance(string methodName, IList<object> args, IDictionary<string, string> metaData, IList<string> classes, IList<String> realClassImplementation)
         {
             RemoteMethodCall call = new RemoteMethodCall();
@@ -61,6 +66,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             call.realClassImplementation = realClassImplementation;
             return call;
         }
+
         #endregion
     }
 }
