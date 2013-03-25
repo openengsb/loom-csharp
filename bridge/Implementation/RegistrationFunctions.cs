@@ -26,6 +26,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 
         private ILog Logger;
 
+        public RegistrationFunctions()
+        {
+            this.Logger = LogManager.GetLogger(typeof(RegistrationFunctions));
+        }
+
         public RegistrationFunctions(ILog logger)
         {
             this.Logger = logger;
