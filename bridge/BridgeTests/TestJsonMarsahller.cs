@@ -64,7 +64,7 @@ namespace BridgeTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestInvalidSerialisationWithTheCustomJsonUnMarshallerAsCusomMarshaller()
         {
-            JsonConvert.SerializeObject(new Entry1(), new CustomJsonUnMarshaller());
+            JsonConvert.SerializeObject(new Entry1[1], new CustomJsonUnMarshaller());
         }
 
         [TestMethod]

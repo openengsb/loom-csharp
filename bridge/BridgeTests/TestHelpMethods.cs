@@ -54,8 +54,8 @@ namespace BridgeTests
         {
             public EntryWithAllEntryParameter() { }
 
-            public Entry1[] key { get; set; }
-            public Entry1[] value { get; set; }
+            public Entry1 key { get; set; }
+            public Entry1 value { get; set; }
         }
 
         [TestInitialize]
@@ -223,24 +223,31 @@ namespace BridgeTests
         }
 
         [TestMethod]
-        public void TestConvertDictionaryToEntry1WithParameterTypeWrong()
+        public void TestIfMapIsRecognizedAndIfVariablesAreDetectedCorrectlyAndCorrectConvertedFromJsonToObject()
         {
-            //Todo: OPENENGSB-3574 - Change ConvertMap so that It supports all types not only arrays
             IDictionary result = new Dictionary<String, String>();
             Entry1[] entry = new Entry1[] { new Entry1() { key = "Test", value = 123 } };
             result.Add("123", new JsonMarshaller().MarshallObject(entry));
-            EntryWithEntryParameter[] arrays = (EntryWithEntryParameter[])result.ConvertMap(typeof(EntryWithEntryParameter[]));
+            EntryWithEntryParameter[] arrays = (EntryWithEntryParameter[])result.ConvertMap(typeof(EntryWithEntryParameter));
             Assert.IsTrue(arrays[0].key.Equals("123"));
             Assert.IsTrue(arrays[0].value[0].key.Equals("Test"));
-            result.Clear();
-            result.Add(new JsonMarshaller().MarshallObject(entry), new JsonMarshaller().MarshallObject(entry));
-
-            EntryWithAllEntryParameter[] tmpresult = (EntryWithAllEntryParameter[])result.ConvertMap(typeof(EntryWithAllEntryParameter[]));
-
-            Assert.IsTrue(tmpresult[0].key[0].key.Equals("Test"));
-            Assert.IsTrue(tmpresult[0].value[0].key.Equals("Test"));
         }
+        [TestMethod]
+        //This Test case checks if an object that is not an array is not recognized as Map and converted correctly
+        public void TestConvertDictionaryToEntry1WithParameterTypeAreEntry1AndInJsonFormat()
+        {
+            IDictionary result = new Dictionary<String, String>();
+            Entry1 keyEntry = new Entry1 { key = "Test", value = 123 };
+            Entry1 valueEntry = new Entry1 { key = "ValueTest", value = 111 };
+            result.Add(marshaller.MarshallObject(keyEntry), marshaller.MarshallObject(valueEntry));
 
+            EntryWithAllEntryParameter[] arrays = (EntryWithAllEntryParameter[])result.ConvertMap(typeof(EntryWithAllEntryParameter));
+
+            Assert.AreEqual<String>(arrays[0].key.key, keyEntry.key);
+            Assert.AreEqual<int>(arrays[0].key.value, keyEntry.value);
+            Assert.AreEqual<String>(arrays[0].value.key, valueEntry.key);
+            Assert.AreEqual<int>(arrays[0].value.value, valueEntry.value);
+        }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestInvalidConvertMapWhereMapIsAStringAndNotAnEntryX()
