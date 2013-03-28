@@ -22,12 +22,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Reflection;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote;
 using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
 namespace BridgeTests
 {

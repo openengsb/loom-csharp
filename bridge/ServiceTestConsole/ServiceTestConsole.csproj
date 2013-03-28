@@ -104,6 +104,10 @@
       <Project>{5ccd2925-bb25-496e-824f-3894a4fbf968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenEngSB3.0.0\OpenEngSB3.0.0.csproj">
+      <Project>{c90b32c2-d26c-4930-86a0-7649abc3edb5}</Project>
+      <Name>OpenEngSB3.0.0</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
