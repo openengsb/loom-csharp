@@ -24,6 +24,8 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -33,6 +35,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
     public class DomainFactoryProvider
     {
 
+        private static String startingNameOfOpenEngSBAssemblies="OpenEngSB";
         /// <summary>
         /// Retrieve a factory, depending on the openEngSB version
         /// </summary>
@@ -40,16 +43,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service)
         {
-            int version = GetVersionNumber(stringVersion);
-            if (version >= 300)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<ServiceTyp>(destination, service);
-            }
-            if (version >= 240)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<ServiceTyp>(destination, service);
-            }
-            return null;
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult,destination, service) as IDomainFactory;
         }
 
         /// <summary>
@@ -59,16 +55,29 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, ABridgeExceptionHandling exceptionhandler)
         {
-            int version = GetVersionNumber(stringVersion);
-            if (version >= 300)
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, exceptionhandler) as IDomainFactory;
+
+        }
+        /// <summary>
+        /// Seach in all dlls of the current Solution for the OpenEnGSB version
+        /// </summary>
+        /// <returns>The type of the RealDomainFactory</returns>
+        private static Type GetRealDomainFactory(String version)
+        {
+            try
             {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<ServiceTyp>(destination, service, exceptionhandler);
+                Assembly osbassembly = Assembly.Load(startingNameOfOpenEngSBAssemblies + version);
+                List<Type> types = new List<Type>(osbassembly.GetTypes());
+                Type domainResult = types.Find(tmptype => Regex.IsMatch(tmptype.FullName.ToUpper(), @"REALDOMAINFACTORY"));
+                return domainResult;
             }
-            if (version >= 240)
+            catch (Exception ex)
             {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<ServiceTyp>(destination, service, exceptionhandler);
+                throw new BridgeException("There could not Assembly with the Name OpenEngSB" + version
+                    + " be found. Maybe you did not add this assembly to the solution", ex);
             }
-            return null;
         }
 
         /// <summary>
@@ -78,16 +87,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, String username, String password)
         {
-            int version = GetVersionNumber(stringVersion);
-            if (version >= 300)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<ServiceTyp>(destination, service, username, password);
-            }
-            if (version >= 240)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<ServiceTyp>(destination, service, username, password);
-            }
-            return null;
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, username, password) as IDomainFactory;
         }
 
         /// <summary>
@@ -97,16 +99,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Factory</returns>
         public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, ABridgeExceptionHandling exceptionhandler, String username, String password)
         {
-            int version = GetVersionNumber(stringVersion);
-            if (version >= 300)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.RealDomainFactory<ServiceTyp>(destination, service, exceptionhandler, username, password);
-            }
-            if (version >= 240)
-            {
-                return new Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.RealDomainFactory<ServiceTyp>(destination, service, exceptionhandler, username, password);
-            }
-            return null;
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, exceptionhandler, username, password) as IDomainFactory;
         }
 
         /// <summary>

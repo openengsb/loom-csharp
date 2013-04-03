@@ -38,19 +38,17 @@ namespace BridgeTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BridgeException))]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameter()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString);
-
-            Assert.IsNull(factory);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BridgeException))]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndExceptionHandlerAsParameter()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, nullExceptionHandler);
-
-            Assert.IsNull(factory);
         }
 
         [TestMethod]
@@ -86,19 +84,17 @@ namespace BridgeTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BridgeException))]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndUsernamPassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, username, password);
-
-            Assert.IsNull(factory);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BridgeException))]
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndExceptionHandlerUsernamPassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(versionInvalid, nullString, nullString, nullExceptionHandler, username, password);
-
-            Assert.IsNull(factory);
         }
 
         [TestMethod]

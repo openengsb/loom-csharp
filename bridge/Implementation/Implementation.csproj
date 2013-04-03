@@ -82,12 +82,9 @@
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\BinaryData.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\OpenEngSBModel.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageBase.cs" />
+    <Compile Include="Common\OpenEngSBModel.cs" />
     <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Exceptions\OpenEngSBException.cs" />
-    <Compile Include="OpenEngSB2_4_0\RealDomainFactory.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
     <Compile Include="Communication\IIncomingPort.cs" />
     <Compile Include="Communication\IMarshaller.cs" />
@@ -99,30 +96,8 @@
     <Compile Include="Communication\Jms\JMSPort.cs" />
     <Compile Include="Communication\Json\JsonMarshaller.cs" />
     <Compile Include="Common\LocalType.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Authentification.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\ConnectorDescription.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\ConnectorId.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Data.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\DomainProxy.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\DomainReverseProxy.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\Message.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MessageResult.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\RemoteMethodCall.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodCallRequest.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodResult.cs" />
-    <Compile Include="OpenEngSB2_4_0\Remote\RemoteObjects\MethodResultMessage.cs" />
     <Compile Include="Common\RemoteType.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\BeanDescription.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\ConnectorDescription.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\DomainProxy.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\DomainReverseProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OpenEngSB3_0_0\RealDomainFactory.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MessageResult.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\RemoteMethodCall.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResult.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodResultMessage.cs" />
-    <Compile Include="OpenEngSB3_0_0\Remote\RemoteObjects\MethodCallMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
