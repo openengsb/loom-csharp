@@ -26,12 +26,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class ConnectorDescription
     {
         #region Variables
+
         public IDictionary<String, Object> properties { get; set; }
+
         public IDictionary<String, String> attributes { get; set; }
+
         public String domainType { get; set; }
+
         public String connectorType { get; set; }
+
         #endregion
+
         #region Constructor
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -40,6 +47,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             attributes = new Dictionary<string, string>();
             properties = new Dictionary<string, object>();
         }
+
         #endregion
     }
 }

@@ -25,9 +25,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class MethodResultMessage : MessageBase
     {
         #region Variables
+
         public MethodResult result { get; set; }
+
         #endregion
+
         #region Public static Methods
+
         /// <summary>
         /// Creates a new instance of MethodResultMessage
         /// </summary>
@@ -41,6 +45,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             instance.timestamp = DateTime.Now.Ticks;
             return instance;
         }
+
         #endregion
     }
 }

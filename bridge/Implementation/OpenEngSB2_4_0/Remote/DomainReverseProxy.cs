@@ -24,9 +24,12 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote.Remo
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     /// <summary>
     /// This class builds reverse proxies for resources (class instances) on the
     /// client side for the bus.
@@ -82,7 +85,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CREATION_SERVICE_ID);
             Guid id = Guid.NewGuid();
-
             Data data = Data.CreateInstance(Username, Password);
             Authentification authentification = Authentification.createInstance(AUTHENTIFICATION_CLASS, data, BinaryData.CreateInstance());
 
@@ -114,7 +116,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request);
             Registrationprocess = ERegistration.REGISTERED;
@@ -148,11 +150,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
             Destination destinationinfo = new Destination(destination);
             destinationinfo.Queue = CREATION_QUEUE;
 
-            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(destinationinfo.FullDestination, ExceptionHandler, ConnectorId);
             string request = Marshaller.MarshallObject(callRequest);
             portOut.Send(request);
 
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId), ExceptionHandler);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(destinationinfo.Host, callRequest.message.callId), ExceptionHandler, ConnectorId);
             string reply = portIn.Receive();
 
             MethodResultMessage result = Marshaller.UnmarshallObject<MethodResultMessage>(reply);
@@ -182,7 +184,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote
                 {
                     string returnMsg = Marshaller.MarshallObject(methodReturnMessage);
                     Destination dest = new Destination(destination);
-                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId), ExceptionHandler);
+                    IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(dest.Host, methodCallRequest.message.callId), ExceptionHandler, ConnectorId);
                     portOut.Send(returnMsg);
                     portOut.Close();
                     if (methodReturnMessage.message.result.type.Equals(ReturnType.Exception))

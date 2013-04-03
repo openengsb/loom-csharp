@@ -24,14 +24,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class MethodCallMessage : MessageBase
     {
         #region Variables
+
         public RemoteMethodCall methodCall { get; set; }
+
         public bool answer { get; set; }
+
         public string destination { get; set; }
+
         public String principal { get; set; }
 
         public BeanDescription credentials { get; set; }
+
         #endregion
+
         #region Public Static Methods
+
         /// <summary>
         /// Creates an instance of SecureMethodCallRequest
         /// </summary>
@@ -52,6 +59,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             instance.credentials = credentials;
             return instance;
         }
+
         #endregion
     }
 }

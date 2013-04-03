@@ -26,12 +26,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
     /// </summary>
     public interface IMarshaller
     {
+
         /// <summary>
         /// Serialize a object
         /// </summary>
         /// <param name="obj">Object to serialize</param>
         /// <returns>Serialized string</returns>
         string MarshallObject(object obj);
+        
         /// <summary>
         /// Deserialze a object
         /// </summary>
@@ -39,12 +41,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication
         /// <param name="objectType">Type of the object to return</param>
         /// <returns>The deserialized object</returns>
         object UnmarshallObject(string jsonText, Type objectType);
+        
         /// <summary>
         /// Deserialze a object
         /// </summary>
-        /// <typeparam name="T">Type of the object</typeparam>
+        /// <typeparam name="ObjectTyp">Type of the object</typeparam>
         /// <param name="jsonText">Json object in string format</param>
         /// <returns>The deserialized object</returns>
-        T UnmarshallObject<T>(string jsonText);
+        ObjectTyp UnmarshallObject<ObjectTyp>(string jsonText);
     }
 }

@@ -27,33 +27,40 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
-    public abstract class Domain<T> : RealProxy
+    public abstract class Domain<TransparentProxyType> : RealProxy
     {
         #region Const.
         /// <summary>
         /// Name of the queue the server listens to for calls.
         /// </summary>
         protected const string HOST_QUEUE = "receive";
-        protected static ILog Logger = LogManager.GetLogger(typeof(T));
+        protected static ILog Logger;
+
         #endregion
         #region Variables
+
         protected ABridgeExceptionHandling Exceptionhandler;
+
         /// <summary>
         /// Authenifaction class
         /// </summary>
         protected string AUTHENTIFICATION_CLASS = "org.openengsb.core.api.security.model.UsernamePasswordAuthenticationInfo";
+
         /// <summary>
         /// Username for the authentification
         /// </summary>
         protected String Username;
+
         /// <summary>
         /// Password for the authentification
         /// </summary>
         protected String Password;
+
         /// <summary>
         /// Id identifying the service instance on the bus.
         /// </summary>
-        protected String ServiceId;
+        protected String ConnectorId;
+
         /// <summary>
         /// Domain type
         /// </summary>
@@ -65,33 +72,41 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         protected string Host;
 
         protected IMarshaller Marshaller;
+
         #endregion
         #region Constructors
-        public Domain(string host, string serviceId, String domainName, ABridgeExceptionHandling exceptionhandler)
-            : base(typeof(T))
+
+        public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
+            : base(typeof(TransparentProxyType))
         {
-            this.ServiceId = serviceId;
+            this.ConnectorId = connectorId;
             this.DomainName = domainName;
             this.Host = host;
             this.Marshaller = new JsonMarshaller();
             this.Username = "admin";
             this.Password = "password";
             this.Exceptionhandler = exceptionhandler;
+            Logger = LogManager.GetLogger(typeof(TransparentProxyType));
         }
-        public Domain(string host, string serviceId, String domainName, String username, String password, ABridgeExceptionHandling exceptionhandler)
-            : this(host,serviceId,domainName,exceptionhandler)
+
+        public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : this(host, connectorId, domainName, exceptionhandler)
         {
             this.Username = username;
             this.Password = password;
         }
+
         #endregion
         #region Public Methods
-        public new T GetTransparentProxy()
+
+        public new TransparentProxyType GetTransparentProxy()
         {
-            return (T)base.GetTransparentProxy();
+            return (TransparentProxyType)base.GetTransparentProxy();
         }
+
         #endregion
         #region Protected Methods
+
         /// <summary>
         /// Builds an IMessage using MethodReturn.
         /// </summary>
@@ -104,14 +119,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             switch (methodReturn.type)
             {
                 case ReturnType.Exception:
-                    return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
+                    {
+                        return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
+                    }
                 case ReturnType.Void:
                 case ReturnType.Object:
-                    return new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
+                    {
+                        return new ReturnMessage(methodReturn.arg, null, 0, null, callMessage);
+                    }
                 default:
-                    return null;
+                    {
+                        return null;
+                    }
             }
         }
+
         #endregion
     }
 }

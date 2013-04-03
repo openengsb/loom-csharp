@@ -22,10 +22,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
     public class MessageResult
     {
         #region Variables
+
         public MethodResult result { get; set; }
+
         public string callId { get; set; }
+
         #endregion
+
         #region Public Static Methods
+
         /// <summary>
         /// Creates a new instance of MessageResult
         /// </summary>
@@ -39,6 +44,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote.
             msg.callId = callId;
             return msg;
         }
+
         #endregion
     }
 }

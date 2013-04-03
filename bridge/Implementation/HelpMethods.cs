@@ -36,7 +36,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
     public static class HelpMethods
     {
-        public static IMarshaller marshaller = new JsonMarshaller();
+
         /// <summary>
         /// Implemnents the OpenEngSBModel type to a sepcified type
         /// </summary>
@@ -44,6 +44,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Type:OpenEngSBModel</returns>
         public static Type ImplementTypeDynamicly(Type extendType)
         {
+            if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive || extendType.Name.ToUpper().Equals("STRING"))
+            {
+                return extendType;
+            }
             AssemblyName assemblyName = new AssemblyName("DataBuilderAssembly");
             AssemblyBuilder assemBuilder = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemBuilder.DefineDynamicModule("DataBuilderModule");
@@ -54,6 +58,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Type type = typeBuilder.CreateType();
             return type;
         }
+
         /// <summary>
         /// Generate the set and get
         /// </summary>
@@ -63,30 +68,30 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             foreach (PropertyInfo method in typeof(OpenEngSBModel).GetProperties())
             {
                 Type type = method.GetGetMethod().ReturnType;
-                if (type.Name.Equals(typeof(void)))
+                if (!type.Name.Equals(typeof(void)))
                 {
-                    continue;
+                    String name = method.Name;
+                    FieldBuilder field = typeBuilder.DefineField(name, type, FieldAttributes.Private);
+                    PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, null);
+                    MethodAttributes getSetAttr = MethodAttributes.Public |
+                            MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
+                    MethodBuilder getter = typeBuilder.DefineMethod("get_" + name, getSetAttr, type, Type.EmptyTypes);
+                    ILGenerator getIL = getter.GetILGenerator();
+                    getIL.Emit(OpCodes.Ldarg_0);
+                    getIL.Emit(OpCodes.Ldfld, field);
+                    getIL.Emit(OpCodes.Ret);
+                    MethodBuilder setter = typeBuilder.DefineMethod("set_" + name, getSetAttr, null, new Type[] { type });
+                    ILGenerator setIL = setter.GetILGenerator();
+                    setIL.Emit(OpCodes.Ldarg_0);
+                    setIL.Emit(OpCodes.Ldarg_1);
+                    setIL.Emit(OpCodes.Stfld, field);
+                    setIL.Emit(OpCodes.Ret);
+                    propertyBuilder.SetGetMethod(getter);
+                    propertyBuilder.SetSetMethod(setter);
                 }
-                String name = method.Name;
-                FieldBuilder field = typeBuilder.DefineField(name, type, FieldAttributes.Private);
-                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, null);
-                MethodAttributes getSetAttr = MethodAttributes.Public |
-                        MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-                MethodBuilder getter = typeBuilder.DefineMethod("get_" + name, getSetAttr, type, Type.EmptyTypes);
-                ILGenerator getIL = getter.GetILGenerator();
-                getIL.Emit(OpCodes.Ldarg_0);
-                getIL.Emit(OpCodes.Ldfld, field);
-                getIL.Emit(OpCodes.Ret);
-                MethodBuilder setter = typeBuilder.DefineMethod("set_" + name, getSetAttr, null, new Type[] { type });
-                ILGenerator setIL = setter.GetILGenerator();
-                setIL.Emit(OpCodes.Ldarg_0);
-                setIL.Emit(OpCodes.Ldarg_1);
-                setIL.Emit(OpCodes.Stfld, field);
-                setIL.Emit(OpCodes.Ret);
-                propertyBuilder.SetGetMethod(getter);
-                propertyBuilder.SetSetMethod(setter);
             }
         }
+
         /// <summary>
         /// Takes a Namespace as input, reverse the elements and returns the package structure from java
         /// </summary>
@@ -124,7 +129,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             }
             else
             {
-                result = SearchInTheXMLType(fieldname, type);
+                result = SearchInXMLType(fieldname, type);
             }
             String classname = HelpMethods.FirstLetterToUpper(type.FullName.Replace(type.Namespace + ".", ""));
             if (classname.Contains("[]"))
@@ -136,114 +141,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
                 return result + "." + classname;
             }
         }
-        /// <summary>
-        /// Converts a Dictionary to a Map (entryX)
-        /// </summary>
-        /// <param name="arg">IDcitionary</param>
-        /// <param name="type">type to convert it into</param>
-        /// <returns></returns>
-        public static Object[] ConvertMap(this IDictionary arg, Type type)
-        {
-            Type elementType = type;
-            if (elementType.IsArray)
-            {
-                elementType = type.GetElementType();
-            }
-            Array elements = Array.CreateInstance(elementType, arg.Count);
 
-            int i = 0;
-            foreach (Object key in arg.Keys)
-            {
-                Object instance = Activator.CreateInstance(elementType, false);
-                Object value = arg[key];
-                Type keyType = elementType.GetProperty("key").PropertyType;
-                Type valueType = elementType.GetProperty("value").PropertyType;
-                if (IsValueNotInCorrectType(key, keyType))
-                {
-                    instance = marshaller.UnmarshallObject(instance.ToString(), keyType);
-                }
-                elementType.GetProperty("key").SetValue(instance, key, null);
-                if (IsValueNotInCorrectType(value, valueType))
-                {
-                    value = marshaller.UnmarshallObject(value.ToString(), valueType);
-                }
-                elementType.GetProperty("value").SetValue(instance, value, null);
-                elements.SetValue(instance, i++);
-            }
-            return (Object[])elements;
-        }
-
-        private static bool IsValueNotInCorrectType(Object key, Type keyType)
-        {
-            Boolean a1 = keyType.IsPrimitive || keyType.Equals(typeof(string));
-            Boolean a2 = keyType.IsInstanceOfType(key.GetType().DeclaringType);
-            return !a1 && !a2;
-        }
-        /// <summary>
-        /// Converts a Dictionary to a Map (entryX)
-        /// </summary>
-        /// <typeparam name="T">Type to convert the Dictionary into</typeparam>
-        /// <param name="arg"></param>
-        /// <returns></returns>
-        public static T[] ConvertMap<T>(this IDictionary arg)
-        {
-            Array elements = ConvertMap(arg, typeof(T));
-            return (T[])elements;
-        }
-        /// <summary>
-        /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
-        /// If the Object is not a Map then the parameter object is returned
-        /// </summary>
-        /// <typeparam name="T">Key type</typeparam>
-        /// <typeparam name="V">Value Type</typeparam>
-        /// <param name="obj">Map input</param>
-        /// <returns>IDictionary</returns>
-        public static IDictionary<T, V> ConvertMap<T, V>(this Object obj)
-        {
-            Object result = ConvertMap(obj);
-            if (result.GetType() is IDictionary)
-            {
-                return null;
-            }
-            IDictionary tmpDict = ((IDictionary)result);
-            IDictionary<T, V> tmpresult = new Dictionary<T, V>();
-            foreach (Object key in tmpDict.Keys)
-            {
-                tmpresult.Add((T)key, (V)tmpDict[key]);
-            }
-            return tmpresult;
-        }
-        /// <summary>
-        /// Converts a Map (WSDL converted Type i.e entryX) to an Dictionary.
-        /// If the Object is not a Map then the parameter object is returned
-        /// </summary>
-        /// <param name="obj">Object to convert</param>
-        /// <returns>IDictionary or the object itselfe</returns>
-        public static Object ConvertMap(this Object obj)
-        {
-            if (!(obj.GetType().IsArray) || !obj.GetType().Name.ToUpper().Contains("ENTRY"))
-            {
-                return obj;
-            }
-
-            Dictionary<Object, Object> result = new Dictionary<Object, Object>();
-            foreach (object keyValue in (Object[])obj)
-            {
-                Object key = keyValue.GetType().GetProperty("key").GetValue(keyValue, null);
-                Object value = keyValue.GetType().GetProperty("value").GetValue(keyValue, null);
-                result.Add(key, value);
-            }
-
-            return result;
-        }
         /// <summary>
         /// Searches for the packagenames in the XMLType Attribute
         /// </summary>
         /// <param name="fieldname">Typename</param>
         /// <param name="type">IMplementation of the domain (dll)</param>
         /// <returns>Packagename</returns>
-        private static String SearchInTheXMLType(String fieldname, Type type)
+        private static String SearchInXMLType(String fieldname, Type type)
         {
+            String exceptionMessage = "Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found";
             String typename = fieldname;
             if (typename.Contains("[]"))
             {
@@ -252,13 +159,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             Assembly ass = type.Assembly;
 
             type = ass.GetType(typename);
-            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).First(element => element is XmlTypeAttribute);
+            if (type == null)
+            {
+                throw new BridgeException(exceptionMessage);
+            }
+            XmlTypeAttribute attribute = (XmlTypeAttribute)Attribute.GetCustomAttributes(type).FirstOrDefault(element => element is XmlTypeAttribute);
             if (attribute != null)
             {
                 return ReverseURL(attribute.Namespace);
             }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            throw new BridgeException(exceptionMessage);
         }
+
         /// <summary>
         /// Searches for Packagenames in the SOAP attributes
         /// </summary>
@@ -266,26 +178,31 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>Packagename</returns>
         private static String SearchSoapAttributes(MethodInfo method)
         {
-            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).First(element => element is SoapDocumentMethodAttribute);
+            SoapDocumentMethodAttribute attribute = (SoapDocumentMethodAttribute)method.GetCustomAttributes(false).FirstOrDefault(element => element is SoapDocumentMethodAttribute);
             if (attribute != null)
             {
                 return ReverseURL(attribute.RequestNamespace);
             }
-            throw new MethodAccessException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
+            throw new BridgeException("Fieldname doesn't have a corresponding attribute (Namepspace) or the attribute couldn't be found");
         }
+
         /// <summary>
         /// Makes the first character to a upper character
         /// </summary>
         /// <param name="element">Element to edit</param>
         /// <returns>String with the first character upper</returns>
-        private static String FirstLetterToUpper(String element)
+        public static String FirstLetterToUpper(String element)
         {
-            if (element.Length <= 1) return element.ToUpper();
+            if (element.Length <= 1)
+            {
+                return element.ToUpper();
+            }
             String first = element.Substring(0, 1);
             first = first.ToUpper();
             String tmp = element.Substring(1);
             return first + tmp;
         }
+
         /// <summary>
         /// Add true objects for the Specified fields
         /// </summary>
@@ -294,7 +211,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static void AddTrueForSpecified(IList<object> args, MethodInfo m)
         {
             ParameterInfo[] paraminfo = m.GetParameters();
-            if (paraminfo.Length <= args.Count && paraminfo.Length < 2 && args.Count <= 0) return;
             int i = 0;
             while (i + 1 < paraminfo.Length)
             {
@@ -314,14 +230,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             ParameterInfo[] parameters = m.GetParameters();
             int i = 0;
-            int parameterLength = 0;
+            int parameterLength = parameterResult.Count;
             while (i + 1 < parameters.Length)
             {
                 String paramName = parameters[i].Name + "Specified";
-                if ((parameters[i + 1].ParameterType.Equals(typeof(System.Boolean))) && paramName.Equals(parameters[i + 1].Name))
+                Boolean isBoolean = parameters[i + 1].ParameterType.Equals(typeof(System.Boolean));
+                Boolean isParameterTheSame = paramName.Equals(parameters[i + 1].Name);
+                if (isBoolean && isParameterTheSame)
                 {
                     parameterResult.Remove(parameters[i + 1]);
-                    parameterLength++;
+                    parameterLength--;
                 }
                 i = i + 2;
             }
@@ -337,10 +255,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         public static bool TypesAreEqual(IList<string> typeStrings, ParameterInfo[] parameterInfos)
         {
             if (typeStrings.Count != parameterInfos.Length)
+            {
                 throw new BridgeException("The method has not the same amount of parameters");
+            }
             for (int i = 0; i < parameterInfos.Length; ++i)
             {
-                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos)) return false;
+                if (!TypeIsEqual(typeStrings[i], parameterInfos[i].ParameterType, parameterInfos))
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -353,11 +276,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>If to types are equal</returns>
         private static bool TypeIsEqual(string remoteType, Type localType, ParameterInfo[] parameterInfos)
         {
-            if (localType.Equals(typeof(object))) return true;
+            if (localType.Equals(typeof(object)))
+            {
+                return true;
+            }
             RemoteType remote_typ = new RemoteType(remoteType, parameterInfos);
-            if (localType.Name.ToLower().Contains("nullable")) return (localType.FullName.Contains(remote_typ.Name));
+            if (localType.Name.ToLower().Contains("nullable"))
+            {
+                return (localType.FullName.Contains(remote_typ.Name));
+            }
             return (remote_typ.Name.ToUpper().Equals(localType.Name.ToUpper()));
         }
-
     }
 }

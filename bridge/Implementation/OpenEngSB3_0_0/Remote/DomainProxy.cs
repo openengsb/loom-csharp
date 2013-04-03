@@ -30,22 +30,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
     /// <summary>
     /// This class generates generic proxies. All method calls will be forwared to the configured server.
     /// </summary>
-    /// <typeparam name="T">Type to proxy.</typeparam>
-    public class DomainProxy<T> : Domain<T>
+    /// <typeparam name="ProxyTyp">Typ to proxy.</typeparam>
+    public class DomainProxy<ProxyTyp> : Domain<ProxyTyp>
     {
         #region Constructors
-        public DomainProxy(string host, string serviceId, String domainName, ABridgeExceptionHandling exceptionhandler)
-            : base(host, serviceId, domainName, exceptionhandler)
+
+        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
+            : base(host, connectorId, domainName, exceptionhandler)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
-        public DomainProxy(string host, string serviceId, String domainName, String username, String password, ABridgeExceptionHandling exceptionhandler)
-            : base(host, serviceId, domainName, username, password, exceptionhandler)
+
+        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : base(host, connectorId, domainName, exceptionhandler, username, password)
         {
             AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
         }
+
         #endregion
+
         #region Public Methods
+
         /// <summary>
         /// Will be invoked when a call to the proxy has been made.
         /// </summary>
@@ -56,15 +61,18 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = Marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(Host, HOST_QUEUE), Exceptionhandler);
+            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(Host, HOST_QUEUE), Exceptionhandler, ConnectorId);
             portOut.Send(methodCallMsg, methodCallRequest.callId);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(Host, methodCallRequest.callId), Exceptionhandler);
+            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(Host, methodCallRequest.callId), Exceptionhandler, ConnectorId);
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = Marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
             return ToMessage(methodReturn.result, callMessage);
         }
+
         #endregion
+
         #region Private methods
+
         /// <summary>
         /// Builds an MethodCall using IMethodCallMessage.
         /// </summary>
@@ -82,9 +90,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             metaData.Add("contextId", "foo");
             List<string> classes = new List<string>();
             foreach (object arg in msg.Args)
-            {             
-                LocalType type = new LocalType(arg.GetType());
-                classes.Add(type.RemoteTypeFullName);
+            {
+                if (arg != null)
+                {
+                    LocalType type = new LocalType(arg.GetType());
+                    classes.Add(type.RemoteTypeFullName);
+                }
+                else
+                {
+                    classes.Add(null);
+                }
             }
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
             BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
@@ -92,6 +107,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB3_0_0.Remote
             MethodCallMessage message = MethodCallMessage.createInstance(Username, authentification, call, id.ToString(), true, "");
             return message;
         }
+
         #endregion
     }
 }

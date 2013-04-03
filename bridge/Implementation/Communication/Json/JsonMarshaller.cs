@@ -28,6 +28,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
     public class JsonMarshaller : IMarshaller
     {
         #region Methods
+
         /// </summary>
         /// <typeparam name="T">Object Typ</typeparam>
         /// <param name="jsonText">Object in String format</param>
@@ -53,6 +54,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         {
             return JsonConvert.SerializeObject(obj, new CustomJsonMarshaller());
         }
+
         /// <summary>
         /// Uses the Newtonsoft Json Parser, to deserialize the jsontext. The fastJson deserializer has problems to deserialize the objects
         /// </summary>
@@ -70,6 +72,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                 throw new BridgeException("A json message couldn't be deserised the message", new BridgeException(jsonText, ex));
             }
         }
+
         #endregion
     }
 }

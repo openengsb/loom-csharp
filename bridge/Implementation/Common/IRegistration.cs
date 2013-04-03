@@ -22,14 +22,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public interface IRegistration
     {
         Boolean Registered { get; }
+
         void CreateRemoteProxy();
+
         void DeleteRemoteProxy();
+
         XLinkUrlBlueprint ConnectToXLink(string toolName, String hostId, ModelToViewsTuple[] modelsToViews);
+
         void DisconnectFromXLink(String hostId);
+
         void RegisterConnector(String connectorId);
+
         void UnRegisterConnector();
+
         String ConnectorId { get; }
+
         String DomainName { get; }
+
         void Stop();
     }
 }

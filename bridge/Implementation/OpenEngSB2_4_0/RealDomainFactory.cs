@@ -20,9 +20,12 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0.Remote;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
 {
+    //Will be removed because the .Net Bridge starts supporing the OpenEngSB Version 3.0.0
+    [ExcludeFromCodeCoverageAttribute()]
     public class RealDomainFactory<T> : AbstractRealDomainFactory<T>
     {
         #region Constructor
@@ -34,8 +37,20 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.OpenEngSB2_4_0
             : base(destination, domainService)
         {
         }
+        public RealDomainFactory(string destination, T domainService, ABridgeExceptionHandling exceptionhandler, string username, string password)
+            : base(destination, domainService, exceptionhandler, username, password)
+        {
+        }
+        public RealDomainFactory(string destination, T domainService, string username, string password)
+            : base(destination, domainService, username, password)
+        {
+        }
         #endregion
         #region Abstact Method Implementation
+        protected override A GetSubEventhandler<A>(String connectorId, String username, String password)
+        {
+            return new DomainProxy<A>(Destination, GetDomainTypConnectorId(connectorId), GetDomainType(connectorId), Exceptionhandler, username, password).GetTransparentProxy();
+        }
         protected override A GetSubEventhandler<A>(String connectorId)
         {
             return new DomainProxy<A>(Destination, GetDomainTypConnectorId(connectorId), GetDomainType(connectorId), Exceptionhandler).GetTransparentProxy();
