@@ -35,7 +35,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
     public class DomainFactoryProvider
     {
 
-        private static String startingNameOfOpenEngSBAssemblies="OpenEngSB";
+        private static String startingNameOfOpenEngSBAssemblies = "OpenEngSB";
         /// <summary>
         /// Retrieve a factory, depending on the openEngSB version
         /// </summary>
@@ -45,7 +45,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             Type domainResult = GetRealDomainFactory(stringVersion);
             domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
-            return Activator.CreateInstance(domainResult,destination, service) as IDomainFactory;
+            return Activator.CreateInstance(domainResult, destination, service) as IDomainFactory;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             {
                 Assembly osbassembly = Assembly.Load(startingNameOfOpenEngSBAssemblies + version);
                 List<Type> types = new List<Type>(osbassembly.GetTypes());
-                Type domainResult = types.Find(tmptype => Regex.IsMatch(tmptype.FullName.ToUpper(), @"REALDOMAINFACTORY"));
+                Type domainResult = types.Find(tmptype => typeof(IDomainFactory).IsAssignableFrom(tmptype));
                 return domainResult;
             }
             catch (Exception ex)
