@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Interface description .Net Bridge")]
-[assembly: AssemblyDescription("Interface descrrption of the .Net Bridge")]
+[assembly: AssemblyDescription("Interface description of the .Net Bridge")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OpenEngSB")]
 [assembly: AssemblyProduct("Interface")]
@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.0")]
-[assembly: AssemblyVersion("3.0.0.9")]
-[assembly: AssemblyFileVersion("3.0.0.9")]
-[assembly: AssemblyInformationalVersion("1.0.0-SNAPSHOT")]
+[assembly: AssemblyVersion("3.0.0.11")]
+[assembly: AssemblyFileVersion("3.0.0.11")]
+[assembly: AssemblyInformationalVersion("3.0.0.11-SNAPSHOT")]

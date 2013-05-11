@@ -53,7 +53,7 @@ namespace BridgeTests
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
             OpenEngSBCore.XLinkConnectorView[] views = new OpenEngSBCore.XLinkConnectorView[1];
-            views[0] = (new OpenEngSBCore.XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
+            views[0] = (new OpenEngSBCore.XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<string2stringMapEntry>() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {

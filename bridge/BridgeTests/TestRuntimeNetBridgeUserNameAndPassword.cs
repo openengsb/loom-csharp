@@ -82,7 +82,7 @@ namespace BridgeTests
         {
             uuid = factory.RegisterConnector(nullString, domainName);
 
-            IExampleDomainEventsSoap11Binding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(uuid);
+            IExampleDomainEventsSoapBinding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoapBinding>(uuid);
 
             factory.UnRegisterConnector(uuid);
             factory.DeleteDomainService(uuid);

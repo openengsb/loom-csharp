@@ -57,7 +57,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     }
                     return "java.lang." + HelpMethods.FirstLetterToUpper(name);
                 }
-                if (type.Name.ToUpper().Contains("ENTRY"))
+                if (type.Name.ToUpper().EndsWith("MAPENTRY"))
                 {
                     return "java.util.Map";
                 }
