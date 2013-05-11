@@ -19,9 +19,9 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using log4net;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using System.Collections.Generic;
-using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using OpenEngSBCore;
+using ExampleDomain;
 
 namespace ServiceTestConsole
 {
@@ -66,7 +66,7 @@ namespace ServiceTestConsole
             }
             else
             {
-                IExampleDomainEventsSoap11Binding remotedomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(ConnectorId);
+                IExampleDomainEventsSoapBinding remotedomain = factory.GetEventhandler<IExampleDomainEventsSoapBinding>(ConnectorId);
                 LogEvent lEvent = new LogEvent();
                 lEvent.name = "Example";
                 lEvent.level = "DEBUG";
@@ -87,7 +87,7 @@ namespace ServiceTestConsole
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
             XLinkConnectorView[] views = new XLinkConnectorView[1];
-            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<entry3>() });
+            views[0] = (new XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<string2stringMapEntry>() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {

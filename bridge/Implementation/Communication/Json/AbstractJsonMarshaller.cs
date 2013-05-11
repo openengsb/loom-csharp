@@ -35,7 +35,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// <returns></returns>
         protected static bool IsMapType(Type objectType)
         {
-            return objectType.Name.ToUpper().StartsWith("ENTRY") && objectType.IsArray;
+            return objectType.Name.ToUpper().EndsWith("MAPENTRY") && objectType.IsArray;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

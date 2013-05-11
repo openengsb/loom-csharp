@@ -15,16 +15,16 @@
  * limitations under the License.
  ***/
 using System;
-using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 
 using log4net;
+using ExampleDomain;
 namespace ServiceTestConsole
 {
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
+    public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoapBinding
     {
 
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
@@ -51,10 +51,6 @@ namespace ServiceTestConsole
             return m;
         }
 
-        public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
-        {
-            throw new NotImplementedException();
-        }
 
         public string getInstanceId()
         {
@@ -64,6 +60,12 @@ namespace ServiceTestConsole
         public string doReturnMethod(string args0)
         {
             return args0;
+        }
+
+
+        public void getAliveState(out AliveState? @return, out bool returnSpecified)
+        {
+            throw new NotImplementedException();
         }
     }
 }

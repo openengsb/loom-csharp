@@ -192,7 +192,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <param name="element">The object, which gets extended</param>
         /// <param name="models">The OpenEngSBEntries</param>
         /// <returns>The object with the OpenEngSBModel</returns>
-        public static ReturnTyp AddOpenEngSBModel<ReturnTyp>(this ReturnTyp element, List<OpenEngSBModelEntry> models)
+        public static ReturnTyp AddOpenEngSBModel<ReturnTyp>(this ReturnTyp element, List<openEngSBModelEntry> models)
         {
             Type TOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(element.GetType());
             OpenEngSBModel tmpElement = element.ConvertOSBType(TOpenEngSBModel) as OpenEngSBModel;
