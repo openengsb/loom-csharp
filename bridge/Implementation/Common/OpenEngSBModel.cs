@@ -12,7 +12,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
     public interface OpenEngSBModel
     {
 
-        List<OpenEngSBModelEntry> openEngSBModelTail { get; set; }
+        List<openEngSBModelEntry> openEngSBModelTail { get; set; }
 
     }
 }

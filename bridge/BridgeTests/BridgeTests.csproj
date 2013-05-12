@@ -37,9 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomain, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ExampleDomain.3.0.1.0-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
+    <Reference Include="ExampleDomain">
+      <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -48,14 +47,13 @@
     <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OOSourceCodeDomain">
       <HintPath>..\packages\OOSourceCodeDomain.3.0.0-SNAPSHOT\lib\OOSourceCodeDomain.dll</HintPath>
     </Reference>
-    <Reference Include="OpenEngSBCore, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OpenEngSBCore.3.0.3.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+    <Reference Include="OpenEngSBCore">
+      <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />

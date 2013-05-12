@@ -72,8 +72,8 @@ namespace BridgeTests
             Entry1 entry = (Entry1)entryObject;
             entry.key = "test";
             entry.value = 1;
-            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
-            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            List<openEngSBModelEntry> elements = new List<openEngSBModelEntry>();
+            openEngSBModelEntry osbEntry = new openEngSBModelEntry();
             osbEntry.key = "key";
             osbEntry.type = "type";
             osbEntry.value = "value";
@@ -105,8 +105,8 @@ namespace BridgeTests
             testentry.key = "Test";
             testentry.value = 2;
 
-            List<OpenEngSBModelEntry> elements = new List<OpenEngSBModelEntry>();
-            OpenEngSBModelEntry osbEntry = new OpenEngSBModelEntry();
+            List<openEngSBModelEntry> elements = new List<openEngSBModelEntry>();
+            openEngSBModelEntry osbEntry = new openEngSBModelEntry();
             osbEntry.key = "key";
             osbEntry.type = "type";
             osbEntry.value = "value";

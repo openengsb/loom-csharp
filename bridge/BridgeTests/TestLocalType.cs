@@ -57,7 +57,7 @@ namespace BridgeTests
         [TestMethod]
         public void TestIfRemoteDictionaryIsInJavaValid()
         {
-            LocalType lt = new LocalType(typeof(entry1));
+            LocalType lt = new LocalType(typeof(string2stringMapEntry));
 
             Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.util.Map");
         }

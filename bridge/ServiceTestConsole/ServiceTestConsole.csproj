@@ -55,9 +55,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExampleDomain, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ExampleDomain.3.0.1.0-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
+    <Reference Include="ExampleDomain">
+      <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
@@ -67,7 +66,7 @@
       <HintPath>..\packages\OOSourceCodeDomain.3.0.0-SNAPSHOT\lib\OOSourceCodeDomain.dll</HintPath>
     </Reference>
     <Reference Include="OpenEngSBCore">
-      <HintPath>..\packages\OpenEngSBCore.3.0.3.1-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+      <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

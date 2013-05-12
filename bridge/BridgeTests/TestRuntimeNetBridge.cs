@@ -144,7 +144,7 @@ namespace BridgeTests
             logEvent.name = "Test";
 
             uuid = factory.RegisterConnector(null, domainName);
-            IExampleDomainEventsSoap11Binding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(uuid);
+            IExampleDomainEventsSoapBinding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoapBinding>(uuid);
 
             Assert.IsTrue(factory.Registered(uuid));
             Assert.IsFalse(factory.Registered("WRONG ID"));
@@ -166,7 +166,7 @@ namespace BridgeTests
         public void TestCreateRegisterConnectorAndGetEventHandlerWithInvalitConnectorId()
         {
             uuid = factory.RegisterConnector(nullString, domainName);
-            IExampleDomainEventsSoap11Binding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoap11Binding>(nullString);
+            IExampleDomainEventsSoapBinding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoapBinding>(nullString);
         }
 
         [TestMethod]

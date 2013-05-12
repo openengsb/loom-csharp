@@ -26,7 +26,7 @@ namespace BridgeTests.TestConnectorImplementation
     /// Example implementation of the local domain
     /// </summary>
     [ExcludeFromCodeCoverageAttribute()]
-    public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoap11Binding
+    public class ExampleDomainConnector : RegistrationFunctions, IExampleDomainSoapBinding
     {
 
         public ExampleDomainConnector() : base(LogManager.GetLogger(typeof(ExampleDomainConnector))) { }
@@ -48,10 +48,6 @@ namespace BridgeTests.TestConnectorImplementation
             return m;
         }
 
-        public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
-        {
-            throw new NotImplementedException();
-        }
 
         public string getInstanceId()
         {
@@ -61,6 +57,12 @@ namespace BridgeTests.TestConnectorImplementation
         public string doReturnMethod(string args0)
         {
             return args0;
+        }
+
+
+        public void getAliveState(out AliveState? @return, out bool returnSpecified)
+        {
+            throw new NotImplementedException();
         }
     }
 }
