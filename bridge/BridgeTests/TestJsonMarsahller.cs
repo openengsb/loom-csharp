@@ -21,9 +21,9 @@ namespace BridgeTests
     public class TestJsonMarshaller
     {
         IMarshaller marshaller = new JsonMarshaller();
-        public class Entry1
+        public class StringIntMapEntry
         {
-            public Entry1() { }
+            public StringIntMapEntry() { }
 
             public string key { get; set; }
             public int value { get; set; }
@@ -57,28 +57,28 @@ namespace BridgeTests
 
             public string key { get; set; }
             public int value { get; set; }
-            public Entry1[] elements { get; set; }
+            public StringIntMapEntry[] elements { get; set; }
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestInvalidSerialisationWithTheCustomJsonUnMarshallerAsCusomMarshaller()
         {
-            JsonConvert.SerializeObject(new Entry1[1], new CustomJsonUnMarshaller());
+            JsonConvert.SerializeObject(new StringIntMapEntry[1], new CustomJsonUnMarshaller());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestInvalidDeserialisationWithTheCustomJsonMarshallerAsCusomMarshaller()
         {
-            Entry1[] entry1 = new Entry1[1];
-            entry1[0] = new Entry1();
+            StringIntMapEntry[] entry1 = new StringIntMapEntry[1];
+            entry1[0] = new StringIntMapEntry();
             entry1[0].key = "key";
             entry1[0].value = 1;
 
             String msg = marshaller.MarshallObject(entry1);
 
-            JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonMarshaller());
+            JsonConvert.DeserializeObject<StringIntMapEntry[]>(msg, new CustomJsonMarshaller());
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace BridgeTests
             String msg = marshaller.MarshallObject(entry1);
             //Entr1[]!=TestClass
 
-            JsonConvert.DeserializeObject<Entry1[]>(msg, new CustomJsonUnMarshaller());
+            JsonConvert.DeserializeObject<StringIntMapEntry[]>(msg, new CustomJsonUnMarshaller());
         }
 
         [TestMethod]

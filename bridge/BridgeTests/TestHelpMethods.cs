@@ -209,8 +209,8 @@ namespace BridgeTests
             OOSourceCodeDomain.XLinkConnectorView oosxlink = new OOSourceCodeDomain.XLinkConnectorView();
             oosxlink.name = "TestCase";
             oosxlink.viewId = "TestViewId";
-            OOSourceCodeDomain.entry1[] entry = new OOSourceCodeDomain.entry1[1];
-            entry[0] = new OOSourceCodeDomain.entry1();
+            OOSourceCodeDomain.string2stringMapEntry[] entry = new OOSourceCodeDomain.string2stringMapEntry[1];
+            entry[0] = new OOSourceCodeDomain.string2stringMapEntry();
             entry[0].key = "key";
             entry[0].value = "value";
             oosxlink.descriptions = entry;
