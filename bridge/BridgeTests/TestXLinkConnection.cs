@@ -22,7 +22,7 @@ namespace BridgeTests
         [TestInitialize]
         public void InitialiseFactory()
         {
-            IOOSourceCodeDomainSoap11Binding exampleDomain = new OOSourceCodeDomainConnector();
+            IOOSourceCodeDomainSoapBinding exampleDomain = new OOSourceCodeDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
         }
 
@@ -53,7 +53,7 @@ namespace BridgeTests
             descriptions.Add("en", "This view opens the values in a SQLViewer.");
             descriptions.Add("de", "Dieses Tool öffnet die Werte in einem SQLViewer.");
             OpenEngSBCore.XLinkConnectorView[] views = new OpenEngSBCore.XLinkConnectorView[1];
-            views[0] = (new OpenEngSBCore.XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<string2stringMapEntry>() });
+            views[0] = (new OpenEngSBCore.XLinkConnectorView() { name = "SQLView", viewId = "SQL Viewer", descriptions = descriptions.ConvertMap<OpenEngSBCore.string2stringMapEntry>() });
             modelsToViews[0] =
                     new ModelToViewsTuple()
                     {

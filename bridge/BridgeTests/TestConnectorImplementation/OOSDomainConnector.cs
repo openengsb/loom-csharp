@@ -26,7 +26,7 @@ namespace BridgeTests.TestConnectorImplementation
     /// Example implementation of the local domain
     /// </summary>
     [ExcludeFromCodeCoverageAttribute()]
-    public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoap11Binding
+    public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoapBinding
     {
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
 
@@ -35,13 +35,6 @@ namespace BridgeTests.TestConnectorImplementation
         public void updateClass(OOClass args0)
         {
             logger.Info("updateClasse method call");
-        }
-
-        public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
-        {
-            @return = orgopenengsbcoreapiAliveState.ONLINE;
-            returnSpecified = true;
-            base.GetAliveState();
         }
 
         public string getInstanceId()
@@ -57,6 +50,11 @@ namespace BridgeTests.TestConnectorImplementation
         public void openXLinks(object[] args0, string args1)
         {
             logger.Info("openXLinks method call");
+        }
+
+        public void getAliveState(out AliveState? @return, out bool returnSpecified)
+        {
+            throw new NotImplementedException();
         }
     }
 }
