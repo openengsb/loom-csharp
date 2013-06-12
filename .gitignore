@@ -131,10 +131,14 @@ bin/
 TestResults/
 *.suo
 *.user
-packages/
 
 #================
 # ReSharper files
 #================
 _ReSharper.*
 
+#================
+# Nuget files
+#================
+packages/
+nuget.exe
