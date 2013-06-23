@@ -34,6 +34,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
     /// </summary>
     public class DomainFactoryProvider
     {
+        private static List<Assembly> SupportedOpenEngSBVersions = new List<Assembly>();
 
         private static String startingNameOfOpenEngSBAssemblies = "OpenEngSB";
         /// <summary>
@@ -47,7 +48,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
             return Activator.CreateInstance(domainResult, destination, service) as IDomainFactory;
         }
-
+        /// <summary>
+        /// Allos it to define the supported versions
+        /// </summary>
+        /// <param name="openengsbAssembly"></param>
+        public static void addSupport(Assembly openengsbAssembly)
+        {
+            SupportedOpenEngSBVersions.Add(openengsbAssembly);
+        }
         /// <summary>
         /// Retrieve a factory, depending on the openEngSB version
         /// </summary>
@@ -68,7 +76,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         {
             try
             {
-                Assembly osbassembly = Assembly.Load(startingNameOfOpenEngSBAssemblies + version);
+                Assembly osbassembly = SearchAssemblyInSupportedList(version);
+                if (osbassembly == null)
+                {
+                    osbassembly = Assembly.Load(startingNameOfOpenEngSBAssemblies + version);
+                }
                 List<Type> types = new List<Type>(osbassembly.GetTypes());
                 Type domainResult = types.Find(tmptype => typeof(IDomainFactory).IsAssignableFrom(tmptype));
                 return domainResult;
@@ -76,8 +88,28 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             catch (Exception ex)
             {
                 throw new BridgeException("There could not Assembly with the Name OpenEngSB" + version
-                    + " be found. Maybe you did not add this assembly to the solution", ex);
+                    + " be found. Maybe you did not add this assembly to the solution or did" +
+                    " not invoke the support method from the OpenEngSB implementation", ex);
             }
+        }
+        /// <summary>
+        /// Searchs throw all the supported elements in the List and search for the correct version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        private static Assembly SearchAssemblyInSupportedList(String version)
+        {
+            Version t = new Version(version);
+            foreach (Assembly ass in SupportedOpenEngSBVersions)
+            {
+                Version v = ass.GetName().Version;
+                int b = v.Build;
+                if (v.Major == t.Major && v.Minor == t.Minor && v.Build == t.Build)
+                {
+                    return ass;
+                }
+            }
+            return null;
         }
 
         /// <summary>

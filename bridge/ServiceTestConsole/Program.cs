@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using OpenEngSBCore;
 using ExampleDomain;
+using Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300;
 
 namespace ServiceTestConsole
 {
@@ -38,6 +39,7 @@ namespace ServiceTestConsole
             Boolean xlink = false;
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             OOSourceCodeDomainConnector ooconnector = new OOSourceCodeDomainConnector();
+            OpenEngSB300.SetSupport();
             IDomainFactory factory;
             string domainName;
             string destination = "tcp://localhost.:6549";
