@@ -40,9 +40,15 @@
     <Reference Include="ExampleDomain">
       <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Experimental.IO">
+      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Microsoft.Experimental.IO.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -55,6 +61,17 @@
     </Reference>
     <Reference Include="OpenEngSBCore">
       <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+    </Reference>
+    <Reference Include="OSBConnection, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\OSBConnection.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet">
+      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Sonatype, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Sonatype.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
@@ -74,25 +91,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestRuntimeNetBridgeWrongUsernameAndPassword.cs" />
-    <Compile Include="TestJsonMarsahller.cs" />
+    <Compile Include="Tests\TestJsonMarsahller.cs" />
     <Compile Include="TestExceptionHandlers\TestCustomExceptionHandler.cs" />
-    <Compile Include="TestJmsPort.cs" />
-    <Compile Include="TestDefaultEcxeptionHandler.cs" />
+    <Compile Include="Tests\TestDefaultEcxeptionHandler.cs" />
     <Compile Include="TestConnectorImplementation\OOSDomainConnector.cs" />
-    <Compile Include="TestRemoteType.cs" />
-    <Compile Include="TestRuntimeNetBridge.cs" />
-    <Compile Include="TestCommunicationClass.cs" />
+    <Compile Include="Tests\TestRemoteType.cs" />
+    <Compile Include="Tests\TestCommunicationClass.cs" />
     <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs" />
-    <Compile Include="TestHelpMethods.cs" />
+    <Compile Include="Tests\TestHelpMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDomainFactoryProvider.cs" />
-    <Compile Include="TestRuntimeNetBridgeUserNameAndPassword.cs" />
-    <Compile Include="TestExceptionHandler.cs" />
-    <Compile Include="TestLocalType.cs" />
-    <Compile Include="TestRegisterFunction.cs" />
-    <Compile Include="TestXLinkConnection.cs" />
-    <Compile Include="TestDestination.cs" />
+    <Compile Include="Tests\TestDomainFactoryProvider.cs" />
+    <Compile Include="Tests\TestExceptionHandler.cs" />
+    <Compile Include="Tests\TestLocalType.cs" />
+    <Compile Include="Tests\TestRegisterFunction.cs" />
+    <Compile Include="Tests\TestDestination.cs" />
+    <Compile Include="OSBTestProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -116,6 +129,7 @@
       <Name>OpenEngSB3.0.0</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

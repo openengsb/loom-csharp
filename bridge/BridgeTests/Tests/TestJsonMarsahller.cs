@@ -14,7 +14,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using BridgeTests.TestExceptionHandlers;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Newtonsoft.Json;
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverageAttribute()]

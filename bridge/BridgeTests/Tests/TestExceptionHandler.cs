@@ -8,7 +8,7 @@ using System.Threading;
 using BridgeTests.TestConnectorImplementation;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverageAttribute()]

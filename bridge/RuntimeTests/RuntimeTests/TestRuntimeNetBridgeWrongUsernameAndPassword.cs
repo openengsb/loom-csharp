@@ -1,17 +1,17 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using BridgeTests.TestConnectorImplementation;
+using RuntimeTests.TestConnectorImplementation;
 using System.Diagnostics.CodeAnalysis;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
-namespace BridgeTests
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace RuntimeTests.RuntimeTests
 {
-    [TestClass]
-    [ExcludeFromCodeCoverageAttribute()]
-    public class TestRuntimeNetBridgeWrongUsernameAndPassword
+
+    public class TestRuntimeNetBridgeWrongUsernameAndPassword : OSBRunTimeTestParent
     {
         private IDomainFactory factory;
         private const String domainName = "example";
@@ -21,30 +21,34 @@ namespace BridgeTests
         private const String destination = "tcp://localhost.:6549";
         private const String nullString = null;
         private const String version = "3.0.0";
-
-        [TestInitialize]
-        public void InitialiseFactory()
+    
+        public override void Init()
         {
             uuid = Guid.NewGuid().ToString();
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(BridgeException))]
         public void TestCreateConnectorWithWrongUsernameAndPassword()
         {
-            uuid = factory.CreateDomainService(domainName);
+            try
+            {
+                uuid = factory.CreateDomainService(domainName);
+                Assert.Fail();
+            }
+            catch (BridgeException) { }
         }
-
-        [ExpectedException(typeof(BridgeException))]
         public void TestRegisterConnectorWithoutCreateAndWithWrongUsernameAndPassword()
         {
-            uuid = factory.RegisterConnector(uuid, domainName);
+            try
+            {
+                uuid = factory.RegisterConnector(uuid, domainName);
+                Assert.Fail();
+            }
+            catch (BridgeException) { }
         }
 
-        [TestCleanup]
-        public void CleanUp()
+        public override void CleanUp()
         {
             factory.StopConnection(uuid);
         }

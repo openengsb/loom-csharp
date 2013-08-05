@@ -10,7 +10,7 @@ using System.Reflection;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverageAttribute()]

@@ -1,32 +1,28 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using OOSourceCodeDomain;
-using BridgeTests.TestConnectorImplementation;
+using RuntimeTests.TestConnectorImplementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using OpenEngSBCore;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-namespace BridgeTests
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace RuntimeTests.RuntimeTests
 {
-    [TestClass]
-    [ExcludeFromCodeCoverageAttribute()]
-    public class TestXLinkConnection
+    public class TestRuntimeXLinkConnection : OSBRunTimeTestParent
     {
         private IDomainFactory factory;
         private String uuid;
         private const String domainName = "oosourcecode";
         private const String destination = "tcp://localhost.:6549";
-
-        [TestInitialize]
-        public void InitialiseFactory()
+        
+        public override void Init()
         {
             IOOSourceCodeDomainSoapBinding exampleDomain = new OOSourceCodeDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance("3.0.0", destination, exampleDomain, new ForwardDefaultExceptionHandler());
         }
 
-        [TestMethod]
         public void TestCreateRegisterConnecttoxlinkDisconnectfromXlinkUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly()
         {
             uuid = factory.RegisterConnector(null, domainName);
@@ -63,8 +59,7 @@ namespace BridgeTests
             return modelsToViews;
         }
 
-        [TestCleanup]
-        public void CleanUp()
+        public override void CleanUp()
         {
             factory.StopConnection(uuid);
         }

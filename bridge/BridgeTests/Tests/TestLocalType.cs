@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using LocalTypeTestClass;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverageAttribute()]

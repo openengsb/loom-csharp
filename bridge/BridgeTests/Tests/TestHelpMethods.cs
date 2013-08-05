@@ -29,7 +29,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [ExcludeFromCodeCoverageAttribute()]
     [TestClass]
@@ -480,7 +480,7 @@ namespace BridgeTests
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayTypeWhereTheBridgeTestClassIsNotInTheAssembly()
         {
-            HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(BridgeTests.TestClass[]));
+            HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(TestClass[]));
         }
 
         [TestMethod]

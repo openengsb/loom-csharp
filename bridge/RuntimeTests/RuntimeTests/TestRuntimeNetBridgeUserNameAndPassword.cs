@@ -4,13 +4,15 @@ using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using ExampleDomain;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using BridgeTests.TestConnectorImplementation;
+using RuntimeTests.TestConnectorImplementation;
 using System.Diagnostics.CodeAnalysis;
-namespace BridgeTests
+using System.Collections.Generic;
+using OSBConnection;
+using SonaTypeDependencies;
+namespace RuntimeTests.RuntimeTests
 {
-    [TestClass]
-    [ExcludeFromCodeCoverageAttribute()]
-    public class TestRuntimeNetBridgeUserNameAndPassword
+
+    public class TestRuntimeNetBridgeUserNameAndPassword : OSBRunTimeTestParent
     {
         private IDomainFactory factory;
         private const String domainName = "example";
@@ -21,14 +23,13 @@ namespace BridgeTests
         private const String nullString = null;
         private const String version = "3.0.0";
 
-        [TestInitialize]
-        public void InitialiseFactory()
+        public override void Init()
         {
             ExampleDomainConnector exampleDomain = new ExampleDomainConnector();
             factory = DomainFactoryProvider.GetDomainFactoryInstance(version, destination, exampleDomain, new ForwardDefaultExceptionHandler(), Username, Password);
         }
 
-        [TestMethod]
+        
         public void TestCreateDeleteConnectorAndNoRegistrationWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
@@ -38,8 +39,7 @@ namespace BridgeTests
 
             factory.DeleteDomainService(uuid);
         }
-
-        [TestMethod]
+        
         public void TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectlyUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
@@ -50,7 +50,6 @@ namespace BridgeTests
             factory.DeleteDomainService(uuid);
         }
 
-        [TestMethod]
         public void TestCreateRegisterUnregisterDeleteConnectorWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.CreateDomainService(domainName);
@@ -69,7 +68,7 @@ namespace BridgeTests
             Assert.IsFalse(factory.Registered(uuid));
         }
 
-        [TestMethod]
+        
         public void TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.RegisterConnector(null, domainName);
@@ -77,7 +76,7 @@ namespace BridgeTests
             factory.DeleteDomainService(uuid);
         }
 
-        [TestMethod]
+        
         public void TestCreateRegisterEventHandlerUnregisterDeleteWorksCorrectlyWithUsernameAndPassword()
         {
             uuid = factory.RegisterConnector(nullString, domainName);
@@ -88,8 +87,7 @@ namespace BridgeTests
             factory.DeleteDomainService(uuid);
         }
 
-        [TestCleanup]
-        public void CleanUp()
+        public override void CleanUp()
         {
             factory.StopAllConnections();
         }

@@ -5,7 +5,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 using BridgeTests.TestConnectorImplementation;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BridgeTests
+namespace BridgeTests.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverageAttribute()]
