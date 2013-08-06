@@ -1,16 +1,12 @@
-﻿using System;
+﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
-using System.Xml.Serialization;
-using System.IO;
 using Sonatype;
 using SonaTypeDependencies;
-using System.Xml;
 
 namespace SonaTypeTests
 {
     [TestClass]
-    public class ArtefactSerializerTests
+    public class ArtifactSerializerTests
     {
         [TestMethod]
         public void TestIfArtifactAreEqual()
@@ -28,6 +24,7 @@ namespace SonaTypeTests
 
             Assert.AreEqual<Artifact>(artefact, artefact);
         }
+        
         [TestMethod]
         public void TestIfArtifactAreNotEqualWhereOneObjectIsEmpty()
         {
@@ -44,11 +41,13 @@ namespace SonaTypeTests
 
             Assert.AreNotEqual<Artifact>(artefact, new Artifact());
         }
+
         [TestMethod]
         public void TestIfArtifactAreEqualWithEmptyArifacts()
         {
             Assert.AreEqual<Artifact>(new Artifact(), new Artifact());
         }
+        
         [TestMethod]
         public void TestArtifactIsNotEqual()
         {
@@ -76,6 +75,7 @@ namespace SonaTypeTests
             artefactNotEqual.PomLink = "DIFFRENT TO ARTEFACT1";
             Assert.AreNotEqual<Artifact>(artefact, artefactNotEqual);
         }
+        
         [TestMethod]
         public void TestSerializerCreatesTheCorrectOutput()
         {
@@ -105,10 +105,9 @@ namespace SonaTypeTests
             builder.AppendLine("<artifactLink>https://repository.sonatype.org/service/local/artifact/maven/redirect?r=ossrh-snapshot&amp;g=org.openengsb.framework&amp;a=openengsb-framework&amp;v=2.6.0-SNAPSHOT&amp;e=zip&amp;c=src</artifactLink>");
             builder.AppendLine("</artifact>");
 
-            SonatypeDependencyManager sonaType = new SonatypeDependencyManager(null,null,null,null,null);
+            SonatypeDependencyManager sonaType = new SonatypeDependencyManager(null, null, null, null, null);
             Artifact resultArtefact = sonaType.ConvertSearchResult<Artifact>(builder.ToString());
             Assert.AreNotEqual<Artifact>(expectedResult, resultArtefact);
         }
-
     }
 }

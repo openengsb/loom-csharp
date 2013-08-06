@@ -133,9 +133,9 @@ TestResults/
 *.user
 
 #================
-# ReSharper files
+# Style Cope
 #================
-_ReSharper.*
+*.Cache
 
 #================
 # Nuget files

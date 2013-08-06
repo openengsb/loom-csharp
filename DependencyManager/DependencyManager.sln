@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEngSBConnection", "Open
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonaTypeTests", "SonaTypeTests\SonaTypeTests.csproj", "{BBFDD1C4-039F-4FBE-8BDB-D1C3DD9AA557}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnzipArtifacts", "UnzipArtifact\UnzipArtifacts.csproj", "{09A55D7D-F997-4B4D-8D0A-FE1E4EF460A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{BBFDD1C4-039F-4FBE-8BDB-D1C3DD9AA557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBFDD1C4-039F-4FBE-8BDB-D1C3DD9AA557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBFDD1C4-039F-4FBE-8BDB-D1C3DD9AA557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09A55D7D-F997-4B4D-8D0A-FE1E4EF460A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A55D7D-F997-4B4D-8D0A-FE1E4EF460A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A55D7D-F997-4B4D-8D0A-FE1E4EF460A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A55D7D-F997-4B4D-8D0A-FE1E4EF460A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

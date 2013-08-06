@@ -75,16 +75,20 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ArtefactSerializerTests.cs" />
+    <Compile Include="ArtifactSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsearchResultsSerialization.cs" />
-    <Compile Include="ArtefactComparingTests.cs" />
+    <Compile Include="ArtifactComparingTests.cs" />
     <Compile Include="TestUnzip.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sonatype\SonaType.csproj">
       <Project>{e261fd60-68e1-496f-b802-8766bcd8f9ea}</Project>
       <Name>SonaType</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnzipArtifact\UnzipArtifacts.csproj">
+      <Project>{09a55d7d-f997-4b4d-8d0a-fe1e4ef460a3}</Project>
+      <Name>UnzipArtifacts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

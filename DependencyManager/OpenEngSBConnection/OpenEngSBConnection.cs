@@ -1,5 +1,4 @@
-﻿using Renci.SshNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,95 +7,120 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
+using Renci.SshNet;
 
 namespace OSBConnection
 {
     public class OpenEngSBConnection
     {
-        private const String openEngSBBatLocation = @"\bin\openengsb.bat";
+        private const String OpenEngSBBatLocation = @"\bin\openengsb.bat";
+        private static ILog logger = LogManager.GetLogger(typeof(OpenEngSBConnection));
+        private static int retries;
         private SshClient osbClient;
-        private String osbFolderLocation = "";
+        private String osbFolderLocation = String.Empty;
         private String username = "karaf";
         private String password = "karaf";
-        private String OSBUrl = "localhost";
+        private String osbUrl = "localhost";
         private int port = 8101;
-        private Process osbProcess;
-        private static int retries;
+        private Process osbProcess = null;
+        
         public int ExecutionTimeOutBetweenCommands { get; set; }
+
         public int TimeToWaitUntilOSBIsStarted { get; set; }
 
-        public Boolean isOSBConnectionOpen { get; private set; }
+        public Boolean IsOSBConnectionOpen { get; private set; }
 
         public OpenEngSBConnection(String osbFolderLocation)
         {
-            isOSBConnectionOpen = false;
+            this.IsOSBConnectionOpen = false;
             this.osbFolderLocation = osbFolderLocation;
             retries = 5;
-            ExecutionTimeOutBetweenCommands = 10000;
-            TimeToWaitUntilOSBIsStarted = 5000;
+            this.ExecutionTimeOutBetweenCommands = 10000;
+            this.TimeToWaitUntilOSBIsStarted = 5000;
         }
-        public OpenEngSBConnection(String OSBUrl, String username, String password, int port, String osbFolderLocation)
+
+        public OpenEngSBConnection(String osbUrl, String username, String password, int port, String osbFolderLocation)
             : this(osbFolderLocation)
         {
-            this.OSBUrl = OSBUrl;
+            this.osbUrl = osbUrl;
             this.username = username;
             this.password = password;
             this.port = port;
         }
 
-        private void startOpenEngSB()
+        public void StartOpenEngSB()
         {
-            ProcessStartInfo start = new ProcessStartInfo(osbFolderLocation+"\\"+ openEngSBBatLocation);
+            ProcessStartInfo start = new ProcessStartInfo(this.osbFolderLocation + "\\" + OpenEngSBBatLocation);
             start.WindowStyle = ProcessWindowStyle.Normal;
             start.CreateNoWindow = false;
             start.UseShellExecute = false;
-            osbProcess = Process.Start(start);
-            //Wait until the OSB is started
-            Thread.Sleep(TimeToWaitUntilOSBIsStarted);
+            this.osbProcess = Process.Start(start);
+            //// Wait until the OSB is started
+            Thread.Sleep(this.TimeToWaitUntilOSBIsStarted);
         }
 
-        public void connectToOSBWithSSH()
+        public void ConnectToOSBWithSSH()
         {
-            isOSBConnectionOpen = false;
-            startOpenEngSB();
-            osbClient = new SshClient(OSBUrl, port, username, password);
+            if (this.osbProcess == null)
+            {
+                throw new InvalidOperationException("The OSB process is not started");
+            }
+
+            this.IsOSBConnectionOpen = false;
+            this.osbClient = new SshClient(this.osbUrl, this.port, this.username, this.password);
             try
             {
-                osbClient.Connect();
+                this.osbClient.Connect();
             }
             catch (SocketException)
             {
-                //The OSB is not started yet. Retry again
+                // The OSB is not started yet. Retry again
                 if (retries-- <= 0)
                 {
                     throw;
                 }
-                Thread.Sleep(TimeToWaitUntilOSBIsStarted);
-                connectToOSBWithSSH();
+
+                Thread.Sleep(this.TimeToWaitUntilOSBIsStarted);
+                this.ConnectToOSBWithSSH();
             }
-            isOSBConnectionOpen = true;
+
+            this.IsOSBConnectionOpen = true;
         }
 
-        public void executeCommand(String command)
+        public void ExecuteCommand(String command)
         {
-            osbClient.RunCommand(command);
-            Thread.Sleep(ExecutionTimeOutBetweenCommands);
+            this.osbClient.RunCommand(command);
+            Thread.Sleep(this.ExecutionTimeOutBetweenCommands);
         }
 
-        public void closeConnection()
+        public void CloseConnection()
         {
-            isOSBConnectionOpen = false;
-            executeCommand("shutdown -f");
-            Thread.Sleep(ExecutionTimeOutBetweenCommands);
+            this.IsOSBConnectionOpen = false;
+            this.ExecuteCommand("shutdown -f");            
+        }
+
+        public void Shutdown()
+        {
+            if (IsOSBConnectionOpen)
+            {
+                CloseConnection();
+            }
+
+            Thread.Sleep(this.ExecutionTimeOutBetweenCommands);
             try
             {
-                if (osbClient.IsConnected)
+                if (this.osbClient.IsConnected)
                 {
-                    osbProcess.Kill();
+                    this.osbProcess.Kill();
                 }
             }
-            catch{}
-            osbClient.Disconnect();
+            catch (Exception ex)
+            {
+                logger.Error("Killing proces did not work", ex);
+            }
+
+            this.osbClient.Disconnect();
         }
     }
 }

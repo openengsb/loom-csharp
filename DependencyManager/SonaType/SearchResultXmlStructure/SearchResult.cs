@@ -20,20 +20,22 @@ namespace Sonatype.SearchResultXmlStructure
         [XmlElement("count")]
         public int Count { get; set; }
         [XmlElement("tooManyResults")]
-        public Boolean TooManyResults { get; set; }
+        public bool TooManyResults { get; set; }
         [XmlArray("data")]
-        public List<Artifact> artefacts { get; set; }
+        public List<Artifact> Artifacts { get; set; }
 
         public SearchResult()
         {
-            artefacts = new List<Artifact>();
+            Artifacts = new List<Artifact>();
         }
-        public override Boolean Equals(Object artifact1)
+
+        public override bool Equals(Object artifact1)
         {
             if (!artifact1.GetType().Equals(this.GetType()))
             {
                 return false;
             }
+
             PropertyInfo[] fields = this.GetType().GetProperties();
             foreach (PropertyInfo field in fields)
             {
@@ -42,22 +44,11 @@ namespace Sonatype.SearchResultXmlStructure
                     return false;
                 }
             }
+
             return true;
         }
 
-        private Boolean AreNotEqual(Object obj1Value, Object obj2Value)
-        {
-            if (obj2Value != null && isNotEqual(obj2Value, obj1Value))
-            {
-                return true;
-            }
-            else if (obj1Value != null && isNotEqual(obj1Value, obj2Value))
-            {
-                return true;
-            }
-            return false;
-        }
-        public Boolean isNotEqual(Object obj1, Object obj2)
+        public bool IsNotEqual(Object obj1, Object obj2)
         {
             if (obj1 is ICollection && obj2 is ICollection)
             {
@@ -67,11 +58,27 @@ namespace Sonatype.SearchResultXmlStructure
                     return false;
                 }
             }
+
             return !obj1.Equals(obj2);
         }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+ 
+        private bool AreNotEqual(Object obj1Value, Object obj2Value)
+        {
+            if (obj2Value != null && IsNotEqual(obj2Value, obj1Value))
+            {
+                return true;
+            }
+            else if (obj1Value != null && IsNotEqual(obj1Value, obj2Value))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

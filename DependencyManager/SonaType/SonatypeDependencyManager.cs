@@ -1,28 +1,28 @@
-﻿using log4net;
-using Sonatype;
-using Sonatype.SearchResultXmlStructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml.Serialization;
+using log4net;
+using Sonatype;
+using Sonatype.SearchResultXmlStructure;
 using ZetaLongPaths;
 
 namespace SonaTypeDependencies
 {
     public class SonatypeDependencyManager
     {
-        private static ILog logger = LogManager.GetLogger(typeof(SonatypeDependencyManager));
         private const String BaseUrl = "http://repository.sonatype.org/";
         private const String RestFullBaseUrl = "https://oss.sonatype.org/content/repositories/snapshots";
         private const String SearchUrl = "service/local/data_index?";
         private const String GroupSearchParameter = "g={0}";
-        private const String ArtefactSearchParameter = "&a={0}";
+        private const String ArtifactSearchParameter = "&a={0}";
         private const String PackageSearchParameter = "&p={0}";
         private const String ExtensionSearchParameter = "&e={0}";
         private const String VersionSearchParameter = "&v={0}";
-        private const String SevenZipFolderLocation = @"\7-zip\7z.dll";
+
+        private static ILog logger = LogManager.GetLogger(typeof(SonatypeDependencyManager));
 
         private String groupId;
         private String artefactId;
@@ -31,6 +31,7 @@ namespace SonaTypeDependencies
         private String classifier;
 
         private WebClient client = new WebClient();
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -49,149 +50,27 @@ namespace SonaTypeDependencies
         }
 
         /// <summary>
-        /// Creates a Url from the groupId, artefactId and the Version
-        /// </summary>
-        /// <returns></returns>
-        private String getSearchUrl()
-        {
-            logger.Info("Generate Search Url");
-            if (String.IsNullOrEmpty(groupId) || String.IsNullOrEmpty(artefactId)
-                || String.IsNullOrEmpty(packaging))
-            {
-                throw new ArgumentException("The packageName, version or packaging can not be empty");
-            }
-            StringBuilder builder = new StringBuilder(BaseUrl);
-            builder.Append(SearchUrl);
-            builder.Append(String.Format(GroupSearchParameter, groupId));
-            if (IsStringNotEmpty(artefactId))
-            {
-                builder.Append(String.Format(ArtefactSearchParameter, artefactId));
-            }
-            if (IsStringNotEmpty(version))
-            {
-                builder.Append(String.Format(VersionSearchParameter, version));
-            }
-            builder.Append(String.Format(PackageSearchParameter, packaging));
-            return builder.ToString();
-        }
-
-        private bool IsStringNotEmpty(String value)
-        {
-            return !String.IsNullOrEmpty(value);
-        }
-
-        /// <summary>
         /// Downloads the Artifact according to the parameters that has been
         /// indicated over the constructor
         /// </summary>
-        /// <param name="FolderLocation">The location where the Artefact should be dowloaded</param>
+        /// <param name="folderLocation">The location where the Artefact should be dowloaded</param>
         /// <returns>The Absolute Path to the Artefact</returns>
-        public String DownloadArtefactToFolder(String FolderLocation)
+        public FileInfo DownloadArtifactToFolder(String folderLocation)
         {
             logger.Info("Download all the Artefacts (In XML format)");
-            String searchResult = client.DownloadString(new Uri(getSearchUrl()));
+            String searchResult = this.client.DownloadString(new Uri(this.GetSearchUrl()));
             logger.Info("Convert the XML to SearchResult object");
             SearchResult result = ConvertSearchResult<SearchResult>(searchResult);
             logger.Info("Add the Artefacts by search the artefacts (Because of a Bug in Nexus sonatype)");
-            result.artefacts.AddRange(findArtifactOverRest());
+            result.Artifacts.AddRange(this.FindArtifactOverRest());
             logger.Info("Search for the artefact that fulfils all the criteria");
-            Artifact selectedArtifact = findCorrectArtefact(result);
-            String FolderLocationAndFileName = Path.Combine(FolderLocation, selectedArtifact.ArtifactId + "-" + selectedArtifact.Version + "." + selectedArtifact.Packaging);
-            logger.Info("Download the Artefact to the folder " + FolderLocationAndFileName);
-            client.DownloadFile(selectedArtifact.ArtifactLink, FolderLocationAndFileName);
-            return FolderLocationAndFileName;
-        }
-        /// <summary>
-        /// Unzip a Zip file to a defined folder
-        /// </summary>
-        /// <param name="zipFilename"></param>
-        /// <param name="outputFolder"></param>
-        /// <returns></returns>
-        public String UnzipFile(String zipFilename, String outputFolder)
-        {
-            DirectoryInfo[] startDirectories = (new DirectoryInfo(outputFolder)).GetDirectories();
-            String t = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + SevenZipFolderLocation;
-            SevenZip.SevenZipBase.SetLibraryPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
-                + SevenZipFolderLocation);
-            SevenZip.SevenZipExtractor ex = new SevenZip.SevenZipExtractor(zipFilename);
-            ex.ExtractionFinished += (s, e) =>
-            {
-                logger.Info("Extracting finished");
-            };
-
-            ex.ExtractArchive(outputFolder);
-            String parentFile = null;
-            foreach (SevenZip.ArchiveFileInfo zFile in ex.ArchiveFileData)
-            {
-                if (parentFile == null || parentFile.Length > zFile.FileName.Length)
-                {
-                    parentFile = zFile.FileName;
-                }
-            }
-            if (parentFile.Contains("\\"))
-            {
-                parentFile = parentFile.Substring(0, parentFile.IndexOf("\\"));
-            }
-            return Path.Combine(outputFolder, parentFile);
-        }
-        /// <summary>
-        /// Nexus sonatype does not list elements that have no classifier.
-        /// To find zip files (wiht no classifier) this workaround is used.
-        /// (Search the file over a Rest url)
-        /// </summary>
-        /// <returns></returns>
-        private List<Artifact> findArtifactOverRest()
-        {
-            StringBuilder urlBuilder = new StringBuilder(RestFullBaseUrl);
-            foreach (String element in groupId.Split('.'))
-            {
-                urlBuilder.Append("/");
-                urlBuilder.Append(element);
-            }
-            urlBuilder.Append("/");
-            urlBuilder.Append(artefactId);
-            urlBuilder.Append("/");
-            urlBuilder.Append(version);
-            urlBuilder.Append("/");
-            return HtmlArtifact.getinstance(client.DownloadString(urlBuilder.ToString()));
-        }
-        /// <summary>
-        /// Returns all the artefacts that fullfils the parameters (indicated over the constructor)
-        /// </summary>
-        /// <param name="artefacts"></param>
-        /// <returns></returns>
-        private List<Artifact> removeWrongArtefacts(List<Artifact> artefacts)
-        {
-            return artefacts.FindAll(ar =>
-            {
-                return ar.ArtifactId == this.artefactId
-                    && ar.Classifier == this.classifier
-                    && ar.Packaging == this.packaging;
-            });
+            Artifact selectedArtifact = this.FindCorrectArtifact(result);
+            String folderLocationAndFileName = Path.Combine(folderLocation, selectedArtifact.ArtifactId + "-" + selectedArtifact.Version + "." + selectedArtifact.Packaging);
+            logger.Info("Download the Artefact to the folder " + folderLocationAndFileName);
+            this.client.DownloadFile(selectedArtifact.ArtifactLink, folderLocationAndFileName);
+            return new FileInfo(folderLocationAndFileName);
         }
 
-        private Artifact findCorrectArtefact(SearchResult result)
-        {
-            List<Artifact> matchingArtefacts = removeWrongArtefacts(result.artefacts);
-            if (matchingArtefacts.Count > 0)
-            {
-                Artifact oldestArtefact = null;
-                foreach (Artifact art in matchingArtefacts)
-                {
-                    if (oldestArtefact == null)
-                    {
-                        oldestArtefact = art;
-                        continue;
-                    }
-                    if (oldestArtefact.CompareTo(art) > 0)
-                    {
-                        oldestArtefact = art;
-                    }
-                }
-                return oldestArtefact;
-            }
-            throw new ArgumentException("For the given parameters, no Artefact could be found");
-        }
         /// <summary>
         /// Converts the SearchResult (in XML) to an Object
         /// </summary>
@@ -205,14 +84,40 @@ namespace SonaTypeDependencies
             return (ResultType)serializer.Deserialize(reader);
         }
 
+        private Artifact FindCorrectArtifact(SearchResult result)
+        {
+            List<Artifact> matchingArtefacts = this.RemoveWrongArtifacts(result.Artifacts);
+            if (matchingArtefacts.Count > 0)
+            {
+                Artifact oldestArtefact = null;
+                foreach (Artifact art in matchingArtefacts)
+                {
+                    if (oldestArtefact == null)
+                    {
+                        oldestArtefact = art;
+                        continue;
+                    }
 
-        private void createAllNotExistingFolder(ZlpDirectoryInfo directories)
+                    if (oldestArtefact.CompareTo(art) > 0)
+                    {
+                        oldestArtefact = art;
+                    }
+                }
+
+                return oldestArtefact;
+            }
+
+            throw new ArgumentException("For the given parameters, no Artefact could be found");
+        }
+
+        private void CreateAllNotExistingFolder(ZlpDirectoryInfo directories)
         {
             if (directories.Exists)
             {
                 return;
             }
-            createAllNotExistingFolder(directories.Parent);
+
+            this.CreateAllNotExistingFolder(directories.Parent);
             Microsoft.Experimental.IO.LongPathDirectory.Create(directories.FullName);
         }
 
@@ -313,5 +218,73 @@ namespace SonaTypeDependencies
           {
               return unziptoFileName.ToString() + "\\" + e.FileName;
           }*/
+        private bool IsStringNotEmpty(String value)
+        {
+            return !String.IsNullOrEmpty(value);
+        }
+
+        /// <summary>
+        /// Creates a Url from the groupId, artefactId and the Version
+        /// </summary>
+        /// <returns></returns>
+        private String GetSearchUrl()
+        {
+            logger.Info("Generate Search Url");
+            if (String.IsNullOrEmpty(this.groupId) || String.IsNullOrEmpty(this.artefactId)
+                || String.IsNullOrEmpty(this.packaging))
+            {
+                throw new ArgumentException("The packageName, version or packaging can not be empty");
+            }
+
+            StringBuilder builder = new StringBuilder(BaseUrl);
+            builder.Append(SearchUrl);
+            builder.Append(String.Format(GroupSearchParameter, this.groupId));
+            builder.Append(String.Format(ArtifactSearchParameter, this.artefactId));
+            if (this.IsStringNotEmpty(this.version))
+            {
+                builder.Append(String.Format(VersionSearchParameter, this.version));
+            }
+
+            builder.Append(String.Format(PackageSearchParameter, this.packaging));
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Nexus sonatype does not list elements that have no classifier.
+        /// To find zip files (wiht no classifier) this workaround is used.
+        /// (Search the file over a Rest url)
+        /// </summary>
+        /// <returns></returns>
+        private List<Artifact> FindArtifactOverRest()
+        {
+            StringBuilder urlBuilder = new StringBuilder(RestFullBaseUrl);
+            foreach (String element in this.groupId.Split('.'))
+            {
+                urlBuilder.Append("/");
+                urlBuilder.Append(element);
+            }
+
+            urlBuilder.Append("/");
+            urlBuilder.Append(this.artefactId);
+            urlBuilder.Append("/");
+            urlBuilder.Append(this.version);
+            urlBuilder.Append("/");
+            return HtmlArtifact.ConvertToArtifacts(this.client.DownloadString(urlBuilder.ToString()));
+        }
+
+        /// <summary>
+        /// Returns all the artefacts that fullfils the parameters (indicated over the constructor)
+        /// </summary>
+        /// <param name="artefacts"></param>
+        /// <returns></returns>
+        private List<Artifact> RemoveWrongArtifacts(List<Artifact> artefacts)
+        {
+            return artefacts.FindAll(ar =>
+            {
+                return ar.ArtifactId == this.artefactId
+                    && ar.Classifier == this.classifier
+                    && ar.Packaging == this.packaging;
+            });
+        }
     }
 }

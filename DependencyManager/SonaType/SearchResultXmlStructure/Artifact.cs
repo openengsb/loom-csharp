@@ -12,7 +12,7 @@ namespace Sonatype
 {
     [Serializable]
     [XmlType("artifact")]
-    public class Artifact : System.Object, IComparable<Artifact>
+    public class Artifact : Object, IComparable<Artifact>
     {
         [XmlElement("resourceURI")]
         public String ResourceUri { get; set; }
@@ -37,15 +37,17 @@ namespace Sonatype
         [XmlElement("artifactLink")]
         public String ArtifactLink { get; set; }
 
-        public Artifact() { }
+        public Artifact() 
+        {
+        }
 
-
-        public override Boolean Equals(Object artifact1)
+        public override bool Equals(object artifact1)
         {
             if (!artifact1.GetType().Equals(this.GetType()))
             {
                 return false;
             }
+
             PropertyInfo[] fields = typeof(Artifact).GetProperties();
             foreach (PropertyInfo field in fields)
             {
@@ -54,20 +56,8 @@ namespace Sonatype
                     return false;
                 }
             }
-            return true;
-        }
 
-        private Boolean AreNotEqual(Object obj1Value, Object obj2Value)
-        {
-            if (obj2Value != null && !obj2Value.Equals(obj1Value))
-            {
-                return true;
-            }
-            else if (obj1Value != null && !obj1Value.Equals(obj2Value))
-            {
-                return true;
-            }
-            return false;
+            return true;
         }
 
         public override int GetHashCode()
@@ -81,16 +71,19 @@ namespace Sonatype
             {
                 return 0;
             }
-            if (String.IsNullOrEmpty(other.Version) )
+
+            if (String.IsNullOrEmpty(other.Version))
             {
                 return 1;
             }
+            
             if (String.IsNullOrEmpty(this.Version))
             {
                 return -1;
             }
-            String versionOther = other.Version.Replace(".","").Replace("-","").Trim();
-            String thisVersion=Version.Replace(".","").Replace("-","").Trim();
+            
+            String versionOther = other.Version.Replace(".", String.Empty).Replace("-", String.Empty).Trim();
+            String thisVersion = Version.Replace(".", String.Empty).Replace("-", String.Empty).Trim();
 
             for (int i = 0; i < versionOther.Length; i++)
             {
@@ -98,11 +91,14 @@ namespace Sonatype
                 {
                     break;
                 }
-                if (!thisVersion[i].Equals(versionOther[i])){
+
+                if (!thisVersion[i].Equals(versionOther[i]))
+                {
                     return GetComparingResult(versionOther[i], thisVersion[i]);
                 }
             }
-            return thisVersion.Length-versionOther.Length;
+
+            return thisVersion.Length - versionOther.Length;
         }
 
         private int GetComparingResult(char versionOther, char thisVersion)
@@ -116,7 +112,22 @@ namespace Sonatype
             {
                 return -1;
             }
+
             return 0;
+        }
+
+        private bool AreNotEqual(Object obj1Value, Object obj2Value)
+        {
+            if (obj2Value != null && !obj2Value.Equals(obj1Value))
+            {
+                return true;
+            }
+            else if (obj1Value != null && !obj1Value.Equals(obj2Value))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

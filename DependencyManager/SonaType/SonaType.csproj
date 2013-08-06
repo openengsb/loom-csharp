@@ -74,7 +74,7 @@
     <Compile Include="SearchResultXmlStructure\SearchResult.cs" />
     <Compile Include="SonatypeDependencyManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchResultXmlStructure\Artefact.cs" />
+    <Compile Include="SearchResultXmlStructure\Artifact.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
