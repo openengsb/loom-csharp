@@ -1,4 +1,22 @@
-﻿using System;
+﻿#region Copyright
+// <copyright file="SonatypeDependencyManager.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -121,103 +139,6 @@ namespace SonaTypeDependencies
             Microsoft.Experimental.IO.LongPathDirectory.Create(directories.FullName);
         }
 
-        /* /// <summary>
-         /// Unzips a zip to a folder
-         /// </summary>
-         /// <param name="FileLocation">The folder where the zip should be located</param>
-         /// <returns></returns>
-         public String UnzipFile(String FileLocation)
-         {
-             if (!File.Exists(FileLocation))
-             {
-                 throw new ArgumentException("File does not exists");
-             }
-             DirectoryInfo unziptoFileName = new FileInfo(FileLocation).Directory;
-             List<String> directories = new List<String>();
-             logger.Info("Start unzipping " + FileLocation);
-             ZipInputStream stream = new ZipInputStream(FileLocation);
-
-             ZipEntry e;
-             while ((e = stream.GetNextEntry()) != null)
-             {
-                 logger.Info("Completed: " + stream.Position + "/" + stream.Length);
-                 if (!File.Exists(e.FileName))
-                 {
-                     if (e.IsDirectory)
-                     {
-                         directories.Add(e.FileName);
-                         createAllNotExistingFolder(new ZlpDirectoryInfo(CreateAbsolutePath(unziptoFileName, e)));
-                         continue;
-                     }
-                     BinaryReader sr = new BinaryReader(stream);
-                     {
-                         directories.Add(e.FileName);
-                         ZlpFileInfo maybeLongFile = new ZlpFileInfo(CreateAbsolutePath(unziptoFileName, e));
-                         createAllNotExistingFolder(maybeLongFile.Directory);
-                         long sizelong = e.UncompressedSize;
-                         int size = (int)sizelong;
-                         if (sizelong > size)
-                         {
-                             size = int.MaxValue;
-                         }
-                         byte[] buffer = new byte[size];
-                         MemoryStream m = new MemoryStream();
-                         while (sr.Read(buffer, 0, size) > 0)
-                         {
-                             m.Write(buffer, 0, size);
-                         }
-                         byte[] fileInBytes = m.ToArray();
-                         try
-                         {
-                             FileStream f = File.Create(maybeLongFile.FullName);
-                             f.Write(fileInBytes, 0, fileInBytes.Length);
-                             f.Close();
-                         }
-                         catch (PathTooLongException)
-                         {
-                             HandlePathToLongException(maybeLongFile, fileInBytes);
-                         }
-                     }
-                 }
-             }
-             stream.Close();
-
-             if (directories.Count > 0)
-             {
-                 DirectoryInfo checkExistendDirectory = unziptoFileName.GetDirectories().ToList<DirectoryInfo>().Find(d => directories.Find(directory => directory.StartsWith(d.Name)) != null);
-                 logger.Info("Unzip completed");
-                 return checkExistendDirectory.FullName;
-             }
-             throw new ArgumentException("The OSB directory could not be unzipped successfully");
-         }
-         
-        private void HandlePathToLongException(ZlpFileInfo maybeLongFile, byte[] fileInBytes)
-        {
-            logger.Info("Path to long exception has been regognized. Create tmp file and rename/move this one to the folder");
-            FileInfo tempFile = CreateTempFile();
-            FileStream f = tempFile.Create();
-            f.Write(fileInBytes, 0, fileInBytes.Length);
-            f.Close();
-            if (Microsoft.Experimental.IO.LongPathFile.Exists(maybeLongFile.FullName))
-            {
-                //If the Zip is extract twice in the same folder, then the File has to be deleted before.
-                //Else an exception will be thrown.
-                Microsoft.Experimental.IO.LongPathFile.Delete(maybeLongFile.FullName);
-            }
-            Microsoft.Experimental.IO.LongPathFile.Move(tempFile.FullName, maybeLongFile.FullName);
-            tempFile.Delete();
-        }
-
-          private FileInfo CreateTempFile()
-          {
-              FileInfo tempFile = new FileInfo(System.IO.Path.GetTempPath() + "tmp" + (new Random()).Next());
-              return tempFile;
-          }
-
-          private string CreateAbsolutePath(DirectoryInfo unziptoFileName, ZipEntry e)
-          {
-              return unziptoFileName.ToString() + "\\" + e.FileName;
-          }*/
         private bool IsStringNotEmpty(String value)
         {
             return !String.IsNullOrEmpty(value);

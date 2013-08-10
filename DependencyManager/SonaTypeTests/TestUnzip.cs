@@ -1,4 +1,22 @@
-﻿using System;
+﻿#region Copyright
+// <copyright file="TestUnzip.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Experimental.IO;
@@ -13,7 +31,7 @@ namespace SonaTypeTests
     {
         private DirectoryInfo directory = null;
         private DirectoryInfo tempFolder;
-        private Unzipper unzipper;
+        private IUnzipper unzipper;
         [TestInitialize]
         public void InitTests()
         {
@@ -25,7 +43,7 @@ namespace SonaTypeTests
         public void TestUnzipTestWithOneFolderAndOneFileFolderExists()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             Assert.IsTrue(this.directory.Exists);
@@ -35,7 +53,7 @@ namespace SonaTypeTests
         public void TestUnzipTestWithOneFolderAndOneFileFileExists()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             FileInfo testFile = new FileInfo(this.directory.FullName + "/" + "New Text Document.txt");
@@ -46,7 +64,7 @@ namespace SonaTypeTests
         public void TestIfAllFoldersArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.directory.GetDirectories().Length, 32);
@@ -56,7 +74,7 @@ namespace SonaTypeTests
         public void TestIfAllFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.directory.GetFiles().Length, 5);
@@ -66,7 +84,7 @@ namespace SonaTypeTests
         public void TestIfAllSubFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             List<FileInfo> files = new List<FileInfo>();
@@ -82,7 +100,7 @@ namespace SonaTypeTests
         public void TestUnzipTestWithPathToLong()
         {
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithPathToLongInside.zip");
-            unzipper = new Unzipper(zipFile);
+            unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.GetLongestPathDirectory(this.directory).FullName.Length, 248);
