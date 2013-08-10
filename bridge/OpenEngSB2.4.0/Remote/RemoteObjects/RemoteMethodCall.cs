@@ -32,16 +32,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB240.Remote.RemoteObjects
         /// <summary>
         /// Fully qualified class names of the arguments.
         /// </summary>
-        public IList<string> classes { get; set; }
+        public IList<string> Classes { get; set; }
         /// <summary>
         /// Name of the method to be called.
         /// </summary>
-        public string methodName { get; set; }
+        public string MethodName { get; set; }
 
         /// <summary>
         /// Arguments of the call.
         /// </summary>
-        public IList<object> args { get; set; }
+        public IList<object> Args { get; set; }
 
         /// <summary>
         /// Metadata
@@ -56,10 +56,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB240.Remote.RemoteObjects
         public static RemoteMethodCall CreateInstance(string methodName, IList<object> args, IDictionary<string, string> metaData, IList<string> classes, IList<String> realClassImplementation)
         {
             RemoteMethodCall call = new RemoteMethodCall();
-            call.methodName = methodName;
-            call.args = args;
+            call.MethodName = methodName;
+            call.Args = args;
             call.metaData = metaData;
-            call.classes = classes;
+            call.Classes = classes;
             call.realClassImplementation = realClassImplementation;
             return call;
         }

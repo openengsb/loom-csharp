@@ -40,9 +40,6 @@
     <Reference Include="ExampleDomain">
       <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
@@ -91,10 +88,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Tests\TestJsonMarsahller.cs" />
-    <Compile Include="TestExceptionHandlers\TestCustomExceptionHandler.cs" />
+    <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs" />
+    <Compile Include="TestClasses\TestClassLocalType.cs" />
+    <Compile Include="TestClasses\TestClass.cs" />
+    <Compile Include="Tests\TestJsonMarshaller.cs" />
+    <Compile Include="TestConnectorImplementation\TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="Tests\TestDefaultEcxeptionHandler.cs" />
-    <Compile Include="TestConnectorImplementation\OOSDomainConnector.cs" />
+    <Compile Include="TestConnectorImplementation\OOSourceCodeDomainConnector.cs" />
     <Compile Include="Tests\TestRemoteType.cs" />
     <Compile Include="Tests\TestCommunicationClass.cs" />
     <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs" />
@@ -103,9 +103,8 @@
     <Compile Include="Tests\TestDomainFactoryProvider.cs" />
     <Compile Include="Tests\TestExceptionHandler.cs" />
     <Compile Include="Tests\TestLocalType.cs" />
-    <Compile Include="Tests\TestRegisterFunction.cs" />
+    <Compile Include="Tests\TestCloseAndRegisterConnector.cs" />
     <Compile Include="Tests\TestDestination.cs" />
-    <Compile Include="OSBTestProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

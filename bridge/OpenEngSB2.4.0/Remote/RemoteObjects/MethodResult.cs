@@ -33,12 +33,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB240.Remote.RemoteObjects
         /// <summary>
         /// Type of the return value.
         /// </summary>
-		public ReturnType type { get; set; }
+		public ReturnType Type { get; set; }
 
         /// <summary>
         /// Return value of the RPC.
         /// </summary>
-		public object arg { get; set; }
+		public object Arg { get; set; }
 
         /// <summary>
         /// Metadata
@@ -62,8 +62,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB240.Remote.RemoteObjects
         public static MethodResult CreateInstance(ReturnType type, object arg, IDictionary<string, string> metaData, string className)
         {
             MethodResult result = new MethodResult();
-            result.type = type;
-            result.arg = arg;
+            result.Type = type;
+            result.Arg = arg;
             result.metaData = metaData;
             result.className = className;
             return result;

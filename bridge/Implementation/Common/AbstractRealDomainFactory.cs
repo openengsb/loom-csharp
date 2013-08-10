@@ -1,62 +1,83 @@
-﻿/***
- * Licensed to the Austrian Association for Software Tool Integration (AASTI)
- * under one or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information regarding copyright
- * ownership. The AASTI licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ***/
+﻿#region Copyright
+// <copyright file="AbstractRealDomainFactory.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
 using System;
 using System.Collections.Generic;
-using OpenEngSBCore;
 using log4net;
+using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
-
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 {
     public abstract class AbstractRealDomainFactory<DomainImplementationType> : IDomainFactory
     {
+        #region Properties
+        public String Destination
+        {
+            get;
+            private set;
+        }
+
+        public DomainImplementationType DomainService
+        {
+            get;
+            private set;
+        }
+        
+        public ABridgeExceptionHandling Exceptionhandler
+        {
+            get;
+            private set;
+        }
+        #endregion
+        #region Logger
         private static ILog logger = LogManager.GetLogger(typeof(AbstractRealDomainFactory<DomainImplementationType>));
-
-        #region Variables
-
-        private Dictionary<String, IRegistration> Proxies;
-        protected String Destination;
-        protected DomainImplementationType DomainService;
-        protected String username;
-        protected String password;
+        #endregion
+        #region Private Variables
+        private String password;
+        private String username;
         private Boolean defaultUsernameAndPassword = true;
-        protected ABridgeExceptionHandling Exceptionhandler = new RetryDefaultExceptionHandler();
-
+        private Dictionary<String, IRegistration> proxies;
         #endregion
         #region Constructors
+        public AbstractRealDomainFactory()
+        {
+            Exceptionhandler = new RetryDefaultExceptionHandler();
+            proxies = new Dictionary<String, IRegistration>();
+            Exceptionhandler = new RetryDefaultExceptionHandler();
+            defaultUsernameAndPassword = true;
+        }
+
+        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService)
+            : this()
+        {
+            this.Destination = destination;
+            this.DomainService = domainService;
+        }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, String username, String password)
-            : this(destination, domainService)
+        : this(destination, domainService)
         {
             this.username = username;
             this.password = password;
             defaultUsernameAndPassword = false;
-        }
-
-        public AbstractRealDomainFactory(string destination, DomainImplementationType domainService)
-        {
-            this.Destination = destination;
-            this.DomainService = domainService;
-            Proxies = new Dictionary<String, IRegistration>();
-            Exceptionhandler = new RetryDefaultExceptionHandler();
-            defaultUsernameAndPassword = true;
         }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler)
@@ -64,28 +85,31 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.Exceptionhandler = exceptionhandler;
             this.Destination = destination;
             this.DomainService = domainService;
-            Proxies = new Dictionary<String, IRegistration>();
+            proxies = new Dictionary<String, IRegistration>();
             defaultUsernameAndPassword = true;
         }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
-            : this(destination, domainService, exceptionhandler)
+        : this(destination, domainService, exceptionhandler)
         {
             this.username = username;
             this.password = password;
             defaultUsernameAndPassword = false;
         }
-
         #endregion
         #region Public Methods
-
-        public bool Registered(String connectorId)
+        public XLinkUrlBlueprint ConnectToXLink(string connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews)
         {
-            if (Proxies.ContainsKey(connectorId))
+            IRegistration connector = null;
+            if (proxies.TryGetValue(connectorId, out connector))
             {
-                return Proxies[connectorId].Registered;
+                if (connector.Registered)
+                {
+                    return connector.ConnectToXLink(domainName, hostId, modelsToViews);
+                }
             }
-            return false;
+
+            throw new BridgeException("The connecotr with id " + connectorId + " has no instance");
         }
 
         /// <summary>
@@ -104,46 +128,24 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
 
         /// <summary>
-        /// Create or register a connector (depending on createNew (true=Create; false=Register)
-        /// </summary>
-        /// <param name="domainName">Domain Name</param>
-        /// <param name="createNew">Create new connector</param>
-        /// <returns>uuid</returns>
-        private string CreateDomainServiceOrReregisterExisting(String connectorId, String domainName, Boolean createNew)
-        {
-            DomainReverse<DomainImplementationType> proxy;
-            if (defaultUsernameAndPassword)
-            {
-                proxy = CreateInstance(connectorId, domainName, createNew);
-            }
-            else
-            {
-                proxy = CreateInstance(connectorId, domainName, createNew, username, password);
-            }
-            Proxies.Add(connectorId, proxy);
-            try
-            {
-                proxy.Start();
-            }
-            catch (OpenEngSBException ex)
-            {
-                proxy.Stop();
-                Proxies.Remove(connectorId);
-                throw ex;
-            }
-            return connectorId;
-        }
-
-        /// <summary>
         /// Deletes and stops the reverse proxy.
         /// </summary>
         /// <param name="service"></param>
         public void DeleteDomainService(String connectorId)
         {
             IRegistration stoppable = null;
-            if (Proxies.TryGetValue(connectorId, out stoppable))
+            if (proxies.TryGetValue(connectorId, out stoppable))
             {
                 stoppable.DeleteRemoteProxy();
+            }
+        }
+
+        public void DisconnectFromXLink(string connectorId, String hostId)
+        {
+            IRegistration stoppable = null;
+            if (proxies.TryGetValue(connectorId, out stoppable))
+            {
+                stoppable.DisconnectFromXLink(hostId);
             }
         }
 
@@ -158,6 +160,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 throw new BridgeException("There is no connector with the connectorId " + connectorId);
             }
+
             return domainType + "+external-connector-proxy+" + connectorId;
         }
 
@@ -169,10 +172,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public String GetDomainType(String connectorId)
         {
             IRegistration connector = null;
-            if (Proxies.TryGetValue(connectorId, out connector))
+            if (proxies.TryGetValue(connectorId, out connector))
             {
                 return connector.DomainName;
             }
+
             return null;
         }
 
@@ -199,7 +203,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public String RegisterConnector(String connectorId, String domainName)
         {
             String uuid = connectorId;
-            if (!String.IsNullOrEmpty(uuid) && !Proxies.ContainsKey(uuid))
+            if (!String.IsNullOrEmpty(uuid) && !proxies.ContainsKey(uuid))
             {
                 try
                 {
@@ -215,30 +219,30 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             {
                 uuid = CheckIfConnectorExistAndCreateConenctorIfNot(domainName, uuid);
             }
-            Proxies[uuid].RegisterConnector(uuid);
+
+            proxies[uuid].RegisterConnector(uuid);
             return uuid;
         }
 
-        private string CheckIfConnectorExistAndCreateConenctorIfNot(String domainName, String uuid)
+        public bool Registered(String connectorId)
         {
-            if (String.IsNullOrEmpty(uuid) || !Proxies.ContainsKey(uuid))
+            if (proxies.ContainsKey(connectorId))
             {
-                uuid = CreateDomainService(domainName);
+                return proxies[connectorId].Registered;
             }
-            return uuid;
+
+            return false;
         }
 
-        /// <summary>
-        /// Unregisters a connector
-        /// </summary>
-        /// <param name="service">The service</param>
-        public void UnRegisterConnector(String connectorId)
+        public void StopAllConnections()
         {
-            IRegistration stoppable = null;
-            if (Proxies.TryGetValue(connectorId, out stoppable))
+            Exceptionhandler.Stop = true;
+            foreach (IRegistration stoppable in proxies.Values)
             {
-                stoppable.UnRegisterConnector();
+                stoppable.Stop();
             }
+
+            proxies.Clear();
         }
 
         /// <summary>
@@ -248,70 +252,48 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         public void StopConnection(String connectorId)
         {
             IRegistration stoppable = null;
-            if (Proxies.TryGetValue(connectorId, out stoppable))
+            if (proxies.TryGetValue(connectorId, out stoppable))
             {
                 stoppable.UnRegisterConnector();
                 stoppable.Stop();
-                Proxies.Remove(connectorId);
+                proxies.Remove(connectorId);
             }
         }
-
-        public XLinkUrlBlueprint ConnectToXLink(string connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews)
-        {
-            IRegistration connector = null;
-            if (Proxies.TryGetValue(connectorId, out connector))
-            {
-                if (connector.Registered)
-                {
-                    return connector.ConnectToXLink(domainName, hostId, modelsToViews);
-                }
-            }
-            throw new BridgeException("The connecotr with id " + connectorId + " has no instance");
-        }
-
-        public void DisconnectFromXLink(string connectorId, String hostId)
-        {
-            IRegistration stoppable = null;
-            if (Proxies.TryGetValue(connectorId, out stoppable))
-            {
-                stoppable.DisconnectFromXLink(hostId);
-            }
-        }
-
-        public void StopAllConnections()
-        {
-            Exceptionhandler.Stop = true;
-            foreach (IRegistration stoppable in Proxies.Values)
-            {
-                stoppable.Stop();
-            }
-            Proxies.Clear();
-        }
-
-        #endregion
-
-        #region Abstract Methods
 
         /// <summary>
-        /// Returns the DomainReverse object correct OpenEngSB version 
+        /// Unregisters a connector
+        /// </summary>
+        /// <param name="service">The service</param>
+        public void UnRegisterConnector(String connectorId)
+        {
+            IRegistration stoppable = null;
+            if (proxies.TryGetValue(connectorId, out stoppable))
+            {
+                stoppable.UnRegisterConnector();
+            }
+        }
+        #endregion
+        #region Abstract Methods
+        /// <summary>
+        /// Returns the DomainReverse object correct OpenEngSB version
         /// </summary>
         /// <param name="connectorId"></param>
         /// <param name="domainName"></param>
         /// <param name="createConstructor"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        /// <returns></returns>        
+        /// <returns></returns>
         protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor);
 
         /// <summary>
-        /// Returns the DomainReverse object correct OpenEngSB version 
+        /// Returns the DomainReverse object correct OpenEngSB version
         /// </summary>
         /// <param name="connectorId"></param>
         /// <param name="domainName"></param>
         /// <param name="createConstructor"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        /// <returns></returns>        
+        /// <returns></returns>
         protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor, String username, String password);
 
         /// <summary>
@@ -331,7 +313,50 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="password">Password</param>
         /// <returns>An eventHandler</returns>
         protected abstract InterfaceTyp GetSubEventhandler<InterfaceTyp>(String connectorId, String username, String password);
+        #endregion
+        #region Private Methods
+        private string CheckIfConnectorExistAndCreateConenctorIfNot(String domainName, String uuid)
+        {
+            if (String.IsNullOrEmpty(uuid) || !proxies.ContainsKey(uuid))
+            {
+                uuid = CreateDomainService(domainName);
+            }
 
+            return uuid;
+        }
+
+        /// <summary>
+        /// Create or register a connector (depending on createNew (true=Create; false=Register)
+        /// </summary>
+        /// <param name="domainName">Domain Name</param>
+        /// <param name="createNew">Create new connector</param>
+        /// <returns>uuid</returns>
+        private string CreateDomainServiceOrReregisterExisting(String connectorId, String domainName, Boolean createNew)
+        {
+            DomainReverse<DomainImplementationType> proxy;
+            if (defaultUsernameAndPassword)
+            {
+                proxy = CreateInstance(connectorId, domainName, createNew);
+            }
+            else
+            {
+                proxy = CreateInstance(connectorId, domainName, createNew, username, password);
+            }
+
+            proxies.Add(connectorId, proxy);
+            try
+            {
+                proxy.Start();
+            }
+            catch (OpenEngSBException ex)
+            {
+                proxy.Stop();
+                proxies.Remove(connectorId);
+                throw ex;
+            }
+
+            return connectorId;
+        }
         #endregion
     }
 }

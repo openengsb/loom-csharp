@@ -72,7 +72,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs" />
-    <Compile Include="TestConnectorImplementation\OOSDomainConnector.cs" />
+    <Compile Include="TestConnectorImplementation\OOSourceCodeDomainConnector.cs" />
     <Compile Include="TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="TestsAndExamples\TestOSBCompatibleWithExampleAndOOSourceDomain.cs" />
     <Compile Include="RuntimeTests\TestRuntimeJmsPort.cs" />

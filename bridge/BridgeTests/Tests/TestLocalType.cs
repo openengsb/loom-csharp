@@ -1,33 +1,52 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
-using OpenEngSBCore;
+﻿#region Copyright
+// <copyright file="TestLocalType.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using LocalTypeTestClass;
-using System.Diagnostics.CodeAnalysis;
+using BridgeTests.TestClasses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenEngSBCore;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 
 namespace BridgeTests.Tests
 {
     [TestClass]
-    [ExcludeFromCodeCoverageAttribute()]
+    [ExcludeFromCodeCoverageAttribute]
     public class TestLocalType
     {
+        #region Tests
         [TestMethod]
-        public void TestIfRemoteStringIsInJavaValid()
+        public void TestIfRemoteAliveStatIsInJavaValid()
         {
-            LocalType lt = new LocalType(typeof(String));
+            LocalType lt = new LocalType(typeof(AliveState));
 
-            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.String");
+            Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.openengsb.core.api.AliveState");
         }
 
         [TestMethod]
-        public void TestIfRemoteIntIsInJavaValid()
+        public void TestIfRemoteDictionaryIsInJavaValid()
         {
-            LocalType lt = new LocalType(typeof(int));
+            LocalType lt = new LocalType(typeof(string2stringMapEntry));
 
-            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Integer");
+            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.util.Map");
         }
 
         [TestMethod]
@@ -47,40 +66,29 @@ namespace BridgeTests.Tests
         }
 
         [TestMethod]
-        public void TestIfRemoteAliveStatIsInJavaValid()
-        {
-            LocalType lt = new LocalType(typeof(AliveState));
-
-            Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.openengsb.core.api.AliveState");
-        }
-
-        [TestMethod]
-        public void TestIfRemoteDictionaryIsInJavaValid()
-        {
-            LocalType lt = new LocalType(typeof(string2stringMapEntry));
-
-            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.util.Map");
-        }
-
-        [TestMethod]
         public void TestIfRemoteFromAnnotiationInAMethodIsInJavaValid()
         {
-            LocalType lt = new LocalType(typeof(TestClassLocalType));
+            Type testClassType = typeof(TestClassLocalTypeWithLessMethods);
+            LocalType lt = new LocalType(testClassType);
 
-            Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.test.domain.example.TestClassLocalType");
+            Assert.AreEqual<String>(lt.RemoteTypeFullName, "org.test.domain.example." + testClassType.Name);
         }
-    }
-}
 
-namespace LocalTypeTestClass
-{
-    [XmlTypeAttribute(Namespace = "http://example.domain.test.org")]
-    [ExcludeFromCodeCoverageAttribute()]
-    public class TestClassLocalType
-    {
-        [SoapDocumentMethod("urn:raiseEvent", RequestNamespace = "http://example.domain.openengsb.org", ParameterStyle = SoapParameterStyle.Wrapped)]
-        public void hasArraySpecified(String[] test, Boolean testSpecified) { }
-        [SoapDocumentMethod("urn:raiseEvent", RequestNamespace = "http://example.domain.openengsb.org", ParameterStyle = SoapParameterStyle.Wrapped)]
-        public void hasStringSpecified(String test, String testSpecified) { }
+        [TestMethod]
+        public void TestIfRemoteIntIsInJavaValid()
+        {
+            LocalType lt = new LocalType(typeof(int));
+
+            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.Integer");
+        }
+
+        [TestMethod]
+        public void TestIfRemoteStringIsInJavaValid()
+        {
+            LocalType lt = new LocalType(typeof(String));
+
+            Assert.AreEqual<String>(lt.RemoteTypeFullName, "java.lang.String");
+        }
+        #endregion
     }
 }
