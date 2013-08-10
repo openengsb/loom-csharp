@@ -26,6 +26,7 @@ namespace SonaTypeTests
     [TestClass]
     public class ArtifactSerializerTests
     {
+        #region Tests
         [TestMethod]
         public void TestIfArtifactAreEqual()
         {
@@ -127,5 +128,6 @@ namespace SonaTypeTests
             Artifact resultArtefact = sonaType.ConvertSearchResult<Artifact>(builder.ToString());
             Assert.AreNotEqual<Artifact>(expectedResult, resultArtefact);
         }
+        #endregion
     }
 }

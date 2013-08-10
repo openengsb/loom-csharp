@@ -31,6 +31,7 @@ namespace SonaTypeDependencies
 {
     public class SonatypeDependencyManager
     {
+        #region Constants
         private const String BaseUrl = "http://repository.sonatype.org/";
         private const String RestFullBaseUrl = "https://oss.sonatype.org/content/repositories/snapshots";
         private const String SearchUrl = "service/local/data_index?";
@@ -39,17 +40,19 @@ namespace SonaTypeDependencies
         private const String PackageSearchParameter = "&p={0}";
         private const String ExtensionSearchParameter = "&e={0}";
         private const String VersionSearchParameter = "&v={0}";
-
+        #endregion
+        #region Logger
         private static ILog logger = LogManager.GetLogger(typeof(SonatypeDependencyManager));
-
+        #endregion
+        #region Private Variables
         private String groupId;
         private String artefactId;
         private String version;
         private String packaging;
         private String classifier;
-
         private WebClient client = new WebClient();
-
+        #endregion
+        #region Constructors
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -66,7 +69,8 @@ namespace SonaTypeDependencies
             this.packaging = packaging;
             this.classifier = classifier;
         }
-
+        #endregion
+        #region Public Methods
         /// <summary>
         /// Downloads the Artifact according to the parameters that has been
         /// indicated over the constructor
@@ -101,7 +105,8 @@ namespace SonaTypeDependencies
             StringReader reader = new StringReader(searchResult);
             return (ResultType)serializer.Deserialize(reader);
         }
-
+        #endregion
+        #region Private Methods
         private Artifact FindCorrectArtifact(SearchResult result)
         {
             List<Artifact> matchingArtefacts = this.RemoveWrongArtifacts(result.Artifacts);
@@ -207,5 +212,6 @@ namespace SonaTypeDependencies
                     && ar.Packaging == this.packaging;
             });
         }
+        #endregion
     }
 }

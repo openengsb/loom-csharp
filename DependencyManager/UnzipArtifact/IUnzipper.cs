@@ -24,8 +24,13 @@ using System.Threading.Tasks;
 
 namespace UnzipArtifact
 {
+    /// <summary>
+    /// Interface for unzipping a Zip file
+    /// </summary>
     public interface IUnzipper
     {
+        #region Methods
         String UnzipFile(String outputFolder);
+        #endregion
     }
 }

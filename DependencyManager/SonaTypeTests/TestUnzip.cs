@@ -29,16 +29,20 @@ namespace SonaTypeTests
     [TestClass]
     public class TestUnzip
     {
+        #region Private Variables
         private DirectoryInfo directory = null;
         private DirectoryInfo tempFolder;
         private IUnzipper unzipper;
+        #endregion
+        #region Initializer
         [TestInitialize]
         public void InitTests()
         {
             this.tempFolder = new DirectoryInfo(System.IO.Path.GetTempFileName() + Guid.NewGuid());
             this.tempFolder.Create();
         }
-
+        #endregion
+        #region Tests
         [TestMethod]
         public void TestUnzipTestWithOneFolderAndOneFileFolderExists()
         {
@@ -59,7 +63,7 @@ namespace SonaTypeTests
             FileInfo testFile = new FileInfo(this.directory.FullName + "/" + "New Text Document.txt");
             Assert.IsTrue(testFile.Exists);
         }
-        
+
         [TestMethod]
         public void TestIfAllFoldersArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
@@ -69,7 +73,7 @@ namespace SonaTypeTests
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.directory.GetDirectories().Length, 32);
         }
-        
+
         [TestMethod]
         public void TestIfAllFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
@@ -79,7 +83,7 @@ namespace SonaTypeTests
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.directory.GetFiles().Length, 5);
         }
-        
+
         [TestMethod]
         public void TestIfAllSubFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
@@ -95,17 +99,19 @@ namespace SonaTypeTests
 
             Assert.AreEqual<int>(files.Count, 2);
         }
-        
+
         [Ignore]
         public void TestUnzipTestWithPathToLong()
         {
+            // Does not work with 7zip. In a futer Version, a unzipper is added that allows it to unpack Long pathes.
             FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithPathToLongInside.zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
             Assert.AreEqual<int>(this.GetLongestPathDirectory(this.directory).FullName.Length, 248);
         }
-
+        #endregion
+        #region Cleanup
         [TestCleanup]
         public void Cleanup()
         {
@@ -124,14 +130,15 @@ namespace SonaTypeTests
 
             this.tempFolder.Delete(true);
         }
-
+        #endregion
+        #region Private Methods
         private DirectoryInfo GetLongestPathDirectory(DirectoryInfo directory)
         {
             if (directory == null)
             {
                 return null;
             }
-            
+
             int max = directory.FullName.Length;
             DirectoryInfo result = directory;
             foreach (DirectoryInfo d in this.directory.GetDirectories())
@@ -149,7 +156,7 @@ namespace SonaTypeTests
                     max = tmp.FullName.Length;
                 }
             }
-            
+
             return result;
         }
 
@@ -159,18 +166,19 @@ namespace SonaTypeTests
             {
                 return;
             }
-            
+
             foreach (String file in LongPathDirectory.EnumerateFiles(parentDirectory))
             {
                 LongPathFile.Delete(file);
             }
-            
+
             foreach (String info in LongPathDirectory.EnumerateDirectories(parentDirectory))
             {
                 this.DeleteAllFolder(info);
             }
-            
+
             Microsoft.Experimental.IO.LongPathDirectory.Delete(parentDirectory);
         }
+        #endregion
     }
 }

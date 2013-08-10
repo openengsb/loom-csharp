@@ -28,15 +28,22 @@ namespace UnzipArtifact
 {
     public class SevenZipUnzipper : IUnzipper
     {
+        #region Constants
         private const String SevenZipFolderLocation = @"\7-zip\7z.dll";
+        #endregion
+        #region Logger
         private static ILog logger = LogManager.GetLogger(typeof(SevenZipUnzipper));
+        #endregion
+        #region Private Variables
         private FileInfo zipFileLocation;
-
+        #endregion
+        #region Constructors
         public SevenZipUnzipper(FileInfo zipFileLocation)
         {
             this.zipFileLocation = zipFileLocation;
         }
-
+        #endregion
+        #region Public Methods
         /// <summary>
         /// Unzip a Zip file to a defined folder
         /// </summary>
@@ -72,5 +79,6 @@ namespace UnzipArtifact
 
             return Path.Combine(outputFolder, parentFile);
         }
+        #endregion
     }
 }

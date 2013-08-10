@@ -30,14 +30,20 @@ namespace Example
     /// </summary>
     public class Program
     {
+        private static String groupId = "org.openengsb.framework";
+        private static String artifactId = "openengsb-framework";
+        private static String version = "3.0.0-SNAPSHOT";
+        private static String packaging = "zip";
+        private static String classifier = null;
+
         /// <summary>
-        /// Entry point
+        /// Example code
         /// </summary>
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
             log4net.Config.BasicConfigurator.Configure();
-            SonatypeDependencyManager dm = new SonatypeDependencyManager("org.openengsb.framework", "openengsb-framework", "3.0.0-SNAPSHOT", "zip", null);
+            SonatypeDependencyManager dm = new SonatypeDependencyManager(groupId, artifactId, version, packaging, classifier);
             FileInfo fileLocation = dm.DownloadArtifactToFolder(System.IO.Path.GetTempPath());
             IUnzipper unzipper = new SevenZipUnzipper(fileLocation);
             string unzipFileLocation = unzipper.UnzipFile(fileLocation.Directory.FullName);
@@ -46,8 +52,8 @@ namespace Example
             openengsb.ConnectToOSBWithSSH();
             List<String> commands = new List<string>();
             commands.Add("feature:install openengsb-domain-example");
-            commands.Add("feature:install  openengsb-ports-jms");
-            commands.Add("feature:install  openengsb-ports-rs");
+            commands.Add("feature:install openengsb-ports-jms");
+            commands.Add("feature:install openengsb-ports-rs");
             foreach (String command in commands)
             {
                 openengsb.ExecuteCommand(command);

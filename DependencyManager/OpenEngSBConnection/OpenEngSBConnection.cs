@@ -32,6 +32,7 @@ namespace OSBConnection
 {
     public class OpenEngSBConnection
     {
+        #region Variabels
         private const String OpenEngSBBatLocation = @"\bin\openengsb.bat";
         private static ILog logger = LogManager.GetLogger(typeof(OpenEngSBConnection));
         private static int retries;
@@ -42,13 +43,15 @@ namespace OSBConnection
         private String osbUrl = "localhost";
         private int port = 8101;
         private Process osbProcess = null;
-        
-        public int ExecutionTimeOutBetweenCommands { get; set; }
+        #endregion
+        #region Properties
+        public int ExecutionTimeOutBetweenCommands { get; private set; }
 
-        public int TimeToWaitUntilOSBIsStarted { get; set; }
+        public int TimeToWaitUntilOSBIsStarted { get; private set; }
 
         public Boolean IsOSBConnectionOpen { get; private set; }
-
+        #endregion
+        #region Constructors
         public OpenEngSBConnection(String osbFolderLocation)
         {
             this.IsOSBConnectionOpen = false;
@@ -66,7 +69,8 @@ namespace OSBConnection
             this.password = password;
             this.port = port;
         }
-
+        #endregion
+        #region Public Methods
         public void StartOpenEngSB()
         {
             ProcessStartInfo start = new ProcessStartInfo(this.osbFolderLocation + "\\" + OpenEngSBBatLocation);
@@ -140,5 +144,6 @@ namespace OSBConnection
 
             this.osbClient.Disconnect();
         }
+        #endregion
     }
 }

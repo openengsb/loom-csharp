@@ -25,6 +25,7 @@ namespace SonaTypeTests
     [TestClass]
     public class ArtifactComparingTests
     {
+        #region Tests
         [TestMethod]
         public void TestIfSameArtifactreturn0WhenCompared()
         {
@@ -99,5 +100,6 @@ namespace SonaTypeTests
             ar2.Version = "3.0.0-SNAPSHOT-201307057";
             Assert.AreEqual(ar2.CompareTo(ar), 1);
         }
+        #endregion
     }
 }
