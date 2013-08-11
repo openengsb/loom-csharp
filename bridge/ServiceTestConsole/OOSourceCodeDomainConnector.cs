@@ -26,7 +26,7 @@ namespace ServiceTestConsole
     /// <summary>
     /// Example implementation of the local domain
     /// </summary>
-    public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoap11Binding
+    public class OOSourceCodeDomainConnector : RegistrationFunctions, IOOSourceCodeDomainSoapBinding
     {
         #region Logger
         private static ILog logger = LogManager.GetLogger(typeof(ExampleDomainConnector));
@@ -43,13 +43,6 @@ namespace ServiceTestConsole
             logger.Info("updateClasse method call");
         }
 
-        public void getAliveState(out orgopenengsbcoreapiAliveState? @return, out bool returnSpecified)
-        {
-            @return = orgopenengsbcoreapiAliveState.ONLINE;
-            returnSpecified = true;
-            GetAliveState();
-        }
-
         public string getInstanceId()
         {
             return ".Net Bridge connector";
@@ -63,6 +56,13 @@ namespace ServiceTestConsole
         public void openXLinks(object[] args0, string args1)
         {
             logger.Info("openXLinks method call");
+        }
+
+        public void getAliveState(out AliveState? @return, out bool returnSpecified)
+        {
+            @return = AliveState.ONLINE;
+            returnSpecified = true;
+            GetAliveState();
         }
         #endregion
     }
