@@ -39,6 +39,7 @@ namespace BridgeTests.Tests
         private const String Version240 = "2.4.0";
         private const String Version300 = "3.0.0";
         private const String VersionInvalid = "1.4.0";
+        private const String ContextId = "Test";
         #endregion
         #region Public Methods
         [TestMethod]
@@ -131,6 +132,30 @@ namespace BridgeTests.Tests
         public void TestFactoryReturnsNullWithInvalidVersionNumberAsParameterAndUsernamPassword()
         {
             IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(VersionInvalid, NullString, NullString, Username, Password);
+        }
+
+        [TestMethod]
+        public void TestFactoryReturnWithVersionDomainNameserviceAndContextId()
+        {
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(Version300, NullString, NullString, ContextId);
+        }
+
+        [TestMethod]
+        public void TestFactoryReturnWithVersionDomainNameserviceExceptionHandlerAndContextId()
+        {
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(Version300, NullString, NullString, NullExceptionHandler, ContextId);
+        }
+
+        [TestMethod]
+        public void TestFactoryReturnWithVersionDomainNameserviceExceptionHandlerUserNamePasswordAndContextId()
+        {
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(Version300, NullString, NullString, NullExceptionHandler, Username, Password, ContextId);
+        }
+
+        [TestMethod]
+        public void TestFactoryReturnWithVersionDomainNameserviceUserNamePasswordAndContextId()
+        {
+            IDomainFactory factory = DomainFactoryProvider.GetDomainFactoryInstance<String>(Version300, NullString, NullString, Username, Password, ContextId);
         }
         #endregion
     }

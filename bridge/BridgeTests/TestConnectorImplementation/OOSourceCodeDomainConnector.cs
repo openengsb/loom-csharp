@@ -1,5 +1,5 @@
 ﻿#region Copyright
-// <copyright file="OOSourceCodeDomainConnector.cs" company="OpenEngSB">
+// <copyright file="TestOOSourceCodeDomainConnector.cs" company="OpenEngSB">
 // Licensed to the Austrian Association for Software Tool Integration (AASTI)
 // under one or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information regarding copyright
