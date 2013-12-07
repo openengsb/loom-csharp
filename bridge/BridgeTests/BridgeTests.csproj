@@ -119,10 +119,6 @@
       <Project>{5ccd2925-bb25-496e-824f-3894a4fbf968}</Project>
       <Name>Interface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenEngSB2.4.0\OpenEngSB2.4.0.csproj">
-      <Project>{117467b7-aa87-4e02-aac2-dd69b53c2cb5}</Project>
-      <Name>OpenEngSB2.4.0</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenEngSB3.0.0\OpenEngSB3.0.0.csproj">
       <Project>{c90b32c2-d26c-4930-86a0-7649abc3edb5}</Project>
       <Name>OpenEngSB3.0.0</Name>
