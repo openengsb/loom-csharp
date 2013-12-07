@@ -38,6 +38,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         {
             get;
         }
+
+        String ContextId
+        {
+            get;
+            set;
+        }
         #endregion
         #region Methods
         XLinkUrlBlueprint ConnectToXLink(string toolName, String hostId, ModelToViewsTuple[] modelsToViews);

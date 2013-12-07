@@ -137,6 +137,96 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             return GetDomainFactoryInstance(GetVersionFromURI(urlVersion), destination, service, exceptionhandler, username, password);
         }
         #endregion
+        #region Public Methods
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, String contextId)
+        {
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, contextId) as IDomainFactory;
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, ABridgeExceptionHandling exceptionhandler, String contextId)
+        {
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, contextId, exceptionhandler) as IDomainFactory;
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, String username, String password, String contextId)
+        {
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, contextId, username, password) as IDomainFactory;
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="stringVersion">Version of the OpenEngSB-framework in String format</param>
+        /// <returns>Factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(String stringVersion, String destination, ServiceTyp service, ABridgeExceptionHandling exceptionhandler, String username, String password, String contextId)
+        {
+            Type domainResult = GetRealDomainFactory(stringVersion);
+            domainResult = domainResult.MakeGenericType(typeof(ServiceTyp));
+            return Activator.CreateInstance(domainResult, destination, service, contextId, exceptionhandler, username, password) as IDomainFactory;
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(Uri urlVersion, String destination, ServiceTyp service, String contextId)
+        {
+            return GetDomainFactoryInstance(GetVersionFromURI(urlVersion), destination, service, contextId);
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<ServiceTyp>(Uri urlVersion, String destination, ServiceTyp service, String username, String password, String contextid)
+        {
+            return GetDomainFactoryInstance(GetVersionFromURI(urlVersion), destination, service, username, password, contextid);
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service, ABridgeExceptionHandling exceptionHandler, String contextId)
+        {
+            return GetDomainFactoryInstance(GetVersionFromURI(urlVersion), destination, service, exceptionHandler, contextId);
+        }
+
+        /// <summary>
+        /// Retrieve a factory, depending on the openEngSB version
+        /// </summary>
+        /// <param name="urlVersion">Version of the OpenEngSB-framework in url format</param>
+        /// <returns>factory</returns>
+        public static IDomainFactory GetDomainFactoryInstance<T>(Uri urlVersion, String destination, T service, ABridgeExceptionHandling exceptionhandler, String username, String password, String contextId)
+        {
+            return GetDomainFactoryInstance(GetVersionFromURI(urlVersion), destination, service, exceptionhandler, username, password, contextId);
+        }
+        #endregion
         #region Private Methods
         /// <summary>
         /// Seach in all dlls of the current Solution for the OpenEnGSB version

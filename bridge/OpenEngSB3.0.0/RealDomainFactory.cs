@@ -52,28 +52,52 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300
         {
         }
 
+        public RealDomainFactory(string destination, DomainReverseTyp domainService, String contextId, ABridgeExceptionHandling exceptionhandler)
+            : this(destination, domainService, exceptionhandler)
+        {
+            this.ContextId = contextId;
+        }
+
+        public RealDomainFactory(string destination, DomainReverseTyp domainService, String contextId)
+            : this(destination, domainService)
+        {
+            this.ContextId = contextId;
+        }
+
+        public RealDomainFactory(string destination, DomainReverseTyp domainService, String contextId, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : this(destination, domainService, exceptionhandler, username, password)
+        {
+            this.ContextId = contextId;
+        }
+
+        public RealDomainFactory(string destination, DomainReverseTyp domainService, String contextId, String username, String password)
+            : this(destination, domainService, username, password)
+        {
+            this.ContextId = contextId;
+        }
+
         #endregion
 
         #region Abstact Method Implementation
 
         protected override SubEventHandlerTyp GetSubEventhandler<SubEventHandlerTyp>(String connectorId)
         {
-            return new DomainProxy<SubEventHandlerTyp>(Destination, connectorId, GetDomainType(connectorId), Exceptionhandler).GetTransparentProxy();
+            return new DomainProxy<SubEventHandlerTyp>(Destination, connectorId, GetDomainType(connectorId), ContextId, Exceptionhandler).GetTransparentProxy();
         }
 
         protected override A GetSubEventhandler<A>(String connectorId, String username, String password)
         {
-            return new DomainProxy<A>(Destination, connectorId, GetDomainType(connectorId), Exceptionhandler, username, password).GetTransparentProxy();
+            return new DomainProxy<A>(Destination, connectorId, GetDomainType(connectorId), ContextId, Exceptionhandler, username, password).GetTransparentProxy();
         }
 
-        protected override DomainReverse<DomainReverseTyp> CreateInstance(string serviceId, string domainName, bool createConnector)
+        protected override DomainReverse<DomainReverseTyp> CreateInstance(string serviceId, string domainName, String contextId, bool createConnector)
         {
-            return new DomainReverseProxy<DomainReverseTyp>(DomainService, Destination, serviceId, domainName, createConnector, Exceptionhandler);
+            return new DomainReverseProxy<DomainReverseTyp>(DomainService, Destination, serviceId, domainName, contextId, createConnector, Exceptionhandler);
         }
 
-        protected override DomainReverse<DomainReverseTyp> CreateInstance(string serviceId, string domainName, bool createConnector, string username, string password)
+        protected override DomainReverse<DomainReverseTyp> CreateInstance(string serviceId, string domainName, String contextId, bool createConnector, string username, string password)
         {
-            return new DomainReverseProxy<DomainReverseTyp>(DomainService, Destination, serviceId, domainName, username, password, createConnector, Exceptionhandler);
+            return new DomainReverseProxy<DomainReverseTyp>(DomainService, Destination, serviceId, domainName, username, password, contextId, createConnector, Exceptionhandler);
         }
         #endregion
     }

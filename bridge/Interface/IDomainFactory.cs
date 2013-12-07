@@ -24,6 +24,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
     public interface IDomainFactory
     {
         #region Methods
+        String ContextId
+        {
+            get;
+            set;
+        }
+
         EventHandlerTyp GetEventhandler<EventHandlerTyp>(String connectorId);
 
         String CreateDomainService(String domainName);

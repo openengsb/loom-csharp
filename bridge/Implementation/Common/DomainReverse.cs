@@ -62,6 +62,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         #endregion
         #region Private Variables
         /// <summary>
+        /// ContextId that will be added to the MetaDatas. Default value is foo.
+        /// </summary>
+        public String ContextId { get; set; }
+
+        /// <summary>
         /// Defines if the connector should create a new connector or if it should register a existing one
         /// </summary>
         private Boolean createService = true;
@@ -210,6 +215,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             this.Marshaller = new JsonMarshaller();
             this.IsEnabled = true;
             this.QueueThread = null;
+            this.ContextId = "foo";
         }
 
         /// <summary>

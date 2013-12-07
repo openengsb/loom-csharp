@@ -37,14 +37,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
     {
         #region Constructors
 
-        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
-            : base(host, connectorId, domainName, exceptionhandler)
+        public DomainProxy(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler)
+            : base(host, connectorId, domainName, contextId, exceptionhandler)
         {
             AuthenificationClass = "org.openengsb.connector.usernamepassword.Password";
         }
 
-        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
-            : base(host, connectorId, domainName, exceptionhandler, username, password)
+        public DomainProxy(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : base(host, connectorId, domainName, contextId, exceptionhandler, username, password)
         {
             AuthenificationClass = "org.openengsb.connector.usernamepassword.Password";
         }
@@ -86,12 +86,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
 
             string methodName = msg.MethodName;
             Dictionary<string, string> metaData = new Dictionary<string, string>();
-            
+
             // The structure is always domain.DOMAINTYPE.events
             metaData.Add("serviceId", "domain." + DomainName + ".events");
-            
+
             // Arbitrary string, maybe not necessary
-            metaData.Add("contextId", "foo");
+            metaData.Add("contextId", ContextId);
             List<string> classes = new List<string>();
             foreach (object arg in msg.Args)
             {
@@ -112,7 +112,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             MethodCallMessage message = MethodCallMessage.CreateInstance(Username, authentification, call, id.ToString(), true, String.Empty);
             return message;
         }
-
         #endregion
     }
 }

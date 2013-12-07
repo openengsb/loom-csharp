@@ -44,9 +44,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
         /// <param name="connectorId">ServiceId</param>
         /// <param name="domainName">name of the remote Domain</param>
         /// <param name="domainEvents">Type of the remoteDomainEvents</param>
-        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
-        : base(localDomainService, host, connectorId, domainName, createNewConnector, exceptionhandler)
+        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, String contextId, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+            : base(localDomainService, host, connectorId, domainName, createNewConnector, exceptionhandler)
         {
+            this.ContextId = contextId;
             Logger.Info("Connecting to OpenEngSB version 3.0");
         }
 
@@ -59,9 +60,10 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
         /// <param name="domainName">name of the remote Domain</param>
         /// <param name="username">Username for the authentification</param>
         /// <param name="password">Password for the authentification</param>
-        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, String username, String password, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
-        : base(localDomainService, host, connectorId, domainName, username, password, createNewConnector, exceptionhandler)
+        public DomainReverseProxy(T localDomainService, string host, string connectorId, string domainName, String username, String password, String contextId, Boolean createNewConnector, ABridgeExceptionHandling exceptionhandler)
+            : base(localDomainService, host, connectorId, domainName, username, password, createNewConnector, exceptionhandler)
         {
+            this.ContextId = contextId;
             Logger.Info("Connecting to OpenEngSB version 3.0");
         }
 
@@ -94,6 +96,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             Logger.Info("Create a Xlink connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CreationServiceId);
+            metaData.Add("contextId", ContextId);
 
             IList<string> classes = new List<string>();
             LocalType localType = new LocalType(typeof(String));
@@ -135,6 +138,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             Logger.Info("Create a new connector");
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CreationServiceId);
+            metaData.Add("contextId", ContextId);
             RegisterId = ConnectorId;
 
             IList<string> classes = new List<string>();
@@ -178,6 +182,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             Logger.Info("Delete the connector with ID: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CreationServiceId);
+            metaData.Add("contextId", ContextId);
             LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
             classes.Add(localType.RemoteTypeFullName);
@@ -213,6 +218,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             Logger.Info("Disconnect connector from xlink with the serviceId: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CreationServiceId);
+            metaData.Add("contextId", ContextId);
             LocalType localType = new LocalType(typeof(String));
             IList<String> classes = new List<String>();
             classes.Add(localType.RemoteTypeFullName);
@@ -262,7 +268,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
                     {
                         methodCallRequest.MethodCall.Args = new List<Object>();
                     }
-                    
+
                     MethodResultMessage methodReturnMessage = CallMethod(methodCallRequest);
                     if (methodCallRequest.Answer)
                     {
@@ -303,6 +309,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             String id = Guid.NewGuid().ToString();
             metaData.Add("serviceId", CreationRegistration);
+            metaData.Add("contextId", ContextId);
             LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
             classes.Add(localType.RemoteTypeFullName);
@@ -344,6 +351,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             Logger.Info("Unregister the connector with ID: " + ConnectorId);
             IDictionary<string, string> metaData = new Dictionary<string, string>();
             metaData.Add("serviceId", CreationRegistration);
+            metaData.Add("contextId", ContextId);
             LocalType localType = new LocalType(typeof(String));
             IList<string> classes = new List<string>();
             classes.Add(localType.RemoteTypeFullName);

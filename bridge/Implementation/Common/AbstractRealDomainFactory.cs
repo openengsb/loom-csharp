@@ -40,12 +40,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             get;
             private set;
         }
-        
+
         public ABridgeExceptionHandling Exceptionhandler
         {
             get;
             private set;
         }
+
+        public String ContextId
+        {
+            get;
+            set;
+        }
+
         #endregion
         #region Logger
         private static ILog logger = LogManager.GetLogger(typeof(AbstractRealDomainFactory<DomainImplementationType>));
@@ -73,7 +80,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, String username, String password)
-        : this(destination, domainService)
+            : this(destination, domainService)
         {
             this.username = username;
             this.password = password;
@@ -81,6 +88,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler)
+            : this(destination, domainService)
         {
             this.Exceptionhandler = exceptionhandler;
             this.Destination = destination;
@@ -90,12 +98,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
 
         public AbstractRealDomainFactory(string destination, DomainImplementationType domainService, ABridgeExceptionHandling exceptionhandler, String username, String password)
-        : this(destination, domainService, exceptionhandler)
+            : this(destination, domainService, exceptionhandler)
         {
             this.username = username;
             this.password = password;
             defaultUsernameAndPassword = false;
         }
+
         #endregion
         #region Public Methods
         public XLinkUrlBlueprint ConnectToXLink(string connectorId, String hostId, String domainName, ModelToViewsTuple[] modelsToViews)
@@ -283,7 +292,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor);
+        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, String contextId, Boolean createConstructor);
 
         /// <summary>
         /// Returns the DomainReverse object correct OpenEngSB version
@@ -294,7 +303,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, Boolean createConstructor, String username, String password);
+        protected abstract DomainReverse<DomainImplementationType> CreateInstance(String connectorId, String domainName, String contextId, Boolean createConstructor, String username, String password);
 
         /// <summary>
         /// Returns the eventhandler for the correct OpenEngSB version
@@ -336,11 +345,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             DomainReverse<DomainImplementationType> proxy;
             if (defaultUsernameAndPassword)
             {
-                proxy = CreateInstance(connectorId, domainName, createNew);
+                proxy = CreateInstance(connectorId, domainName, ContextId, createNew);
             }
             else
             {
-                proxy = CreateInstance(connectorId, domainName, createNew, username, password);
+                proxy = CreateInstance(connectorId, domainName, ContextId, createNew, username, password);
             }
 
             proxies.Add(connectorId, proxy);

@@ -44,6 +44,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             private set;
         }
 
+        public String ContextId
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Authenifaction class
         /// </summary>
@@ -111,9 +117,11 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         }
         #endregion
         #region Constructors
-        public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
-        : base(typeof(TransparentProxyType))
+
+        public Domain(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler)
+            : base(typeof(TransparentProxyType))
         {
+            this.ContextId = contextId;
             this.ConnectorId = connectorId;
             this.DomainName = domainName;
             this.Host = host;
@@ -124,8 +132,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Logger = LogManager.GetLogger(typeof(TransparentProxyType));
         }
 
-        public Domain(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
-        : this(host, connectorId, domainName, exceptionhandler)
+        public Domain(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : this(host, connectorId, domainName, contextId, exceptionhandler)
         {
             this.Username = username;
             this.Password = password;
@@ -149,21 +157,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
             Logger.Info("Convert method call to String method and send it to the OpenEngSB");
             switch (methodReturn.Type)
             {
-            case ReturnType.Exception:
-            {
-                return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.Arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
-            }
+                case ReturnType.Exception:
+                    {
+                        return new ReturnMessage(new BridgeException("Received an Excetion from the bridge", new OpenEngSBException(methodReturn.Arg.ToString(), new OpenEngSBException(methodReturn.ToString()))), callMessage);
+                    }
 
-            case ReturnType.Void:
-            case ReturnType.Object:
-            {
-                return new ReturnMessage(methodReturn.Arg, null, 0, null, callMessage);
-            }
+                case ReturnType.Void:
+                case ReturnType.Object:
+                    {
+                        return new ReturnMessage(methodReturn.Arg, null, 0, null, callMessage);
+                    }
 
-            default:
-            {
-                return null;
-            }
+                default:
+                    {
+                        return null;
+                    }
             }
         }
         #endregion
