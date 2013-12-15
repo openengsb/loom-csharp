@@ -46,7 +46,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OpenEngSBCore">
       <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
@@ -82,7 +82,7 @@
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />
-    <Compile Include="Common\OpenEngSBModel.cs" />
+    <Compile Include="Common\IOpenEngSBModel.cs" />
     <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Exceptions\OpenEngSBException.cs" />
     <Compile Include="DomainFactoryProvider.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Communication\IMarshaller.cs" />
     <Compile Include="Communication\IOutgoingPort.cs" />
     <Compile Include="Communication\IPort.cs" />
-    <Compile Include="Communication\Jms\Destination.cs" />
+    <Compile Include="Communication\Jms\JmsDestination.cs" />
     <Compile Include="Communication\Jms\JmsIncomingPort.cs" />
     <Compile Include="Communication\Jms\JmsOutgoingPort.cs" />
     <Compile Include="Communication\Jms\JMSPort.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="Common\LocalType.cs" />
     <Compile Include="Common\RemoteType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SupportManager.cs" />
+    <Compile Include="OpenEngSBImplementationSupportManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

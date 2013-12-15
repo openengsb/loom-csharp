@@ -1,29 +1,31 @@
-﻿/***
- * Licensed to the Austrian Association for Software Tool Integration (AASTI)
- * under one or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information regarding copyright
- * ownership. The AASTI licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ***/
+﻿#region Copyright
+// <copyright file="DomainProxy.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
+using System.Xml.Serialization;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
-using Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote.RemoteObjects;
-using System.Xml.Serialization;
-using System.Collections;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
+using Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote.RemoteObjects;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
 {
@@ -35,16 +37,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
     {
         #region Constructors
 
-        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler)
-            : base(host, connectorId, domainName, exceptionhandler)
+        public DomainProxy(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler)
+            : base(host, connectorId, domainName, contextId, exceptionhandler)
         {
-            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
+            AuthenificationClass = "org.openengsb.connector.usernamepassword.Password";
         }
 
-        public DomainProxy(string host, string connectorId, String domainName, ABridgeExceptionHandling exceptionhandler, String username, String password)
-            : base(host, connectorId, domainName, exceptionhandler, username, password)
+        public DomainProxy(string host, string connectorId, String domainName, String contextId, ABridgeExceptionHandling exceptionhandler, String username, String password)
+            : base(host, connectorId, domainName, contextId, exceptionhandler, username, password)
         {
-            AUTHENTIFICATION_CLASS = "org.openengsb.connector.usernamepassword.Password";
+            AuthenificationClass = "org.openengsb.connector.usernamepassword.Password";
         }
 
         #endregion
@@ -61,12 +63,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
             IMethodCallMessage callMessage = msg as IMethodCallMessage;
             MethodCallMessage methodCallRequest = ToMethodCallRequest(callMessage);
             string methodCallMsg = Marshaller.MarshallObject(methodCallRequest);
-            IOutgoingPort portOut = new JmsOutgoingPort(Destination.CreateDestinationString(Host, HOST_QUEUE), Exceptionhandler, ConnectorId);
-            portOut.Send(methodCallMsg, methodCallRequest.callId);
-            IIncomingPort portIn = new JmsIncomingPort(Destination.CreateDestinationString(Host, methodCallRequest.callId), Exceptionhandler, ConnectorId);
+            IOutgoingPort portOut = new JmsOutgoingPort(JmsDestination.CreateDestinationString(Host, HostQueue), Exceptionhandler, ConnectorId);
+            portOut.Send(methodCallMsg, methodCallRequest.CallId);
+            IIncomingPort portIn = new JmsIncomingPort(JmsDestination.CreateDestinationString(Host, methodCallRequest.CallId), Exceptionhandler, ConnectorId);
             string methodReturnMsg = portIn.Receive();
             MethodResultMessage methodReturn = Marshaller.UnmarshallObject<MethodResultMessage>(methodReturnMsg);
-            return ToMessage(methodReturn.result, callMessage);
+            return ToMessage(methodReturn.Result, callMessage);
         }
 
         #endregion
@@ -84,10 +86,12 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
 
             string methodName = msg.MethodName;
             Dictionary<string, string> metaData = new Dictionary<string, string>();
-            //The structure is always domain.DOMAINTYPE.events
+
+            // The structure is always domain.DOMAINTYPE.events
             metaData.Add("serviceId", "domain." + DomainName + ".events");
+
             // Arbitrary string, maybe not necessary
-            metaData.Add("contextId", "foo");
+            metaData.Add("contextId", ContextId);
             List<string> classes = new List<string>();
             foreach (object arg in msg.Args)
             {
@@ -101,13 +105,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote
                     classes.Add(null);
                 }
             }
+
             RemoteMethodCall call = RemoteMethodCall.CreateInstance(methodName, msg.Args, metaData, classes, null);
-            BeanDescription authentification = BeanDescription.createInstance(AUTHENTIFICATION_CLASS);
-            authentification.data.Add("value", Password);
-            MethodCallMessage message = MethodCallMessage.createInstance(Username, authentification, call, id.ToString(), true, "");
+            BeanDescription authentification = BeanDescription.CreateInstance(AuthenificationClass);
+            authentification.Data.Add("value", Password);
+            MethodCallMessage message = MethodCallMessage.CreateInstance(Username, authentification, call, id.ToString(), true, String.Empty);
             return message;
         }
-
         #endregion
     }
 }

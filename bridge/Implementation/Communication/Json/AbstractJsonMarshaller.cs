@@ -1,19 +1,21 @@
-﻿/***
- * Licensed to the Austrian Association for Software Tool Integration (AASTI)
- * under one or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information regarding copyright
- * ownership. The AASTI licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ***/
+﻿#region Copyright
+// <copyright file="AbstractJsonMarshaller.cs" company="OpenEngSB">
+// Licensed to the Austrian Association for Software Tool Integration (AASTI)
+// under one or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information regarding copyright
+// ownership. The AASTI licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+#endregion
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,17 +29,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
     public abstract class AbstractJsonMarshaller : JsonConverter
     {
-
-        /// <summary>
-        /// Checks if Type is Map (Dictaionary
-        /// </summary>
-        /// <param name="objectType"></param>
-        /// <returns></returns>
-        protected static bool IsMapType(Type objectType)
-        {
-            return objectType.Name.ToUpper().Contains("MAPENTRY") && objectType.IsArray;
-        }
-
+        #region Public Methods
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             IDictionary list = new Dictionary<Object, Object>();
@@ -47,17 +39,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             }
             catch (JsonSerializationException jsonex)
             {
-                if (!testIfNullValueProducesTheException(jsonex))
+                if (!TestIfNullValueProducesTheException(jsonex))
                 {
                     throw jsonex;
                 }
             }
-            return list.ConvertMap(objectType);
-        }
 
-        private static Boolean testIfNullValueProducesTheException(JsonSerializationException jsonex)
-        {
-            return jsonex.Message.ToUpper().Contains("NULL");
+            return list.ConvertMap(objectType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -72,7 +60,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                 CreateJsonWithoutXMLIgnoreFields(writer, value, serializer);
             }
         }
-
+        #endregion
+        #region Protected Methods
+        /// <summary>
+        /// Checks if Type is Map (Dictaionary
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected static bool IsMapType(Type objectType)
+        {
+            return objectType.Name.ToUpper().Contains("MAPENTRY") && objectType.IsArray;
+        }
+        #endregion
+        #region Private Methods
         private static void CreateJsonWithoutXMLIgnoreFields(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
@@ -84,7 +84,14 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                     serializer.Serialize(writer, pi.GetValue(value, null));
                 }
             }
+
             writer.WriteEndObject();
         }
+
+        private static Boolean TestIfNullValueProducesTheException(JsonSerializationException jsonex)
+        {
+            return jsonex.Message.ToUpper().Contains("NULL");
+        }
+        #endregion
     }
 }
