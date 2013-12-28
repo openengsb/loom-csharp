@@ -40,9 +40,9 @@
     <Reference Include="ExampleDomain">
       <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Experimental.IO">
       <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Microsoft.Experimental.IO.dll</HintPath>
@@ -88,6 +88,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ExceptionHandling\Class1.cs" />
+    <Compile Include="ExceptionHandling\UnitTest1.cs" />
     <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs" />
     <Compile Include="TestClasses\TestClassLocalType.cs" />
     <Compile Include="TestClasses\TestClass.cs" />
