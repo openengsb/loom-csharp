@@ -31,9 +31,8 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         #region Public Methods
         public override bool CanConvert(Type objectType)
         {
-            Boolean isMap = IsMapType(objectType);
             Boolean hasXMLIgnore = objectType.GetProperties().Any(P => P.IsDefined(typeof(XmlIgnoreAttribute), false));
-            return isMap || hasXMLIgnore;
+            return IsMapType(objectType) || hasXMLIgnore;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

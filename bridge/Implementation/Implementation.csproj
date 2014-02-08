@@ -84,7 +84,6 @@
     <Compile Include="HelpMethods.cs" />
     <Compile Include="Common\DomainReverse.cs" />
     <Compile Include="Common\RemoteObjects\IMethodCall.cs" />
-    <Compile Include="Common\IOpenEngSBModel.cs" />
     <Compile Include="RegistrationFunctions.cs" />
     <Compile Include="Exceptions\OpenEngSBException.cs" />
     <Compile Include="DomainFactoryProvider.cs" />

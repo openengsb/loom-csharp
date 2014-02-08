@@ -137,7 +137,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// </summary>
         /// <param name="extendType">Type to extend</param>
         /// <returns>Type:OpenEngSBModel</returns>
-        public static Type ImplementTypeDynamicly(Type extendType)
+        public static Type ImplementTypeDynamicly(Type extendType, Type interfaceType)
         {
             if (extendType.Name.ToUpper().Equals("OBJECT") || extendType.IsPrimitive || extendType.Name.ToUpper().Equals("STRING"))
             {
@@ -147,12 +147,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
             AssemblyName assemblyName = new AssemblyName("DataBuilderAssembly");
             AssemblyBuilder assemBuilder = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemBuilder.DefineDynamicModule("DataBuilderModule");
-            TypeBuilder typeBuilder = moduleBuilder.DefineType("OpenEngSBModel" + extendType.Name, TypeAttributes.Class, extendType);
-            typeBuilder.AddInterfaceImplementation(typeof(IOpenEngSBModel));
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(extendType.Name + interfaceType.Name, TypeAttributes.Class, extendType);
+            typeBuilder.AddInterfaceImplementation(interfaceType);
             typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
-            BuildProperty(typeBuilder);
+            BuildProperty(typeBuilder, interfaceType);
             Type type = typeBuilder.CreateType();
             return type;
+        }
+
+        public static Boolean IsTypeJavaException(Type possibleExceptionType)
+        {
+            return possibleExceptionType.Name.ToUpper().EndsWith("EXCEPTION");
         }
 
         /// <summary>
@@ -215,9 +220,9 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// Generate the set and get
         /// </summary>
         /// <param name="typeBuilder"></param>
-        private static void BuildProperty(TypeBuilder typeBuilder)
+        private static void BuildProperty(TypeBuilder typeBuilder, Type typeToImplementProperties)
         {
-            foreach (PropertyInfo method in typeof(IOpenEngSBModel).GetProperties())
+            foreach (PropertyInfo method in typeToImplementProperties.GetProperties())
             {
                 Type type = method.GetGetMethod().ReturnType;
                 if (!type.Name.Equals(typeof(void)))

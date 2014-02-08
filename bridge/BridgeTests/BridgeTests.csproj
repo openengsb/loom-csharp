@@ -88,15 +88,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ExceptionHandling\Class1.cs" />
-    <Compile Include="ExceptionHandling\UnitTest1.cs" />
+    <Compile Include="ExceptionHandling\TestException.cs" />
+    <Compile Include="ExceptionHandling\TestExceptionMarshalling.cs" />
     <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs" />
     <Compile Include="TestClasses\TestClassLocalType.cs" />
     <Compile Include="TestClasses\TestClass.cs" />
     <Compile Include="Tests\TestJsonMarshaller.cs" />
     <Compile Include="TestConnectorImplementation\TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="Tests\TestDefaultEcxeptionHandler.cs" />
-    <Compile Include="TestConnectorImplementation\OOSourceCodeDomainConnector.cs" />
+    <Compile Include="TestConnectorImplementation\TestOOSourceCodeDomainConnector.cs" />
     <Compile Include="Tests\TestRemoteType.cs" />
     <Compile Include="Tests\TestCommunicationClass.cs" />
     <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs" />

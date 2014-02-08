@@ -1,5 +1,4 @@
-﻿#region Copyright
-// <copyright file="CustomJsonUnMarshaller.cs" company="OpenEngSB">
+﻿// <copyright file="TestException.cs" company="OpenEngSB">
 // Licensed to the Austrian Association for Software Tool Integration (AASTI)
 // under one or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information regarding copyright
@@ -15,27 +14,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // </copyright>
-#endregion
 using System;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
+namespace BridgeTests.ExceptionHandling
 {
-    /// <summary>
-    /// Json Marshaller, which converts Maps (java) to a EntryX (X is a number)
-    /// </summary>
-    public class CustomJsonUnMarshaller : AbstractJsonMarshaller
+    public class TestException
     {
-        #region Public Methods
-        public override bool CanConvert(Type objectType)
-        {
-            return IsMapType(objectType) || IsException(objectType);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new InvalidOperationException("This state should never be reached");
-        }
-        #endregion
+        public String Test1 { get; set; }
     }
 }
