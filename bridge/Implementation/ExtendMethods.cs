@@ -23,6 +23,7 @@ using OpenEngSBCore;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
 {
@@ -44,7 +45,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation
         /// <returns>The object with the OpenEngSBModel</returns>
         public static ReturnTyp AddOpenEngSBModel<ReturnTyp>(this ReturnTyp element, List<openEngSBModelEntry> models)
         {
-            Type openEngSBModelType = HelpMethods.ImplementTypeDynamicly(element.GetType());
+            Type openEngSBModelType = HelpMethods.ImplementTypeDynamicly(element.GetType(), typeof(IOpenEngSBModel));
             IOpenEngSBModel tmpElement = element.ConvertOSBType(openEngSBModelType) as IOpenEngSBModel;
             tmpElement.OpenEngSBModelTail = models;
             return (ReturnTyp)tmpElement;

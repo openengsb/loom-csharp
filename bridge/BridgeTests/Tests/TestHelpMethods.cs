@@ -30,6 +30,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace BridgeTests.Tests
 {
@@ -317,7 +318,7 @@ namespace BridgeTests.Tests
         [TestMethod]
         public void TestExtendingTypeAtRunrimeAndAddOpenEngSBModelEntries()
         {
-            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1));
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Entry1), typeof(IOpenEngSBModel));
             Object entryObject = Activator.CreateInstance(type);
             Entry1 entry = (Entry1)entryObject;
             entry.key = "test";
@@ -441,7 +442,7 @@ namespace BridgeTests.Tests
         [TestMethod]
         public void TestImplementOpenEngSBModelAtRuntimeIsCorrect()
         {
-            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Object));
+            Type type = HelpMethods.ImplementTypeDynamicly(typeof(Object),typeof(IOpenEngSBModel));
 
             Object entryObject = Activator.CreateInstance(type);
 

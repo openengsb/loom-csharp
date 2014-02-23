@@ -40,9 +40,9 @@
     <Reference Include="ExampleDomain">
       <HintPath>..\packages\ExampleDomain.3.0.1.1-SNAPSHOT\lib\ExampleDomain.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Experimental.IO">
       <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Microsoft.Experimental.IO.dll</HintPath>
@@ -88,17 +88,35 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs" />
-    <Compile Include="TestClasses\TestClassLocalType.cs" />
-    <Compile Include="TestClasses\TestClass.cs" />
-    <Compile Include="Tests\TestJsonMarshaller.cs" />
+    <Compile Include="ExceptionHandling\TestException.cs" />
+    <Compile Include="ExceptionHandling\TestExceptionMarshalling.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="TestClasses\TestClassLocalType.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="TestClasses\TestClass.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tests\TestJsonMarshaller.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="TestConnectorImplementation\TestExceptionHandlers\TestCustomExceptionHandler.cs" />
     <Compile Include="Tests\TestDefaultEcxeptionHandler.cs" />
-    <Compile Include="TestConnectorImplementation\OOSourceCodeDomainConnector.cs" />
+    <Compile Include="TestConnectorImplementation\TestOOSourceCodeDomainConnector.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Tests\TestRemoteType.cs" />
     <Compile Include="Tests\TestCommunicationClass.cs" />
-    <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs" />
-    <Compile Include="Tests\TestHelpMethods.cs" />
+    <Compile Include="TestConnectorImplementation\ExampleDomainConnector.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tests\TestHelpMethods.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\TestDomainFactoryProvider.cs" />
     <Compile Include="Tests\TestExceptionHandler.cs" />
@@ -107,7 +125,9 @@
     <Compile Include="Tests\TestDestination.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

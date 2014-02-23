@@ -1,5 +1,5 @@
 ﻿#region Copyright
-// <copyright file="CustomJsonUnMarshaller.cs" company="OpenEngSB">
+// <copyright file="IOpenEngSBModel.cs" company="OpenEngSB">
 // Licensed to the Austrian Association for Software Tool Integration (AASTI)
 // under one or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information regarding copyright
@@ -17,24 +17,25 @@
 // </copyright>
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
+using OpenEngSBCore;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
     /// <summary>
-    /// Json Marshaller, which converts Maps (java) to a EntryX (X is a number)
+    /// Is derived from the OpenEngSBModel on the openengsb-framework
     /// </summary>
-    public class CustomJsonUnMarshaller : AbstractJsonMarshaller
+    public interface IOpenEngSBModel
     {
-        #region Public Methods
-        public override bool CanConvert(Type objectType)
+        #region Properties
+        [JsonProperty(PropertyName = "openEngSBModelTail")]
+        List<openEngSBModelEntry> OpenEngSBModelTail
         {
-            return IsMapType(objectType) || IsException(objectType);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new InvalidOperationException("This state should never be reached");
+            get;
+            set;
         }
         #endregion
     }

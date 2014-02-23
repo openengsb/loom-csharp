@@ -30,6 +30,7 @@ using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Jms;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Exceptions;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface.ExceptionHandling;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
@@ -326,6 +327,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
         /// <returns>Arguments</returns>
         protected object[] CreateMethodArguments(IMethodCall methodCall, MethodInfo methodInfo)
         {
+            Type extendtypeWith = typeof(IOpenEngSBModel);
             IList<object> args = new List<object>();
             Assembly asm = typeof(domainServiceType).GetType().Assembly;
             for (int i = 0; i < methodCall.Args.Count; ++i)
@@ -364,12 +366,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 
                 if (type.IsArray)
                 {
-                    Type tmptype = HelpMethods.ImplementTypeDynamicly(type.GetElementType());
-                    type = Array.CreateInstance(tmptype, 0).GetType();
-                }
-                else
-                {
-                    type = HelpMethods.ImplementTypeDynamicly(type);
+                    type = Array.CreateInstance(type.GetElementType(), 0).GetType();
                 }
 
                 object obj = null;

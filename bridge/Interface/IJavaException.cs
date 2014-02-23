@@ -1,5 +1,4 @@
-﻿#region Copyright
-// <copyright file="IOpenEngSBModel.cs" company="OpenEngSB">
+﻿// <copyright file="IJavaException.cs" company="OpenEngSB">
 // Licensed to the Austrian Association for Software Tool Integration (AASTI)
 // under one or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information regarding copyright
@@ -15,28 +14,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // </copyright>
-#endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using OpenEngSBCore;
 
-namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
+namespace Org.Openengsb.Loom.CSharp.Bridge.Interface
 {
-    /// <summary>
-    /// Is derived from the OpenEngSBModel on the openengsb-framework
-    /// </summary>
-    public interface IOpenEngSBModel
+    public interface IJavaException
     {
-        #region Properties
-        [JsonProperty(PropertyName = "openEngSBModelTail")]
-        List<openEngSBModelEntry> OpenEngSBModelTail
-        {
-            get;
-            set;
-        }
-        #endregion
+        [JsonProperty(PropertyName = "cause")]
+        Object Cause { get; set; }
+        [JsonProperty(PropertyName = "stackTrace")]
+        List<Object> StackTrace { get; set; }
+        [JsonProperty(PropertyName = "classContext")]
+        List<String> ClassContext { get; set; }
+        [JsonProperty(PropertyName = "message")]
+        String Message { get; set; }
+        [JsonProperty(PropertyName = "localizedMessage")]
+        String LocalizedMessage { get; set; }
+        [JsonProperty(PropertyName = "suppressed")]
+        List<Object> Suppressed { get; set; }
     }
 }

@@ -24,6 +24,8 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
+using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
@@ -32,20 +34,31 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         #region Public Methods
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            IDictionary list = new Dictionary<Object, Object>();
-            try
+            if (IsMapType(objectType))
             {
-                serializer.Populate(reader, list);
-            }
-            catch (JsonSerializationException jsonex)
-            {
-                if (!TestIfNullValueProducesTheException(jsonex))
+                IDictionary list = new Dictionary<Object, Object>();
+                try
                 {
-                    throw jsonex;
+                    serializer.Populate(reader, list);
                 }
+                catch (JsonSerializationException jsonex)
+                {
+                    if (!TestIfNullValueProducesTheException(jsonex))
+                    {
+                        throw jsonex;
+                    }
+                }
+
+                return list.ConvertMap(objectType);
+            }
+            else if (IsException(objectType))
+            {
+                Object exceptionObject = Activator.CreateInstance(HelpMethods.ImplementTypeDynamicly(objectType, typeof(IJavaException)));
+                serializer.Populate(reader, exceptionObject);
+                return exceptionObject;
             }
 
-            return list.ConvertMap(objectType);
+            return null;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -70,6 +83,16 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         protected static bool IsMapType(Type objectType)
         {
             return objectType.Name.ToUpper().Contains("MAPENTRY") && objectType.IsArray;
+        }
+
+        /// <summary>
+        /// Checks if the type is an Exception type (Ends with Exception)
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected static bool IsException(Type objectType)
+        {
+            return objectType.Name.ToUpper().Contains("EXCEPTION");
         }
         #endregion
         #region Private Methods
