@@ -17,19 +17,18 @@
 // </copyright>
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RuntimeTests;
+using log4net;
 using RuntimeTests.RuntimeTests;
 
 namespace RuntimeTests
 {
     public class Program
     {
+        private static ILog logger = LogManager.GetLogger(typeof(Program));
+
         public static void Main(string[] args)
         {
+            log4net.Config.BasicConfigurator.Configure();
             OSBRunTimeTestParent.OpenOSB();
             try
             {
@@ -45,38 +44,77 @@ namespace RuntimeTests
                 bridge2.Init();
                 xlink.Init();
 
-                jms.TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithIcomingPort();
-                jms.TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithOutgoingPort();
-                jms.TestJmsOutgoingPortWithQueueNameExceptionHandler();
-                jms.TestJmsPortWithWrongUrlParameter();
-                jms.CleanUp();
+                try
+                {
+                    jms.TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithIcomingPort();
+                    jms.TestACustomCreatedExceptionHandlerWhichReturnsAValueAsResultThatGetsInvokedWithOutgoingPort();
+                    jms.TestJmsOutgoingPortWithQueueNameExceptionHandler();
+                    jms.TestJmsPortWithWrongUrlParameter();
+                    jms.CleanUp();
+                    logger.Info("Jms tests completed correctly");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error", ex);
+                }
 
-                net.TestConnectToXlinkWithAConnectorThatIsNotregisteredConnectorAndAnalyseTheException();
-                net.TestConnectToXlinkWithNoncreatedAndNonregisteredConnectorAndCheckTheCorrectException();
-                net.TestCreateDeleteConnectorAndNoRegistrationWorksCorrectly();
-                net.TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectly();
-                net.TestCreateMoreConnectorAndStopAllWorksCorrectly();
-                net.TestCreateRegisterCloseRegisterWorksCorrectly();
-                net.TestCreateRegisterConnectorAndGetEventHandlerWithInvalitConnectorId();
-                net.TestCreateRegisterConnectXlinkDisconnectXlinkUnregisterDeleteConnectorOnADomainThatDoesNotSupportXlink();
-                net.TestCreateRegisterUnregisterDeleteConnectorWorksCorrectly();
-                net.TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly();
-                net.TestCreateRegisterWithEventHandlerInvokedUnregisterDeleteWorksCorrectly();
-                net.CleanUp();
+                try
+                {
+                    net.TestConnectToXlinkWithAConnectorThatIsNotregisteredConnectorAndAnalyseTheException();
+                    net.TestConnectToXlinkWithNoncreatedAndNonregisteredConnectorAndCheckTheCorrectException();
+                    net.TestCreateDeleteConnectorAndNoRegistrationWorksCorrectly();
+                    net.TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectly();
+                    net.TestCreateMoreConnectorAndStopAllWorksCorrectly();
+                    net.TestCreateRegisterCloseRegisterWorksCorrectly();
+                    net.TestCreateRegisterConnectorAndGetEventHandlerWithInvalitConnectorId();
+                    net.TestCreateRegisterConnectXlinkDisconnectXlinkUnregisterDeleteConnectorOnADomainThatDoesNotSupportXlink();
+                    net.TestCreateRegisterUnregisterDeleteConnectorWorksCorrectly();
+                    net.TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly();
+                    net.CleanUp();
+                    logger.Info(".Net Bridge tests completed correctly");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error", ex);
+                }
 
-                bridge1.TestCreateDeleteConnectorAndNoRegistrationWorksCorrectlyWithUsernameAndPassword();
-                bridge1.TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectlyUsernameAndPassword();
-                bridge1.TestCreateRegisterEventHandlerUnregisterDeleteWorksCorrectlyWithUsernameAndPassword();
-                bridge1.TestCreateRegisterUnregisterDeleteConnectorWorksCorrectlyWithUsernameAndPassword();
-                bridge1.TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectlyWithUsernameAndPassword();
-                bridge1.CleanUp();
+                try
+                {
+                    bridge1.TestCreateDeleteConnectorAndNoRegistrationWorksCorrectlyWithUsernameAndPassword();
+                    bridge1.TestCreateDeleteConnectorWithoutRegistrationWithUsernameAndPasswordWorksCorrectlyUsernameAndPassword();
+                    bridge1.TestCreateRegisterEventHandlerUnregisterDeleteWorksCorrectlyWithUsernameAndPassword();
+                    bridge1.TestCreateRegisterUnregisterDeleteConnectorWorksCorrectlyWithUsernameAndPassword();
+                    bridge1.TestCreateRegisterUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectlyWithUsernameAndPassword();
+                    bridge1.CleanUp();
+                    logger.Info(".Net Bridge tests completed correctly");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error", ex);                
+                }
 
-                bridge2.TestCreateConnectorWithWrongUsernameAndPassword();
-                bridge2.TestRegisterConnectorWithoutCreateAndWithWrongUsernameAndPassword();
-                bridge2.CleanUp();
-
-                xlink.TestCreateRegisterConnecttoxlinkDisconnectfromXlinkUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly();
-                xlink.CleanUp();
+                try
+                {
+                    bridge2.TestCreateConnectorWithWrongUsernameAndPassword();
+                    bridge2.TestRegisterConnectorWithoutCreateAndWithWrongUsernameAndPassword();
+                    bridge2.CleanUp();
+                    logger.Info(".Net Bridge tests completed correctly");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error", ex);
+                }
+             
+                try
+                {
+                    xlink.TestCreateRegisterConnecttoxlinkDisconnectfromXlinkUnregisterDeleteWithoutCreateMethodConnectorWorksCorrectly();
+                    xlink.CleanUp();
+                    logger.Info("Xlink tests completed correctly");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error", ex);
+                }
             }
             finally
             {

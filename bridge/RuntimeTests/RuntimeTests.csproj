@@ -52,13 +52,13 @@
       <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="OSBConnection">
-      <HintPath>..\..\..\..\loom-csharp\DependencyManager\OpenEngSBConnection\bin\Debug\OSBConnection.dll</HintPath>
+      <HintPath>..\..\DependencyManager\OpenEngSBConnection\bin\Debug\OSBConnection.dll</HintPath>
     </Reference>
     <Reference Include="SevenZipSharp">
-      <HintPath>..\..\..\..\loom-csharp\DependencyManager\SonaType\bin\Debug\SevenZipSharp.dll</HintPath>
+      <HintPath>..\packages\SevenZipSharp.0.64\lib\SevenZipSharp.dll</HintPath>
     </Reference>
     <Reference Include="Sonatype">
-      <HintPath>..\..\..\..\loom-csharp\DependencyManager\SonaType\bin\Debug\Sonatype.dll</HintPath>
+      <HintPath>..\..\DependencyManager\SonaType\bin\Debug\Sonatype.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,6 +67,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnzipArtifact">
+      <HintPath>..\..\DependencyManager\UnzipArtifact\bin\Debug\UnzipArtifact.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OSBRunTimeTestParent.cs" />

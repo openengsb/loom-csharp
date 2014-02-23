@@ -30,7 +30,7 @@ namespace BridgeTests.TestClasses
     /// Example Test Class
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
-    public class ASDTestClass
+    public class TestClass
     {
         #region Public Methods
         [SoapDocumentMethod("urn:raiseEvent", RequestNamespace = "http://example.domain.openengsb.org", ParameterStyle = SoapParameterStyle.Wrapped)]

@@ -205,27 +205,6 @@ namespace RuntimeTests.RuntimeTests
             factory.DeleteDomainService(uuid);
             Assert.IsFalse(factory.Registered(uuid));
         }
-
-        public void TestCreateRegisterWithEventHandlerInvokedUnregisterDeleteWorksCorrectly()
-        {
-            LogEvent logEvent = new LogEvent();
-            logEvent.level = "1";
-            logEvent.message = "TestCase";
-            logEvent.name = "Test";
-
-            uuid = factory.RegisterConnector(null, DomainName);
-            IExampleDomainEventsSoapBinding exampleDomain = factory.GetEventhandler<IExampleDomainEventsSoapBinding>(uuid);
-
-            Assert.IsTrue(factory.Registered(uuid));
-            Assert.IsFalse(factory.Registered("WRONG ID"));
-            Assert.IsTrue(factory.GetDomainTypConnectorId(uuid).Equals(DomainName + "+external-connector-proxy+" + uuid));
-            Assert.IsNotNull(exampleDomain);
-            exampleDomain.raiseEvent(logEvent);
-            factory.UnRegisterConnector(uuid);
-            Assert.IsFalse(factory.Registered(uuid));
-            factory.DeleteDomainService(uuid);
-            Assert.IsFalse(factory.Registered(uuid));
-        }
         #endregion
     }
 }

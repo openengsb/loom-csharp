@@ -24,9 +24,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
-using OSBConnection;
 using RuntimeTests.TestConnectorImplementation;
-using SonaTypeDependencies;
 
 namespace RuntimeTests.RuntimeTests
 {

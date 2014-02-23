@@ -78,13 +78,13 @@
     <Compile Include="ExceptionHandling\TestExceptionMarshalling.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs">
+    <Compile Include="ClassesFoTests\TestClassLocalTypeWithLessMethods.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClassLocalType.cs">
+    <Compile Include="ClassesFoTests\TestClassLocalType.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClass.cs">
+    <Compile Include="ClassesFoTests\TestClass.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Tests\TestJsonMarshaller.cs">
