@@ -41,9 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Experimental.IO">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Microsoft.Experimental.IO.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="OOSourceCodeDomain">
       <HintPath>..\packages\OOSourceCodeDomain.3.0.1.1-SNAPSHOT\lib\OOSourceCodeDomain.dll</HintPath>
@@ -52,13 +49,11 @@
       <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="OSBConnection">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\OSBConnection.dll</HintPath>
+      <HintPath>..\..\DependencyManager\OpenEngSBConnection\bin\Debug\OSBConnection.dll</HintPath>
     </Reference>
-    <Reference Include="SevenZipSharp">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\SevenZipSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Sonatype">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Sonatype.dll</HintPath>
+    <Reference Include="Sonatype, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DependencyManager\SonaType\bin\Debug\Sonatype.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
