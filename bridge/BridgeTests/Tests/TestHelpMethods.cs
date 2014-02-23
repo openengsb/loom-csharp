@@ -55,7 +55,7 @@ namespace BridgeTests.Tests
             IList<Object> elements = new List<Object>();
             elements.Add("test");
             elements.Add("test1");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasNoSpecified"));
 
             Assert.AreEqual<int>(elements.Count, 2);
@@ -68,7 +68,7 @@ namespace BridgeTests.Tests
             ///A specified field is a field that is created from wsdl.exe to indicated if a primitiv type like boolean is set or not
             IList<Object> elements = new List<Object>();
             elements.Add("test");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasSpecified"));
 
             Assert.AreEqual<int>(elements.Count, 2);
@@ -81,7 +81,7 @@ namespace BridgeTests.Tests
             IList<Object> elements = new List<Object>();
             elements.Add("test");
             elements.Add("test1");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasStringSpecified"));
 
             Assert.AreEqual<int>(elements.Count, 2);
@@ -93,7 +93,7 @@ namespace BridgeTests.Tests
         {
             IList<Object> elements = new List<Object>();
             elements.Add("test");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             HelpMethods.AddTrueForSpecified(elements, testClass.GetType().GetMethod("hasOnlyOneField"));
 
             Assert.AreEqual<int>(elements.Count, 1);
@@ -106,7 +106,7 @@ namespace BridgeTests.Tests
             IList<string> parameters = new List<String>();
             parameters.Add("Integer");
             parameters.Add("int");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
 
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
@@ -117,7 +117,7 @@ namespace BridgeTests.Tests
             IList<string> parameters = new List<String>();
             parameters.Add("Integer");
             parameters.Add("Boolean");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
 
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasObjectSpecified").GetParameters()));
         }
@@ -125,7 +125,7 @@ namespace BridgeTests.Tests
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParameters()
         {
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             ParameterInfo[] tmp = testClass.GetType().GetMethod("hasSpecified").GetParameters();
             List<ParameterInfo> elements = new List<ParameterInfo>(tmp);
 
@@ -138,7 +138,7 @@ namespace BridgeTests.Tests
         [TestMethod]
         public void TestAddTrueForSpecifiedFieldsWithParameterInfoAsParametersWhereNoSpecifiedIsDefined()
         {
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
             ParameterInfo[] tmp = testClass.GetType().GetMethod("hasNoSpecified").GetParameters();
             List<ParameterInfo> elements = new List<ParameterInfo>(tmp);
 
@@ -383,7 +383,7 @@ namespace BridgeTests.Tests
         [TestMethod]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotation()
         {
-            Assert.AreEqual<String>(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(TestClass)), "org.openengsb.domain.example.TestClass");
+            Assert.AreEqual<String>(HelpMethods.CreateClassWithPackageName("hasStringSpecified", typeof(ASDTestClass)), "org.openengsb.domain.example.TestClass");
         }
 
         [TestMethod]
@@ -396,21 +396,21 @@ namespace BridgeTests.Tests
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationFromAnArrayTypeWhereTheBridgeTestClassIsNotInTheAssembly()
         {
-            HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(TestClass[]));
+            HelpMethods.CreateClassWithPackageName("BridgeTests.TestClass[]", typeof(ASDTestClass[]));
         }
 
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhereTheMethodDoesNotExist()
         {
-            HelpMethods.CreateClassWithPackageName("DoesNotExist", typeof(TestClass));
+            HelpMethods.CreateClassWithPackageName("DoesNotExist", typeof(ASDTestClass));
         }
 
         [TestMethod]
         [ExpectedException(typeof(BridgeException))]
         public void TestGettingThePackagenameAndTheClassNameFromTheAnnotationWhichHasNoAnnotation()
         {
-            HelpMethods.CreateClassWithPackageName("hasNoSpecified", typeof(TestClass));
+            HelpMethods.CreateClassWithPackageName("hasNoSpecified", typeof(ASDTestClass));
         }
 
         [TestMethod]
@@ -463,7 +463,7 @@ namespace BridgeTests.Tests
             IList<string> parameters = new List<String>();
             parameters.Add("String");
             parameters.Add("Boolean");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
 
             Assert.IsTrue(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
@@ -474,7 +474,7 @@ namespace BridgeTests.Tests
         {
             IList<string> parameters = new List<String>();
             parameters.Add("String");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
 
             HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters());
         }
@@ -485,7 +485,7 @@ namespace BridgeTests.Tests
             IList<string> parameters = new List<String>();
             parameters.Add("Integer");
             parameters.Add("Bo olean");
-            TestClass testClass = new TestClass();
+            ASDTestClass testClass = new ASDTestClass();
 
             Assert.IsFalse(HelpMethods.TypesAreEqual(parameters, testClass.GetType().GetMethod("hasSpecified").GetParameters()));
         }
