@@ -45,11 +45,11 @@ namespace OSBConnection
         private Process osbProcess = null;
         #endregion
         #region Properties
-        public int ExecutionTimeOutBetweenCommands { get; private set; }
+        public int ExecutionTimeOutBetweenCommands { get; set; }
 
-        public int TimeToWaitUntilOSBIsStarted { get; private set; }
+        public int TimeToWaitUntilOSBIsStarted { get; set; }
 
-        public Boolean IsOSBConnectionOpen { get; private set; }
+        public Boolean IsOSBConnectionOpen { get; set; }
         #endregion
         #region Constructors
         public OpenEngSBConnection(String osbFolderLocation)

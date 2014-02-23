@@ -46,7 +46,7 @@ namespace SonaTypeTests
         [TestMethod]
         public void TestUnzipTestWithOneFolderAndOneFileFolderExists()
         {
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
@@ -56,7 +56,7 @@ namespace SonaTypeTests
         [TestMethod]
         public void TestUnzipTestWithOneFolderAndOneFileFileExists()
         {
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithOneFolderAndOneFile.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
@@ -67,7 +67,7 @@ namespace SonaTypeTests
         [TestMethod]
         public void TestIfAllFoldersArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
@@ -77,7 +77,7 @@ namespace SonaTypeTests
         [TestMethod]
         public void TestIfAllFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
@@ -87,7 +87,7 @@ namespace SonaTypeTests
         [TestMethod]
         public void TestIfAllSubFilesArePresentWhenUnzipTestWith2LevelsOfFolders()
         {
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWith2LevelsOfFolders.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);
@@ -104,7 +104,7 @@ namespace SonaTypeTests
         public void TestUnzipTestWithPathToLong()
         {
             // Does not work with 7zip. In a futer Version, a unzipper is added that allows it to unpack Long pathes.
-            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithPathToLongInside.zip");
+            FileInfo zipFile = new FileInfo(Directory.GetCurrentDirectory() + @"\Resources\TestWithPathToLongInside.7zip");
             unzipper = new SevenZipUnzipper(zipFile);
             String folder = unzipper.UnzipFile(tempFolder.FullName);
             this.directory = new DirectoryInfo(folder);

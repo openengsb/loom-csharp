@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using OSBConnection;
 using SonaTypeDependencies;
+using UnzipArtifact;
 
 namespace RuntimeTests
 {
@@ -42,7 +43,7 @@ namespace RuntimeTests
         #region Public Methods
         public static void CloseOSB()
         {
-            openengsb.closeConnection();
+            openengsb.CloseConnection();
         }
 
         public static void OpenOSB()
@@ -53,7 +54,7 @@ namespace RuntimeTests
             }
             else
             {
-                openengsb.connectToOSBWithSSH();
+                openengsb.ConnectToOSBWithSSH();
             }
         }
         #endregion
@@ -66,19 +67,21 @@ namespace RuntimeTests
         private static void DownloadAndStartOSB()
         {
             SonatypeDependencyManager dm = new SonatypeDependencyManager(GroupId, ArtifactId, Version, Packaging, Classifier);
-            String filename = dm.DownloadArtefactToFolder(tmpFileLocation);
-            string openEngSBFolder = dm.UnzipFile(filename, tmpFileLocation);
+            FileInfo filelocation = dm.DownloadArtifactToFolder(tmpFileLocation);
+            IUnzipper unzipper = new SevenZipUnzipper(filelocation);
+            string openEngSBFolder = unzipper.UnzipFile(filelocation.Directory.FullName);
             openengsb = new OpenEngSBConnection(openEngSBFolder);
             openengsb.ExecutionTimeOutBetweenCommands = 2500;
             openengsb.TimeToWaitUntilOSBIsStarted = 3000;
-            openengsb.connectToOSBWithSSH();
+            openengsb.StartOpenEngSB();
+            openengsb.ConnectToOSBWithSSH();
             List<String> commands = new List<string>();
             commands.Add("feature:install openengsb-domain-example");
             commands.Add("feature:install  openengsb-ports-jms");
             commands.Add("feature:install  openengsb-ports-rs");
             foreach (String command in commands)
             {
-                openengsb.executeCommand(command);
+                openengsb.ExecuteCommand(command);
             }
         }
         #endregion

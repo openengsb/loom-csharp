@@ -44,9 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Experimental.IO">
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Microsoft.Experimental.IO.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,17 +55,6 @@
     </Reference>
     <Reference Include="OpenEngSBCore">
       <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
-    </Reference>
-    <Reference Include="OSBConnection, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\OSBConnection.dll</HintPath>
-    </Reference>
-    <Reference Include="Renci.SshNet">
-      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Sonatype, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\DownloadOSB\DependencyManager\Example\bin\Debug\Sonatype.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
@@ -92,13 +78,13 @@
     <Compile Include="ExceptionHandling\TestExceptionMarshalling.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClassLocalTypeWithLessMethods.cs">
+    <Compile Include="ClassesFoTests\TestClassLocalTypeWithLessMethods.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClassLocalType.cs">
+    <Compile Include="ClassesFoTests\TestClassLocalType.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TestClasses\TestClass.cs">
+    <Compile Include="ClassesFoTests\TestClass.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Tests\TestJsonMarshaller.cs">
