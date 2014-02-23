@@ -1,4 +1,5 @@
-﻿// <copyright file="TestExceptionMarshalling.cs" company="OpenEngSB">
+﻿#region Copyright
+// <copyright file="TestExceptionMarshalling.cs" company="OpenEngSB">
 // Licensed to the Austrian Association for Software Tool Integration (AASTI)
 // under one or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information regarding copyright
@@ -14,11 +15,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // </copyright>
+#endregion
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation;
-using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common;
 using Org.Openengsb.Loom.CSharp.Bridge.Interface;
 
 namespace BridgeTests.ExceptionHandling
