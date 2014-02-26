@@ -27,6 +27,7 @@ namespace BridgeTests.ExceptionHandling
     public class TestExceptionMarshalling
     {
         private JsonMarshaller marshaller = new JsonMarshaller();
+        private String testString = "Test";
 
         [TestMethod]
         public void TestExceptionFromJSONToDotNetIsIJavaExceptionType()
@@ -37,31 +38,24 @@ namespace BridgeTests.ExceptionHandling
         }
 
         [TestMethod]
-        public void TestExceptionFromJSONToDotNetIsTestExceptionType()
+        public void TestExceptionFromExceptionTestJSONMessageToDotNetIsTestExceptionType()
         {
-            String jsonMessage = "{\"Test1\":\"Test1\","
-                                + "\"message\":\"TestException\"}";
-            Assert.IsTrue(marshaller.UnmarshallObject<TestException>(jsonMessage) is TestException);
+            TestException testException = new TestException();
+            testException.Test1 = testString;
+            String jsonMessage = marshaller.MarshallObject(testException);
+            Assert.IsTrue(marshaller.UnmarshallObject<TestException>(jsonMessage) is IJavaException);
         }
 
         [TestMethod]
-        public void TestExceptionMessageFromJSONToDotNetIsCorrectlyDeserialised()
+        public void TestExceptionFromExceptionTestJSONMessageWithMessageFieldAddedToDotNetIsTestExceptionType()
         {
-            String jsonMessage = "{\"Test1\":\"Test1\","
-                                + "\"message\":\"TestException\"}";
-            
-            IJavaException entryObject = (IJavaException) marshaller.UnmarshallObject<TestException>(jsonMessage);
-            Assert.AreEqual(entryObject.Message, "TestException");
-        }
-
-        [TestMethod]
-        public void TestExceptionVariableFromJSONToDotNetIsCorrectlyDeserialised()
-        {
-            String jsonMessage = "{\"Test1\":\"Test1\","
-                                + "\"message\":\"TestException\"}";
-
-            TestException entryObject = marshaller.UnmarshallObject<TestException>(jsonMessage);
-            Assert.AreEqual(entryObject.Test1, "Test1");
+            TestException testException = new TestException();
+            testException.Test1 = testString;
+            String jsonMessage = marshaller.MarshallObject(testException);
+            jsonMessage = jsonMessage.Substring(0, jsonMessage.LastIndexOf("}"));
+            jsonMessage += ",\"message\":\"" + testString + "\"}";
+            IJavaException exception = marshaller.UnmarshallObject<TestException>(jsonMessage) as IJavaException;
+            Assert.AreEqual(exception.Message, testString);
         }
     }
 }
