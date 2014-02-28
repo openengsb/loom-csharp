@@ -366,7 +366,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
 
                 if (type.IsArray)
                 {
-                    type = Array.CreateInstance(type.GetElementType(), 0).GetType();
+                    Type typeWithIOpenEngsbModelTail = type;
+                    if (!HelpMethods.IsTypeJavaException(type))
+                    {
+                        typeWithIOpenEngsbModelTail = HelpMethods.ImplementTypeDynamicly(type.GetElementType(), extendtypeWith);
+                    }
+
+                    type = Array.CreateInstance(typeWithIOpenEngsbModelTail, 0).GetType();
+                }
+                else if (!HelpMethods.IsTypeJavaException(type))
+                {
+                    type = HelpMethods.ImplementTypeDynamicly(type, extendtypeWith);
                 }
 
                 object obj = null;
