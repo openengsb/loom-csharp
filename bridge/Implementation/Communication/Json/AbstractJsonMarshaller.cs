@@ -58,6 +58,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                 return exceptionObject;
             }
 
+            try
+            {
+                Object modelWithOpenEngsbModelTail = Activator.CreateInstance(HelpMethods.ImplementTypeDynamicly(objectType, typeof(IOpenEngSBModel)));
+                serializer.Populate(reader, modelWithOpenEngsbModelTail);
+                return modelWithOpenEngsbModelTail;
+            }
+            catch (JsonSerializationException jsonex)
+            {
+                // The Newton json plugin throws an exception if a value is null (populating)
+                if (!TestIfNullValueProducesTheException(jsonex))
+                {
+                    throw jsonex;
+                }
+            }
+
             return null;
         }
 
@@ -80,9 +95,27 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// </summary>
         /// <param name="objectType"></param>
         /// <returns></returns>
-        protected static bool IsMapType(Type objectType)
+        protected bool IsMapType(Type objectType)
         {
             return objectType.Name.ToUpper().Contains("MAPENTRY") && objectType.IsArray;
+        }
+
+        /// <summary>
+        /// This method checks, if a Type can be extended with IOpenEngSBModel.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected Boolean CanTypeBeExtendedWithOpenEngsbModelTail(Type objectType)
+        {
+            try
+            {
+                Object tmp = Activator.CreateInstance(HelpMethods.ImplementTypeDynamicly(objectType, typeof(IOpenEngSBModel)));
+                return tmp is IOpenEngSBModel;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -90,13 +123,13 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// </summary>
         /// <param name="objectType"></param>
         /// <returns></returns>
-        protected static bool IsException(Type objectType)
+        protected bool IsException(Type objectType)
         {
             return objectType.Name.ToUpper().Contains("EXCEPTION");
         }
         #endregion
         #region Private Methods
-        private static void CreateJsonWithoutXMLIgnoreFields(JsonWriter writer, object value, JsonSerializer serializer)
+        private void CreateJsonWithoutXMLIgnoreFields(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
             foreach (PropertyInfo pi in value.GetType().GetProperties())
@@ -111,7 +144,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             writer.WriteEndObject();
         }
 
-        private static Boolean TestIfNullValueProducesTheException(JsonSerializationException jsonex)
+        private Boolean TestIfNullValueProducesTheException(JsonSerializationException jsonex)
         {
             return jsonex.Message.ToUpper().Contains("NULL");
         }
