@@ -24,7 +24,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote.RemoteObjects
     /// <summary>
     /// Container for a Secured Method Call
     /// </summary>
-    public class MethodCallMessage : MessageBase
+    public class MethodCallMessage : MessageBase, IEquatable<MethodCallMessage>
     {
         #region Variables
 
@@ -69,5 +69,23 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote.RemoteObjects
         }
 
         #endregion
+
+        public bool Equals(MethodCallMessage other)
+        {
+            return this.Answer == other.Answer ||
+                this.CallId == other.CallId ||
+            this.Destination == other.Destination ||
+            this.MethodCall.Args.Count == other.MethodCall.Args.Count ||
+            this.MethodCall.Classes.Count == other.MethodCall.Classes.Count ||
+            this.MethodCall.MetaData.Count == other.MethodCall.MetaData.Count ||
+            this.MethodCall.MethodName == other.MethodCall.MethodName ||
+                   this.MethodCall.RealClassImplementation.Count ==
+                   other.MethodCall.RealClassImplementation.Count ||
+            this.Credentials.BinaryData.Count == other.Credentials.BinaryData.Count ||
+            this.Credentials.ClassName == other.Credentials.ClassName ||
+            this.Credentials.Data.Count == other.Credentials.Data.Count ||
+            this.Principal == other.Principal ||
+            this.Timestamp == other.Timestamp;
+        }
     }
 }
