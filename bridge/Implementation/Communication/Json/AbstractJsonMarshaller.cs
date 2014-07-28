@@ -31,6 +31,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
     public abstract class AbstractJsonMarshaller : JsonConverter
     {
+        private static IDictionary<String, Type> alreadyExtendedTypes=new Dictionary<String,Type>();
         #region Public Methods
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
@@ -48,7 +49,19 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                 return exceptionObject;
             }
 
-            Object modelWithOpenEngsbModelTail = Activator.CreateInstance(HelpMethods.ImplementTypeDynamicly(objectType, typeof(IOpenEngSBModel)));
+            Type typeWithIOpenEngSBModel;
+
+            if (alreadyExtendedTypes.ContainsKey(objectType.Name))
+            {
+                typeWithIOpenEngSBModel = alreadyExtendedTypes[objectType.Name];
+            }
+            else
+            {
+                typeWithIOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(objectType, typeof(IOpenEngSBModel));
+                alreadyExtendedTypes.Add(objectType.Name, typeWithIOpenEngSBModel);
+            }
+
+            Object modelWithOpenEngsbModelTail = Activator.CreateInstance(typeWithIOpenEngSBModel);
             serializer.Populate(reader, modelWithOpenEngsbModelTail);
             return modelWithOpenEngsbModelTail;
         }
