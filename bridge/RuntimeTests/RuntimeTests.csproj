@@ -48,8 +48,9 @@
     <Reference Include="OOSourceCodeDomain">
       <HintPath>..\packages\OOSourceCodeDomain.3.0.1.1-SNAPSHOT\lib\OOSourceCodeDomain.dll</HintPath>
     </Reference>
-    <Reference Include="OpenEngSBCore">
-      <HintPath>..\packages\OpenEngSBCore.3.0.3.3-SNAPSHOT\lib\OpenEngSBCore.dll</HintPath>
+    <Reference Include="OpenEngSBCore, Version=3.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OpenEngSBCore.3.0.0.1\lib\OpenEngSBCore.dll</HintPath>
     </Reference>
     <Reference Include="OSBConnection">
       <HintPath>..\..\DependencyManager\OpenEngSBConnection\bin\Debug\OSBConnection.dll</HintPath>
