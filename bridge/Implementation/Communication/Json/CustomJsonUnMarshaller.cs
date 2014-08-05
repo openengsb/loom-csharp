@@ -27,9 +27,17 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
     public class CustomJsonUnMarshaller : AbstractJsonMarshaller
     {
         #region Public Methods
+
+        /// <summary>
+        /// Every object gets extended with the OpenEngsbModelTail (if it is possible). This iss currently the only
+        /// way to support the OpenEngsbModelTail. If you have a better way, please contact the mailing list (or send
+        /// me a mail)
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            return IsMapType(objectType) || IsException(objectType);
+            return  IsMapType(objectType) || IsException(objectType) || CanTypeBeExtendedWithOpenEngsbModelTail(objectType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

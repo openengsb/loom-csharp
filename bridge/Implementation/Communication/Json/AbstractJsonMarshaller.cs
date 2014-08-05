@@ -31,24 +31,15 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
 {
     public abstract class AbstractJsonMarshaller : JsonConverter
     {
+        private static IDictionary<String, Type> alreadyExtendedTypes=new Dictionary<String,Type>();
         #region Public Methods
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            serializer.NullValueHandling = NullValueHandling.Ignore;
             if (IsMapType(objectType))
             {
                 IDictionary list = new Dictionary<Object, Object>();
-                try
-                {
-                    serializer.Populate(reader, list);
-                }
-                catch (JsonSerializationException jsonex)
-                {
-                    if (!TestIfNullValueProducesTheException(jsonex))
-                    {
-                        throw jsonex;
-                    }
-                }
-
+                serializer.Populate(reader, list);
                 return list.ConvertMap(objectType);
             }
             else if (IsException(objectType))
@@ -58,7 +49,21 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
                 return exceptionObject;
             }
 
-            return null;
+            Type typeWithIOpenEngSBModel;
+
+            if (alreadyExtendedTypes.ContainsKey(objectType.Name))
+            {
+                typeWithIOpenEngSBModel = alreadyExtendedTypes[objectType.Name];
+            }
+            else
+            {
+                typeWithIOpenEngSBModel = HelpMethods.ImplementTypeDynamicly(objectType, typeof(IOpenEngSBModel));
+                alreadyExtendedTypes.Add(objectType.Name, typeWithIOpenEngSBModel);
+            }
+
+            Object modelWithOpenEngsbModelTail = Activator.CreateInstance(typeWithIOpenEngSBModel);
+            serializer.Populate(reader, modelWithOpenEngsbModelTail);
+            return modelWithOpenEngsbModelTail;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -80,23 +85,52 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
         /// </summary>
         /// <param name="objectType"></param>
         /// <returns></returns>
-        protected static bool IsMapType(Type objectType)
+        protected bool IsMapType(Type objectType)
         {
             return objectType.Name.ToUpper().Contains("MAPENTRY") && objectType.IsArray;
         }
 
         /// <summary>
+        /// This method checks, if a Type can be extended with IOpenEngSBModel.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        protected Boolean CanTypeBeExtendedWithOpenEngsbModelTail(Type objectType)
+        {
+            return !(isObjectType(objectType) || isBasicType(objectType) || isOpenEngSBModelTypeImplemented(objectType) || objectType.IsArray || isCollection(objectType) || objectType.IsEnum);
+        }
+
+        private Boolean isObjectType(Type objectType)
+        {
+            return objectType.Name.ToUpper().Equals("OBJECT"); 
+        }
+
+        private Boolean isBasicType(Type objectType)
+        {
+            return objectType.IsPrimitive || objectType.Name.ToUpper().EndsWith("STRING");
+        }
+
+        private Boolean isCollection(Type objectType)
+        {
+            return objectType.GetInterface(typeof(ICollection).Name) != null || objectType.GetInterface(typeof(ICollection<>).Name) != null;
+        }
+
+        private Boolean isOpenEngSBModelTypeImplemented(Type objectType)
+        {
+            return objectType.GetInterfaces().Contains(typeof(IOpenEngSBModel));
+        }
+        /// <summary>
         /// Checks if the type is an Exception type (Ends with Exception)
         /// </summary>
         /// <param name="objectType"></param>
         /// <returns></returns>
-        protected static bool IsException(Type objectType)
+        protected bool IsException(Type objectType)
         {
             return objectType.Name.ToUpper().Contains("EXCEPTION");
         }
         #endregion
         #region Private Methods
-        private static void CreateJsonWithoutXMLIgnoreFields(JsonWriter writer, object value, JsonSerializer serializer)
+        private void CreateJsonWithoutXMLIgnoreFields(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
             foreach (PropertyInfo pi in value.GetType().GetProperties())
@@ -111,7 +145,7 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json
             writer.WriteEndObject();
         }
 
-        private static Boolean TestIfNullValueProducesTheException(JsonSerializationException jsonex)
+        private Boolean TestIfNullValueProducesTheException(JsonSerializationException jsonex)
         {
             return jsonex.Message.ToUpper().Contains("NULL");
         }

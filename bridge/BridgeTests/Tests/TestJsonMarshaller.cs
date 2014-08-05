@@ -23,6 +23,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication;
 using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Communication.Json;
+using Org.Openengsb.Loom.CSharp.Bridge.OpenEngSB300.Remote.RemoteObjects;
+using Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common.Enumeration;
 
 namespace BridgeTests.Tests
 {
@@ -34,6 +36,56 @@ namespace BridgeTests.Tests
         private IMarshaller marshaller = new JsonMarshaller();
         #endregion
         #region Tests
+
+        [TestMethod]
+        public void TestNullValuesUnMarshalling()
+        {
+            BeanDescription description = new BeanDescription();
+            description.ClassName = "test";
+            description.Data = new Dictionary<String, string>();
+            description.BinaryData = null;
+
+            BeanDescription descriptionUnmarshalled = marshaller.UnmarshallObject<BeanDescription>(marshaller.MarshallObject(description));
+
+            Assert.AreEqual(descriptionUnmarshalled.BinaryData, null);
+        }
+
+        [TestMethod]
+        public void TestEnumValuesUnMarshalling()
+        {
+            ReturnType returnType = ReturnType.Void;
+            ReturnType returnTypeUnmarshalled = marshaller.UnmarshallObject<ReturnType>(marshaller.MarshallObject(returnType));
+
+            Assert.AreEqual(returnType, returnTypeUnmarshalled);
+        }
+
+        [TestMethod]
+        public void TestMarshallingDictionaryThatImplementsICollection()
+        {
+            String key="Foo";
+            String value="bar";
+            BeanDescription description = new BeanDescription();
+            description.ClassName = "test";
+            description.Data = new Dictionary<String, string>();
+            description.Data.Add(key, value);
+            description.BinaryData = null;
+
+            BeanDescription descriptionUnmarshalled = marshaller.UnmarshallObject<BeanDescription>(marshaller.MarshallObject(description));
+
+            Assert.AreEqual(descriptionUnmarshalled.Data[key], value);
+        }
+
+        [TestMethod]
+        public void TestMarshallingListThatImplementsICollection()
+        {
+            String value = "Foo bar";
+            RemoteMethodCall description = new RemoteMethodCall();
+            description.Classes = new List<String>() { value };
+            RemoteMethodCall descriptionUnmarshalled = marshaller.UnmarshallObject<RemoteMethodCall>(marshaller.MarshallObject(description));
+
+            Assert.IsTrue(descriptionUnmarshalled.Classes.Contains(value));
+        }
+
         [TestMethod]
         public void TestIfMarshallerConvertsBetweenTheSameTypeStructureOnlyArrayInsteadOfLists()
         {

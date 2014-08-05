@@ -364,10 +364,6 @@ namespace Org.Openengsb.Loom.CSharp.Bridge.Implementation.Common
                     throw new BridgeException("no corresponding local type found");
                 }
 
-                if (type.IsArray)
-                {
-                    type = Array.CreateInstance(type.GetElementType(), 0).GetType();
-                }
 
                 object obj = null;
                 if (type.IsInstanceOfType(arg))

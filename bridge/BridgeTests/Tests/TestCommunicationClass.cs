@@ -61,6 +61,7 @@ namespace BridgeTests.Tests
             marshaller.UnmarshallObject("EXCEPTION", typeof(RemoteMethodCall));
         }
 
+
         [TestMethod]
         public void TestUnmarshallingWithGeneralTypeAndByIndicatingTypeAsParameterAreTheSame()
         {
@@ -68,21 +69,7 @@ namespace BridgeTests.Tests
             MethodCallMessage unmarshalledResult = (MethodCallMessage)marshaller.UnmarshallObject(result, typeof(MethodCallMessage));
             MethodCallMessage unmarshalledResultType = marshaller.UnmarshallObject<MethodCallMessage>(result);
 
-            Assert.AreEqual<Boolean>(unmarshalledResult.Answer, unmarshalledResultType.Answer);
-            Assert.AreEqual<String>(unmarshalledResult.CallId, unmarshalledResultType.CallId);
-            Assert.AreEqual<String>(unmarshalledResult.Destination, unmarshalledResultType.Destination);
-            Assert.AreEqual(unmarshalledResult.MethodCall.Args.Count, unmarshalledResultType.MethodCall.Args.Count);
-            Assert.AreEqual(unmarshalledResult.MethodCall.Classes.Count, unmarshalledResultType.MethodCall.Classes.Count);
-            Assert.AreEqual(unmarshalledResult.MethodCall.MetaData.Count, unmarshalledResultType.MethodCall.MetaData.Count);
-            Assert.AreEqual(unmarshalledResult.MethodCall.MethodName, unmarshalledResultType.MethodCall.MethodName);
-            Assert.AreEqual(
-                   unmarshalledResult.MethodCall.RealClassImplementation.Count,
-                   unmarshalledResultType.MethodCall.RealClassImplementation.Count);
-            Assert.AreEqual(unmarshalledResult.Credentials.BinaryData.Count, unmarshalledResultType.Credentials.BinaryData.Count);
-            Assert.AreEqual(unmarshalledResult.Credentials.ClassName, unmarshalledResultType.Credentials.ClassName);
-            Assert.AreEqual(unmarshalledResult.Credentials.Data.Count, unmarshalledResultType.Credentials.Data.Count);
-            Assert.AreEqual<String>(unmarshalledResult.Principal, unmarshalledResultType.Principal);
-            Assert.AreEqual<long>(unmarshalledResult.Timestamp, unmarshalledResultType.Timestamp);
+            Assert.IsTrue(unmarshalledResult.Equals(unmarshalledResultType));
         }
         #endregion
         #region Private Methods
